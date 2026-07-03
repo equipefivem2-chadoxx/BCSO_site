@@ -1,14 +1,18 @@
 const axios = require('axios');
 
 exports.loginPage = (req, res) => {
-    // Affiche la page de connexion EJS
-    res.render('pages/login');
+    // Affiche la page de connexion EJS SANS le layout global
+    // On passe "error" pour que la vue EJS puisse afficher les messages de refus
+    res.render('pages/login', { 
+        layout: false, 
+        error: req.query.error 
+    });
 };
 
 exports.loginDiscord = (req, res) => {
     const clientId = process.env.DISCORD_CLIENT_ID;
     const redirectUri = encodeURIComponent(process.env.DISCORD_CALLBACK_URL);
-    // Scopes importants : identify (profil basique) + guilds.members.read (pour lire ses rôles sur TON serveur)
+    // Scopes importants : identify (profil basique) + guilds.members.read (pour lire ses rôles)
     const url = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds.members.read`;
     res.redirect(url);
 };
@@ -54,7 +58,7 @@ exports.callbackDiscord = async (req, res) => {
             return res.redirect('/auth/login?error=AccessDenied');
         }
 
-        // 4. Sauvegarde dans la session (on mettra en place express-session dans app.js ensuite)
+        // 4. Sauvegarde dans la session
         req.session.user = {
             id: userInfo.id,
             username: userInfo.username,
@@ -67,6 +71,6 @@ exports.callbackDiscord = async (req, res) => {
 
     } catch (error) {
         console.error('Erreur Auth Discord:', error.response ? error.response.data : error.message);
-        res.redirect('/auth/login?error=NotOnServer'); // Souvent dû au fait que l'user n'est pas sur le serveur de test
+        res.redirect('/auth/login?error=NotOnServer');
     }
 };

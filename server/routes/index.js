@@ -18,7 +18,11 @@ router.get('/', (req, res) => {
 // Page Dashboard (Protégée)
 router.get('/dashboard', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-    res.render('pages/dashboard');
+    
+    // On passe un titre propre pour le layout main.ejs
+    res.render('pages/dashboard', { 
+        title: 'BCSO - Dashboard Principal' 
+    });
 });
 
 // Connexion des modules
@@ -28,7 +32,11 @@ router.use('/auth', authRoutes);
 
 // Gestion de la 404
 router.use((req, res) => {
-    res.status(404).render('pages/404', { message: 'Page introuvable' });
+    // Si tu crées une page 404.ejs plus tard, ajoute { layout: false } si tu ne veux pas la sidebar
+    res.status(404).render('pages/404', { 
+        message: 'Page introuvable',
+        title: '404 - Introuvable'
+    });
 });
 
 module.exports = router;
