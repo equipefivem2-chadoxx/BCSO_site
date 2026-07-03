@@ -1,23 +1,53 @@
-body {
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Segoe UI', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+:root {
+    --bg-dark: #0a0a0a;
+    --card-bg: #151515;
+    --gold: #d4af37;
+    --text-main: #e0e0e0;
 }
 
-h1 { color: #d4af37; } /* Ton doré pour le côté premium */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+main {
+    text-align: center;
+    padding: 3rem;
+    background: var(--card-bg);
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+h1 {
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
 
 button {
-    padding: 10px 20px;
-    background: #1e1e1e;
-    color: #d4af37;
-    border: 1px solid #d4af37;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 12px 25px;
+    font-size: 1rem;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    border-radius: 4px;
 }
 
-button:hover { background: #d4af37; color: #121212; }
+button:hover {
+    background: var(--gold);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
