@@ -1,9 +1,15 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 
-// Page home
 router.get("/", (req, res) => {
-    res.render("home");
+    res.render("pages/home");
+});
+
+router.get("/dashboard", (req, res) => {
+    res.render("pages/dashboard");
+});
+
+router.get("/tickets", (req, res) => {
+    res.render("pages/tickets");
 });
 
 module.exports = router;

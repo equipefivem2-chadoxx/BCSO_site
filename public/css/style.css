@@ -1,68 +1,83 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0f172a;
+    font-family: Arial;
+    background: #0b1220;
     color: white;
 }
 
-.container {
+/* APP LAYOUT */
+.app {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 60px;
+    height: 100vh;
 }
 
-.header {
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    background: #111a2e;
     display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 40px;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.sidebar a:hover {
+    background: #1e2a44;
 }
 
 .logo {
     width: 60px;
-    height: 60px;
+    margin-bottom: 20px;
 }
 
-h1 {
-    font-size: 32px;
-    letter-spacing: 2px;
+/* CONTENT */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.card {
-    background: #1e293b;
-    padding: 30px;
-    border-radius: 12px;
+/* HEADER */
+.header {
+    padding: 15px;
+    background: #111a2e;
+}
+
+/* PAGE */
+.page {
+    padding: 20px;
+}
+
+/* HOME */
+.home {
     text-align: center;
-    width: 400px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.4);
-}
-
-.card h2 {
-    margin-bottom: 10px;
-}
-
-.card p {
-    color: #94a3b8;
+    margin-top: 80px;
 }
 
 .btn {
+    display: inline-block;
     margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
+    padding: 10px 15px;
     background: #2563eb;
     color: white;
-    cursor: pointer;
-    transition: 0.2s;
+    text-decoration: none;
+    border-radius: 8px;
 }
 
 .btn:hover {
     background: #1d4ed8;
 }
 
-.footer {
-    margin-top: 40px;
-    color: #64748b;
-    font-size: 12px;
+/* CARD */
+.card {
+    background: #111a2e;
+    padding: 20px;
+    border-radius: 10px;
 }
