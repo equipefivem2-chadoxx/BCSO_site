@@ -3,55 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Sécurité anti-crash : locals vérifie si la variable existe avant de l'afficher -->
     <title><%= locals.title || 'BCSO MDT System' %></title>
-
-    <!-- Chargement de ta feuille de style principale -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Ajout de FontAwesome pour avoir de belles icônes dans ton dashboard -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Base de style "Dark Mode Police" pour garantir l'affichage de l'architecture -->
+    
     <style>
-        :root {
-            --bg-base: #0b0f19;       /* Bleu nuit très sombre (fond principal) */
-            --bg-panel: #111827;      /* Gris sombre (sidebar & cards) */
-            --border-color: #1f2937;  /* Bordures */
-            --text-light: #f3f4f6;    /* Texte principal */
-            --accent-blue: #2563eb;   /* Bleu accentuation (boutons, liens) */
-        }
-
+        /* BASE RESET - Empêche les bugs d'espacement */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            background-color: var(--bg-base);
-            color: var(--text-light);
+            height: 100vh;
+            background-color: #05070b;
+            color: #f3f4f6;
             font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden; /* Désactive le scroll global de la page */
         }
 
-        /* Le conteneur principal qui tient tout l'écran */
         .app-layout {
             display: flex;
             height: 100vh;
-            overflow: hidden;
+            width: 100vw;
         }
 
-        /* La zone de droite (Header + Contenu de la page) */
-        .main-wrapper {
+        .main-content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            background-color: var(--bg-base);
+            background-color: #0b0f19;
+            height: calc(100vh - 50px); /* Laisse la place pour ta barre du bas */
+            overflow-y: auto; /* Active le scroll uniquement ici */
+            position: relative;
         }
 
-        /* La zone où ton code EJS spécifique s'injectera */
-        .content-area {
-            padding: 30px;
-            flex: 1;
+        .page-wrapper {
+            padding: 40px;
+            width: 100%;
         }
     </style>
 </head>
@@ -59,24 +43,20 @@
 
     <div class="app-layout">
         
-        <!-- 🧱 INJECTION DE LA SIDEBAR (Modulaire) -->
-        <!-- Si tu n'as pas encore rempli le fichier sidebar.ejs, ne t'inquiète pas, il chargera ce que tu y mettras -->
+        <!-- SIDEBAR GAUCHE -->
         <%- include('../partials/sidebar') %>
-
-        <div class="main-wrapper">
-            
-            <!-- 🧱 INJECTION DU HEADER (Modulaire) -->
-            <%- include('../partials/header') %>
-
-            <main class="content-area">
-                <!-- 🚀 C'est ICI que s'affichera le contenu de tes pages (login, dashboard, archives) -->
-                <!-- express-ejs-layouts remplace la balise <%- body %> par ta page -->
+        
+        <!-- CONTENU CENTRAL -->
+        <div class="main-content">
+            <div class="page-wrapper">
                 <%- body %>
-            </main>
-
+            </div>
         </div>
 
     </div>
+
+    <!-- BARRE DU BAS -->
+    <%- include('../partials/header') %>
 
 </body>
 </html>
