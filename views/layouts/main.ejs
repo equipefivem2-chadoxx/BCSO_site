@@ -3,16 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%- title || 'Dashboard' %></title>
+    
+    <!-- Sécurité anti-crash : locals vérifie si la variable existe avant de l'afficher -->
+    <title><%= locals.title || 'BCSO MDT System' %></title>
+
+    <!-- Chargement de ta feuille de style principale -->
     <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Ajout de FontAwesome pour avoir de belles icônes dans ton dashboard -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Base de style "Dark Mode Police" pour garantir l'affichage de l'architecture -->
+    <style>
+        :root {
+            --bg-base: #0b0f19;       /* Bleu nuit très sombre (fond principal) */
+            --bg-panel: #111827;      /* Gris sombre (sidebar & cards) */
+            --border-color: #1f2937;  /* Bordures */
+            --text-light: #f3f4f6;    /* Texte principal */
+            --accent-blue: #2563eb;   /* Bleu accentuation (boutons, liens) */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: var(--bg-base);
+            color: var(--text-light);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Le conteneur principal qui tient tout l'écran */
+        .app-layout {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* La zone de droite (Header + Contenu de la page) */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background-color: var(--bg-base);
+        }
+
+        /* La zone où ton code EJS spécifique s'injectera */
+        .content-area {
+            padding: 30px;
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
-    <!-- Le contenu de la page s'injectera ici -->
-    <main class="main-content">
-        <%- body %>
-    </main>
 
-    <!-- Inclusion de la barre de navigation -->
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        
+        <!-- 🧱 INJECTION DE LA SIDEBAR (Modulaire) -->
+        <!-- Si tu n'as pas encore rempli le fichier sidebar.ejs, ne t'inquiète pas, il chargera ce que tu y mettras -->
+        <%- include('../partials/sidebar') %>
+
+        <div class="main-wrapper">
+            
+            <!-- 🧱 INJECTION DU HEADER (Modulaire) -->
+            <%- include('../partials/header') %>
+
+            <main class="content-area">
+                <!-- 🚀 C'est ICI que s'affichera le contenu de tes pages (login, dashboard, archives) -->
+                <!-- express-ejs-layouts remplace la balise <%- body %> par ta page -->
+                <%- body %>
+            </main>
+
+        </div>
+
+    </div>
+
 </body>
 </html>
