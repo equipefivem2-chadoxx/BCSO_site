@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSO - Authentification</title>
+    <!-- Utilisation de ton fichier CSS existant si besoin, sinon style inline ciblé pour la modularité -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0f19; /* Bleu nuit très sombre */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #ffffff;
+        }
+        .login-card {
+            background-color: #111827; /* Gris très sombre */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #1f2937;
+        }
+        .login-card h2 {
+            margin-bottom: 5px;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .login-card p {
+            color: #9ca3af;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .discord-btn {
+            display: inline-block;
+            background-color: #5865F2; /* Couleur officielle Discord */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            width: 80%;
+        }
+        .discord-btn:hover {
+            background-color: #4752C4;
+            transform: translateY(-2px);
+        }
+        .error-msg {
+            color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            display: none; /* Rendu visible via JS ou EJS si erreur */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <!-- Remplacer le src par le vrai logo du BCSO que tu mettras dans public/images/ -->
+        <img src="/images/logo-bcso.png" alt="Logo BCSO" style="width: 120px; margin-bottom: 20px;" onerror="this.style.display='none'">
+        
+        <h2>MDTC SYSTEM</h2>
+        <p>Accès restreint au personnel autorisé</p>
+
+        <!-- Affichage conditionnel des erreurs -->
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-msg" style="display: block;">
+                <% if (error === 'AccessDenied') { %>
+                    Accès refusé. Vous n'avez pas les habilitations requises.
+                <% } else if (error === 'NotOnServer') { %>
+                    Erreur de vérification. Êtes-vous présent sur le serveur Discord ?
+                <% } else { %>
+                    Une erreur est survenue lors de l'authentification.
+                <% } %>
+            </div>
+        <% } %>
+
+        <a href="/auth/discord" class="discord-btn">
+            Connexion via Discord
+        </a>
+    </div>
+
+</body>
+</html>
