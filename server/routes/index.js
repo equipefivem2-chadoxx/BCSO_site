@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// Route d'accueil
 router.get('/', (req, res) => {
-    res.render('home', { title: 'BCSO Archives' });
+    res.render('home');
 });
 
 module.exports = router;
