@@ -1,66 +1,68 @@
-:root {
-    --bg: #050505;
-    --card: #0d0d0d;
-    --gold: #c5a059;
-    --border: rgba(197, 160, 89, 0.3);
-}
-
 body {
-    background-color: var(--bg);
-    color: #fff;
-    font-family: 'Segoe UI', Roboto, sans-serif;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* Petit effet de fond subtil */
-    background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #050505 100%);
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
 }
 
 .container {
-    background: var(--card);
-    padding: 3rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-    text-align: center;
-    width: 320px;
-    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
 }
 
-.logo { 
-    width: 100px; 
-    margin-bottom: 20px; 
-    filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.2));
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 40px;
 }
 
-h1 { 
-    color: var(--gold); 
-    font-size: 1.5rem; 
-    letter-spacing: 4px; 
-    text-transform: uppercase;
-    margin: 0 0 25px 0;
-    font-weight: 300;
+.logo {
+    width: 60px;
+    height: 60px;
 }
 
-.btn-login {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    background: transparent;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    text-decoration: none;
-    font-size: 0.9rem;
-    text-transform: uppercase;
+h1 {
+    font-size: 32px;
     letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.4s ease;
 }
 
-.btn-login:hover {
-    background: var(--gold);
-    color: #000;
-    box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+.card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.card h2 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #94a3b8;
+}
+
+.btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    background: #1d4ed8;
+}
+
+.footer {
+    margin-top: 40px;
+    color: #64748b;
+    font-size: 12px;
 }
