@@ -1,0 +1,44 @@
+<style>
+    .error-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+        text-align: center;
+    }
+    .error-container h1 {
+        font-size: 80px;
+        color: #d4af37;
+        margin: 0;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+    .error-container h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .error-container p {
+        color: #9ca3af;
+        margin-bottom: 30px;
+    }
+    .btn-return {
+        background-color: var(--bg-panel);
+        border: 1px solid var(--border-color);
+        color: var(--text-light);
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-return:hover {
+        border-color: #d4af37;
+        color: #d4af37;
+    }
+</style>
+
+<div class="error-container">
+    <h1>404</h1>
+    <h2>Zone Restreinte ou Introuvable</h2>
+    <p>Le document ou l'archive que vous cherchez n'existe pas dans la base de données du BCSO.</p>
+    <a href="/dashboard" class="btn-return"><i class="fas fa-arrow-left"></i> Retour au Dashboard</a>
+</div>
