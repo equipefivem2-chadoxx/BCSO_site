@@ -1,43 +1,131 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0b1220;
-    color: white;
+:root {
+    --bg-dark: #070707;
+    --gold-primary: #c5a059;
+    --gold-hover: #e8c678;
+    --card-bg: rgba(15, 15, 15, 0.85);
+    --border-glass: rgba(197, 160, 89, 0.15);
+    --text-main: #e0e0e0;
+    --text-muted: #888888;
 }
 
-.center {
-    height: 100vh;
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at center, #141414 0%, #070707 100%);
+    color: var(--text-main);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
+}
+
+/* --- SECTION CENTRALE (HERO) --- */
+.main-content {
+    flex: 1;
+    display: flex;
     justify-content: center;
     align-items: center;
+    padding-bottom: 80px; /* Espace pour la navbar en bas */
+}
+
+.hero-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 3rem 4rem;
     text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    max-width: 500px;
 }
 
-.logo {
-    width: 120px;
-    margin-bottom: 20px;
-}
-
-h1 {
-    font-size: 40px;
+.hero-card h1 {
+    color: var(--gold-primary);
+    font-size: 2rem;
+    text-transform: uppercase;
     letter-spacing: 3px;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-weight: 400;
 }
 
-p {
-    color: #94a3b8;
+.subtitle {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
 }
 
-.btn {
-    margin-top: 20px;
-    padding: 12px 18px;
-    background: #2563eb;
-    color: white;
+/* --- BOUTON PREMIUM --- */
+.btn-premium {
+    display: inline-block;
+    padding: 14px 35px;
+    background: transparent;
+    color: var(--gold-primary);
+    border: 1px solid var(--gold-primary);
+    border-radius: 4px;
     text-decoration: none;
-    border-radius: 8px;
-    transition: 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-.btn:hover {
-    background: #1d4ed8;
+.btn-premium:hover {
+    background: var(--gold-primary);
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
+}
+
+/* --- BARRE DE NAVIGATION EN BAS --- */
+.bottom-navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(5, 5, 5, 0.95);
+    border-top: 1px solid var(--border-glass);
+    backdrop-filter: blur(15px);
+    z-index: 1000;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 30px;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-logo {
+    height: 35px;
+}
+
+.nav-title {
+    color: var(--gold-primary);
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--gold-primary);
 }

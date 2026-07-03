@@ -2,25 +2,17 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>BCSO Archives</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%- title || 'Dashboard' %></title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <!-- Le contenu de la page s'injectera ici -->
+    <main class="main-content">
+        <%- body %>
+    </main>
 
-<div class="app">
-
-    <% include ../partials/sidebar %>
-
-    <div class="content">
-        <% include ../partials/header %>
-
-        <div class="page">
-            <%- body %>
-        </div>
-
-    </div>
-
-</div>
-
+    <!-- Inclusion de la barre de navigation -->
+    <%- include('../partials/header') %>
 </body>
 </html>
