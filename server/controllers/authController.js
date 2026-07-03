@@ -11,7 +11,11 @@ exports.loginPage = (req, res) => {
 
 exports.loginDiscord = (req, res) => {
     const clientId = process.env.DISCORD_CLIENT_ID;
-    const redirectUri = encodeURIComponent(process.env.DISCORD_CALLBACK_URL);
+    
+    // ⚠️ L'URL en dur pour contourner les bugs de formatage des variables sur Railway
+    const rawUrl = "https://bcso-noface.up.railway.app/auth/discord/callback";
+    const redirectUri = encodeURIComponent(rawUrl);
+    
     // Scopes importants : identify (profil basique) + guilds.members.read (pour lire ses rôles)
     const url = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds.members.read`;
     res.redirect(url);
@@ -22,13 +26,16 @@ exports.callbackDiscord = async (req, res) => {
         const code = req.query.code;
         if (!code) return res.redirect('/auth/login?error=NoCode');
 
+        // ⚠️ Il faut utiliser EXACTEMENT la même URL en dur ici pour la validation du token
+        const rawUrl = "https://bcso-noface.up.railway.app/auth/discord/callback";
+
         // 1. Échanger le code contre un Token d'accès
         const params = new URLSearchParams();
         params.append('client_id', process.env.DISCORD_CLIENT_ID);
         params.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
         params.append('grant_type', 'authorization_code');
         params.append('code', code);
-        params.append('redirect_uri', process.env.DISCORD_CALLBACK_URL);
+        params.append('redirect_uri', rawUrl); // On passe l'URL propre ici
 
         const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', params, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -47,7 +54,9 @@ exports.callbackDiscord = async (req, res) => {
 
         // 3. Attribution des accès selon le rôle Discord
         let systemRole = null;
-        if (userRoles.includes(process.env.ROLE_ADMIN_ID)) {
+        
+        // Le rôle Capitaine est reconnu comme le vrai lead et obtient les droits d'administration
+        if (userRoles.includes(process.env.ROLE_CAPTAIN_ID) || userRoles.includes(process.env.ROLE_ADMIN_ID)) {
             systemRole = 'admin';
         } else if (userRoles.includes(process.env.ROLE_OFFICER_ID)) {
             systemRole = 'officer';
