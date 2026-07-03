@@ -1,73 +1,220 @@
 <style>
-    /* Scoping strict pour éviter les conflits avec ton ancien style.css */
-    #bcso-dashboard-container {
-        padding-bottom: 70px; /* Laisse de la place pour la barre du bas */
-        max-width: 1200px;
-        margin: 0 auto;
+    /* 🎨 DESIGN MASTERCLASS - PREMIUM MDT */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .header-panel {
+
+    #bcso-dashboard-container {
+        padding-bottom: 70px;
+        max-width: 1400px;
+        margin: 0 auto;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* BANNIÈRE DE BIENVENUE */
+    .master-header {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #111827 0%, #05070b 100%);
+        padding: 35px 40px;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: linear-gradient(90deg, rgba(17,24,39,1) 0%, rgba(11,15,25,0) 100%);
-        padding: 20px 30px;
-        border-radius: 8px;
-        border-left: 4px solid #d4af37;
-        margin-bottom: 40px;
     }
-    .header-panel h2 { margin: 0; font-size: 24px; font-weight: 500; }
-    .badge-admin {
-        background-color: rgba(212, 175, 55, 0.1);
-        color: #d4af37;
-        padding: 8px 16px;
-        border-radius: 4px;
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        font-weight: bold;
+
+    .master-header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 4px; height: 100%;
+        background: linear-gradient(to bottom, #d4af37, #f3e5ab);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    }
+
+    .welcome-text h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #f3f4f6;
+    }
+    .welcome-text p {
+        margin: 5px 0 0 0;
+        color: #9ca3af;
+        font-size: 14px;
+        text-transform: uppercase;
         letter-spacing: 2px;
     }
+
+    .badge-premium {
+        background: rgba(212, 175, 55, 0.1);
+        color: #d4af37;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        font-weight: 700;
+        letter-spacing: 2px;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        backdrop-filter: blur(5px);
+    }
+
+    /* GRILLE DES STATISTIQUES (KPIs) */
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
+        gap: 30px;
         margin-bottom: 40px;
     }
+
     .kpi-card {
-        background-color: #111827;
-        border: 1px solid #1f2937;
-        padding: 25px;
-        border-radius: 8px;
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 30px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
+
+    .kpi-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(212, 175, 55, 0.3);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.1);
+    }
+
+    .kpi-card::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; width: 100px; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02));
+        transform: skewX(-20deg) translateX(150px);
+        transition: 0.5s;
+    }
+
+    .kpi-card:hover::after {
+        transform: skewX(-20deg) translateX(-150px);
+    }
+
     .kpi-icon {
-        font-size: 30px;
-        margin-right: 20px;
+        font-size: 35px;
+        margin-right: 25px;
         padding: 15px;
-        border-radius: 8px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px; height: 40px;
     }
-    .kpi-data h3 { margin: 0; font-size: 13px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
-    .kpi-data p { margin: 5px 0 0 0; font-size: 28px; font-weight: bold; color: #fff; }
+
+    .kpi-data h3 { margin: 0; font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; }
+    .kpi-data p { margin: 8px 0 0 0; font-size: 32px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+    /* SECTION ACTIVITÉ RÉCENTE */
+    .recent-section {
+        background: rgba(17, 24, 39, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+    }
+
+    .recent-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+    .recent-header h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #e5e7eb;
+        letter-spacing: 1px;
+    }
+
+    .empty-pulse {
+        text-align: center;
+        padding: 50px 0;
+        color: #6b7280;
+    }
+
+    .empty-pulse i {
+        font-size: 40px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.1); opacity: 0.6; }
+        100% { transform: scale(1); opacity: 0.3; }
+    }
 </style>
 
 <div id="bcso-dashboard-container">
-    <div class="header-panel">
-        <h2>Bienvenue, <%= user ? user.username : 'Officier' %></h2>
-        <span class="badge-admin"><i class="fas fa-star"></i> <%= user ? user.role.toUpperCase() : 'UTILISATEUR' %></span>
+    
+    <div class="master-header">
+        <div class="welcome-text">
+            <h2>Bienvenue, <%= user ? user.username : 'Agent' %></h2>
+            <p>Système Centralisé du Blaine County Sheriff Office</p>
+        </div>
+        <span class="badge-premium"><i class="fas fa-shield-alt"></i> <%= user ? user.role.toUpperCase() : 'ACCÈS SÉCURISÉ' %></span>
     </div>
 
     <div class="kpi-grid">
+        <!-- Tickers en cours (Sera relié à l'API du Bot Discord) -->
         <div class="kpi-card">
-            <div class="kpi-icon" style="color: #60a5fa; background-color: rgba(96, 165, 250, 0.1);"><i class="fas fa-ticket-alt"></i></div>
-            <div class="kpi-data"><h3>Tickets Traités</h3><p>0</p></div>
+            <div class="kpi-icon" style="color: #60a5fa; background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.2);">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div class="kpi-data">
+                <h3>Tickets en cours</h3>
+                <p>0</p>
+            </div>
         </div>
+
+        <!-- Rapports Validés (Sera relié à la DB MongoDB) -->
         <div class="kpi-card">
-            <div class="kpi-icon" style="color: #ef4444; background-color: rgba(239, 68, 68, 0.1);"><i class="fas fa-gavel"></i></div>
-            <div class="kpi-data"><h3>Opérations</h3><p>0</p></div>
+            <div class="kpi-icon" style="color: #d4af37; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.2);">
+                <i class="fas fa-file-signature"></i>
+            </div>
+            <div class="kpi-data">
+                <h3>Rapports Validés</h3>
+                <p>0</p>
+            </div>
         </div>
+
+        <!-- Effectifs (Optionnel pour le moment) -->
         <div class="kpi-card">
-            <div class="kpi-icon" style="color: #d4af37; background-color: rgba(212, 175, 55, 0.1);"><i class="fas fa-folder"></i></div>
-            <div class="kpi-data"><h3>Rapports Validés</h3><p>0</p></div>
+            <div class="kpi-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="kpi-data">
+                <h3>Agents en Service</h3>
+                <p>0</p>
+            </div>
         </div>
     </div>
+
+    <div class="recent-section">
+        <div class="recent-header">
+            <h3><i class="fas fa-satellite-dish" style="color: #d4af37;"></i> Flux de données en direct</h3>
+            <span style="font-size: 12px; color: #9ca3af;"><i class="fas fa-circle" style="color: #10b981; font-size: 8px;"></i> Sync active</span>
+        </div>
+        <div class="empty-pulse">
+            <i class="fas fa-database"></i>
+            <p>En attente des transmissions du Bot Discord...</p>
+        </div>
+    </div>
+
 </div>
