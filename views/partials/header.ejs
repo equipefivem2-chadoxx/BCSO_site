@@ -1,10 +1,29 @@
-<nav class="bottom-navbar">
-    <div class="nav-brand">
-        <img src="/images/bcso.png" alt="Logo" class="nav-icon" onerror="this.style.display='none'">
-        <span>BCSO INTRANET</span>
-    </div>
-    <div class="nav-links">
-        <a href="/">Accueil</a>
-        <a href="/dashboard">Archives</a>
-    </div>
-</nav>
+<style>
+    .bcso-bottom-bar {
+        position: fixed;
+        bottom: 0;
+        left: 260px; /* Laisse la place à la sidebar */
+        right: 0;
+        height: 50px;
+        background-color: #0a0e17;
+        border-top: 1px solid rgba(212, 175, 55, 0.2); /* Ligne dorée */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        z-index: 20;
+        color: #6b7280;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .brand-text {
+        color: #d4af37;
+        font-weight: bold;
+    }
+</style>
+
+<div class="bcso-bottom-bar">
+    <div><i class="fas fa-shield-alt"></i> <span class="brand-text">BCSO INTRANET</span> - Réseau Sécurisé</div>
+    <div>Statut : <span style="color: #10b981;">Connecté</span> | Session chiffrée</div>
+</div>

@@ -1,146 +1,73 @@
 <style>
-    /* Styles modulaires spécifiques au Dashboard */
-    .dashboard-header {
+    /* Scoping strict pour éviter les conflits avec ton ancien style.css */
+    #bcso-dashboard-container {
+        padding-bottom: 70px; /* Laisse de la place pour la barre du bas */
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .header-panel {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 15px;
-    }
-
-    .dashboard-header h2 {
-        margin: 0;
-        font-size: 28px;
-        font-weight: 600;
-        letter-spacing: 1px;
-    }
-
-    .role-badge {
-        background-color: rgba(212, 175, 55, 0.15); /* Fond doré léger */
-        color: #d4af37; /* Texte doré premium */
-        padding: 6px 12px;
-        border-radius: 4px;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: 14px;
-        letter-spacing: 1px;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
+        background: linear-gradient(90deg, rgba(17,24,39,1) 0%, rgba(11,15,25,0) 100%);
+        padding: 20px 30px;
+        border-radius: 8px;
+        border-left: 4px solid #d4af37;
         margin-bottom: 40px;
     }
-
-    .stat-card {
-        background-color: var(--bg-panel);
-        border: 1px solid var(--border-color);
+    .header-panel h2 { margin: 0; font-size: 24px; font-weight: 500; }
+    .badge-admin {
+        background-color: rgba(212, 175, 55, 0.1);
+        color: #d4af37;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+    .kpi-card {
+        background-color: #111827;
+        border: 1px solid #1f2937;
+        padding: 25px;
         border-radius: 8px;
-        padding: 20px;
         display: flex;
         align-items: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease, border-color 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
-
-    .stat-card:hover {
-        transform: translateY(-3px);
-        border-color: #d4af37; /* Effet hover doré */
-    }
-
-    .stat-icon {
-        font-size: 32px;
-        color: var(--accent-blue);
+    .kpi-icon {
+        font-size: 30px;
         margin-right: 20px;
-        background-color: rgba(37, 99, 235, 0.1);
         padding: 15px;
         border-radius: 8px;
     }
-
-    .stat-info h3 {
-        margin: 0;
-        font-size: 14px;
-        color: #9ca3af;
-        text-transform: uppercase;
-    }
-
-    .stat-info .stat-number {
-        margin: 5px 0 0 0;
-        font-size: 24px;
-        font-weight: bold;
-        color: var(--text-light);
-    }
-
-    .recent-activity {
-        background-color: var(--bg-panel);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 20px;
-    }
-
-    .recent-activity h3 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        font-size: 18px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 10px;
-    }
-
-    .empty-state {
-        text-align: center;
-        color: #6b7280;
-        font-style: italic;
-        padding: 30px 0;
-    }
+    .kpi-data h3 { margin: 0; font-size: 13px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
+    .kpi-data p { margin: 5px 0 0 0; font-size: 28px; font-weight: bold; color: #fff; }
 </style>
 
-<div class="dashboard-header">
-    <!-- On utilise la variable "user" injectée via la session dans app.js -->
-    <h2>Bienvenue, <%= user ? user.username : 'Officier' %></h2>
-    
-    <!-- Affichage dynamique du rôle -->
-    <span class="role-badge"><i class="fas fa-id-badge"></i> <%= user ? user.role : 'Utilisateur' %></span>
-</div>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon" style="color: #10b981; background-color: rgba(16, 185, 129, 0.1);">
-            <i class="fas fa-ticket-alt"></i>
-        </div>
-        <div class="stat-info">
-            <h3>Tickets Traités</h3>
-            <p class="stat-number">0</p>
-        </div>
+<div id="bcso-dashboard-container">
+    <div class="header-panel">
+        <h2>Bienvenue, <%= user ? user.username : 'Officier' %></h2>
+        <span class="badge-admin"><i class="fas fa-star"></i> <%= user ? user.role.toUpperCase() : 'UTILISATEUR' %></span>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-icon" style="color: #ef4444; background-color: rgba(239, 68, 68, 0.1);">
-            <i class="fas fa-gavel"></i>
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="color: #60a5fa; background-color: rgba(96, 165, 250, 0.1);"><i class="fas fa-ticket-alt"></i></div>
+            <div class="kpi-data"><h3>Tickets Traités</h3><p>0</p></div>
         </div>
-        <div class="stat-info">
-            <h3>Opérations</h3>
-            <p class="stat-number">0</p>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="color: #ef4444; background-color: rgba(239, 68, 68, 0.1);"><i class="fas fa-gavel"></i></div>
+            <div class="kpi-data"><h3>Opérations</h3><p>0</p></div>
         </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon" style="color: #f59e0b; background-color: rgba(245, 158, 11, 0.1);">
-            <i class="fas fa-folder-open"></i>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="color: #d4af37; background-color: rgba(212, 175, 55, 0.1);"><i class="fas fa-folder"></i></div>
+            <div class="kpi-data"><h3>Rapports Validés</h3><p>0</p></div>
         </div>
-        <div class="stat-info">
-            <h3>Rapports</h3>
-            <p class="stat-number">0</p>
-        </div>
-    </div>
-</div>
-
-<div class="recent-activity">
-    <h3><i class="fas fa-history"></i> Activité Récente</h3>
-    <div class="empty-state">
-        <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
-        Aucune archive transmise par le système central pour le moment. En attente de synchronisation avec les serveurs d'intervention.
     </div>
 </div>

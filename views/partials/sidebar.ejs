@@ -1,7 +1,51 @@
-<div class="sidebar">
-    <img src="/images/bcso.png" class="logo">
+<style>
+    .bcso-sidebar {
+        width: 260px;
+        background-color: #05070b; /* Noir profond */
+        border-right: 1px solid #1f2937;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0;
+        z-index: 10;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+    }
+    .sidebar-logo {
+        width: 120px; /* Force la taille pour éviter le logo géant */
+        margin-bottom: 20px;
+        filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));
+    }
+    .sidebar-nav {
+        width: 100%;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    .nav-item {
+        color: #9ca3af;
+        text-decoration: none;
+        padding: 15px 30px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .nav-item:hover, .nav-item.active {
+        background-color: rgba(212, 175, 55, 0.05); /* Effet doré subtil */
+        color: #d4af37; /* Or premium */
+        border-left: 3px solid #d4af37;
+    }
+</style>
 
-    <a href="/">Home</a>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/tickets">Tickets</a>
-</div>
+<aside class="bcso-sidebar">
+    <img src="/images/bcso.png" alt="BCSO Logo" class="sidebar-logo">
+    
+    <div class="sidebar-nav">
+        <a href="/dashboard" class="nav-item active"><i class="fas fa-home"></i> Vue d'ensemble</a>
+        <a href="/archives" class="nav-item"><i class="fas fa-folder-open"></i> Base de Données</a>
+        <a href="#" class="nav-item"><i class="fas fa-users"></i> Effectifs</a>
+    </div>
+</aside>
