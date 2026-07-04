@@ -57,4 +57,29 @@ router.post('/ajouter', async (req, res) => {
     }
 });
 
+// 3. Supprimer un agent
+router.post('/supprimer/:id', async (req, res) => {
+    try {
+        await Agent.findByIdAndDelete(req.params.id);
+        res.redirect('/admin');
+    } catch (error) {
+        console.error('Erreur de suppression:', error);
+        res.redirect('/admin');
+    }
+});
+
+// 4. Modifier un agent
+router.post('/modifier/:id', async (req, res) => {
+    try {
+        const { prenom, nom, matricule, grade, discordId } = req.body;
+        await Agent.findByIdAndUpdate(req.params.id, {
+            prenom, nom, matricule, grade, discordId
+        });
+        res.redirect('/admin');
+    } catch (error) {
+        console.error('Erreur de modification:', error);
+        res.redirect('/admin');
+    }
+});
+
 module.exports = router;
