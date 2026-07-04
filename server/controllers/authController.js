@@ -67,10 +67,13 @@ exports.callbackDiscord = async (req, res) => {
             return res.redirect('/auth/login?error=AccessDenied');
         }
 
-        // 4. Sauvegarde dans la session
+        // 🚀 4. Sauvegarde dans la session (Avec gestion du pseudo serveur)
+        // S'il n'y a pas de rename sur le serveur (nick), on se rabat sur le pseudo global, puis classique.
+        const serverNickname = memberResponse.data.nick || userInfo.global_name || userInfo.username;
+
         req.session.user = {
             id: userInfo.id,
-            username: userInfo.username,
+            username: serverNickname,
             avatar: userInfo.avatar,
             role: systemRole
         };

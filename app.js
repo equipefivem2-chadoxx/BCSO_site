@@ -2,10 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
-const expressLayouts = require('express-ejs-layouts'); // <-- Ajout du module
+const expressLayouts = require('express-ejs-layouts');
+const connectDB = require('./database/config'); // 🧱 Import du module de Base de Données
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// 🚀 Initialisation de la Base de Données MongoDB
+connectDB();
 
 // 1. Configuration du moteur de rendu (EJS)
 app.set('view engine', 'ejs');
@@ -13,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Configuration du Layout EJS
 app.use(expressLayouts);
-app.set('layout', 'layouts/main'); // Pointe vers views/layouts/main.ejs
+app.set('layout', 'layouts/main');
 
 // 2. Middlewares natifs
 app.use(express.static(path.join(__dirname, 'public')));
