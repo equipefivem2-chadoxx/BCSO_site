@@ -3,10 +3,8 @@ const router = express.Router();
 
 // Importation des sous-routeurs (Modularité stricte)
 const authRoutes = require('./auth');
-// const apiDiscordRoutes = require('./discord');
-// const archivesRoutes = require('./archives');
+const adminRoutes = require('./admin'); // Futur routeur modulaire pour l'admin
 
-// Route d'accueil basique (Redirige vers le dashboard si connecté, sinon login)
 router.get('/', (req, res) => {
     if (req.session.user) {
         res.redirect('/dashboard');
@@ -16,23 +14,31 @@ router.get('/', (req, res) => {
 });
 
 // Page Dashboard (Protégée)
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
-    // On passe un titre propre pour le layout main.ejs
+    let agentsCount = 0;
+    try {
+        // Comptage dynamique depuis MongoDB
+        const Agent = require('../models/Agent');
+        agentsCount = await Agent.countDocuments();
+    } catch (err) {
+        // Sécurité : si le modèle crash ou n'existe pas encore, on renvoie 0
+        console.log('Attente de la création de la collection Agent...');
+    }
+    
     res.render('pages/dashboard', { 
-        title: 'BCSO - Dashboard Principal' 
+        title: 'BCSO - Dashboard Principal',
+        agentsCount: agentsCount // On envoie le vrai chiffre à la page EJS
     });
 });
 
 // Connexion des modules
 router.use('/auth', authRoutes);
-// router.use('/api/discord', apiDiscordRoutes);
-// router.use('/archives', archivesRoutes);
+router.use('/admin', adminRoutes); // Connexion de la route sécurisée
 
 // Gestion de la 404
 router.use((req, res) => {
-    // Si tu crées une page 404.ejs plus tard, ajoute { layout: false } si tu ne veux pas la sidebar
     res.status(404).render('pages/404', { 
         message: 'Page introuvable',
         title: '404 - Introuvable'

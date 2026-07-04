@@ -1,7 +1,7 @@
 <style>
     .bcso-sidebar {
         width: 260px;
-        background-color: #05070b; /* Noir profond */
+        background-color: #05070b;
         border-right: 1px solid #1f2937;
         display: flex;
         flex-direction: column;
@@ -11,7 +11,7 @@
         box-shadow: 4px 0 15px rgba(0,0,0,0.5);
     }
     .sidebar-logo {
-        width: 120px; /* Force la taille pour éviter le logo géant */
+        width: 120px;
         margin-bottom: 20px;
         filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.6));
     }
@@ -34,8 +34,8 @@
         gap: 15px;
     }
     .nav-item:hover, .nav-item.active {
-        background-color: rgba(212, 175, 55, 0.05); /* Effet doré subtil */
-        color: #d4af37; /* Or premium */
+        background-color: rgba(212, 175, 55, 0.05);
+        color: #d4af37;
         border-left: 3px solid #d4af37;
     }
 </style>
@@ -47,5 +47,12 @@
         <a href="/dashboard" class="nav-item active"><i class="fas fa-home"></i> Vue d'ensemble</a>
         <a href="/archives" class="nav-item"><i class="fas fa-folder-open"></i> Base de Données</a>
         <a href="#" class="nav-item"><i class="fas fa-users"></i> Effectifs</a>
+        
+        <!-- Affichage conditionnel de l'onglet Administration -->
+        <% if (user && (user.role === 'admin' || user.id === '1247264549489610897')) { %>
+            <a href="/admin" class="nav-item" style="color: #d4af37; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 10px; padding-top: 20px;">
+                <i class="fas fa-cogs"></i> Administration
+            </a>
+        <% } %>
     </div>
 </aside>

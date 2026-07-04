@@ -1,0 +1,210 @@
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: 50px;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .admin-header {
+        background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(11, 15, 25, 0) 100%);
+        padding: 25px 30px;
+        border-left: 4px solid #d4af37;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .admin-header h2 { margin: 0; font-size: 24px; font-weight: 600; color: #fff; }
+    .admin-header p { margin: 5px 0 0 0; color: #9ca3af; font-size: 14px; }
+
+    /* LAYOUT EN DEUX COLONNES */
+    .admin-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 30px;
+    }
+
+    /* FORMULAIRE PREMIUM */
+    .form-panel, .list-panel {
+        background: rgba(17, 24, 39, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 30px;
+    }
+
+    .panel-title {
+        color: #d4af37;
+        font-size: 18px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 10px;
+    }
+
+    .input-group { margin-bottom: 20px; }
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #9ca3af;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        background-color: #0b0f19;
+        border: 1px solid #1f2937;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #d4af37;
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: rgba(212, 175, 55, 0.1);
+        color: #d4af37;
+        border: 1px solid #d4af37;
+        border-radius: 6px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .btn-submit:hover {
+        background-color: #d4af37;
+        color: #000;
+    }
+
+    /* TABLEAU DES EFFECTIFS */
+    .agents-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .agents-table th {
+        text-align: left;
+        padding: 15px;
+        color: #9ca3af;
+        font-size: 12px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #1f2937;
+    }
+    .agents-table td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.02);
+        color: #e5e7eb;
+        font-size: 14px;
+    }
+    .badge-grade {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>
+
+<div id="admin-container">
+    <div class="admin-header">
+        <h2><i class="fas fa-cogs"></i> Haut Commandement</h2>
+        <p>Interface sécurisée de gestion des effectifs et des accréditations.</p>
+    </div>
+
+    <div class="admin-grid">
+        <!-- COLONNE GAUCHE : AJOUTER UN AGENT -->
+        <div class="form-panel">
+            <h3 class="panel-title"><i class="fas fa-user-plus"></i> Accréditer un Agent</h3>
+            
+            <form action="/admin/ajouter" method="POST">
+                <div class="input-group">
+                    <label>Prénom de l'agent</label>
+                    <input type="text" name="prenom" class="form-control" placeholder="Ex: John" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Nom de l'agent</label>
+                    <input type="text" name="nom" class="form-control" placeholder="Ex: Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Matricule</label>
+                    <input type="text" name="matricule" class="form-control" placeholder="Ex: 01" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Grade Officiel</label>
+                    <select name="grade" class="form-control" required>
+                        <option value="Admin">Admin</option>
+                        <option value="Sheriff">Sheriff</option>
+                        <option value="Lieutenant">Lieutenant</option>
+                        <option value="Sergeant Chef">Sergeant Chef</option>
+                        <option value="Sergeant II">Sergeant II</option>
+                        <option value="Sergeant I">Sergeant I</option>
+                        <option value="SLO">SLO</option>
+                        <option value="Deputy III">Deputy III</option>
+                        <option value="Deputy II">Deputy II</option>
+                        <option value="Deputy I">Deputy I</option>
+                        <option value="Deputy Junior">Deputy Junior</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>ID Discord (Optionnel)</label>
+                    <input type="text" name="discordId" class="form-control" placeholder="ID Discord pour la liaison">
+                </div>
+
+                <button type="submit" class="btn-submit"><i class="fas fa-check"></i> Valider l'accréditation</button>
+            </form>
+        </div>
+
+        <!-- COLONNE DROITE : LISTE DES AGENTS -->
+        <div class="list-panel">
+            <h3 class="panel-title"><i class="fas fa-list"></i> Effectifs Enregistrés</h3>
+            
+            <% if (agents && agents.length > 0) { %>
+                <table class="agents-table">
+                    <thead>
+                        <tr>
+                            <th>Matricule</th>
+                            <th>Identité</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% agents.forEach(function(agent) { %>
+                            <tr>
+                                <td style="color: #d4af37; font-weight: bold;">[<%= agent.matricule %>]</td>
+                                <td><%= agent.prenom %> <%= agent.nom %></td>
+                                <td><span class="badge-grade"><%= agent.grade %></span></td>
+                                <td>
+                                    <!-- Plus tard, on pourra ajouter des boutons de modification/suppression ici -->
+                                    <i class="fas fa-shield-check" style="color: #10b981;"></i> Actif
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <div style="text-align: center; color: #6b7280; padding: 40px 0;">
+                    <i class="fas fa-user-slash" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p>Aucun agent accrédité dans la base de données.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
