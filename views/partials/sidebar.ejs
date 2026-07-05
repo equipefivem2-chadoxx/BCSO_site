@@ -52,6 +52,9 @@
         <a href="/archives" class="nav-item"><i class="fas fa-folder-open"></i> Base de Données</a>
         <a href="/effectifs" class="nav-item"><i class="fas fa-users"></i> Effectifs</a>
         
+        <a href="/formations" class="nav-item"><i class="fas fa-graduation-cap"></i> Formations</a>
+        <a href="/documents" class="nav-item"><i class="fas fa-file-signature"></i> Documents</a>
+        
         <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true)) { %>
             <a href="/admin" class="nav-item" style="color: #d4af37; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 10px; padding-top: 20px;">
                 <i class="fas fa-cogs"></i> Administration

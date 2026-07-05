@@ -1,0 +1,81 @@
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .dev-container { 
+        max-width: 800px; 
+        margin: 60px auto; 
+        padding: 40px; 
+        background: #0f172a; 
+        border: 1px solid #1e293b; 
+        border-radius: 12px; 
+        text-align: center; 
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        animation: fadeIn 0.4s ease-out; 
+    }
+    .dev-icon {
+        font-size: 4rem;
+        color: #d4af37;
+        margin-bottom: 20px;
+    }
+    .dev-container h1 {
+        color: #d4af37;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-size: 1.8rem;
+    }
+    .dev-container p {
+        color: #94a3b8;
+        font-size: 1rem;
+        margin-bottom: 25px;
+    }
+    .progress-bar-container {
+        background: #05070b;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        padding: 4px;
+        margin-bottom: 30px;
+    }
+    .progress-bar {
+        background: linear-gradient(90deg, #bfa030 0%, #d4af37 100%);
+        height: 12px;
+        border-radius: 10px;
+        width: 15%; /* Pourcentage d'avancement factice */
+        transition: width 0.5s ease-in-out;
+    }
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid #d4af37;
+        color: #d4af37;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        transition: all 0.3s;
+    }
+    .btn-back:hover {
+        background: #d4af37;
+        color: #05070b;
+    }
+</style>
+
+<div class="dev-container">
+    <div class="dev-icon">
+        <i class="fas fa-file-signature"></i>
+    </div>
+    <h1>Module Documents & Procédures</h1>
+    <p>Cette section centralisera l'ensemble des codes, lois, procédures internes et mandats officiels du BCSO. Elle est actuellement en cours de développement par le Haut Commandement.</p>
+    
+    <div style="text-align: left; margin-bottom: 8px; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">
+        Maquettage de l'interface : 15%
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" style="width: 15%;"></div>
+    </div>
+
+    <a href="/dashboard" class="btn-back"><i class="fas fa-arrow-left"></i> Retour au tableau de bord</a>
+</div>

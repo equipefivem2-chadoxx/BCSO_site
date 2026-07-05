@@ -22,7 +22,7 @@ router.get('/dashboard', async (req, res) => {
     let agentsCount = 0;
     let ticketsArchivesCount = 0;
     let ticketsEnCoursCount = 0;
-    let recentTickets = []; // 🚀 Variable pour le flux en direct
+    let recentTickets = []; 
 
     try {
         const Agent = require('../models/Agent');
@@ -31,15 +31,12 @@ router.get('/dashboard', async (req, res) => {
         const Ticket = require('../models/Ticket');
         ticketsArchivesCount = await Ticket.countDocuments();
         
-        // 🚀 Récupération des 5 dernières archives pour le Flux
         recentTickets = await Ticket.find({}).sort({ dateCreation: -1 }).limit(5);
     } catch (err) {
         console.log('Attente de la création des collections...');
     }
 
-    // Calcul des tickets en cours via Discord
     const { DISCORD_TOKEN, GUILD_ID } = process.env;
-    // 👇 ICI : Le bon ID de ta catégorie Discord
     const TICKET_CATEGORY_ID = "1427847738665472030"; 
     
     if (DISCORD_TOKEN && GUILD_ID) {
@@ -63,7 +60,25 @@ router.get('/dashboard', async (req, res) => {
         agentsCount: agentsCount,
         ticketsArchivesCount: ticketsArchivesCount,
         ticketsEnCoursCount: ticketsEnCoursCount,
-        recentTickets: recentTickets // 🚀 Envoi vers le dashboard.ejs
+        recentTickets: recentTickets 
+    });
+});
+
+// 🚀 NOUVEAU : Route pour la page Formations
+router.get('/formations', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/formations', { 
+        title: 'BCSO - Formations',
+        user: req.session.user
+    });
+});
+
+// 🚀 NOUVEAU : Route pour la page Documents
+router.get('/documents', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/documents', { 
+        title: 'BCSO - Documents',
+        user: req.session.user
     });
 });
 
