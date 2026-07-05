@@ -44,11 +44,10 @@
     <img src="/images/bcso.png" alt="BCSO Logo" class="sidebar-logo">
     
     <div class="sidebar-nav">
-        <a href="/dashboard" class="nav-item active"><i class="fas fa-home"></i> Vue d'ensemble</a>
+        <a href="/dashboard" class="nav-item"><i class="fas fa-home"></i> Vue d'ensemble</a>
         <a href="/archives" class="nav-item"><i class="fas fa-folder-open"></i> Base de Données</a>
         <a href="/effectifs" class="nav-item"><i class="fas fa-users"></i> Effectifs</a>
         
-        <!-- Affichage conditionnel de l'onglet Administration -->
         <% if (user && (user.role === 'admin' || user.id === '1247264549489610897')) { %>
             <a href="/admin" class="nav-item" style="color: #d4af37; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 10px; padding-top: 20px;">
                 <i class="fas fa-cogs"></i> Administration
@@ -56,3 +55,17 @@
         <% } %>
     </div>
 </aside>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const currentUrl = window.location.pathname; // Récupère l'URL actuelle (ex: /effectifs)
+        const navLinks = document.querySelectorAll('.nav-item'); // Cible tous les boutons
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active'); // Nettoie tout
+            if (link.getAttribute('href') === currentUrl) {
+                link.classList.add('active'); // Ajoute la couleur sur le bon bouton
+            }
+        });
+    });
+</script>

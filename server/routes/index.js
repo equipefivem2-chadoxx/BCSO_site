@@ -3,7 +3,8 @@ const router = express.Router();
 
 // Importation des sous-routeurs (Modularité stricte)
 const authRoutes = require('./auth');
-const adminRoutes = require('./admin'); // Futur routeur modulaire pour l'admin
+const adminRoutes = require('./admin'); 
+const effectifsRoutes = require('./effectifs'); // 🚀 AJOUTÉ : Importation du module Effectifs
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -35,7 +36,8 @@ router.get('/dashboard', async (req, res) => {
 
 // Connexion des modules
 router.use('/auth', authRoutes);
-router.use('/admin', adminRoutes); // Connexion de la route sécurisée
+router.use('/admin', adminRoutes);
+router.use('/effectifs', effectifsRoutes); // 🚀 AJOUTÉ : Connexion de la route Effectifs
 
 // Gestion de la 404
 router.use((req, res) => {
