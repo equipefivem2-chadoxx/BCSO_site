@@ -31,21 +31,24 @@
         <div class="total-badge"><i class="fas fa-users"></i> <%= (typeof total !== 'undefined') ? total : 0 %> AGENTS ACCRÉDITÉS</div>
     </div>
 
-    <% if (typeof effectifsTries !== 'undefined' && Object.keys(effectifsTries).length > 0) { 
-        Object.keys(effectifsTries).forEach((grade, index) => { 
-            const delay = index * 0.1; %>
-            
-            <div class="grade-section" style="animation-delay: <%= delay + 's' %>;">
+    <% 
+    if (typeof effectifsTries !== 'undefined' && Object.keys(effectifsTries).length > 0) {
+        let grades = Object.keys(effectifsTries);
+        for(let i = 0; i < grades.length; i++) {
+            let grade = grades[i];
+            let delay = i * 0.1;
+    %>
+            <div class="grade-section" style="animation-delay: <%= delay %>s;">
                 <h3 class="grade-title"><%= grade %></h3>
                 <div class="agents-grid">
-                    <% effectifsTries[grade].forEach(agent => { %>
+                    <% effectifsTries[grade].forEach(function(agent) { %>
                         <div class="agent-card">
                             <div class="card-header">
                                 <span class="matricule">[<%= agent.matricule %>]</span>
                                 <div class="status-dot"></div>
                             </div>
                             <div class="agent-name"><%= agent.prenom %> <%= agent.nom %></div>
-                            <% if (agent.discordId && agent.discordId.length > 0) { %>
+                            <% if (agent.discordId && agent.discordId.trim() !== '') { %>
                                 <div class="agent-discord"><i class="fab fa-discord"></i> Ligne Sécurisée active</div>
                             <% } else { %>
                                 <div class="agent-discord" style="color: #4b5563;"><i class="fas fa-unlink"></i> Non lié</div>
@@ -54,9 +57,10 @@
                     <% }); %>
                 </div>
             </div>
-            
-        <% }); 
-    } else { %>
+    <% 
+        }
+    } else { 
+    %>
         <div style="text-align: center; padding: 100px 0; color: #6b7280;">
             <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 20px; opacity: 0.3;"></i>
             <p>Les dossiers des effectifs sont actuellement vides.</p>
