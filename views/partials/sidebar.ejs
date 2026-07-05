@@ -9,6 +9,10 @@
         padding: 30px 0;
         z-index: 10;
         box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
     }
     .sidebar-logo {
         width: 120px;
@@ -48,7 +52,7 @@
         <a href="/archives" class="nav-item"><i class="fas fa-folder-open"></i> Base de Données</a>
         <a href="/effectifs" class="nav-item"><i class="fas fa-users"></i> Effectifs</a>
         
-        <% if (user && (user.role === 'admin' || user.id === '1247264549489610897')) { %>
+        <% if (user && (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true)) { %>
             <a href="/admin" class="nav-item" style="color: #d4af37; border-top: 1px solid rgba(212,175,55,0.2); margin-top: 10px; padding-top: 20px;">
                 <i class="fas fa-cogs"></i> Administration
             </a>
@@ -58,13 +62,13 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const currentUrl = window.location.pathname; // Récupère l'URL actuelle (ex: /effectifs)
-        const navLinks = document.querySelectorAll('.nav-item'); // Cible tous les boutons
+        const currentUrl = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-item');
         
         navLinks.forEach(link => {
-            link.classList.remove('active'); // Nettoie tout
+            link.classList.remove('active');
             if (link.getAttribute('href') === currentUrl) {
-                link.classList.add('active'); // Ajoute la couleur sur le bon bouton
+                link.classList.add('active');
             }
         });
     });

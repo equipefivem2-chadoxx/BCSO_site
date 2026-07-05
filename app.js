@@ -4,6 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
 const connectDB = require('./database/config'); // 🧱 Import du module de Base de Données
+const Agent = require('./server/models/Agent'); // 👮‍♂️ Import du modèle Agent pour la vérification globale
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,9 +33,27 @@ app.use(session({
     cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 } // 24 heures
 }));
 
-// 4. Injection des variables globales pour les vues EJS
-app.use((req, res, next) => {
+// 4. Injection des variables globales pour les vues EJS (Mise à jour avec vérification BDD)
+app.use(async (req, res, next) => {
+    // On initialise la variable locale avec l'utilisateur en session s'il existe
     res.locals.user = req.session.user || null;
+    
+    // Si l'utilisateur est connecté via Discord, on va chercher son statut en Base de Données
+    if (req.session.user) {
+        try {
+            const agentBDD = await Agent.findOne({ discordId: req.session.user.id });
+            if (agentBDD) {
+                // On injecte dynamiquement le statut 'isAdmin' de la BDD pour que EJS (sidebar) le lise
+                res.locals.user.isAdmin = agentBDD.isAdmin || false;
+            } else {
+                res.locals.user.isAdmin = false;
+            }
+        } catch (error) {
+            console.error('[BCSO MDT] 🔴 Erreur lors de la vérification Admin globale:', error);
+            res.locals.user.isAdmin = false;
+        }
+    }
+    
     next();
 });
 
