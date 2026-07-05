@@ -1,70 +1,103 @@
-<!-- Inclusion des bibliothèques de style (au cas où elles manquent dans ton layout) -->
+<!-- Inclusion des bibliothèques de style -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-    /* Design Premium BCSO */
+    /* Design Pro & Premium BCSO - Interface Gouvernementale */
     .bcso-page {
-        background-color: #05070b;
+        background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
         min-height: 100vh;
-        color: #e5e7eb;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #f8fafc;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
+    
     .bcso-card {
-        background-color: #111827;
-        border: 1px solid #1f2937;
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 12px;
-        transition: all 0.3s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
+    
     .bcso-card:hover {
-        border-color: rgba(212, 175, 55, 0.5);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        border-color: rgba(234, 179, 8, 0.4);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
         transform: translateY(-2px);
     }
-    .text-gold { color: #d4af37 !important; }
-    .bg-gold-light { background-color: rgba(212, 175, 55, 0.1) !important; }
-    .border-gold { border-left: 4px solid #d4af37 !important; }
+    
+    .card-header-custom {
+        background: rgba(15, 23, 42, 0.6);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px 12px 0 0;
+    }
+    
+    /* Couleurs personnalisées pour forcer la visibilité */
+    .text-gold { color: #eab308 !important; }
+    .bg-gold-light { background-color: rgba(234, 179, 8, 0.15) !important; }
+    .border-gold { border-left: 4px solid #eab308 !important; }
+    
+    /* LA CORRECTION DU TEXTE INVISIBLE EST ICI */
+    .text-readable { color: #cbd5e1 !important; line-height: 1.6; font-size: 0.95rem; }
     
     .article-title {
-        color: #f3f4f6;
-        font-size: 0.95rem;
+        color: #ffffff;
+        font-size: 1.05rem;
         letter-spacing: 0.5px;
-        border-bottom: 1px solid #1f2937;
-        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 8px;
         margin-bottom: 10px;
     }
+    
     .bcso-badge {
-        background: linear-gradient(45deg, #2a0808, #4a0f0f);
-        border: 1px solid #7f1d1d;
+        background: linear-gradient(145deg, #3f0f0f, #1a0505);
+        border: 1px solid #991b1b;
         color: #fca5a5;
+        transition: all 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    }
+    
+    .bcso-badge:hover {
+        background: linear-gradient(145deg, #7f1d1d, #450a0a);
+        color: #ffffff;
+        transform: scale(1.03);
+    }
+
+    .icon-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
     }
 </style>
 
 <div class="bcso-page py-5 px-4">
-    <div class="container-fluid max-w-7xl mx-auto" style="max-width: 1400px;">
+    <div class="container-fluid mx-auto" style="max-width: 1400px;">
         
         <!-- En-tête de la page -->
         <div class="d-flex align-items-center mb-5 border-bottom border-secondary border-opacity-25 pb-4">
-            <div class="bg-gold-light p-4 rounded-4 me-4 text-gold shadow-sm">
-                <i class="fas fa-balance-scale fa-3x"></i>
+            <div class="icon-box bg-gold-light text-gold shadow-sm me-4" style="width: 70px; height: 70px;">
+                <i class="fas fa-balance-scale fa-2x"></i>
             </div>
             <div>
-                <h1 class="display-5 mb-1 text-white fw-bold text-uppercase" style="letter-spacing: 1px;">Règlement Intérieur</h1>
-                <p class="text-muted fs-5 mb-0">Blaine County Sheriff's Office — Code de conduite et procédures officielles</p>
+                <h1 class="display-5 mb-1 text-white fw-bold text-uppercase" style="letter-spacing: 1.5px;">Règlement Intérieur</h1>
+                <p class="text-readable fs-5 mb-0">Blaine County Sheriff's Office — Code de conduite et procédures officielles</p>
             </div>
         </div>
 
         <!-- Devise BCSO (Mise en avant) -->
         <div class="bcso-card border-gold mb-5 text-center py-5 position-relative overflow-hidden">
-            <div class="position-absolute top-50 start-50 translate-middle opacity-25">
+            <div class="position-absolute top-50 start-50 translate-middle opacity-10">
                 <i class="fas fa-star fa-10x text-gold"></i>
             </div>
             <div class="card-body position-relative z-index-1">
-                <h6 class="text-uppercase tracking-wider text-muted fw-bold mb-3">IV. Devise Officielle</h6>
-                <h2 class="display-5 fw-bold text-gold mb-4" style="text-shadow: 0 2px 4px rgba(0,0,0,0.5);">"HONOR • INTEGRITY • SERVICE"</h2>
-                <p class="text-light fs-5 mx-auto mb-0 lh-lg" style="max-width: 800px;">
+                <h6 class="text-uppercase tracking-wider text-readable fw-bold mb-3" style="letter-spacing: 2px;">IV. Devise Officielle</h6>
+                <h2 class="display-5 fw-bold text-gold mb-4">"HONOR • INTEGRITY • SERVICE"</h2>
+                <p class="text-white fs-5 mx-auto mb-0 lh-lg" style="max-width: 850px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
                     Le Blaine County Sheriff's Office protège les citoyens avec professionnalisme, intégrité et respect des lois. 
-                    Tout membre s'engage à représenter dignement le BCSO et à offrir un roleplay réaliste et de qualité.
+                    Tout membre s'engage à représenter dignement le BCSO et à offrir un roleplay réaliste et de haute qualité.
                 </p>
             </div>
         </div>
@@ -73,41 +106,42 @@
             <!-- RÈGLEMENT HRP -->
             <div class="col-12 col-xl-6">
                 <div class="bcso-card h-100 shadow-lg">
-                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-4">
+                    <div class="card-header-custom p-4">
                         <h4 class="text-white fw-bold mb-0 text-uppercase d-flex align-items-center">
-                            <span class="bg-primary bg-opacity-25 text-primary p-2 rounded me-3"><i class="fas fa-desktop"></i></span>
+                            <span class="icon-box bg-primary bg-opacity-25 text-primary me-3"><i class="fas fa-desktop"></i></span>
                             I. Règlement HRP
                         </h4>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-4">
-                            <h6 class="article-title fw-bold"><i class="fas fa-angle-right text-gold me-2"></i>ARTICLE 1 - RESPECT</h6>
-                            <p class="text-muted mb-0">Le respect envers tous les joueurs et membres du staff est obligatoire. Les insultes HRP, provocations et comportements toxiques sont strictement interdits. Toute discrimination est lourdement sanctionnée.</p>
+                            <h6 class="article-title fw-bold"><i class="fas fa-chevron-right text-gold me-2 small"></i>ARTICLE 1 - RESPECT</h6>
+                            <p class="text-readable mb-0">Le respect envers tous les joueurs et membres du staff est obligatoire. Les insultes HRP, provocations et comportements toxiques sont strictement interdits. Toute discrimination est lourdement sanctionnée.</p>
                         </div>
                         <div class="mb-4">
-                            <h6 class="article-title fw-bold"><i class="fas fa-angle-right text-gold me-2"></i>ARTICLE 2 - PROFESSIONNALISME</h6>
-                            <p class="text-muted mb-0">Le BCSO représente une faction sérieuse. Chaque membre doit adopter un comportement mature. Les décisions de la hiérarchie sont à respecter sans condition.</p>
+                            <h6 class="article-title fw-bold"><i class="fas fa-chevron-right text-gold me-2 small"></i>ARTICLE 2 - PROFESSIONNALISME</h6>
+                            <p class="text-readable mb-0">Le BCSO représente une faction sérieuse. Chaque membre doit adopter un comportement mature. Les décisions de la hiérarchie sont à respecter sans condition.</p>
                         </div>
                         <div class="mb-4">
-                            <h6 class="article-title fw-bold"><i class="fas fa-angle-right text-gold me-2"></i>ARTICLE 3 - ACTIVITÉ</h6>
-                            <p class="text-muted mb-0">Les membres doivent être actifs. Toute absence prolongée doit être signalée à un supérieur. Après plusieurs jours d'absence sans prévenir, des sanctions internes seront appliquées.</p>
+                            <h6 class="article-title fw-bold"><i class="fas fa-chevron-right text-gold me-2 small"></i>ARTICLE 3 - ACTIVITÉ</h6>
+                            <p class="text-readable mb-0">Les membres doivent être actifs. Toute absence prolongée doit être signalée à un supérieur. Après plusieurs jours d'absence sans justifier, des sanctions internes seront appliquées.</p>
                         </div>
                         <div class="mb-4">
-                            <h6 class="article-title fw-bold"><i class="fas fa-angle-right text-gold me-2"></i>ARTICLE 4 - CONFIDENTIALITÉ</h6>
-                            <p class="text-muted mb-0">Les informations internes du BCSO ne doivent jamais être divulguées. Les documents, plans d'opérations et communications radio restent strictement confidentiels.</p>
+                            <h6 class="article-title fw-bold"><i class="fas fa-chevron-right text-gold me-2 small"></i>ARTICLE 4 - CONFIDENTIALITÉ</h6>
+                            <p class="text-readable mb-0">Les informations internes du BCSO ne doivent jamais être divulguées. Les documents, plans d'opérations et communications radio restent strictement confidentiels.</p>
                         </div>
                         <div class="mb-4">
-                            <h6 class="article-title fw-bold"><i class="fas fa-angle-right text-gold me-2"></i>ARTICLE 5 - VÉHICULES</h6>
-                            <p class="text-muted mb-0">Les véhicules de service sont réservés aux interventions. Le trolling, le drift ou la conduite irréaliste sont formellement interdits.</p>
+                            <h6 class="article-title fw-bold"><i class="fas fa-chevron-right text-gold me-2 small"></i>ARTICLE 5 - VÉHICULES</h6>
+                            <p class="text-readable mb-0">Les véhicules de service sont réservés aux interventions. Le trolling, le drift ou la conduite irréaliste (No-RP) sont formellement interdits.</p>
                         </div>
-                        <div class="p-3 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25 mt-4">
-                            <h6 class="text-danger fw-bold mb-2"><i class="fas fa-exclamation-circle me-2"></i>ARTICLE 6 - SANCTIONS POSSIBLES :</h6>
-                            <div class="d-flex flex-wrap gap-2 mt-2">
-                                <span class="badge bg-dark border border-secondary text-light">Avertissement</span>
-                                <span class="badge bg-dark border border-secondary text-light">Blâme</span>
-                                <span class="badge bg-dark border border-secondary text-light">Suspension</span>
-                                <span class="badge bg-dark border border-secondary text-light">Rétrogradation</span>
-                                <span class="badge bg-danger text-white">Exclusion</span>
+                        
+                        <div class="p-4 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25 mt-4">
+                            <h6 class="text-danger fw-bold mb-3"><i class="fas fa-exclamation-circle me-2"></i>ARTICLE 6 - SANCTIONS POSSIBLES :</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-dark border border-secondary text-light p-2">Avertissement</span>
+                                <span class="badge bg-dark border border-secondary text-light p-2">Blâme</span>
+                                <span class="badge bg-dark border border-secondary text-light p-2">Suspension</span>
+                                <span class="badge bg-dark border border-secondary text-light p-2">Rétrogradation</span>
+                                <span class="badge bg-danger text-white p-2">Exclusion</span>
                             </div>
                         </div>
                     </div>
@@ -119,32 +153,32 @@
                 
                 <!-- RÈGLEMENT RP -->
                 <div class="bcso-card shadow-lg">
-                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-4">
+                    <div class="card-header-custom p-4">
                         <h4 class="text-white fw-bold mb-0 text-uppercase d-flex align-items-center">
-                            <span class="bg-info bg-opacity-25 text-info p-2 rounded me-3"><i class="fas fa-shield-alt"></i></span>
+                            <span class="icon-box bg-info bg-opacity-25 text-info me-3"><i class="fas fa-shield-alt"></i></span>
                             II. Règlement RP (En Service)
                         </h4>
                     </div>
                     <div class="card-body p-4">
-                        <div class="d-flex mb-3">
-                            <div class="text-info me-3 mt-1"><i class="fas fa-check-circle"></i></div>
+                        <div class="d-flex mb-4">
+                            <div class="text-info me-3 mt-1"><i class="fas fa-check-circle fa-lg"></i></div>
                             <div>
-                                <strong class="text-white d-block mb-1">Article 1 : Tenue et Équipement</strong>
-                                <span class="text-muted small">Tout agent doit porter sa tenue réglementaire, posséder son équipement, être sur la bonne fréquence radio et respecter la hiérarchie.</span>
+                                <strong class="text-white d-block mb-1 fs-6">Article 1 : Tenue et Équipement</strong>
+                                <span class="text-readable">Tout agent doit porter sa tenue réglementaire complète, posséder son équipement, être sur la bonne fréquence radio et respecter la hiérarchie.</span>
                             </div>
                         </div>
-                        <div class="d-flex mb-3">
-                            <div class="text-info me-3 mt-1"><i class="fas fa-search"></i></div>
+                        <div class="d-flex mb-4">
+                            <div class="text-info me-3 mt-1"><i class="fas fa-search fa-lg"></i></div>
                             <div>
-                                <strong class="text-white d-block mb-1">Article 2 : Contrôles</strong>
-                                <span class="text-muted small">Toujours justifié par un motif RP valable (Contrôle routier, suspect, appel citoyen, infraction). Aucun contrôle abusif ne sera toléré.</span>
+                                <strong class="text-white d-block mb-1 fs-6">Article 2 : Contrôles</strong>
+                                <span class="text-readable">Un contrôle doit toujours être justifié par un motif RP valable (Routier, suspect, appel, infraction). Aucun contrôle abusif ne sera toléré.</span>
                             </div>
                         </div>
                         <div class="d-flex">
-                            <div class="text-info me-3 mt-1"><i class="fas fa-walkie-talkie"></i></div>
+                            <div class="text-info me-3 mt-1"><i class="fas fa-walkie-talkie fa-lg"></i></div>
                             <div>
-                                <strong class="text-white d-block mb-1">Article 10 : Radio</strong>
-                                <span class="text-muted small">Les communications doivent impérativement être courtes, claires et professionnelles.</span>
+                                <strong class="text-white d-block mb-1 fs-6">Article 10 : Communications Radio</strong>
+                                <span class="text-readable">Les transmissions doivent impérativement être courtes, claires et professionnelles (utilisation des codes 10).</span>
                             </div>
                         </div>
                     </div>
@@ -152,27 +186,27 @@
 
                 <!-- FAUTES GRAVES -->
                 <div class="bcso-card shadow-lg flex-grow-1">
-                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-4">
+                    <div class="card-header-custom p-4">
                         <h4 class="text-white fw-bold mb-0 text-uppercase d-flex align-items-center">
-                            <span class="bg-warning bg-opacity-25 text-warning p-2 rounded me-3"><i class="fas fa-skull-crossbones"></i></span>
+                            <span class="icon-box bg-warning bg-opacity-25 text-warning me-3"><i class="fas fa-skull-crossbones"></i></span>
                             III. Fautes Graves
                         </h4>
                     </div>
                     <div class="card-body p-4">
-                        <p class="text-muted mb-4">La commission de l'une des fautes suivantes entraîne des sanctions lourdes :</p>
+                        <p class="text-readable mb-4">La commission de l'une des fautes suivantes entraîne des sanctions disciplinaires lourdes :</p>
                         <div class="row g-3 mb-4">
-                            <div class="col-6"><div class="bcso-badge p-2 rounded text-center small fw-bold"><i class="fas fa-ban me-2"></i>Abus de pouvoir</div></div>
-                            <div class="col-6"><div class="bcso-badge p-2 rounded text-center small fw-bold"><i class="fas fa-user-slash me-2"></i>Free Arrest / Jail</div></div>
-                            <div class="col-6"><div class="bcso-badge p-2 rounded text-center small fw-bold"><i class="fas fa-hand-holding-usd me-2"></i>Corruption</div></div>
-                            <div class="col-6"><div class="bcso-badge p-2 rounded text-center small fw-bold"><i class="fas fa-crosshairs me-2"></i>Usage abusif d'armes</div></div>
-                            <div class="col-6"><div class="bcso-badge p-2 rounded text-center small fw-bold"><i class="fas fa-gavel me-2"></i>Refus d'ordres</div></div>
-                            <div class="col-6"><div class="bcso-badge p-2 rounded text-center small fw-bold"><i class="fas fa-user-secret me-2"></i>Fuite d'infos</div></div>
+                            <div class="col-12 col-md-6"><div class="bcso-badge p-3 rounded-3 text-center fw-bold"><i class="fas fa-ban me-2"></i>Abus de pouvoir</div></div>
+                            <div class="col-12 col-md-6"><div class="bcso-badge p-3 rounded-3 text-center fw-bold"><i class="fas fa-user-slash me-2"></i>Arrestation Abusive</div></div>
+                            <div class="col-12 col-md-6"><div class="bcso-badge p-3 rounded-3 text-center fw-bold"><i class="fas fa-hand-holding-usd me-2"></i>Corruption</div></div>
+                            <div class="col-12 col-md-6"><div class="bcso-badge p-3 rounded-3 text-center fw-bold"><i class="fas fa-crosshairs me-2"></i>Usage abusif d'armes</div></div>
+                            <div class="col-12 col-md-6"><div class="bcso-badge p-3 rounded-3 text-center fw-bold"><i class="fas fa-gavel me-2"></i>Insubordination</div></div>
+                            <div class="col-12 col-md-6"><div class="bcso-badge p-3 rounded-3 text-center fw-bold"><i class="fas fa-user-secret me-2"></i>Fuite d'informations</div></div>
                         </div>
-                        <div class="alert alert-danger mb-0 border-0 bg-danger bg-opacity-25 text-white d-flex align-items-center">
+                        <div class="alert alert-danger mb-0 border-0 bg-danger bg-opacity-25 text-white d-flex align-items-center p-3 rounded-3">
                             <i class="fas fa-exclamation-triangle fa-2x me-3 text-danger"></i>
                             <div>
-                                <strong>Tolérance Zéro.</strong><br>
-                                <span class="small">Ces fautes peuvent entraîner une exclusion immédiate et définitive de la faction.</span>
+                                <strong class="d-block fs-5">Tolérance Zéro</strong>
+                                <span class="small text-light opacity-75">Ces fautes peuvent entraîner une exclusion immédiate et définitive.</span>
                             </div>
                         </div>
                     </div>
@@ -183,56 +217,62 @@
             <!-- PROCÉDURES (LARGEUR TOTALE) -->
             <div class="col-12">
                 <div class="bcso-card shadow-lg mt-2">
-                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-4">
+                    <div class="card-header-custom p-4">
                         <h5 class="text-white fw-bold mb-0 text-uppercase d-flex align-items-center">
-                            <span class="bg-success bg-opacity-25 text-success p-2 rounded me-3"><i class="fas fa-clipboard-list"></i></span>
+                            <span class="icon-box bg-success bg-opacity-25 text-success me-3"><i class="fas fa-clipboard-list"></i></span>
                             Procédures d'Intervention et d'Opération
                         </h5>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-4">
+                            
+                            <!-- Box Usage de la force -->
                             <div class="col-12 col-md-4">
-                                <div class="p-4 rounded-4 bg-dark h-100 border border-secondary border-opacity-25 position-relative overflow-hidden">
-                                    <div class="position-absolute top-0 end-0 p-3 opacity-25"><i class="fas fa-fist-raised fa-3x text-warning"></i></div>
+                                <div class="p-4 rounded-4 bg-dark bg-opacity-50 h-100 border border-secondary border-opacity-25 position-relative overflow-hidden">
+                                    <div class="position-absolute top-0 end-0 p-3 opacity-25"><i class="fas fa-fist-raised fa-4x text-warning"></i></div>
                                     <h6 class="text-warning fw-bold mb-3 fs-5 position-relative z-index-1">Usage de la force</h6>
-                                    <p class="text-muted small mb-3">L'usage de la force doit toujours être progressif et proportionné :</p>
-                                    <ol class="text-light small mb-0 ps-3 fw-bold lh-lg position-relative z-index-1">
+                                    <p class="text-readable small mb-3">L'usage de la force doit toujours être progressif et proportionné :</p>
+                                    <ol class="text-white small mb-0 ps-3 fw-bold lh-lg position-relative z-index-1">
                                         <li>Dialogue & Ordres verbaux</li>
-                                        <li>Menottage</li>
-                                        <li>Taser (Pistolet à impulsion)</li>
-                                        <li class="text-danger mt-2">Arme létale <br><span class="fw-normal text-muted">(En cas de danger immédiat uniquement)</span></li>
+                                        <li>Contact physique / Menottage</li>
+                                        <li>Arme non-létale (Taser / Matraque)</li>
+                                        <li class="text-danger mt-2">Arme létale <br><span class="fw-normal text-readable">(En cas de danger de mort immédiat)</span></li>
                                     </ol>
                                 </div>
                             </div>
                             
+                            <!-- Box Arrestation -->
                             <div class="col-12 col-md-4">
-                                <div class="p-4 rounded-4 bg-dark h-100 border border-secondary border-opacity-25 position-relative overflow-hidden">
-                                    <div class="position-absolute top-0 end-0 p-3 opacity-25"><i class="fas fa-handcuffs fa-3x text-info"></i></div>
-                                    <h6 class="text-info fw-bold mb-3 fs-5 position-relative z-index-1">Arrestation</h6>
-                                    <p class="text-muted small mb-3">Toute arrestation doit respecter la procédure légale :</p>
-                                    <ul class="text-light small mb-0 list-unstyled lh-lg position-relative z-index-1">
-                                        <li><i class="fas fa-check text-success me-2"></i> Lecture claire des droits Miranda</li>
-                                        <li><i class="fas fa-check text-success me-2"></i> Menottage RP & Fouille justifiée</li>
-                                        <li><i class="fas fa-check text-success me-2"></i> Inventaire précis des saisies</li>
-                                        <li><i class="fas fa-check text-success me-2"></i> Rédaction du rapport complet</li>
+                                <div class="p-4 rounded-4 bg-dark bg-opacity-50 h-100 border border-secondary border-opacity-25 position-relative overflow-hidden">
+                                    <div class="position-absolute top-0 end-0 p-3 opacity-25"><i class="fas fa-handcuffs fa-4x text-info"></i></div>
+                                    <h6 class="text-info fw-bold mb-3 fs-5 position-relative z-index-1">Procédure d'Arrestation</h6>
+                                    <p class="text-readable small mb-3">Toute arrestation doit respecter le cadre légal strict :</p>
+                                    <ul class="text-white small mb-0 list-unstyled lh-lg position-relative z-index-1 fw-bold">
+                                        <li><i class="fas fa-check text-success me-2"></i> Lecture des droits Miranda</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Menottage & Palpation de sécurité</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Fouille justifiée et inventaire</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Rédaction du rapport d'incident</li>
                                     </ul>
                                 </div>
                             </div>
                             
+                            <!-- Box Poursuites (Le texte manquant est là) -->
                             <div class="col-12 col-md-4">
-                                <div class="p-4 rounded-4 bg-dark h-100 border border-secondary border-opacity-25 position-relative overflow-hidden">
-                                    <div class="position-absolute top-0 end-0 p-3 opacity-25"><i class="fas fa-car-side fa-3x text-primary"></i></div>
+                                <div class="p-4 rounded-4 bg-dark bg-opacity-50 h-100 border border-secondary border-opacity-25 position-relative overflow-hidden">
+                                    <div class="position-absolute top-0 end-0 p-3 opacity-25"><i class="fas fa-car-side fa-4x text-primary"></i></div>
                                     <h6 class="text-primary fw-bold mb-3 fs-5 position-relative z-index-1">Poursuites & Fouilles</h6>
-                                    <p class="text-muted small mb-0 lh-lg position-relative z-index-1">
-                                        Pendant une poursuite, <strong>gardez votre calme</strong> et communiquez activement à la radio. Ne provoquez pas d'accidents irréalistes (No-RP).<br><br>
-                                        Les fouilles doivent être légitimes (suite à une arrestation, suspicion forte d'arme, mandat du procureur). 
+                                    <p class="text-readable small mb-0 lh-lg position-relative z-index-1">
+                                        <strong class="text-white">Courses-Poursuites :</strong> Gardez votre sang-froid. Annoncez vos positions à la radio avec précision. Ne provoquez pas d'accidents (PIT de manière réaliste uniquement).<br><br>
+                                        <strong class="text-white">Fouilles :</strong> Elles doivent être motivées (suite à une arrestation, forte suspicion d'arme visible, ou mandat du procureur). 
                                     </p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
