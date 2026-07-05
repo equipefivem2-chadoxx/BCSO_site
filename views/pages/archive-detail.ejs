@@ -31,7 +31,9 @@
     .msg-author { color: #fff; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px; }
     .msg-author i { color: #d4af37; font-size: 12px; }
     .msg-date { color: #6b7280; font-size: 12px; }
-    .msg-content { color: #d1d5db; font-size: 14px; line-height: 1.6; white-space: pre-wrap; padding-left: 20px; border-left: 2px solid rgba(212, 175, 55, 0.2); }
+    
+    /* 🚀 CORRECTION DU TEXTE QUI DÉPASSE */
+    .msg-content { color: #d1d5db; font-size: 14px; line-height: 1.6; white-space: pre-wrap; padding-left: 20px; border-left: 2px solid rgba(212, 175, 55, 0.2); word-wrap: break-word; overflow-wrap: break-word; }
     
     .msg-images { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-left: 20px; }
     .evidence-img { height: 120px; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; transition: 0.2s; object-fit: cover; }
@@ -42,7 +44,10 @@
     .final-report-body { padding: 40px; }
     .report-field { margin-bottom: 25px; }
     .report-label { color: #d4af37; font-size: 12px; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; display: block; letter-spacing: 1.5px; opacity: 0.9; }
-    .report-value { background: rgba(0, 0, 0, 0.3); padding: 15px 20px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.03); color: #fff; line-height: 1.7; font-size: 14px; }
+    
+    /* 🚀 CORRECTION DU COMPTE RENDU QUI DÉPASSE */
+    .report-value { background: rgba(0, 0, 0, 0.3); padding: 15px 20px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.03); color: #fff; line-height: 1.7; font-size: 14px; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+    
     .report-hr { border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent); margin: 35px 0; }
 </style>
 
@@ -97,7 +102,7 @@
         messages.forEach(msg => {
             let contentText = msg.content ? msg.content.trim() : '';
 
-            // 🚀 Nettoyage des vieux messages vides qui trainaient
+            // Nettoyage des vieux messages vides qui trainaient
             if (contentText === '*Message vide ou embed non pris en charge*') return;
 
             const sectionMatch = contentText.match(/DÉBUT DE LA SECTION : (.*?)\*\*/);
@@ -108,7 +113,6 @@
             }
 
             if (contentText.includes('🚨 TITRE OPÉRATION 🚨') || contentText.includes('╔════════════════════╗')) {
-                // 🚀 Nettoyage de la phrase "Décrivez précisément..."
                 finalReportHtml = contentText
                     .replace(/╔════════════════════╗/g, '')
                     .replace(/🚨 TITRE OPÉRATION 🚨/g, '')
@@ -126,8 +130,15 @@
             if (contentText.includes('[IMAGE]')) {
                 const parts = contentText.split('[IMAGE]');
                 contentText = parts[0].trim();
-                const urls = parts[1].trim().split(' ');
-                urls.forEach(url => { if(url) images.push(url); });
+                
+                // 🚀 NOUVELLE EXTRACTION IMAGES : Coupe les sauts de ligne et les espaces pour isoler les vrais liens HTTP
+                const urlStr = parts[1].trim();
+                const urls = urlStr.split(/\s+/); 
+                urls.forEach(url => { 
+                    if (url && url.startsWith('http')) {
+                        images.push(url); 
+                    }
+                });
             }
 
             if (contentText !== "" || images.length > 0) {
@@ -159,7 +170,7 @@
                 if (m.pics.length > 0) {
                     picsHtml = `<div class="msg-images">`;
                     m.pics.forEach(pic => {
-                        picsHtml += `<a href="${pic}" target="_blank"><img src="${pic}" class="evidence-img" alt="Preuve"></a>`;
+                        picsHtml += `<a href="${pic}" target="_blank"><img src="${pic}" class="evidence-img" alt="Preuve non disponible"></a>`;
                     });
                     picsHtml += `</div>`;
                 }
