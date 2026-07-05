@@ -48,7 +48,7 @@ router.get('/', async (req, res) => {
 // 2. Traiter le formulaire d'ajout d'un agent
 router.post('/ajouter', async (req, res) => {
     try {
-        const { prenom, nom, matricule, grade, telephone, discordId, isAdmin } = req.body;
+        const { prenom, nom, matricule, grade, telephone, discordId, isAdmin, canDeleteArchives } = req.body;
         
         const nouvelAgent = new Agent({
             prenom,
@@ -57,7 +57,8 @@ router.post('/ajouter', async (req, res) => {
             grade,
             telephone: telephone || "Non renseigné",
             discordId: discordId || '',
-            isAdmin: isAdmin === 'on' ? true : false // La case à cocher renvoie 'on' si cochée
+            isAdmin: isAdmin === 'on' ? true : false,
+            canDeleteArchives: canDeleteArchives === 'on' ? true : false
         });
 
         await nouvelAgent.save();
@@ -83,7 +84,7 @@ router.post('/supprimer/:id', async (req, res) => {
 // 4. Modifier un agent
 router.post('/modifier/:id', async (req, res) => {
     try {
-        const { prenom, nom, matricule, grade, telephone, discordId, isAdmin } = req.body;
+        const { prenom, nom, matricule, grade, telephone, discordId, isAdmin, canDeleteArchives } = req.body;
         await Agent.findByIdAndUpdate(req.params.id, {
             prenom, 
             nom, 
@@ -91,7 +92,8 @@ router.post('/modifier/:id', async (req, res) => {
             grade, 
             telephone: telephone || "Non renseigné",
             discordId,
-            isAdmin: isAdmin === 'on' ? true : false
+            isAdmin: isAdmin === 'on' ? true : false,
+            canDeleteArchives: canDeleteArchives === 'on' ? true : false
         });
         res.redirect('/admin');
     } catch (error) {

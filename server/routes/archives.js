@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
+const Agent = require('../models/Agent'); // 🚀 NOUVEAU : On importe le modèle Agent
 
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
@@ -29,10 +30,17 @@ router.get('/', async (req, res) => {
 
         const tickets = await Ticket.find(query).sort({ dateCreation: -1 });
 
+        // 🚀 NOUVEAU : On cherche l'agent en base de données pour vérifier ses droits (bouton corbeille EJS)
+        let agentConnecte = null;
+        if (req.session.user && req.session.user.id) {
+            agentConnecte = await Agent.findOne({ discordId: req.session.user.id });
+        }
+
         res.render('pages/archives', {
             title: 'BCSO - Archives & Transcriptions',
             tickets: tickets,
-            filters: req.query
+            filters: req.query,
+            agentConnecte: agentConnecte // On envoie l'agent à la vue EJS
         });
     } catch (error) {
         console.error('Erreur affichage archives:', error);
@@ -69,18 +77,18 @@ router.get('/:ticketId', async (req, res) => {
     }
 });
 
-router.post('/delete/:id', async (req, res) => {
-    // 1. Vérification de connexion
+// 🚀 NOUVEAU : Route de suppression mise à jour (renommée en /supprimer pour matcher l'EJS)
+router.post('/supprimer/:id', async (req, res) => {
+    // 1. Vérification de connexion de base
     if (!req.session.user) return res.redirect('/auth/login');
     
-    // 2. Définition des grades
-    const gradesAutorises = ['admin', 'sheriff', 'lieutenant', 'sergeant chef', 'sergeant ii', 'sergeant i'];
-    const userGrade = (req.session.user.grade || req.session.user.role || '').toLowerCase();
-    
-    // 3. Vérification des droits avec sensibilité à la casse corrigée
-    if (gradesAutorises.includes(userGrade)) {
-        try {
-            console.log(`Tentative de suppression de l'archive ID: ${req.params.id} par ${req.session.user.username || 'un agent autorisé'}`);
+    try {
+        // 2. On récupère l'agent lié à la session
+        const agentConnecte = await Agent.findOne({ discordId: req.session.user.id });
+        
+        // 3. On vérifie les vraies permissions via le modèle Agent
+        if (agentConnecte && (agentConnecte.canDeleteArchives || agentConnecte.isAdmin)) {
+            console.log(`Tentative de suppression de l'archive ID: ${req.params.id} par ${agentConnecte.prenom} ${agentConnecte.nom}`);
             
             // Suppression dans la base de données
             const deletedTicket = await Ticket.findByIdAndDelete(req.params.id);
@@ -90,11 +98,11 @@ router.post('/delete/:id', async (req, res) => {
             } else {
                 console.log('❌ Erreur : Dossier introuvable dans la base de données.');
             }
-        } catch (error) {
-            console.error('❌ Erreur critique lors de la suppression du dossier:', error);
+        } else {
+            console.log(`⛔ Action refusée : L'agent ${req.session.user.username} n'a pas les droits requis.`);
         }
-    } else {
-        console.log(`⛔ Action refusée : Grade insuffisant (${userGrade}).`);
+    } catch (error) {
+        console.error('❌ Erreur critique lors de la suppression du dossier:', error);
     }
     
     // 4. Redirection vers la liste des archives

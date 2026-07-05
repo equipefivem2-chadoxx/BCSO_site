@@ -306,6 +306,17 @@
                     <span class="slider"></span>
                 </label>
             </div>
+
+            <div class="switch-container">
+                <div>
+                    <strong style="font-size: 0.85rem; display:block;">Droit de Suppression</strong>
+                    <small style="color: #94a3b8; font-size: 0.7rem;">Autoriser la suppression des archives</small>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" name="canDeleteArchives">
+                    <span class="slider"></span>
+                </label>
+            </div>
             
             <button type="submit" class="btn" style="margin-top: 18px;"><i class="fas fa-plus"></i> Créer l'Agent</button>
         </form>
@@ -341,6 +352,11 @@
                                 <span class="badge <%= agent.isAdmin ? 'badge-admin' : 'badge-user' %>">
                                     <%= agent.isAdmin ? 'Admin Site' : 'Agent' %>
                                 </span>
+                                <% if(agent.canDeleteArchives) { %>
+                                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; margin-left: 5px;">
+                                        Suppression
+                                    </span>
+                                <% } %>
                             </td>
                             <td class="actions-cell">
                                 <button class="btn-action edit" onclick="toggleEditRow('<%= agent._id %>')"><i class="fas fa-edit"></i></button>
@@ -393,13 +409,22 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top:12px;">
-                                        <div class="switch-container" style="margin-top:0; width: 220px; padding: 8px 12px;">
-                                            <span style="font-size: 0.8rem;">Accès Admin</span>
-                                            <label class="switch">
-                                                <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>>
-                                                <span class="slider"></span>
-                                            </label>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top:12px; flex-wrap: wrap; gap: 10px;">
+                                        <div style="display: flex; gap: 10px;">
+                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 8px 12px;">
+                                                <span style="font-size: 0.8rem;">Accès Admin</span>
+                                                <label class="switch">
+                                                    <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>>
+                                                    <span class="slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 8px 12px;">
+                                                <span style="font-size: 0.8rem;">Suppression</span>
+                                                <label class="switch">
+                                                    <input type="checkbox" name="canDeleteArchives" <%= agent.canDeleteArchives ? 'checked' : '' %>>
+                                                    <span class="slider"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                         <div style="display:flex; gap:10px;">
                                             <button type="button" class="btn" style="background:#475569; color:#fff; width: auto;" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>

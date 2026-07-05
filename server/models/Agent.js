@@ -12,6 +12,7 @@ const agentSchema = new mongoose.Schema({
     telephone: { type: String, required: false, default: "Non renseigné" },
     // 🚀 NOUVEAU : Gestion des permissions (Séparée du grade RP)
     isAdmin: { type: Boolean, default: false },
+    canDeleteArchives: { type: Boolean, default: false },
     grade: { 
         type: String, 
         required: true,

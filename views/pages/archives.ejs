@@ -33,7 +33,6 @@
         <p>Indexation automatisée des transcriptions de dossiers et d'interventions.</p>
     </div>
 
-    <!-- MODULE DE FILTRAGE -->
     <div class="search-panel">
         <form action="/archives" method="GET" class="search-form">
             <div class="search-group">
@@ -59,7 +58,6 @@
         </form>
     </div>
 
-    <!-- RÉSULTAT DU TABLEAU -->
     <div class="table-panel">
         <% if (typeof tickets !== 'undefined' && tickets.length > 0) { %>
             <table class="archive-table">
@@ -79,11 +77,18 @@
                             <td style="font-weight: 600; color: #fff;">#<%= ticket.channelName %></td>
                             <td><span class="badge-motif"><%= ticket.motif %></span></td>
                             <td style="color: #10b981; font-weight: 500;"><i class="fas fa-user-shield" style="font-size: 11px;"></i> <%= ticket.closedBy %></td>
-                            <td>
-                                <!-- 🚀 Le nouveau lien direct vers la page de détails -->
+                            <td style="display: flex; gap: 8px; align-items: center;">
                                 <a href="/archives/<%= ticket.channelName %>" class="btn-view">
                                     <i class="fas fa-external-link-alt"></i> Ouvrir le rapport
                                 </a>
+                                
+                                <% if (typeof agentConnecte !== 'undefined' && (agentConnecte.canDeleteArchives || agentConnecte.isAdmin)) { %>
+                                    <form action="/archives/supprimer/<%= ticket._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce rapport définitivement ?');">
+                                        <button type="submit" class="btn-view" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); padding: 8px 12px;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                <% } %>
                             </td>
                         </tr>
                     <% }); %>
