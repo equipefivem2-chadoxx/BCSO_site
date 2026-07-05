@@ -14,7 +14,7 @@
     .search-input { background: #0b0f19; border: 1px solid #1f2937; color: #fff; padding: 10px 15px; border-radius: 6px; font-size: 14px; min-width: 200px; transition: all 0.3s; }
     .search-input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.2); }
     
-    .btn-search { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; padding: 10px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s; height: 41px; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-search { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; padding: 10px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s; height: 41px; text-transform: uppercase; letter-spacing: 1px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
     .btn-search:hover { background: #d4af37; color: #000; }
 
     .table-panel { background: rgba(17, 24, 39, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; backdrop-filter: blur(10px); }
@@ -23,33 +23,8 @@
     .archive-table td { padding: 18px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #e5e7eb; font-size: 14px; }
     
     .badge-motif { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); color: #d4af37; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-    .btn-view { background: none; border: none; color: #d4af37; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: all 0.2s; padding: 6px 10px; border-radius: 6px; }
-    .btn-view:hover { background: rgba(212, 175, 55, 0.1); }
-
-    /* --- STYLES DU POP-UP PREMIUM --- */
-    #transcriptModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-    .modal-box { background: #0b0f19; border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; width: 850px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
-    .modal-header { padding: 20px 25px; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; background: #05070b; border-radius: 12px 12px 0 0; }
-    .modal-body { padding: 25px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; background: #0b0f19; }
-    
-    /* Messages Basiques */
-    .msg-block { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px 20px; border-radius: 8px; }
-    .msg-meta { font-size: 12px; color: #9ca3af; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .msg-author { color: #d4af37; font-weight: bold; font-size: 14px; }
-    .msg-content { color: #e5e7eb; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
-    
-    /* Chapitres (Fils Discord) */
-    .chapter-divider { background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%); border-left: 3px solid #d4af37; padding: 12px 20px; color: #f3f4f6; font-weight: 600; font-size: 14px; margin: 20px 0 5px 0; border-radius: 4px; text-transform: uppercase; letter-spacing: 2px; }
-    
-    /* Images auto-redimensionnées */
-    .ticket-image { max-width: 100%; max-height: 350px; border-radius: 6px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.05); }
-
-    /* Carte de Rapport de Police (Le parser intelligent) */
-    .report-card { background: linear-gradient(145deg, #111827 0%, #0b0f19 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 10px; padding: 30px; margin-top: 10px; position: relative; }
-    .report-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: #d4af37; opacity: 0.6; border-radius: 10px 10px 0 0; }
-    .report-title { text-align: center; color: #d4af37; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.1); }
-    .report-label { color: #d4af37; font-weight: 600; font-size: 15px; display: inline-block; margin-top: 15px; }
-    .report-hr { border: 0; height: 1px; background: rgba(212, 175, 55, 0.1); margin: 25px 0; }
+    .btn-view { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; padding: 8px 15px; border-radius: 6px; text-decoration: none; }
+    .btn-view:hover { background: #d4af37; color: #000; }
 </style>
 
 <div id="archives-container">
@@ -79,7 +54,7 @@
             </div>
             <button type="submit" class="btn-search"><i class="fas fa-filter"></i> Filtrer</button>
             <% if (typeof filters !== 'undefined' && Object.keys(filters).length > 0) { %>
-                <a href="/archives" class="btn-search" style="background: none; border-color: #4b5563; color: #9ca3af; text-decoration: none; line-height: 20px; text-align: center;">Réinitialiser</a>
+                <a href="/archives" class="btn-search" style="background: none; border-color: #4b5563; color: #9ca3af;">Réinitialiser</a>
             <% } %>
         </form>
     </div>
@@ -92,10 +67,9 @@
                     <tr>
                         <th>Date</th>
                         <th>Dossier / Salon</th>
-                        <th>Auteur</th>
                         <th>Motif</th>
                         <th>Clôturé par</th>
-                        <th>Transcription</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -103,13 +77,13 @@
                         <tr>
                             <td style="color: #9ca3af;"><%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></td>
                             <td style="font-weight: 600; color: #fff;">#<%= ticket.channelName %></td>
-                            <td><%= ticket.openedBy %></td>
                             <td><span class="badge-motif"><%= ticket.motif %></span></td>
                             <td style="color: #10b981; font-weight: 500;"><i class="fas fa-user-shield" style="font-size: 11px;"></i> <%= ticket.closedBy %></td>
                             <td>
-                                <button class="btn-view" data-channel="<%= ticket.channelName %>" data-messages="<%= encodeURIComponent(JSON.stringify(ticket.messages)) %>" onclick="openTranscriptModal(this)">
-                                    <i class="fas fa-eye"></i> Ouvrir la fiche
-                                </button>
+                                <!-- 🚀 Le nouveau lien direct vers la page de détails -->
+                                <a href="/archives/<%= ticket.channelName %>" class="btn-view">
+                                    <i class="fas fa-external-link-alt"></i> Ouvrir le rapport
+                                </a>
                             </td>
                         </tr>
                     <% }); %>
@@ -123,83 +97,3 @@
         <% } %>
     </div>
 </div>
-
-<!-- LE POP-UP MODAL POUR LIRE LE DOSSIER -->
-<div id="transcriptModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h3 class="panel-title" id="modalTitle" style="margin: 0; color: #fff;"><i class="fas fa-file-alt" style="color:#d4af37; margin-right: 10px;"></i> Archive</h3>
-            <button class="btn-search" style="padding: 5px 15px; height: auto;" onclick="document.getElementById('transcriptModal').style.display='none'">Fermer</button>
-        </div>
-        <div class="modal-body" id="modalBody">
-            <!-- Injecté dynamiquement par JS -->
-        </div>
-    </div>
-</div>
-
-<script>
-    function openTranscriptModal(buttonElement) {
-        const channelName = buttonElement.getAttribute('data-channel');
-        const encodedMessages = buttonElement.getAttribute('data-messages');
-        const messages = JSON.parse(decodeURIComponent(encodedMessages));
-        
-        const body = document.getElementById('modalBody');
-        document.getElementById('modalTitle').innerHTML = '<span style="color:#d4af37">#</span> ' + channelName;
-        body.innerHTML = '';
-
-        messages.forEach(msg => {
-            let contentText = msg.content;
-
-            // 1️⃣ DÉTECTION DES CHAPITRES (FILS DISCORD)
-            if (contentText.includes('DÉBUT DE LA SECTION :')) {
-                const sectionMatch = contentText.match(/DÉBUT DE LA SECTION : (.*?)\*\*/);
-                const sectionName = sectionMatch ? sectionMatch[1] : 'SECTION COMPLÉMENTAIRE';
-                
-                const divider = document.createElement('div');
-                divider.className = 'chapter-divider';
-                divider.innerHTML = `<i class="fas fa-folder" style="margin-right: 8px;"></i> ${sectionName}`;
-                body.appendChild(divider);
-                return; // Ne pas afficher la bulle de message d'origine
-            }
-
-            // 2️⃣ DÉTECTION DES IMAGES
-            let imageHtml = '';
-            if (contentText.includes('[IMAGE]')) {
-                const parts = contentText.split('[IMAGE]');
-                contentText = parts[0]; 
-                const urls = parts[1].trim().split(' ');
-                imageHtml = urls.map(url => `<img src="${url}" class="ticket-image" alt="Pièce jointe">`).join('<br>');
-            }
-
-            // 3️⃣ PARSER INTELLIGENT DU RAPPORT D'OPÉRATION
-            if (contentText.includes('🚨 TITRE OPÉRATION 🚨') || contentText.includes('╔════════════════════╗')) {
-                contentText = contentText
-                    .replace(/╔════════════════════╗/g, '<div class="report-card">')
-                    .replace(/🚨 TITRE OPÉRATION 🚨/g, '<div class="report-title">RAPPORT D\'OPÉRATION</div>')
-                    .replace(/╚════════════════════╝/g, '')
-                    .replace(/(📅 Date \/ Heure :|📍 Secteur :|⚖️ Infraction :|👥 Suspects|🎭 Otages|🚗 Véhicules|📢 Revendications|🎖️ Lead Terrain :|🤝 Lead Négociations :|📝 Rapport d'Opération|Compte-rendu :)/g, '<span class="report-label">$1</span>')
-                    .replace(/━━━━━━━━━━━━━━━━━━━━/g, '<hr class="report-hr">');
-                
-                // Assure la fermeture de la div du rapport
-                if (contentText.includes('<div class="report-card">')) {
-                    contentText += '</div>';
-                }
-            }
-
-            // 4️⃣ GÉNÉRATION DU BLOC HTML FINAL
-            const block = document.createElement('div');
-            block.className = 'msg-block';
-            block.innerHTML = `
-                <div class="msg-meta">
-                    <span class="msg-author"><i class="fas fa-user-circle" style="margin-right: 5px;"></i> ${msg.author}</span>
-                    <span>${msg.timestamp}</span>
-                </div>
-                <div class="msg-content">${contentText}</div>
-                ${imageHtml ? `<div style="margin-top: 10px;">${imageHtml}</div>` : ''}
-            `;
-            body.appendChild(block);
-        });
-
-        document.getElementById('transcriptModal').style.display = 'flex';
-    }
-</script>

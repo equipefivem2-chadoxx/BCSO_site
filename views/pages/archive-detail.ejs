@@ -1,0 +1,189 @@
+<style>
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    #detail-container { max-width: 1500px; margin: 0 auto; padding-bottom: 60px; animation: slideUp 0.4s ease-out; }
+    
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 20px; }
+    .btn-retour { background: rgba(255,255,255,0.05); color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 10px; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+    .btn-retour:hover { background: rgba(212, 175, 55, 0.1); border-color: #d4af37; color: #d4af37; }
+    
+    .report-main-title { font-size: 24px; font-weight: bold; color: #f3f4f6; text-align: center; flex-grow: 1; }
+    .report-main-title span { color: #d4af37; }
+
+    /* STRUCTURE DE LA GRILLE TYPE MDT */
+    .mdt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .grid-full { grid-column: span 2; }
+    
+    .mdt-card { background: #05070b; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+    .mdt-card-header { padding: 15px 20px; border-bottom: 1px solid rgba(212, 175, 55, 0.1); font-weight: bold; font-size: 16px; color: #fff; background: rgba(212, 175, 55, 0.05); display: flex; align-items: center; gap: 10px; }
+    .mdt-card-body { padding: 25px; flex-grow: 1; color: #e5e7eb; font-size: 14px; }
+
+    /* Badges & Tags */
+    .mdt-tag { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; margin-right: 10px; }
+    .agent-badge { background: #1f2937; color: #60a5fa; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; border: 1px solid #374151; margin-right: 10px; }
+
+    /* Galerie d'images */
+    .gallery-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; }
+    .gallery-grid img { height: 180px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: transform 0.2s; object-fit: cover; }
+    .gallery-grid img:hover { transform: scale(1.02); border-color: #d4af37; }
+
+    /* Format Rapport Formulaire */
+    .form-field { margin-bottom: 20px; }
+    .form-label { color: #d4af37; font-size: 12px; text-transform: uppercase; font-weight: bold; margin-bottom: 8px; display: block; letter-spacing: 1px; }
+    .form-value { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); color: #fff; line-height: 1.6; white-space: pre-wrap; }
+
+    /* Historique Chat (En bas de page) */
+    .log-box { display: flex; flex-direction: column; gap: 15px; background: #000; padding: 20px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); max-height: 500px; overflow-y: auto; }
+    .log-entry { padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .log-entry:last-child { border-bottom: none; padding-bottom: 0; }
+    .log-meta { font-size: 12px; color: #d4af37; margin-bottom: 5px; font-weight: bold; display: flex; justify-content: space-between; }
+    .log-text { color: #9ca3af; font-size: 13px; white-space: pre-wrap; line-height: 1.5; }
+    .thread-title { color: #fff; font-weight: bold; font-size: 13px; background: rgba(212,175,55,0.1); border-left: 3px solid #d4af37; padding: 8px 15px; margin: 15px 0 5px 0; border-radius: 4px; text-transform: uppercase; }
+</style>
+
+<div id="detail-container">
+    <div class="top-bar">
+        <a href="/archives" class="btn-retour"><i class="fas fa-arrow-left"></i> Retour</a>
+        <div class="report-main-title">Dossier : <span>#<%= ticket.channelName %></span></div>
+        <div style="width: 110px;"></div> <!-- Espace mort pour le centrage -->
+    </div>
+
+    <div class="mdt-grid">
+        
+        <!-- ENCADRÉ 1 : TYPE & TAGS -->
+        <div class="mdt-card">
+            <div class="mdt-card-header"><i class="fas fa-info-circle"></i> Type & Informations</div>
+            <div class="mdt-card-body">
+                <div class="form-field">
+                    <span class="form-label">Classification</span>
+                    <div class="form-value" style="text-transform: capitalize;"><%= ticket.motif %></div>
+                </div>
+                <div class="form-field">
+                    <span class="form-label">Date de clôture</span>
+                    <div class="form-value"><%= new Date(ticket.dateCreation).toLocaleString('fr-FR') %></div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <span class="mdt-tag">BCSO</span>
+                    <span class="mdt-tag" style="border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.1);">CLÔTURÉ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENCADRÉ 2 : OFFICIERS -->
+        <div class="mdt-card">
+            <div class="mdt-card-header"><i class="fas fa-users"></i> Officiers Impliqués</div>
+            <div class="mdt-card-body">
+                <span class="form-label">Superviseur de clôture</span>
+                <div class="agent-badge" style="margin-bottom: 20px;"><i class="fas fa-shield-alt"></i> <%= ticket.closedBy %></div>
+                
+                <span class="form-label">Ouvert par / Origine</span>
+                <div class="agent-badge" style="background: rgba(255,255,255,0.05); color: #fff; border-color: rgba(255,255,255,0.1);"><i class="fas fa-user"></i> <%= ticket.openedBy %></div>
+            </div>
+        </div>
+
+        <!-- ENCADRÉ 3 : GALERIE -->
+        <div class="mdt-card grid-full">
+            <div class="mdt-card-header"><i class="fas fa-images"></i> Galerie & Pièces à conviction</div>
+            <div class="mdt-card-body" id="galerie-container">
+                <span style="color: #6b7280; font-style: italic;">Analyse des preuves en cours...</span>
+            </div>
+        </div>
+
+        <!-- ENCADRÉ 4 : RAPPORT D'OPÉRATION (Formaté) -->
+        <div class="mdt-card grid-full">
+            <div class="mdt-card-header" style="color: #d4af37; border-bottom: 1px solid rgba(212, 175, 55, 0.2);"><i class="fas fa-file-signature"></i> Description & Rapport Officiel</div>
+            <div class="mdt-card-body" id="rapport-container">
+                <span style="color: #6b7280; font-style: italic;">Aucun rapport formaté n'a été détecté dans ce dossier.</span>
+            </div>
+        </div>
+
+        <!-- ENCADRÉ 5 : LOGS BRUTS -->
+        <div class="mdt-card grid-full">
+            <div class="mdt-card-header"><i class="fas fa-history"></i> Historique des communications</div>
+            <div class="mdt-card-body">
+                <div class="log-box" id="log-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Décodage sécurisé du JSON injecté par EJS
+        const rawMessages = `<%- JSON.stringify(ticket.messages).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"') %>`;
+        const messages = JSON.parse(rawMessages);
+        
+        const galerieContainer = document.getElementById('galerie-container');
+        const rapportContainer = document.getElementById('rapport-container');
+        const logContainer = document.getElementById('log-container');
+        
+        let hasImages = false;
+        let hasReport = false;
+        
+        galerieContainer.innerHTML = '<div class="gallery-grid" id="gallery-grid"></div>';
+        const galleryGrid = document.getElementById('gallery-grid');
+        logContainer.innerHTML = '';
+
+        messages.forEach(msg => {
+            let contentText = msg.content;
+            
+            // 1️⃣ DÉTECTION DES IMAGES -> Trié dans la Galerie
+            if (contentText.includes('[IMAGE]')) {
+                const parts = contentText.split('[IMAGE]');
+                contentText = parts[0]; 
+                const urls = parts[1].trim().split(' ');
+                
+                urls.forEach(url => {
+                    if(url) {
+                        hasImages = true;
+                        galleryGrid.innerHTML += `<a href="${url}" target="_blank"><img src="${url}" alt="Preuve visuelle"></a>`;
+                    }
+                });
+            }
+
+            // 2️⃣ DÉTECTION DU RAPPORT -> Trié dans Description & Rapport Officiel
+            if (contentText.includes('🚨 TITRE OPÉRATION 🚨') || contentText.includes('╔════════════════════╗')) {
+                hasReport = true;
+                
+                // Transformation magique du modèle texte brut en champs de formulaire MDT
+                let cleanReport = contentText
+                    .replace(/╔════════════════════╗/g, '')
+                    .replace(/🚨 TITRE OPÉRATION 🚨/g, '')
+                    .replace(/╚════════════════════╝/g, '')
+                    .replace(/━━━━━━━━━━━━━━━━━━━━/g, '')
+                    .replace(/(📅 Date \/ Heure :|📍 Secteur :|⚖️ Infraction :|👥 Suspects|🎭 Otages|🚗 Véhicules|📢 Revendications|🎖️ Lead Terrain :|🤝 Lead Négociations :|📝 Rapport d'Opération|Compte-rendu :)/g, 
+                             '</div><div class="form-field"><span class="form-label">$1</span><div class="form-value">');
+                
+                // On nettoie la balise fermante superflue au début
+                cleanReport = cleanReport.replace('</div>', '');
+                rapportContainer.innerHTML = `${cleanReport}</div>`;
+            }
+
+            // 3️⃣ GESTION DES LOGS -> Trié dans l'Historique
+            if (contentText.includes('DÉBUT DE LA SECTION :')) {
+                // Création d'un titre pour séparer visuellement les fils Discord
+                const sectionMatch = contentText.match(/DÉBUT DE LA SECTION : (.*?)\*\*/);
+                const sectionName = sectionMatch ? sectionMatch[1] : 'SECTION COMPLÉMENTAIRE';
+                logContainer.innerHTML += `<div class="thread-title"><i class="fas fa-folder-open"></i> Fil : ${sectionName}</div>`;
+            } else {
+                // Ajout du message classique dans les logs
+                logContainer.innerHTML += `
+                    <div class="log-entry">
+                        <div class="log-meta">
+                            <span><i class="fas fa-user-circle"></i> ${msg.author}</span>
+                            <span style="color: #6b7280; font-weight: normal;">${msg.timestamp}</span>
+                        </div>
+                        <div class="log-text">${contentText || '[Contenu visuel extrait vers la galerie]'}</div>
+                    </div>
+                `;
+            }
+        });
+
+        if (!hasImages) {
+            galerieContainer.innerHTML = '<span style="color: #6b7280; font-style: italic;">Aucune image n\'a été jointe à ce dossier.</span>';
+        }
+        if (!hasReport) {
+            // Si pas de rapport détecté, on laisse le texte par défaut
+        }
+    });
+</script>

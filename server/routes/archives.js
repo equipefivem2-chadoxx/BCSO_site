@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
 
+// Route principale : Tableau et recherche
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -9,20 +10,17 @@ router.get('/', async (req, res) => {
         let query = {};
         const { search, filterType, date } = req.query;
 
-        // Système de filtrage intelligent et cumulable
         if (search && search.trim() !== '') {
-            const regex = new RegExp(search, 'i'); // 'i' pour ignorer les majuscules/minuscules
+            const regex = new RegExp(search, 'i');
             if (filterType === 'agent') {
                 query.closedBy = regex;
             } else if (filterType === 'motif') {
                 query.motif = regex;
             } else {
-                // Recherche globale par défaut (Nom du salon ou auteur)
                 query.$or = [{ channelName: regex }, { openedBy: regex }];
             }
         }
 
-        // Filtrage précis par date si sélectionnée
         if (date && date.trim() !== '') {
             const start = new Date(date);
             const end = new Date(date);
@@ -30,7 +28,6 @@ router.get('/', async (req, res) => {
             query.dateCreation = { $gte: start, $lt: end };
         }
 
-        // On récupère les fiches triées de la plus récente à la plus ancienne
         const tickets = await Ticket.find(query).sort({ dateCreation: -1 });
 
         res.render('pages/archives', {
@@ -41,6 +38,27 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error('Erreur affichage archives:', error);
         res.redirect('/dashboard');
+    }
+});
+
+// 🚀 NOUVELLE ROUTE : Affichage de la page MDT complète du dossier
+router.get('/:ticketId', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const ticket = await Ticket.findOne({ channelName: req.params.ticketId });
+        
+        if (!ticket) {
+            return res.status(404).render('pages/404', { message: 'Dossier introuvable', title: '404' });
+        }
+
+        res.render('pages/archive-detail', {
+            title: `Dossier #${ticket.channelName}`,
+            ticket: ticket
+        });
+    } catch (error) {
+        console.error('Erreur ouverture dossier:', error);
+        res.redirect('/archives');
     }
 });
 
