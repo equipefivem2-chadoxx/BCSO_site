@@ -60,9 +60,9 @@
             <% 
             const gradesAutorises = ['admin', 'Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I'];
             const userGrade = (user && user.grade) ? user.grade : (user && user.role) ? user.role : '';
-            if (gradesAutorises.includes(userGrade) || userGrade === 'admin') { 
+            if (gradesAutorises.map(g => g.toLowerCase()).includes(userGrade.toLowerCase()) || userGrade.toLowerCase() === 'admin') { 
             %>
-                <form action="/archives/delete/<%= ticket._id %>" method="POST" onsubmit="return confirm('Supprimer définitivement ce dossier du BCSO ?');">
+                <form action="/archives/delete/<%= ticket._id.toString() %>" method="POST" onsubmit="return confirm('⚠️ ATTENTION : Supprimer définitivement ce dossier du BCSO ? Cette action est irréversible.');">
                     <button type="submit" class="btn-delete"><i class="fas fa-trash-alt"></i> SUPPRIMER</button>
                 </form>
             <% } else { %>

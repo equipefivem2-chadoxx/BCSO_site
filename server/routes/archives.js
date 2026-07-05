@@ -70,19 +70,34 @@ router.get('/:ticketId', async (req, res) => {
 });
 
 router.post('/delete/:id', async (req, res) => {
+    // 1. Vérification de connexion
     if (!req.session.user) return res.redirect('/auth/login');
     
-    const gradesAutorises = ['admin', 'Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I'];
-    const userGrade = req.session.user.grade || req.session.user.role || '';
+    // 2. Définition des grades
+    const gradesAutorises = ['admin', 'sheriff', 'lieutenant', 'sergeant chef', 'sergeant ii', 'sergeant i'];
+    const userGrade = (req.session.user.grade || req.session.user.role || '').toLowerCase();
     
-    if (gradesAutorises.includes(userGrade) || gradesAutorises.includes('admin')) {
+    // 3. Vérification des droits avec sensibilité à la casse corrigée
+    if (gradesAutorises.includes(userGrade)) {
         try {
-            await Ticket.findByIdAndDelete(req.params.id);
+            console.log(`Tentative de suppression de l'archive ID: ${req.params.id} par ${req.session.user.username || 'un agent autorisé'}`);
+            
+            // Suppression dans la base de données
+            const deletedTicket = await Ticket.findByIdAndDelete(req.params.id);
+            
+            if (deletedTicket) {
+                console.log('✅ Dossier supprimé avec succès.');
+            } else {
+                console.log('❌ Erreur : Dossier introuvable dans la base de données.');
+            }
         } catch (error) {
-            console.error('Erreur lors de la suppression du dossier:', error);
+            console.error('❌ Erreur critique lors de la suppression du dossier:', error);
         }
+    } else {
+        console.log(`⛔ Action refusée : Grade insuffisant (${userGrade}).`);
     }
     
+    // 4. Redirection vers la liste des archives
     res.redirect('/archives');
 });
 
