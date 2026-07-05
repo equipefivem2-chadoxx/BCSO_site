@@ -28,10 +28,40 @@ const checkAdmin = async (req, res, next) => {
 
 router.use(checkAdmin);
 
-// 1. Afficher la page d'administration
+// 1. Afficher la page d'administration avec tri par hiérarchie
 router.get('/', async (req, res) => {
     try {
-        const agents = await Agent.find().sort({ grade: 1, matricule: 1 });
+        // On récupère tous les agents
+        const agents = await Agent.find();
+
+        // 🚀 Ordre hiérarchique personnalisé (du plus haut au plus bas)
+        const ordreGrades = [
+            'Sheriff', 
+            'Lieutenant', 
+            'Sergeant Chef', 
+            'Sergeant II', 
+            'Sergeant I', 
+            'SLO', 
+            'Deputy III', 
+            'Deputy II', 
+            'Deputy I', 
+            'Deputy Junior'
+        ];
+
+        // Tri des agents en JavaScript
+        agents.sort((a, b) => {
+            const indexA = ordreGrades.indexOf(a.grade);
+            const indexB = ordreGrades.indexOf(b.grade);
+
+            // Si les grades sont différents, on trie selon l'index dans le tableau (le plus bas index = plus haut gradé)
+            if (indexA !== indexB) {
+                return indexA - indexB;
+            }
+
+            // Si le grade est identique, on trie par numéro de matricule (ex: 02 avant 55)
+            return a.matricule.localeCompare(b.matricule, undefined, { numeric: true, sensitivity: 'base' });
+        });
+
         const archivesCount = await Ticket.countDocuments(); // Compteur pour la zone de danger
         
         res.render('pages/admin', { 
@@ -102,7 +132,7 @@ router.post('/modifier/:id', async (req, res) => {
     }
 });
 
-// 🚀 5. ZONE DE DANGER : Purger tous les rapports d'opération
+// 5. ZONE DE DANGER : Purger tous les rapports d'opération
 router.post('/purge-rapports', async (req, res) => {
     try {
         await Ticket.deleteMany({}); // Supprime TOUT le contenu de la collection Ticket
