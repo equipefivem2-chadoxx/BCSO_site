@@ -3,46 +3,80 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
-const connectDB = require('./database/config'); // 🧱 Import du module de Base de Données
+
+const connectDB = require('./database/config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 🚀 Initialisation de la Base de Données MongoDB
+// 🚀 DB
 connectDB();
 
-// 1. Configuration du moteur de rendu (EJS)
+// =====================
+// VIEW ENGINE
+// =====================
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Configuration du Layout EJS
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 
-// 2. Middlewares natifs
+// =====================
+// MIDDLEWARES
+// =====================
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 3. Configuration de la session (Modulaire)
+// =====================
+// SESSION
+// =====================
 app.use(session({
     secret: process.env.SESSION_SECRET || 'bcso_secret_key_secure',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 } // 24 heures
+    cookie: {
+        secure: false,
+        maxAge: 1000 * 60 * 60 * 24
+    }
 }));
 
-// 4. Injection des variables globales pour les vues EJS
+// =====================
+// GLOBAL USER EJS
+// =====================
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
     next();
 });
 
-// 5. Chargement du Routeur Global
+// =====================
+// ROUTES IMPORT (IMPORTANT FIX)
+// =====================
 const indexRouter = require('./server/routes/index');
-app.use('/', indexRouter);
+const authRouter = require('./server/routes/auth');
+const adminRouter = require('./server/routes/admin');
 
-// 6. Lancement du serveur
+// =====================
+// ROUTES USE
+// =====================
+app.use('/', indexRouter);
+app.use('/auth', authRouter);
+app.use('/admin', adminRouter);
+
+// =====================
+// DASHBOARD ROUTE DIRECT (si pas de fichier)
+// =====================
+const { requireAuth, syncUser } = require('./server/middleware/checkAuth');
+
+app.get('/dashboard', requireAuth, syncUser, (req, res) => {
+    res.render('pages/dashboard', {
+        user: req.session.user
+    });
+});
+
+// =====================
+// START SERVER
+// =====================
 app.listen(PORT, () => {
     console.log(`[BCSO MDT] 🟢 Système en ligne sur le port ${PORT}`);
 });

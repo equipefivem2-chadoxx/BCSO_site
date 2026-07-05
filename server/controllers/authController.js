@@ -1,5 +1,23 @@
-const Agent = require('../models/Agent');
 const axios = require('axios');
+const Agent = require('../models/Agent');
+
+exports.loginPage = (req, res) => {
+    res.render('pages/login', {
+        layout: false,
+        error: req.query.error
+    });
+};
+
+exports.loginDiscord = (req, res) => {
+    const clientId = process.env.DISCORD_CLIENT_ID;
+
+    const rawUrl = "https://bcso-noface.up.railway.app/auth/discord/callback";
+    const redirectUri = encodeURIComponent(rawUrl);
+
+    const url = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds.members.read`;
+
+    res.redirect(url);
+};
 
 exports.callbackDiscord = async (req, res) => {
     try {
@@ -8,6 +26,7 @@ exports.callbackDiscord = async (req, res) => {
 
         const rawUrl = "https://bcso-noface.up.railway.app/auth/discord/callback";
 
+        // 1. Token Discord
         const params = new URLSearchParams();
         params.append('client_id', process.env.DISCORD_CLIENT_ID);
         params.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
@@ -23,53 +42,72 @@ exports.callbackDiscord = async (req, res) => {
 
         const accessToken = tokenResponse.data.access_token;
 
+        // 2. Infos membre guild
+        const guildId = process.env.TEST_GUILD_ID;
+
         const memberResponse = await axios.get(
-            `https://discord.com/api/users/@me`,
+            `https://discord.com/api/users/@me/guilds/${guildId}/member`,
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
-        const guildMember = await axios.get(
-            `https://discord.com/api/users/@me/guilds/${process.env.TEST_GUILD_ID}/member`,
-            { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
+        const userRoles = memberResponse.data.roles || [];
+        const userInfo = memberResponse.data.user;
 
-        const userInfo = guildMember.data.user;
-        const roles = guildMember.data.roles || [];
+        // 3. Role system
+        let systemRole = null;
 
-        // 🔥 IMPORTANT : on récupère l’agent Mongo
+        if (
+            userRoles.includes(process.env.ROLE_CAPTAIN_ID) ||
+            userRoles.includes(process.env.ROLE_ADMIN_ID)
+        ) {
+            systemRole = 'admin';
+        } else if (userRoles.includes(process.env.ROLE_OFFICER_ID)) {
+            systemRole = 'officer';
+        }
+
+        if (!systemRole) {
+            return res.redirect('/auth/login?error=AccessDenied');
+        }
+
+        // 4. 🔥 SYNC AVEC MONGO (IMPORTANT FIX)
         let agent = await Agent.findOne({ discordId: userInfo.id });
 
-        // si pas d’agent => fallback
         if (!agent) {
-            return res.redirect('/auth/login?error=NoAgentLinked');
+            agent = await Agent.create({
+                discordId: userInfo.id,
+                prenom: userInfo.global_name || userInfo.username,
+                nom: "",
+                matricule: "TEMP-" + userInfo.id.slice(-4),
+                grade: systemRole === 'admin' ? 'Sheriff' : 'Deputy Junior',
+                isAdmin: systemRole === 'admin'
+            });
         }
 
-        // 🔥 ROLE FINAL = MONGO + DISCORD
-        let systemRole = agent.isAdmin ? 'admin' : 'officer';
-
-        // (option bonus si tu veux garder discord override)
-        if (roles.includes(process.env.ROLE_CAPTAIN_ID)) {
-            systemRole = 'admin';
+        // 5. refresh admin DB (IMPORTANT)
+        if (systemRole === 'admin') {
+            agent.isAdmin = true;
+            await agent.save();
         }
 
+        // 6. nickname Discord
         const serverNickname =
-            guildMember.data.nick ||
+            memberResponse.data.nick ||
             userInfo.global_name ||
             userInfo.username;
 
+        // 7. SESSION CLEAN
         req.session.user = {
             id: userInfo.id,
             username: serverNickname,
-            avatar: userInfo.avatar,
             role: systemRole,
-            grade: agent.grade,
-            isAdmin: agent.isAdmin
+            matricule: agent.matricule,
+            grade: agent.grade
         };
 
         return res.redirect('/dashboard');
 
     } catch (err) {
-        console.error(err);
-        return res.redirect('/auth/login?error=AuthFail');
+        console.error('Auth error:', err?.response?.data || err.message);
+        return res.redirect('/auth/login?error=AuthFailed');
     }
 };
