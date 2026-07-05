@@ -21,8 +21,7 @@
     .matricule { font-size: 22px; font-weight: 800; color: #d4af37; font-family: monospace; }
     .status-dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
     
-    .agent-name { font-size: 18px; color: #f3f4f6; font-weight: 600; margin-bottom: 5px; }
-    .agent-discord { font-size: 12px; color: #6b7280; display: flex; align-items: center; gap: 5px; }
+    .agent-name { font-size: 18px; color: #f3f4f6; font-weight: 600; }
 </style>
 
 <div id="roster-container">
@@ -38,7 +37,7 @@
             let grade = grades[i];
             let delay = i * 0.1;
     %>
-            <div class="grade-section" style="animation-delay: <%= delay %>s;">
+            <div class="grade-section" <%- 'style="animation-delay: ' + delay + 's;"' %>>
                 <h3 class="grade-title"><%= grade %></h3>
                 <div class="agents-grid">
                     <% effectifsTries[grade].forEach(function(agent) { %>
@@ -48,11 +47,6 @@
                                 <div class="status-dot"></div>
                             </div>
                             <div class="agent-name"><%= agent.prenom %> <%= agent.nom %></div>
-                            <% if (agent.discordId && agent.discordId.trim() !== '') { %>
-                                <div class="agent-discord"><i class="fab fa-discord"></i> Ligne Sécurisée active</div>
-                            <% } else { %>
-                                <div class="agent-discord" style="color: #4b5563;"><i class="fas fa-unlink"></i> Non lié</div>
-                            <% } %>
                         </div>
                     <% }); %>
                 </div>
