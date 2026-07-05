@@ -53,26 +53,19 @@ exports.callbackDiscord = async (req, res) => {
         const userInfo = memberResponse.data.user;
 
         // 3. Attribution des accès selon le rôle Discord
-// 3. Attribution des accès selon le rôle Discord
-let systemRole = null;
+        let systemRole = null;
+        
+        // Le rôle Capitaine est reconnu comme le vrai lead et obtient les droits d'administration
+        if (userRoles.includes(process.env.ROLE_CAPTAIN_ID) || userRoles.includes(process.env.ROLE_ADMIN_ID)) {
+            systemRole = 'admin';
+        } else if (userRoles.includes(process.env.ROLE_OFFICER_ID)) {
+            systemRole = 'officer';
+        }
 
-// 🚀 NOUVEAU : Vérification obligatoire du rôle d'accès au site
-const ACCESS_ROLE_ID = '1427651123606589446'; 
-
-if (!userRoles.includes(ACCESS_ROLE_ID)) {
-    // Si le mec n'a pas le rôle, il dégage
-    return res.redirect('/auth/login?error=AccessDenied');
-}
-
-// Ensuite, on définit son niveau d'accès pour le site
-if (userRoles.includes(process.env.ROLE_CAPTAIN_ID) || userRoles.includes(process.env.ROLE_ADMIN_ID)) {
-    systemRole = 'admin';
-} else if (userRoles.includes(process.env.ROLE_OFFICER_ID)) {
-    systemRole = 'officer';
-} else {
-    // S'il a le rôle d'accès mais aucun grade spécifique, on lui donne un accès de base
-    systemRole = 'user';
-}
+        // Si aucun rôle correspondant, on bloque l'accès
+        if (!systemRole) {
+            return res.redirect('/auth/login?error=AccessDenied');
+        }
 
         // 🚀 4. Sauvegarde dans la session (Avec gestion du pseudo serveur)
         // S'il n'y a pas de rename sur le serveur (nick), on se rabat sur le pseudo global, puis classique.
