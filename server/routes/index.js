@@ -49,6 +49,15 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
+// 🚀 Route pour la page Règlement (NOUVEAU)
+router.get('/reglement', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/reglement', { 
+        title: 'BCSO - Règlement',
+        user: req.session.user
+    });
+});
+
 // 🚀 Route pour la page Formations
 router.get('/formations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
