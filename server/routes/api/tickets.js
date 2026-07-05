@@ -30,4 +30,21 @@ router.post('/transcript', async (req, res) => {
     }
 });
 
+// 🚀 NOUVELLE ROUTE : Le bot envoie le nombre de tickets en cours ici
+router.post('/sync-count', (req, res) => {
+    try {
+        const { count } = req.body;
+        
+        if (typeof count === 'number') {
+            // Sauvegarde dans la mémoire globale d'Express (ultra rapide)
+            req.app.locals.ticketsEnCoursCount = count;
+            return res.status(200).json({ success: true, message: 'Compteur mis à jour' });
+        }
+        
+        return res.status(400).json({ success: false, message: 'Format invalide' });
+    } catch (error) {
+        return res.status(500).json({ success: false });
+    }
+});
+
 module.exports = router;

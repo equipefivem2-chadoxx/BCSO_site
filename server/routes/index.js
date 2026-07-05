@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
 
+// Plus besoin d'axios ici, on a tout retiré pour optimiser !
 const authRoutes = require('./auth');
 const adminRoutes = require('./admin'); 
 const effectifsRoutes = require('./effectifs');
@@ -21,7 +21,6 @@ router.get('/dashboard', async (req, res) => {
     
     let agentsCount = 0;
     let ticketsArchivesCount = 0;
-    let ticketsEnCoursCount = 0;
     let recentTickets = []; 
 
     try {
@@ -36,23 +35,9 @@ router.get('/dashboard', async (req, res) => {
         console.log('Attente de la création des collections...');
     }
 
-    const { DISCORD_TOKEN, GUILD_ID } = process.env;
-    const TICKET_CATEGORY_ID = "1427847738665472030"; 
-    
-    if (DISCORD_TOKEN && GUILD_ID) {
-        try {
-            const response = await axios.get(`https://discord.com/api/v10/guilds/${GUILD_ID}/channels`, {
-                headers: { Authorization: `Bot ${DISCORD_TOKEN}` }
-            });
-            const channels = response.data;
-            const openTickets = channels.filter(c => c.parent_id === TICKET_CATEGORY_ID);
-            ticketsEnCoursCount = openTickets.length;
-        } catch (discordErr) {
-            console.error("Impossible de récupérer les salons Discord:", discordErr.message);
-        }
-    } else {
-        console.warn("⚠️ Attention: DISCORD_TOKEN ou GUILD_ID manquants dans le fichier .env du site.");
-    }
+    // 🚀 LECTURE ULTRA RAPIDE : On lit la valeur envoyée par le bot et stockée en mémoire.
+    // Plus aucun chargement lent via l'API Discord !
+    let ticketsEnCoursCount = req.app.locals.ticketsEnCoursCount || 0;
 
     res.render('pages/dashboard', { 
         title: 'BCSO - Dashboard Principal',
@@ -64,7 +49,7 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
-// 🚀 NOUVEAU : Route pour la page Formations
+// 🚀 Route pour la page Formations
 router.get('/formations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formations', { 
@@ -73,7 +58,7 @@ router.get('/formations', (req, res) => {
     });
 });
 
-// 🚀 NOUVEAU : Route pour la page Documents
+// 🚀 Route pour la page Documents
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 
