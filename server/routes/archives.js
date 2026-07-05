@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
 
-// Route principale : Tableau et recherche
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -10,20 +9,17 @@ router.get('/', async (req, res) => {
         let query = {};
         const { search, filterType, date } = req.query;
 
-        // Système de filtrage intelligent et cumulable
         if (search && search.trim() !== '') {
-            const regex = new RegExp(search, 'i'); // 'i' pour ignorer les majuscules/minuscules
+            const regex = new RegExp(search, 'i');
             if (filterType === 'agent') {
                 query.closedBy = regex;
             } else if (filterType === 'motif') {
                 query.motif = regex;
             } else {
-                // Recherche globale par défaut (Nom du salon ou auteur)
                 query.$or = [{ channelName: regex }, { openedBy: regex }];
             }
         }
 
-        // Filtrage précis par date si sélectionnée
         if (date && date.trim() !== '') {
             const start = new Date(date);
             const end = new Date(date);
@@ -31,7 +27,6 @@ router.get('/', async (req, res) => {
             query.dateCreation = { $gte: start, $lt: end };
         }
 
-        // On récupère les fiches triées de la plus récente à la plus ancienne
         const tickets = await Ticket.find(query).sort({ dateCreation: -1 });
 
         res.render('pages/archives', {
@@ -45,12 +40,19 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE : Affichage de la page MDT complète du dossier
 router.get('/:ticketId', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
     try {
-        const ticket = await Ticket.findOne({ channelName: req.params.ticketId });
+        let ticket;
+        
+        // 🚀 CORRECTION : On cherche d'abord par l'ID unique (qui ne fait jamais de doublons)
+        if (req.params.ticketId.match(/^[0-9a-fA-F]{24}$/)) {
+            ticket = await Ticket.findById(req.params.ticketId);
+        } else {
+            // Sécurité pour la rétrocompatibilité (si un lien a gardé l'ancien format, on prend le plus récent)
+            ticket = await Ticket.findOne({ channelName: req.params.ticketId }).sort({ dateCreation: -1 });
+        }
         
         if (!ticket) {
             return res.status(404).render('pages/404', { message: 'Dossier introuvable', title: '404' });
@@ -59,7 +61,7 @@ router.get('/:ticketId', async (req, res) => {
         res.render('pages/archive-detail', {
             title: `Dossier #${ticket.channelName}`,
             ticket: ticket,
-            user: req.session.user // On l'envoie pour vérifier le grade sur le bouton Supprimer
+            user: req.session.user
         });
     } catch (error) {
         console.error('Erreur ouverture dossier:', error);
@@ -67,11 +69,9 @@ router.get('/:ticketId', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE : Suppression sécurisée d'un dossier
 router.post('/delete/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
-    // Vérification stricte des grades
     const gradesAutorises = ['admin', 'Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I'];
     const userGrade = req.session.user.grade || req.session.user.role || '';
     

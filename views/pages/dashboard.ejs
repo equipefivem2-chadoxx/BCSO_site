@@ -237,7 +237,8 @@
                                 <span><i class="fas fa-clock"></i> <%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></span>
                             </div>
                         </div>
-                        <a href="/archives/<%= ticket.channelName %>" class="btn-open">Ouvrir <i class="fas fa-chevron-right"></i></a>
+                        <!-- 🚀 CORRECTION : Utilisation de l'ID Unique de la BDD pour pointer vers le bon document -->
+                        <a href="/archives/<%= ticket._id %>" class="btn-open">Ouvrir <i class="fas fa-chevron-right"></i></a>
                     </div>
                 <% }); %>
             </div>
