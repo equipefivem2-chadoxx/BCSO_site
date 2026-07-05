@@ -22,20 +22,24 @@ router.get('/dashboard', async (req, res) => {
     let agentsCount = 0;
     let ticketsArchivesCount = 0;
     let ticketsEnCoursCount = 0;
+    let recentTickets = []; // 🚀 Variable pour le flux en direct
 
     try {
         const Agent = require('../models/Agent');
         agentsCount = await Agent.countDocuments();
         
         const Ticket = require('../models/Ticket');
-        ticketsArchivesCount = await Ticket.countDocuments(); // Nbre total de rapports validés
+        ticketsArchivesCount = await Ticket.countDocuments();
+        
+        // 🚀 Récupération des 5 dernières archives pour le Flux
+        recentTickets = await Ticket.find({}).sort({ dateCreation: -1 }).limit(5);
     } catch (err) {
         console.log('Attente de la création des collections...');
     }
 
-    // Calcul des tickets en cours
+    // Calcul des tickets en cours via Discord
     const { DISCORD_TOKEN, GUILD_ID } = process.env;
-    const TICKET_CATEGORY_ID = "1522570076073627719"; // 🚀 L'ID DE TA CATÉGORIE
+    const TICKET_CATEGORY_ID = "1522570076073627719"; 
     
     if (DISCORD_TOKEN && GUILD_ID) {
         try {
@@ -55,7 +59,8 @@ router.get('/dashboard', async (req, res) => {
         user: req.session.user,
         agentsCount: agentsCount,
         ticketsArchivesCount: ticketsArchivesCount,
-        ticketsEnCoursCount: ticketsEnCoursCount
+        ticketsEnCoursCount: ticketsEnCoursCount,
+        recentTickets: recentTickets // 🚀 Envoi vers le dashboard.ejs
     });
 });
 
