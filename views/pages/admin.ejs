@@ -1,215 +1,310 @@
 <style>
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(15px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+/* ===== STYLE IDENTIQUE MAIS CLEAN ===== */
 
-    #admin-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding-bottom: 50px;
-        animation: fadeIn 0.5s ease-out;
-    }
+@keyframes fadeIn {
+    from { opacity:0; transform:translateY(15px); }
+    to { opacity:1; transform:translateY(0); }
+}
 
-    .admin-header {
-        background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(11, 15, 25, 0) 100%);
-        padding: 25px 30px;
-        border-left: 4px solid #d4af37;
-        border-radius: 8px;
-        margin-bottom: 30px;
-    }
+#admin-container {
+    max-width:1200px;
+    margin:0 auto;
+    padding-bottom:50px;
+    animation:fadeIn .5s ease;
+}
 
-    .admin-header h2 { margin: 0; font-size: 24px; font-weight: 600; color: #fff; }
-    .admin-header p { margin: 5px 0 0 0; color: #9ca3af; font-size: 14px; }
+.admin-header {
+    background:linear-gradient(90deg, rgba(212,175,55,0.1), transparent);
+    padding:25px 30px;
+    border-left:4px solid #d4af37;
+    border-radius:8px;
+    margin-bottom:30px;
+}
 
-    /* LAYOUT EN DEUX COLONNES */
-    .admin-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 30px;
-    }
+.admin-header h2 { color:#fff; margin:0; }
+.admin-header p { color:#9ca3af; margin:5px 0 0; }
 
-    /* FORMULAIRE PREMIUM */
-    .form-panel, .list-panel {
-        background: rgba(17, 24, 39, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        padding: 30px;
-    }
+.admin-grid {
+    display:grid;
+    grid-template-columns:1fr 2fr;
+    gap:30px;
+}
 
-    .panel-title {
-        color: #d4af37;
-        font-size: 18px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        padding-bottom: 10px;
-    }
+.form-panel, .list-panel {
+    background:rgba(17,24,39,0.6);
+    border:1px solid rgba(255,255,255,0.05);
+    border-radius:12px;
+    padding:25px;
+    backdrop-filter:blur(10px);
+}
 
-    .input-group { margin-bottom: 20px; }
-    .input-group label {
-        display: block;
-        margin-bottom: 8px;
-        color: #9ca3af;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .form-control {
-        width: 100%;
-        padding: 12px 15px;
-        background-color: #0b0f19;
-        border: 1px solid #1f2937;
-        border-radius: 6px;
-        color: #fff;
-        font-size: 14px;
-        transition: all 0.3s ease;
-    }
-    .form-control:focus {
-        outline: none;
-        border-color: #d4af37;
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
-    }
+.panel-title {
+    color:#d4af37;
+    margin-bottom:15px;
+}
 
-    .btn-submit {
-        width: 100%;
-        padding: 12px;
-        background-color: rgba(212, 175, 55, 0.1);
-        color: #d4af37;
-        border: 1px solid #d4af37;
-        border-radius: 6px;
-        font-weight: bold;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    .btn-submit:hover {
-        background-color: #d4af37;
-        color: #000;
-    }
+.input-group { margin-bottom:12px; }
 
-    /* TABLEAU DES EFFECTIFS */
-    .agents-table { width: 100%; border-collapse: collapse; }
-    .agents-table th { text-align: left; padding: 15px; color: #9ca3af; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #1f2937; }
-    .agents-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #e5e7eb; font-size: 14px; }
-    .badge-grade { background: rgba(255, 255, 255, 0.05); padding: 5px 10px; border-radius: 4px; font-size: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
-    
-    /* Boutons d'action */
-    .action-btns { display: flex; gap: 15px; align-items: center; }
-    .btn-icon { background: none; border: none; cursor: pointer; font-size: 16px; transition: color 0.3s; padding: 0; }
-    .btn-edit { color: #60a5fa; } .btn-edit:hover { color: #3b82f6; }
-    .btn-delete { color: #f87171; } .btn-delete:hover { color: #ef4444; }
+.input-group label {
+    display:block;
+    font-size:12px;
+    color:#9ca3af;
+    margin-bottom:5px;
+    text-transform:uppercase;
+}
 
-    /* Modal de modification */
-    #editModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-content { background: #05070b; padding: 30px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3); width: 400px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.8); }
+.form-control {
+    width:100%;
+    padding:10px;
+    background:#0b0f19;
+    border:1px solid #1f2937;
+    border-radius:6px;
+    color:white;
+}
+
+.btn-submit {
+    width:100%;
+    padding:12px;
+    border:1px solid #d4af37;
+    background:rgba(212,175,55,0.1);
+    color:#d4af37;
+    font-weight:bold;
+    cursor:pointer;
+    text-transform:uppercase;
+}
+
+.btn-submit:hover {
+    background:#d4af37;
+    color:black;
+}
+
+.agents-table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.agents-table th {
+    text-align:left;
+    font-size:11px;
+    color:#9ca3af;
+    border-bottom:1px solid #1f2937;
+    padding:10px;
+}
+
+.agents-table td {
+    padding:10px;
+    border-bottom:1px solid rgba(255,255,255,0.03);
+    color:#e5e7eb;
+    font-size:13px;
+}
+
+.actions {
+    display:flex;
+    gap:10px;
+}
+
+.btn-icon {
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.btn-edit { color:#60a5fa; }
+.btn-delete { color:#f87171; }
+
+#editModal {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content {
+    background:#05070b;
+    padding:25px;
+    border-radius:10px;
+    width:420px;
+    border:1px solid rgba(212,175,55,0.3);
+}
 </style>
 
 <div id="admin-container">
+
     <div class="admin-header">
-        <h2><i class="fas fa-cogs"></i> Haut Commandement</h2>
-        <p>Interface sécurisée de gestion des effectifs et des accréditations.</p>
+        <h2>⚙️ Haut Commandement</h2>
+        <p>Gestion des agents</p>
     </div>
 
     <div class="admin-grid">
-        <!-- COLONNE GAUCHE : AJOUTER UN AGENT -->
+
+        <!-- AJOUT -->
         <div class="form-panel">
-            <h3 class="panel-title"><i class="fas fa-user-plus"></i> Accréditer un Agent</h3>
+            <h3 class="panel-title">➕ Ajouter un agent</h3>
+
             <form action="/admin/ajouter" method="POST">
-                <div class="input-group"><label>Prénom de l'agent</label><input type="text" name="prenom" class="form-control" placeholder="Ex: John" required></div>
-                <div class="input-group"><label>Nom de l'agent</label><input type="text" name="nom" class="form-control" placeholder="Ex: Doe" required></div>
-                <div class="input-group"><label>Matricule</label><input type="text" name="matricule" class="form-control" placeholder="Ex: 01" required></div>
+
                 <div class="input-group">
-                    <label>Grade Officiel</label>
-                    <select name="grade" class="form-control" required>
-                        <option value="Admin">Admin</option><option value="Sheriff">Sheriff</option><option value="Lieutenant">Lieutenant</option>
-                        <option value="Sergeant Chef">Sergeant Chef</option><option value="Sergeant II">Sergeant II</option><option value="Sergeant I">Sergeant I</option>
-                        <option value="SLO">SLO</option><option value="Deputy III">Deputy III</option><option value="Deputy II">Deputy II</option>
-                        <option value="Deputy I">Deputy I</option><option value="Deputy Junior">Deputy Junior</option>
+                    <label>Prénom</label>
+                    <input name="prenom" class="form-control" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Nom</label>
+                    <input name="nom" class="form-control" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Matricule</label>
+                    <input name="matricule" class="form-control" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Grade</label>
+                    <select name="grade" class="form-control">
+                        <option>Sheriff</option>
+                        <option>Lieutenant</option>
+                        <option>Sergeant Chef</option>
+                        <option>Sergeant II</option>
+                        <option>Sergeant I</option>
+                        <option>SLO</option>
+                        <option>Deputy III</option>
+                        <option>Deputy II</option>
+                        <option>Deputy I</option>
+                        <option>Deputy Junior</option>
                     </select>
                 </div>
-                <div class="input-group"><label>ID Discord (Optionnel)</label><input type="text" name="discordId" class="form-control" placeholder="ID Discord pour la liaison"></div>
-                <button type="submit" class="btn-submit"><i class="fas fa-check"></i> Valider l'accréditation</button>
+
+                <div class="input-group">
+                    <label>Téléphone</label>
+                    <input name="telephone" class="form-control">
+                </div>
+
+                <div class="input-group">
+                    <label>Discord ID</label>
+                    <input name="discordId" class="form-control">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" name="isAdmin">
+                        Admin
+                    </label>
+                </div>
+
+                <button class="btn-submit">Valider</button>
             </form>
         </div>
 
-        <!-- COLONNE DROITE : LISTE DES AGENTS -->
+        <!-- LISTE -->
         <div class="list-panel">
-            <h3 class="panel-title"><i class="fas fa-list"></i> Effectifs Enregistrés</h3>
-            <% if (agents && agents.length > 0) { %>
-                <table class="agents-table">
-                    <thead>
-                        <tr><th>Matricule</th><th>Identité</th><th>Grade</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody>
-                        <% agents.forEach(function(agent) { %>
-                            <tr>
-                                <td style="color: #d4af37; font-weight: bold;">[<%= agent.matricule %>]</td>
-                                <td><%= agent.prenom %> <%= agent.nom %></td>
-                                <td><span class="badge-grade"><%= agent.grade %></span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <!-- Bouton Modifier -->
-                                        <button type="button" class="btn-icon btn-edit" title="Modifier" onclick="openEditModal('<%= agent._id %>', '<%= agent.prenom %>', '<%= agent.nom %>', '<%= agent.matricule %>', '<%= agent.grade %>', '<%= agent.discordId %>')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <!-- Bouton Supprimer -->
-                                        <form action="/admin/supprimer/<%= agent._id %>" method="POST" onsubmit="return confirm('Attention : Es-tu sûr de vouloir radier cet agent de la base de données ?');" style="margin: 0;">
-                                            <button type="submit" class="btn-icon btn-delete" title="Radier"><i class="fas fa-trash"></i></button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
+            <h3 class="panel-title">📋 Agents</h3>
+
+            <% if (agents && agents.length) { %>
+            <table class="agents-table">
+                <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom</th>
+                        <th>Grade</th>
+                        <th>Téléphone</th>
+                        <th>Admin</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% agents.forEach(function(agent){ %>
+                        <tr>
+
+                            <td style="color:#d4af37;">[<%= agent.matricule %>]</td>
+                            <td><%= agent.prenom %> <%= agent.nom %></td>
+                            <td><%= agent.grade %></td>
+                            <td><%= agent.telephone || '-' %></td>
+                            <td><%= agent.isAdmin ? '✔' : '✖' %></td>
+
+                            <td>
+                                <div class="actions">
+
+                                    <!-- IMPORTANT : DATA SAFE -->
+                                    <button
+                                        class="btn-icon btn-edit"
+                                        data-id="<%= agent._id %>"
+                                        data-prenom="<%= agent.prenom %>"
+                                        data-nom="<%= agent.nom %>"
+                                        data-matricule="<%= agent.matricule %>"
+                                        data-grade="<%= agent.grade %>"
+                                        data-discord="<%= agent.discordId || '' %>"
+                                        data-telephone="<%= agent.telephone || '' %>"
+                                        data-admin="<%= agent.isAdmin ? 1 : 0 %>"
+                                        onclick="openEditModal(this)">
+                                        ✏️
+                                    </button>
+
+                                    <form action="/admin/supprimer/<%= agent._id %>" method="POST">
+                                        <button class="btn-icon btn-delete">🗑</button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
             <% } else { %>
-                <div style="text-align: center; color: #6b7280; padding: 40px 0;">
-                    <i class="fas fa-user-slash" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
-                    <p>Aucun agent accrédité dans la base de données.</p>
-                </div>
+                <p style="color:#6b7280;text-align:center;">Aucun agent</p>
             <% } %>
         </div>
     </div>
 </div>
 
-<!-- MODAL DE MODIFICATION CACHÉ -->
+<!-- MODAL -->
 <div id="editModal">
     <div class="modal-content">
-        <h3 class="panel-title"><i class="fas fa-user-edit"></i> Mise à jour du dossier</h3>
+
+        <h3 style="color:#d4af37;">Modifier agent</h3>
+
         <form id="editForm" method="POST">
-            <div class="input-group"><label>Prénom</label><input type="text" id="editPrenom" name="prenom" class="form-control" required></div>
-            <div class="input-group"><label>Nom</label><input type="text" id="editNom" name="nom" class="form-control" required></div>
-            <div class="input-group"><label>Matricule</label><input type="text" id="editMatricule" name="matricule" class="form-control" required></div>
-            <div class="input-group">
-                <label>Grade Officiel</label>
-                <select id="editGrade" name="grade" class="form-control" required>
-                    <option value="Admin">Admin</option><option value="Sheriff">Sheriff</option><option value="Lieutenant">Lieutenant</option>
-                    <option value="Sergeant Chef">Sergeant Chef</option><option value="Sergeant II">Sergeant II</option><option value="Sergeant I">Sergeant I</option>
-                    <option value="SLO">SLO</option><option value="Deputy III">Deputy III</option><option value="Deputy II">Deputy II</option>
-                    <option value="Deputy I">Deputy I</option><option value="Deputy Junior">Deputy Junior</option>
-                </select>
-            </div>
-            <div class="input-group"><label>ID Discord</label><input type="text" id="editDiscord" name="discordId" class="form-control"></div>
-            
-            <div style="display: flex; gap: 15px; margin-top: 10px;">
-                <button type="button" class="btn-submit" style="background: none; border-color: #4b5563; color: #9ca3af;" onclick="document.getElementById('editModal').style.display='none'">Annuler</button>
-                <button type="submit" class="btn-submit">Sauvegarder</button>
-            </div>
+
+            <input id="editPrenom" name="prenom" class="form-control">
+            <input id="editNom" name="nom" class="form-control">
+            <input id="editMatricule" name="matricule" class="form-control">
+            <input id="editGrade" name="grade" class="form-control">
+            <input id="editDiscord" name="discordId" class="form-control">
+            <input id="editTelephone" name="telephone" class="form-control">
+
+            <label style="color:#9ca3af;">
+                <input type="checkbox" id="editAdmin" name="isAdmin">
+                Admin
+            </label>
+
+            <button class="btn-submit">Sauvegarder</button>
         </form>
+
+        <button class="btn-submit" onclick="closeModal()">Fermer</button>
+
     </div>
 </div>
 
 <script>
-    function openEditModal(id, prenom, nom, matricule, grade, discordId) {
-        document.getElementById('editForm').action = '/admin/modifier/' + id;
-        document.getElementById('editPrenom').value = prenom;
-        document.getElementById('editNom').value = nom;
-        document.getElementById('editMatricule').value = matricule;
-        document.getElementById('editGrade').value = grade;
-        document.getElementById('editDiscord').value = discordId && discordId !== 'undefined' ? discordId : '';
-        document.getElementById('editModal').style.display = 'flex';
-    }
+function openEditModal(btn) {
+    document.getElementById('editForm').action = '/admin/modifier/' + btn.dataset.id;
+
+    document.getElementById('editPrenom').value = btn.dataset.prenom;
+    document.getElementById('editNom').value = btn.dataset.nom;
+    document.getElementById('editMatricule').value = btn.dataset.matricule;
+    document.getElementById('editGrade').value = btn.dataset.grade;
+    document.getElementById('editDiscord').value = btn.dataset.discord;
+    document.getElementById('editTelephone').value = btn.dataset.telephone;
+    document.getElementById('editAdmin').checked = btn.dataset.admin === "1";
+
+    document.getElementById('editModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
 </script>
