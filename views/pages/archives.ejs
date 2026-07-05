@@ -1,0 +1,155 @@
+<style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #archives-container { max-width: 1400px; margin: 0 auto; padding-bottom: 60px; animation: fadeIn 0.4s ease-out; }
+    
+    .archive-header { background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(5, 7, 11, 0) 100%); padding: 25px 30px; border-left: 4px solid #d4af37; border-radius: 8px; margin-bottom: 35px; }
+    .archive-header h2 { margin: 0; font-size: 24px; color: #fff; }
+    .archive-header p { margin: 5px 0 0 0; color: #9ca3af; font-size: 14px; }
+
+    /* BARRE DE RECHERCHE PREMIUM */
+    .search-panel { background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px 30px; margin-bottom: 30px; backdrop-filter: blur(10px); }
+    .search-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+    .search-group { display: flex; flex-direction: column; gap: 8px; }
+    .search-label { color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    
+    .search-input { background: #0b0f19; border: 1px solid #1f2937; color: #fff; padding: 10px 15px; border-radius: 6px; font-size: 14px; min-width: 200px; transition: all 0.3s; }
+    .search-input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.2); }
+    
+    .btn-search { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; padding: 10px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s; height: 41px; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-search:hover { background: #d4af37; color: #000; }
+
+    /* TABLEAU DES RAPPORTS */
+    .table-panel { background: rgba(17, 24, 39, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; backdrop-filter: blur(10px); }
+    .archive-table { width: 100%; border-collapse: collapse; }
+    .archive-table th { text-align: left; padding: 15px; color: #9ca3af; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #1f2937; letter-spacing: 1px; }
+    .archive-table td { padding: 18px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #e5e7eb; font-size: 14px; }
+    
+    .badge-motif { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); color: #d4af37; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .btn-view { background: none; border: none; color: #60a5fa; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+    .btn-view:hover { color: #3b82f6; }
+
+    /* MODAL D'AFFICHAGE DU TEXTE */
+    #transcriptModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-box { background: #0b0f19; border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; width: 750px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+    .modal-header { padding: 20px 25px; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; }
+    .modal-body { padding: 25px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 15px; background: #05070b; }
+    
+    /* BULLES DE CHAT */
+    .msg-block { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px 18px; border-radius: 8px; }
+    .msg-meta { font-size: 12px; color: #d4af37; font-weight: bold; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .msg-content { color: #e5e7eb; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
+</style>
+
+<div id="archives-container">
+    <div class="archive-header">
+        <h2><i class="fas fa-folder-open"></i> Archives Centrales</h2>
+        <p>Indexation automatisée des transcriptions de dossiers et d'interventions.</p>
+    </div>
+
+    <!-- MODULE DE FILTRAGE -->
+    <div class="search-panel">
+        <form action="/archives" method="GET" class="search-form">
+            <div class="search-group">
+                <label class="search-label">Recherche</label>
+                <input type="text" name="search" class="search-input" placeholder="Matricule, nom, salon..." value="<%= (typeof filters !== 'undefined' && filters.search) ? filters.search : '' %>">
+            </div>
+            <div class="search-group">
+                <label class="search-label">Filtrer par</label>
+                <select name="filterType" class="search-input" style="min-width: 150px;">
+                    <option value="global" <%= (typeof filters !== 'undefined' && filters.filterType === 'global') ? 'selected' : '' %>>Recherche Globale</option>
+                    <option value="agent" <%= (typeof filters !== 'undefined' && filters.filterType === 'agent') ? 'selected' : '' %>>Agent en charge</option>
+                    <option value="motif" <%= (typeof filters !== 'undefined' && filters.filterType === 'motif') ? 'selected' : '' %>>Motif du dossier</option>
+                </select>
+            </div>
+            <div class="search-group">
+                <label class="search-label">Date précise</label>
+                <input type="date" name="date" class="search-input" value="<%= (typeof filters !== 'undefined' && filters.date) ? filters.date : '' %>">
+            </div>
+            <button type="submit" class="btn-search"><i class="fas fa-filter"></i> Filtrer</button>
+            <% if (typeof filters !== 'undefined' && Object.keys(filters).length > 0) { %>
+                <a href="/archives" class="btn-search" style="background: none; border-color: #4b5563; color: #9ca3af; text-decoration: none; line-height: 20px; text-align: center;">Réinitialiser</a>
+            <% } %>
+        </form>
+    </div>
+
+    <!-- RÉSULTAT DU TABLEAU -->
+    <div class="table-panel">
+        <% if (typeof tickets !== 'undefined' && tickets.length > 0) { %>
+            <table class="archive-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Dossier / Salon</th>
+                        <th>Auteur</th>
+                        <th>Motif</th>
+                        <th>Clôturé par</th>
+                        <th>Transcription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% tickets.forEach(function(ticket) { %>
+                        <tr>
+                            <td style="color: #9ca3af;"><%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></td>
+                            <td style="font-weight: 600; color: #fff;">#<%= ticket.channelName %></td>
+                            <td><%= ticket.openedBy %></td>
+                            <td><span class="badge-motif"><%= ticket.motif %></span></td>
+                            <td style="color: #10b981; font-weight: 500;"><i class="fas fa-user-shield" style="font-size: 11px;"></i> <%= ticket.closedBy %></td>
+                            <td>
+                                <!-- SOLUTION ROBUSTE : Utilisation des attributs data-* pour transmettre le JSON encodé proprement -->
+                                <button class="btn-view" data-channel="<%= ticket.channelName %>" data-messages="<%= encodeURIComponent(JSON.stringify(ticket.messages)) %>" onclick="openTranscriptModal(this)">
+                                    <i class="fas fa-eye"></i> Ouvrir la fiche
+                                </button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div style="text-align: center; color: #6b7280; padding: 50px 0;">
+                <i class="fas fa-database" style="font-size: 35px; margin-bottom: 15px; opacity: 0.4;"></i>
+                <p>Aucune transcription ne correspond à vos critères de recherche.</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- LE POP-UP MODAL POUR LIRE LE DOSSIER -->
+<div id="transcriptModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 class="panel-title" id="modalTitle" style="margin: 0;">Transcription</h3>
+            <button class="btn-search" style="padding: 5px 15px; height: auto;" onclick="document.getElementById('transcriptModal').style.display='none'">Fermer</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <!-- Injecté dynamiquement par le script js ci-dessous -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Récupération via le bouton cliqué pour décoder le JSON sans erreur de syntaxe HTML
+    function openTranscriptModal(buttonElement) {
+        const channelName = buttonElement.getAttribute('data-channel');
+        const encodedMessages = buttonElement.getAttribute('data-messages');
+        const messages = JSON.parse(decodeURIComponent(encodedMessages));
+        
+        const body = document.getElementById('modalBody');
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-file-alt" style="color:#d4af37;"></i> Archive #' + channelName;
+        body.innerHTML = '';
+
+        messages.forEach(msg => {
+            const block = document.createElement('div');
+            block.className = 'msg-block';
+            block.innerHTML = `
+                <div class="msg-meta">
+                    <span><i class="fas fa-user" style="font-size:11px;"></i> ${msg.author}</span>
+                    <span style="color:#6b7280; font-weight:normal;">${msg.timestamp}</span>
+                </div>
+                <div class="msg-content">${msg.content}</div>
+            `;
+            body.appendChild(block);
+        });
+
+        document.getElementById('transcriptModal').style.display = 'flex';
+    }
+</script>

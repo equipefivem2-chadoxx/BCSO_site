@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-// Importation des sous-routeurs (Modularité stricte)
+// Importation des sous-routeurs (Modularité stricte respectée)
 const authRoutes = require('./auth');
 const adminRoutes = require('./admin'); 
-const effectifsRoutes = require('./effectifs'); // 🚀 AJOUTÉ : Importation du module Effectifs
+const effectifsRoutes = require('./effectifs');
+const archivesRoutes = require('./archives'); // 🚀 NOUVEAU : Page d'affichage des archives
+const apiTicketsRoutes = require('./api/tickets'); // 🚀 NOUVEAU : Route API pour le bot Discord
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -34,10 +36,12 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
-// Connexion des modules
+// Connexion de tous les modules
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
-router.use('/effectifs', effectifsRoutes); // 🚀 AJOUTÉ : Connexion de la route Effectifs
+router.use('/effectifs', effectifsRoutes);
+router.use('/archives', archivesRoutes); // 🚀 AJOUTÉ
+router.use('/api/tickets', apiTicketsRoutes); // 🚀 AJOUTÉ
 
 // Gestion de la 404
 router.use((req, res) => {
