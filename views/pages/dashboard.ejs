@@ -1,231 +1,254 @@
 <style>
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    /* 🎨 DESIGN MASTERCLASS - PREMIUM MDT */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-#bcso-dashboard-container {
-    padding-bottom: 70px;
-    max-width: 1400px;
-    margin: 0 auto;
-    animation: fadeInUp 0.6s ease-out;
-}
+    #bcso-dashboard-container {
+        padding-bottom: 70px;
+        max-width: 1400px;
+        margin: 0 auto;
+        animation: fadeInUp 0.6s ease-out;
+    }
 
-/* HEADER */
-.master-header {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #111827 0%, #05070b 100%);
-    padding: 35px 40px;
-    border-radius: 12px;
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    /* BANNIÈRE DE BIENVENUE */
+    .master-header {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #111827 0%, #05070b 100%);
+        padding: 35px 40px;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 175, 55, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.master-header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px; height: 100%;
-    background: linear-gradient(to bottom, #d4af37, #f3e5ab);
-}
+    .master-header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 4px; height: 100%;
+        background: linear-gradient(to bottom, #d4af37, #f3e5ab);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    }
 
-.welcome-text h2 {
-    margin: 0;
-    font-size: 28px;
-    color: #f3f4f6;
-}
+    .welcome-text h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #f3f4f6;
+    }
+    .welcome-text p {
+        margin: 5px 0 0 0;
+        color: #9ca3af;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
 
-.welcome-text p {
-    margin: 5px 0 0;
-    color: #9ca3af;
-    font-size: 14px;
-}
+    .badge-premium {
+        background: rgba(212, 175, 55, 0.1);
+        color: #d4af37;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        font-weight: 700;
+        letter-spacing: 2px;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        backdrop-filter: blur(5px);
+    }
 
-.badge-premium {
-    background: rgba(212, 175, 55, 0.1);
-    color: #d4af37;
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    font-weight: 700;
-}
+    /* GRILLE DES STATISTIQUES (KPIs) */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 40px;
+    }
 
-/* KPI */
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-bottom: 40px;
-}
+    .kpi-card {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 30px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
 
-.kpi-card {
-    background: rgba(17, 24, 39, 0.7);
-    border: 1px solid rgba(255,255,255,0.05);
-    padding: 30px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-}
+    .kpi-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(212, 175, 55, 0.3);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.1);
+    }
 
-.kpi-data h3 {
-    margin: 0;
-    font-size: 12px;
-    color: #9ca3af;
-}
+    .kpi-card::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; width: 100px; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02));
+        transform: skewX(-20deg) translateX(150px);
+        transition: 0.5s;
+    }
 
-.kpi-data p {
-    margin: 8px 0 0;
-    font-size: 32px;
-    font-weight: 700;
-    color: #fff;
-}
+    .kpi-card:hover::after {
+        transform: skewX(-20deg) translateX(-150px);
+    }
 
-/* RECENT */
-.recent-section {
-    background: rgba(17, 24, 39, 0.6);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 30px;
-}
+    .kpi-icon {
+        font-size: 35px;
+        margin-right: 25px;
+        padding: 15px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px; height: 40px;
+    }
 
-.recent-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 25px;
-}
+    .kpi-data h3 { margin: 0; font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; }
+    .kpi-data p { margin: 8px 0 0 0; font-size: 32px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-.recent-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+    /* SECTION ACTIVITÉ RÉCENTE */
+    .recent-section {
+        background: rgba(17, 24, 39, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+    }
 
-.recent-item {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 8px;
-    padding: 18px 25px;
-    display: flex;
-    justify-content: space-between;
-}
+    .recent-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
 
-.recent-title {
-    color: #fff;
-    font-weight: 800;
-}
+    .recent-header h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #e5e7eb;
+        letter-spacing: 1px;
+    }
 
-.recent-title span {
-    color: #d4af37;
-}
+    .empty-pulse {
+        text-align: center;
+        padding: 50px 0;
+        color: #6b7280;
+    }
 
-.recent-meta {
-    color: #9ca3af;
-    font-size: 12px;
-    display: flex;
-    gap: 15px;
-}
+    .empty-pulse i {
+        font-size: 40px;
+        margin-bottom: 15px;
+        opacity: 0.5;
+        animation: pulse 2s infinite;
+    }
 
-.btn-open {
-    background: rgba(212,175,55,0.1);
-    color: #d4af37;
-    padding: 10px 15px;
-    border-radius: 6px;
-    text-decoration: none;
-}
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.1); opacity: 0.6; }
+        100% { transform: scale(1); opacity: 0.3; }
+    }
+
+    /* 🚀 DESIGN DE LA LISTE DU FLUX EN DIRECT */
+    .recent-list { display: flex; flex-direction: column; gap: 15px; }
+    .recent-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 18px 25px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+    .recent-item:hover { border-color: rgba(212,175,55,0.3); background: rgba(212,175,55,0.02); transform: translateX(5px); }
+    .recent-info { display: flex; flex-direction: column; gap: 8px; }
+    .recent-title { color: #fff; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .recent-title span { color: #d4af37; }
+    .recent-meta { color: #9ca3af; font-size: 12px; display: flex; gap: 20px; font-weight: 600; }
+    .recent-meta i { color: #d4af37; margin-right: 5px; }
+    .btn-open { background: rgba(212,175,55,0.1); color: #d4af37; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; border: 1px solid rgba(212,175,55,0.2); transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+    .btn-open:hover { background: #d4af37; color: #000; box-shadow: 0 0 10px rgba(212,175,55,0.2); }
 </style>
 
 <div id="bcso-dashboard-container">
-
+    
     <div class="master-header">
         <div class="welcome-text">
-
-            <!-- 🔥 FIX IMPORTANT : fallback propre -->
-            <h2>
-                Bienvenue, 
-                <%= user?.username || 'Agent' %>
-                <% if (user?.grade) { %>
-                    - <%= user.grade %>
-                <% } %>
-            </h2>
-
+            <h2>Bienvenue, <%= user ? user.username : 'Agent' %></h2>
             <p>Système Centralisé du Blaine County Sheriff Office</p>
         </div>
-
-        <span class="badge-premium">
-            <%= user?.role ? user.role.toUpperCase() : 'ACCES LIMITE' %>
-        </span>
+        <span class="badge-premium"><i class="fas fa-shield-alt"></i> <%= user ? user.role.toUpperCase() : 'ACCÈS SÉCURISÉ' %></span>
     </div>
 
     <div class="kpi-grid">
-
+        <!-- Tickers en cours -->
         <div class="kpi-card">
+            <div class="kpi-icon" style="color: #60a5fa; background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.2);">
+                <i class="fas fa-headset"></i>
+            </div>
             <div class="kpi-data">
                 <h3>Tickets en cours</h3>
-                <p><%= ticketsEnCoursCount || 0 %></p>
+                <p><%= locals.ticketsEnCoursCount || 0 %></p>
             </div>
         </div>
 
+        <!-- Rapports Validés -->
         <div class="kpi-card">
+            <div class="kpi-icon" style="color: #d4af37; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.2);">
+                <i class="fas fa-file-signature"></i>
+            </div>
             <div class="kpi-data">
-                <h3>Rapports validés</h3>
-                <p><%= ticketsArchivesCount || 0 %></p>
+                <h3>Rapports Validés</h3>
+                <p><%= locals.ticketsArchivesCount || 0 %></p>
             </div>
         </div>
 
+        <!-- Effectifs Accrédités -->
         <div class="kpi-card">
+            <div class="kpi-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
+                <i class="fas fa-id-card-clip"></i>
+            </div>
             <div class="kpi-data">
-                <h3>Agents accrédités</h3>
-                <p><%= agentsCount || 0 %></p>
+                <h3>Agents Accrédités</h3>
+                <p><%= locals.agentsCount || 0 %></p>
             </div>
         </div>
-
     </div>
 
     <div class="recent-section">
-
         <div class="recent-header">
-            <h3>Flux en direct</h3>
+            <h3><i class="fas fa-satellite-dish" style="color: #d4af37;"></i> Flux de données en direct</h3>
+            <span style="font-size: 12px; color: #9ca3af;"><i class="fas fa-circle" style="color: #10b981; font-size: 8px;"></i> Sync active</span>
         </div>
-
-        <% if (recentTickets && recentTickets.length > 0) { %>
+        
+        <!-- 🚀 AFFICHAGE DYNAMIQUE DES DERNIERS RAPPORTS -->
+        <% if (typeof recentTickets !== 'undefined' && recentTickets.length > 0) { %>
             <div class="recent-list">
-
                 <% recentTickets.forEach(ticket => { %>
                     <div class="recent-item">
-
-                        <div>
-                            <div class="recent-title">
-                                Dossier <span>#<%= ticket.channelName %></span>
-                            </div>
-
+                        <div class="recent-info">
+                            <div class="recent-title">Dossier <span>#<%= ticket.channelName %></span></div>
                             <div class="recent-meta">
-                                <span>Validé: <%= ticket.closedBy %></span>
-                                <span>Type: <%= ticket.motif %></span>
-                                <span><%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></span>
+                                <span><i class="fas fa-user-shield"></i> Validé par : <%= ticket.closedBy %></span>
+                                <span><i class="fas fa-folder-open"></i> Type : <%= ticket.motif.charAt(0).toUpperCase() + ticket.motif.slice(1) %></span>
+                                <span><i class="fas fa-clock"></i> <%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></span>
                             </div>
                         </div>
-
-                        <a class="btn-open" href="/archives/<%= ticket._id %>">
-                            Ouvrir
-                        </a>
-
+                        <!-- 🚀 CORRECTION : Utilisation de l'ID Unique de la BDD pour pointer vers le bon document -->
+                        <a href="/archives/<%= ticket._id %>" class="btn-open">Ouvrir <i class="fas fa-chevron-right"></i></a>
                     </div>
-                <% }) %>
-
+                <% }); %>
             </div>
         <% } else { %>
-
-            <p style="color:#6b7280; text-align:center;">
-                Aucun rapport pour le moment
-            </p>
-
+            <!-- Ce logo n'apparaîtra que s'il n'y a aucun rapport dans la base de données -->
+            <div class="empty-pulse">
+                <i class="fas fa-database"></i>
+                <p>En attente des transmissions du Bot Discord...</p>
+            </div>
         <% } %>
-
     </div>
 
 </div>

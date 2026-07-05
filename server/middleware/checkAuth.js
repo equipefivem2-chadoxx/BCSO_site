@@ -1,7 +1,5 @@
-const Agent = require('../models/Agent');
-
 /**
- * AUTH obligatoire
+ * Middleware pour bloquer l'accès aux utilisateurs non connectés
  */
 exports.requireAuth = (req, res, next) => {
     if (!req.session.user) {
@@ -11,37 +9,13 @@ exports.requireAuth = (req, res, next) => {
 };
 
 /**
- * ADMIN ONLY (Discord + DB + SuperAdmin)
+ * Middleware pour bloquer l'accès selon le rôle (ex: Admin uniquement)
  */
-exports.requireAdmin = async (req, res, next) => {
-    const sessionUser = req.session.user;
-
-    if (!sessionUser) {
-        return res.redirect('/auth/login');
-    }
-
-    try {
-        // 🔥 1. Super Admin hardcodé
-        if (sessionUser.id === '1247264549489610897') {
-            return next();
+exports.requireRole = (role) => {
+    return (req, res, next) => {
+        if (!req.session.user || req.session.user.role !== role) {
+            return res.status(403).send('Accès refusé : Habilitation insuffisante.');
         }
-
-        // 🔥 2. Check DB (SOURCE OF TRUTH)
-        const agent = await Agent.findOne({ discordId: sessionUser.id });
-
-        if (agent?.isAdmin === true) {
-            return next();
-        }
-
-        // 🔥 3. fallback discord role
-        if (sessionUser.role === 'admin') {
-            return next();
-        }
-
-        return res.redirect('/dashboard');
-
-    } catch (err) {
-        console.error('requireAdmin error:', err);
-        return res.redirect('/dashboard');
-    }
+        next();
+    };
 };
