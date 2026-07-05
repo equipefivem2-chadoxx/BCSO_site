@@ -11,6 +11,7 @@
     animation: fadeInUp 0.6s ease-out;
 }
 
+/* HEADER */
 .master-header {
     position: relative;
     overflow: hidden;
@@ -18,6 +19,7 @@
     padding: 35px 40px;
     border-radius: 12px;
     border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     margin-bottom: 40px;
     display: flex;
     justify-content: space-between;
@@ -27,51 +29,47 @@
 .master-header::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 4px;
-    height: 100%;
-    background: #d4af37;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(to bottom, #d4af37, #f3e5ab);
 }
 
 .welcome-text h2 {
     margin: 0;
     font-size: 28px;
-    color: #fff;
+    color: #f3f4f6;
 }
 
 .welcome-text p {
     margin: 5px 0 0;
     color: #9ca3af;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .badge-premium {
+    background: rgba(212, 175, 55, 0.1);
     color: #d4af37;
-    border: 1px solid #d4af37;
-    padding: 8px 15px;
+    padding: 10px 20px;
     border-radius: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-weight: 700;
 }
 
+/* KPI */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
+    gap: 30px;
     margin-bottom: 40px;
 }
 
 .kpi-card {
-    background: rgba(17,24,39,0.7);
+    background: rgba(17, 24, 39, 0.7);
     border: 1px solid rgba(255,255,255,0.05);
-    padding: 25px;
-    border-radius: 10px;
+    padding: 30px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
-}
-
-.kpi-icon {
-    margin-right: 15px;
-    font-size: 26px;
 }
 
 .kpi-data h3 {
@@ -81,30 +79,61 @@
 }
 
 .kpi-data p {
-    margin: 5px 0 0;
-    font-size: 26px;
+    margin: 8px 0 0;
+    font-size: 32px;
+    font-weight: 700;
     color: #fff;
 }
 
+/* RECENT */
 .recent-section {
-    background: rgba(17,24,39,0.6);
-    padding: 25px;
+    background: rgba(17, 24, 39, 0.6);
+    border: 1px solid rgba(255,255,255,0.05);
     border-radius: 12px;
+    padding: 30px;
+}
+
+.recent-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.recent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .recent-item {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 18px 25px;
     display: flex;
     justify-content: space-between;
-    padding: 15px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    margin-bottom: 10px;
+}
+
+.recent-title {
+    color: #fff;
+    font-weight: 800;
+}
+
+.recent-title span {
+    color: #d4af37;
+}
+
+.recent-meta {
+    color: #9ca3af;
+    font-size: 12px;
+    display: flex;
+    gap: 15px;
 }
 
 .btn-open {
+    background: rgba(212,175,55,0.1);
     color: #d4af37;
-    border: 1px solid #d4af37;
-    padding: 8px 12px;
+    padding: 10px 15px;
     border-radius: 6px;
     text-decoration: none;
 }
@@ -112,84 +141,88 @@
 
 <div id="bcso-dashboard-container">
 
-    <!-- HEADER -->
     <div class="master-header">
-
         <div class="welcome-text">
+
+            <!-- 🔥 FIX IMPORTANT : fallback propre -->
             <h2>
                 Bienvenue, 
-                <%= user && user.username ? user.username : 'Agent inconnu' %>
+                <%= user?.username || 'Agent' %>
+                <% if (user?.grade) { %>
+                    - <%= user.grade %>
+                <% } %>
             </h2>
 
             <p>Système Centralisé du Blaine County Sheriff Office</p>
         </div>
 
         <span class="badge-premium">
-            <%= user && user.isAdmin ? 'ADMIN' : (user && user.role ? user.role.toUpperCase() : 'OFFICER') %>
+            <%= user?.role ? user.role.toUpperCase() : 'ACCES LIMITE' %>
         </span>
-
     </div>
 
-    <!-- KPI -->
     <div class="kpi-grid">
 
         <div class="kpi-card">
-            <div class="kpi-icon">📡</div>
             <div class="kpi-data">
                 <h3>Tickets en cours</h3>
-                <p><%= locals.ticketsEnCoursCount || 0 %></p>
+                <p><%= ticketsEnCoursCount || 0 %></p>
             </div>
         </div>
 
         <div class="kpi-card">
-            <div class="kpi-icon">📁</div>
             <div class="kpi-data">
                 <h3>Rapports validés</h3>
-                <p><%= locals.ticketsArchivesCount || 0 %></p>
+                <p><%= ticketsArchivesCount || 0 %></p>
             </div>
         </div>
 
         <div class="kpi-card">
-            <div class="kpi-icon">👮</div>
             <div class="kpi-data">
-                <h3>Agents</h3>
-                <p><%= locals.agentsCount || 0 %></p>
+                <h3>Agents accrédités</h3>
+                <p><%= agentsCount || 0 %></p>
             </div>
         </div>
 
     </div>
 
-    <!-- RECENT -->
     <div class="recent-section">
 
-        <h3 style="color:#fff;">Derniers dossiers</h3>
+        <div class="recent-header">
+            <h3>Flux en direct</h3>
+        </div>
 
-        <% if (recentTickets && recentTickets.length) { %>
+        <% if (recentTickets && recentTickets.length > 0) { %>
+            <div class="recent-list">
 
-            <% recentTickets.forEach(ticket => { %>
-                <div class="recent-item">
+                <% recentTickets.forEach(ticket => { %>
+                    <div class="recent-item">
 
-                    <div>
-                        <div style="color:#fff;font-weight:bold;">
-                            Dossier #<%= ticket.channelName %>
+                        <div>
+                            <div class="recent-title">
+                                Dossier <span>#<%= ticket.channelName %></span>
+                            </div>
+
+                            <div class="recent-meta">
+                                <span>Validé: <%= ticket.closedBy %></span>
+                                <span>Type: <%= ticket.motif %></span>
+                                <span><%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></span>
+                            </div>
                         </div>
 
-                        <div style="font-size:12px;color:#9ca3af;">
-                            <%= ticket.motif %> • <%= ticket.closedBy %> • 
-                            <%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %>
-                        </div>
+                        <a class="btn-open" href="/archives/<%= ticket._id %>">
+                            Ouvrir
+                        </a>
+
                     </div>
+                <% }) %>
 
-                    <a class="btn-open" href="/archives/<%= ticket._id %>">
-                        Ouvrir
-                    </a>
-
-                </div>
-            <% }) %>
-
+            </div>
         <% } else { %>
 
-            <p style="color:#777;">Aucun dossier récent</p>
+            <p style="color:#6b7280; text-align:center;">
+                Aucun rapport pour le moment
+            </p>
 
         <% } %>
 
