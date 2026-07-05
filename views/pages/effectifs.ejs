@@ -21,7 +21,11 @@
     .matricule { font-size: 22px; font-weight: 800; color: #d4af37; font-family: monospace; }
     .status-dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
     
-    .agent-name { font-size: 18px; color: #f3f4f6; font-weight: 600; }
+    .agent-name { font-size: 18px; color: #f3f4f6; font-weight: 600; margin-bottom: 5px; }
+    
+    /* 🚀 NOUVEAU : Style pour le téléphone */
+    .agent-phone { font-size: 13px; color: #9ca3af; font-family: monospace; display: flex; align-items: center; gap: 6px; }
+    .agent-phone i { color: #d4af37; font-size: 11px; }
 </style>
 
 <div id="roster-container">
@@ -47,6 +51,11 @@
                                 <div class="status-dot"></div>
                             </div>
                             <div class="agent-name"><%= agent.prenom %> <%= agent.nom %></div>
+                            <!-- 🚀 AJOUT DU TÉLÉPHONE ICI -->
+                            <div class="agent-phone">
+                                <i class="fas fa-phone-alt"></i> 
+                                <%= agent.telephone && agent.telephone !== 'Non renseigné' ? agent.telephone : 'Numéro masqué' %>
+                            </div>
                         </div>
                     <% }); %>
                 </div>
