@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* BASE RESET - Empêche les bugs d'espacement */
+        /* BASE RESET */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body, html {
@@ -16,25 +16,26 @@
             background-color: #05070b;
             color: #f3f4f6;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow: hidden; /* Désactive le scroll global de la page */
+            overflow: hidden;
         }
 
         .app-layout {
             display: flex;
-            height: 100vh;
+            height: calc(100vh - 50px); /* Laisse exactement 50px pour le header/barre du bas */
             width: 100vw;
         }
 
         .main-content {
             flex: 1;
             background-color: #0b0f19;
-            height: calc(100vh - 50px); /* Laisse la place pour ta barre du bas */
-            overflow-y: auto; /* Active le scroll uniquement ici */
+            overflow-y: auto;
             position: relative;
         }
 
         .page-wrapper {
             padding: 40px;
+            max-width: 1600px; /* Centrage optimal pour éviter que les tableaux s'étirent trop */
+            margin: 0 auto;
             width: 100%;
         }
     </style>
@@ -42,20 +43,15 @@
 <body>
 
     <div class="app-layout">
-        
-        <!-- SIDEBAR GAUCHE -->
         <%- include('../partials/sidebar') %>
         
-        <!-- CONTENU CENTRAL -->
         <div class="main-content">
             <div class="page-wrapper">
                 <%- body %>
             </div>
         </div>
-
     </div>
 
-    <!-- BARRE DU BAS -->
     <%- include('../partials/header') %>
 
 </body>
