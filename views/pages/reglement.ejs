@@ -1,191 +1,72 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-
 <style>
-    :root {
-        --gold: #eab308;
-        --gold-glow: rgba(234, 179, 8, 0.2);
-        --bg-dark: #05070b;
-    }
-
-    body {
-        margin: 0;
-        background-color: var(--bg-dark);
-        font-family: 'Montserrat', sans-serif;
-        color: #e2e8f0;
-    }
-
-    .bcso-page {
-        background: radial-gradient(circle at 50% -20%, #1e293b 0%, #05070b 80%);
-        min-height: 100vh;
-        padding-top: 50px;
-    }
-
-    /* Carte Premium avec effet de lumière */
-    .premium-card {
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        position: relative;
-        overflow: hidden;
-        transition: 0.4s ease;
-    }
-
-    .premium-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 20px;
-        padding: 1px;
-        background: linear-gradient(135deg, var(--gold), transparent);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0.3;
-    }
-
-    .premium-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px var(--gold-glow);
-        border-color: var(--gold);
-    }
-
-    /* Titres typographiques */
-    .title-gradient {
-        background: linear-gradient(to right, #fff, var(--gold));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
-
-    /* Badge & Icones */
-    .icon-circle {
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: rgba(234, 179, 8, 0.1);
-        color: var(--gold);
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-    }
-
-    .badge-grave {
-        background: rgba(220, 38, 38, 0.1);
-        border: 1px solid #dc2626;
-        color: #f87171;
-        padding: 5px 15px;
-        border-radius: 50px;
-        font-size: 0.8rem;
-    }
-
+    body { background-color: #05070b; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
+    .premium-page { background: radial-gradient(circle at top, #1e293b, #05070b); min-height: 100vh; padding: 40px 20px; }
+    .card-glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; }
+    .text-gold { color: #eab308; }
+    .border-gold { border-left: 4px solid #eab308; }
+    .article-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 0; }
+    .badge-grave { background: rgba(220, 38, 38, 0.2); border: 1px solid #991b1b; color: #fca5a5; padding: 5px 12px; border-radius: 5px; font-size: 0.85rem; margin: 4px; display: inline-block; }
 </style>
 
-<div class="bcso-page">
-    <div class="container py-5">
+<div class="premium-page">
+    <div class="container" style="max-width: 1000px;">
         
-        <!-- HEADER -->
         <div class="text-center mb-5">
-            <h1 class="display-3 title-gradient mb-2">BCSO</h1>
-            <p class="text-uppercase text-gold" style="letter-spacing: 4px;">Règlement Intérieur & Protocoles</p>
+            <h1 class="text-uppercase fw-bold text-white mb-2">Règlement Intérieur</h1>
+            <p class="text-gold" style="letter-spacing: 2px;">Blaine County Sheriff's Office</p>
         </div>
 
-        <!-- DEVISE (Hero) -->
-        <div class="premium-card p-5 text-center mb-5 border-0 shadow-lg">
-            <i class="fas fa-star text-gold fa-3x mb-3"></i>
-            <h2 class="text-white fw-bold mb-4">"HONOR • INTEGRITY • SERVICE"</h2>
-            <p class="text-white opacity-75 mx-auto" style="max-width: 600px;">
-                Le Blaine County Sheriff's Office protège les citoyens avec professionnalisme, intégrité et respect des lois. 
-            </p>
+        <div class="card-glass p-4 text-center border-gold mb-4">
+            <h4 class="text-gold mb-3">"HONOR • INTEGRITY • SERVICE"</h4>
+            <p class="small opacity-75">Le Blaine County Sheriff's Office protège les citoyens avec professionnalisme, intégrité et respect des lois. Tout membre s'engage à représenter dignement le BCSO et à offrir un roleplay réaliste et de qualité.</p>
         </div>
 
         <div class="row g-4">
-            <!-- COLONNE 1 -->
-            <div class="col-lg-6">
-                <div class="premium-card p-4 h-100">
-                    <div class="icon-circle"><i class="fas fa-desktop"></i></div>
-                    <h4 class="text-white mb-4">I. Règlement HRP</h4>
-                    <div class="text-white opacity-75">
-                        <p class="mb-3 border-bottom border-secondary pb-2"><i class="fas fa-caret-right text-gold me-2"></i><strong>Respect :</strong> Aucune insulte HRP.</p>
-                        <p class="mb-3 border-bottom border-secondary pb-2"><i class="fas fa-caret-right text-gold me-2"></i><strong>Professionnalisme :</strong> Hiérarchie souveraine.</p>
-                        <p class="mb-3 border-bottom border-secondary pb-2"><i class="fas fa-caret-right text-gold me-2"></i><strong>Activité :</strong> Assiduité requise.</p>
-                        <p class="mb-3"><i class="fas fa-caret-right text-gold me-2"></i><strong>Confidentialité :</strong> Secret d'État.</p>
+            <div class="col-md-6">
+                <div class="card-glass p-4 h-100">
+                    <h5 class="text-white mb-3 border-bottom border-secondary pb-2"><i class="fas fa-desktop text-gold me-2"></i>I. RÈGLEMENT HRP</h5>
+                    <div class="small">
+                        <div class="article-item"><strong>Art 1 - Respect :</strong> Interdiction des insultes, provocations et comportements toxiques. Discrimination sanctionnée.</div>
+                        <div class="article-item"><strong>Art 2 - Professionnalisme :</strong> Comportement mature requis. Hiérarchie à respecter.</div>
+                        <div class="article-item"><strong>Art 3 - Activité :</strong> Présence obligatoire. Signaler toute absence prolongée.</div>
+                        <div class="article-item"><strong>Art 4 - Confidentialité :</strong> Secrets internes, documents et radio confidentiels.</div>
+                        <div class="article-item"><strong>Art 5 - Véhicules :</strong> Réservés aux interventions. Trolling/Drift interdits.</div>
+                        <div class="article-item"><strong>Art 6 - Sanctions :</strong> Avertissement, Blâme, Suspension, Rétrogradation, Exclusion.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- COLONNE 2 -->
-            <div class="col-lg-6">
-                <div class="premium-card p-4 h-100">
-                    <div class="icon-circle"><i class="fas fa-shield-alt"></i></div>
-                    <h4 class="text-white mb-4">II. Règlement RP</h4>
-                    <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded">
-                        <div class="text-gold me-3"><i class="fas fa-tshirt fa-2x"></i></div>
-                        <div>
-                            <div class="text-white fw-bold">Tenue & Équipement</div>
-                            <small class="text-muted">Uniforme complet obligatoire.</small>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center bg-dark p-3 rounded">
-                        <div class="text-gold me-3"><i class="fas fa-radio fa-2x"></i></div>
-                        <div>
-                            <div class="text-white fw-bold">Radio</div>
-                            <small class="text-muted">Utilisation des codes 10 obligatoire.</small>
-                        </div>
+            <div class="col-md-6">
+                <div class="card-glass p-4 h-100">
+                    <h5 class="text-white mb-3 border-bottom border-secondary pb-2"><i class="fas fa-shield-alt text-gold me-2"></i>II. RÈGLEMENT RP</h5>
+                    <div class="small">
+                        <div class="article-item"><strong>Art 1 - Service :</strong> Tenue, équipement et radio requis.</div>
+                        <div class="article-item"><strong>Art 2 - Contrôle :</strong> Motif RP indispensable (Infraction/Suspicion).</div>
+                        <div class="article-item"><strong>Art 3 - Force :</strong> Progression : Dialogue > Menottes > Taser > Létal.</div>
+                        <div class="article-item"><strong>Art 4 - Armes :</strong> Légitime défense uniquement. Pas de tir gratuit.</div>
+                        <div class="article-item"><strong>Art 5 - Poursuite :</strong> Calme et communication obligatoire.</div>
+                        <div class="article-item"><strong>Art 6 - Fouille :</strong> Justification RP requise.</div>
+                        <div class="article-item"><strong>Art 7 - Arrestation :</strong> Droits, menottes, fouille, rapport.</div>
+                        <div class="article-item"><strong>Art 8 - Corruption :</strong> Interdite sans accord admin.</div>
+                        <div class="article-item"><strong>Art 9 - Comportement :</strong> Impartialité et sang-froid.</div>
+                        <div class="article-item"><strong>Art 10 - Radio :</strong> Courte, claire et pro.</div>
                     </div>
                 </div>
             </div>
 
-            <!-- SECTION FAUTES GRAVES (Pleine largeur) -->
             <div class="col-12">
-                <div class="premium-card p-4">
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="icon-circle me-3"><i class="fas fa-skull-crossbones"></i></div>
-                        <h4 class="text-white">III. Fautes Graves</h4>
-                    </div>
-                    <div class="d-flex flex-wrap gap-3">
+                <div class="card-glass p-4 border-start border-danger">
+                    <h5 class="text-danger mb-3"><i class="fas fa-exclamation-triangle me-2"></i>III. FAUTES GRAVES (EXCLUSION IMMÉDIATE)</h5>
+                    <div class="d-flex flex-wrap">
                         <span class="badge-grave">Abus de pouvoir</span>
+                        <span class="badge-grave">Free Arrest / Jail</span>
                         <span class="badge-grave">Corruption</span>
                         <span class="badge-grave">Usage abusif d'armes</span>
-                        <span class="badge-grave">Insubordination</span>
-                    </div>
-                    <div class="mt-4 alert alert-danger border-0 bg-danger bg-opacity-10 text-danger p-3 d-flex align-items-center">
-                        <i class="fas fa-exclamation-triangle me-3 fa-lg"></i>
-                        <strong>Tolérance Zéro :</strong> Exclusion immédiate.
-                    </div>
-                </div>
-            </div>
-            
-            <!-- PROCÉDURES -->
-            <div class="col-12">
-                <div class="premium-card p-4">
-                    <h4 class="text-white mb-4"><i class="fas fa-clipboard-list text-gold me-2"></i>Procédures d'Intervention</h4>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="p-3 border-start border-gold bg-dark rounded">
-                                <h6 class="text-white">Usage Force</h6>
-                                <small class="text-muted">Dialogue → Menottage → Taser → Létal</small>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="p-3 border-start border-gold bg-dark rounded">
-                                <h6 class="text-white">Arrestation</h6>
-                                <small class="text-muted">Droits Miranda + Inventaire</small>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="p-3 border-start border-gold bg-dark rounded">
-                                <h6 class="text-white">Poursuites</h6>
-                                <small class="text-muted">2 véhicules MAX (Hélico = 1 véhicule)</small>
-                            </div>
-                        </div>
+                        <span class="badge-grave">Non-respect des ordres</span>
+                        <span class="badge-grave">Fuite d'infos</span>
+                        <span class="badge-grave">Troll / NORP</span>
                     </div>
                 </div>
             </div>
