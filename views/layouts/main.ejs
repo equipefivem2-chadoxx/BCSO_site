@@ -9,49 +9,42 @@
     
     <style>
         /* BASE RESET */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
         
-        body, html {
-            height: 100vh;
-            background-color: #05070b;
+        body {
+            background-color: #0a0e17; /* Fond raccord avec ta barre du bas */
             color: #f3f4f6;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow: hidden;
+            overflow-x: hidden; /* Empêche tout défilement horizontal */
         }
 
-        .app-layout {
-            display: flex;
-            height: calc(100vh - 50px); /* Laisse exactement 50px pour le header/barre du bas */
-            width: 100vw;
-        }
-
-        .main-content {
-            flex: 1;
-            background-color: #0b0f19;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .page-wrapper {
-            padding: 40px;
-            max-width: 1600px; /* Centrage optimal pour éviter que les tableaux s'étirent trop */
-            margin: 0 auto;
-            width: 100%;
+        /* LE CONTENEUR MAGIQUE QUI RÈGLE TON PROBLÈME DE DÉCALAGE */
+        .main-content-wrapper {
+            margin-left: 260px; /* Pousse tout à droite de la sidebar (260px) */
+            padding-bottom: 50px; /* Laisse la place pour la barre du bas (50px) */
+            min-height: 100vh;
+            width: calc(100% - 260px); /* Prend exactement le reste de l'écran */
+            padding-top: 40px; /* Espacement en haut */
+            padding-left: 40px; /* Espacement à gauche */
+            padding-right: 40px; /* Espacement à droite */
         }
     </style>
 </head>
 <body>
 
-    <div class="app-layout">
-        <%- include('../partials/sidebar') %>
-        
-        <div class="main-content">
-            <div class="page-wrapper">
-                <%- body %>
-            </div>
-        </div>
-    </div>
+    <!-- 1. TA SIDEBAR GAUCHE -->
+    <%- include('../partials/sidebar') %>
+    
+    <!-- 2. TON CONTENU CENTRAL (qui va charger dashboard, admin, etc.) -->
+    <main class="main-content-wrapper">
+        <%- body %>
+    </main>
 
+    <!-- 3. TA BARRE DU BAS -->
     <%- include('../partials/header') %>
 
 </body>
