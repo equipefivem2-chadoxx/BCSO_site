@@ -26,7 +26,7 @@ const agentSchema = new mongoose.Schema({
             'Deputy II', 
             'Deputy I', 
             'Deputy Junior'
-        ] // On a retiré 'Admin' de la liste des grades RP
+        ] // 'Admin' a été retiré de la liste des grades RP
     },
     dateCreation: { type: Date, default: Date.now }
 });
