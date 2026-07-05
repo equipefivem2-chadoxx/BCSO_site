@@ -39,7 +39,8 @@ router.get('/dashboard', async (req, res) => {
 
     // Calcul des tickets en cours via Discord
     const { DISCORD_TOKEN, GUILD_ID } = process.env;
-    const TICKET_CATEGORY_ID = "1522570076073627719"; 
+    // 👇 ICI : Le bon ID de ta catégorie Discord
+    const TICKET_CATEGORY_ID = "1427847738665472030"; 
     
     if (DISCORD_TOKEN && GUILD_ID) {
         try {
@@ -52,6 +53,8 @@ router.get('/dashboard', async (req, res) => {
         } catch (discordErr) {
             console.error("Impossible de récupérer les salons Discord:", discordErr.message);
         }
+    } else {
+        console.warn("⚠️ Attention: DISCORD_TOKEN ou GUILD_ID manquants dans le fichier .env du site.");
     }
 
     res.render('pages/dashboard', { 
