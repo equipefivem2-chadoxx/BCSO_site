@@ -179,7 +179,7 @@
             </div>
             <div class="kpi-data">
                 <h3>Tickets en cours</h3>
-                <p>0</p>
+                <p><%= locals.ticketsEnCoursCount || 0 %></p>
             </div>
         </div>
 
@@ -190,7 +190,7 @@
             </div>
             <div class="kpi-data">
                 <h3>Rapports Validés</h3>
-                <p>0</p>
+                <p><%= locals.ticketsArchivesCount || 0 %></p>
             </div>
         </div>
 
@@ -201,7 +201,6 @@
             </div>
             <div class="kpi-data">
                 <h3>Agents Accrédités</h3>
-                <!-- LA MODIFICATION EST ICI : LE CHIFFRE DYNAMIQUE -->
                 <p><%= locals.agentsCount || 0 %></p>
             </div>
         </div>
