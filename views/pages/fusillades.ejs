@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BCSO - Engagement & Fusillades</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.2);
+            --bg-dark: #05070b;
+            --bg-panel: rgba(11, 15, 25, 0.75);
+            --text-main: #e2e8f0;
+            --border-glow: rgba(189, 165, 129, 0.25);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --forest-green: #1b2e1e;
+        }
+
+        body {
+            margin: 0; background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(189, 165, 129, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 165, 129, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Montserrat', sans-serif; color: var(--text-main); min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        * { box-sizing: border-box; }
+
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .manual-layout {
+            display: flex;
+            max-width: 1650px;
+            margin: 25px auto;
+            height: calc(100vh - 50px);
+            gap: 25px;
+            padding: 0 20px;
+            justify-content: center;
+        }
+
+        /* SIDEBAR DE NAVIGATION */
+        .manual-sidebar {
+            width: 350px;
+            background: rgba(6, 9, 15, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-right: 1px solid var(--border-glow);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 25px;
+            background: linear-gradient(180deg, rgba(27, 46, 30, 0.3) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            position: relative;
+        }
+
+        .sidebar-header::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .btn-back-hub {
+            display: inline-flex;
+            align-items: center; gap: 8px;
+            color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+            text-decoration: none; margin-bottom: 15px; transition: 0.3s;
+            letter-spacing: 1px;
+        }
+        .btn-back-hub:hover { color: var(--primary); transform: translateX(-3px); }
+
+        .manual-title { font-size: 20px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+        .manual-title span { color: var(--primary); display: block; font-size: 11px; letter-spacing: 2px; margin-top: 4px; font-weight: 600; }
+
+        .nav-list { padding: 20px 15px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex-grow: 1; }
+
+        .nav-item {
+            background: transparent; border: 1px solid transparent; color: #94a3b8;
+            padding: 14px 18px; border-radius: 10px; text-align: left; font-family: 'Montserrat', sans-serif;
+            font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-item-meta { display: flex; align-items: center; gap: 12px; }
+        .nav-item i { font-size: 1rem; color: #475569; transition: 0.3s; width: 20px; text-align: center; }
+        .nav-item .page-badge { font-size: 0.7rem; color: #475569; font-weight: 800; }
+        .nav-item:hover { background: rgba(255,255,255,0.02); color: #fff; transform: translateX(4px); }
+        .nav-item:hover i { color: #94a3b8; }
+        
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(189, 165, 129, 0.12) 0%, rgba(189,165,129,0.01) 100%);
+            color: var(--primary); border-left: 4px solid var(--primary); border-radius: 4px 10px 10px 4px; padding-left: 14px;
+        }
+        .nav-item.active i { color: var(--primary); filter: drop-shadow(0 0 6px var(--primary)); }
+        .nav-item.active .page-badge { color: var(--primary); }
+
+        /* ZONE DE CONTENU PRINCIPALE */
+        .manual-content {
+            flex-grow: 1; background: var(--bg-panel); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.02); border-top: 1px solid var(--border-glow);
+            border-radius: 16px; padding: 45px; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .manual-content::-webkit-scrollbar { width: 6px; }
+        .manual-content::-webkit-scrollbar-thumb { background: rgba(189, 165, 129, 0.25); border-radius: 10px; }
+
+        .pane { display: none; animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .pane.active { display: block; }
+
+        .pane-header { margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(189, 165, 129, 0.1); }
+        .pane-title { font-size: 28px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; display: flex; align-items: center; gap: 15px; }
+        .pane-title i { color: var(--primary); filter: drop-shadow(0 2px 8px rgba(189,165,129,0.3)); }
+        .pane-desc { color: #94a3b8; font-size: 0.95rem; margin-top: 8px; font-weight: 500; }
+
+        /* BLOCS DE DEBRIEF ET TEXTES */
+        .text-block-card {
+            background: rgba(10, 15, 25, 0.6); border-left: 4px solid var(--primary);
+            padding: 25px; border-radius: 4px 12px 12px 4px; border: 1px solid rgba(255,255,255,0.02);
+            border-left: 4px solid var(--primary); margin-bottom: 30px; line-height: 1.6; font-size: 0.95rem; color: #cbd5e1;
+        }
+        .text-block-card strong { color: #fff; font-weight: 700; }
+        
+        .alert-block-card {
+            background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 20px; border-radius: 8px; color: #fca5a5; font-size: 0.9rem; font-weight: 700;
+            letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 15px; text-align: center; margin-top: 25px;
+        }
+
+        /* MENU SOMMAIRE */
+        .sommaire-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .sommaire-btn {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.04);
+            border-left: 4px solid var(--primary); color: #fff; padding: 25px 20px;
+            text-align: left; font-family: 'Montserrat', sans-serif; font-size: 1.2rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+            border-radius: 8px; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .sommaire-btn:hover { background: rgba(189, 165, 129, 0.1); border-color: var(--primary); transform: translateX(5px); }
+        .sommaire-btn i { color: var(--primary); font-size: 1.5rem; opacity: 0.5; transition: 0.3s; }
+        .sommaire-btn:hover i { opacity: 1; transform: scale(1.1); }
+
+        /* DOUBLE COLUMN LAYOUT */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .tactical-side-card {
+            background: rgba(5, 7, 11, 0.5); border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px; padding: 30px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        .tactical-side-card.lead { border-top: 3px solid var(--primary); }
+        .tactical-side-card.agents { border-top: 3px solid #475569; }
+        
+        .card-badge-header { font-size: 1.4rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px 0; color: #fff; }
+        .tactical-side-card.lead .card-badge-header { color: var(--primary); }
+        
+        .inner-desc { color: #cbd5e1; font-size: 0.92rem; line-height: 1.6; margin-bottom: 25px; }
+        .inner-desc strong { color: #fff; }
+
+        .bullet-list { list-style: none; padding: 0; margin: 0 0 25px 0; }
+        .bullet-list li { padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.04); font-size: 0.88rem; color: #cbd5e1; display: flex; align-items: center; gap: 10px; }
+        .bullet-list li i { color: var(--primary); font-size: 0.8rem; }
+
+        /* LAW DASHBOARD (Adapted for procedures) */
+        .law-grid { display: flex; flex-direction: column; gap: 15px; }
+        .law-card {
+            background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255,255,255,0.03);
+            padding: 20px 25px; border-radius: 10px; display: grid; grid-template-columns: 45px 1fr; align-items: start; transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .law-card:hover { background: rgba(255,255,255,0.01); border-left-color: var(--primary); }
+        .law-icon-holder { font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; margin-top: 3px; }
+        .law-content-text h4 { margin: 0 0 8px 0; font-size: 1.1rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .law-content-text p { margin: 0; font-size: 0.95rem; line-height: 1.5; color: #cbd5e1; font-weight: 500; }
+        .law-content-text strong { color: #fff; font-weight: 700; }
+
+        /* BANNER POUR L'INDEX COVER */
+        .cover-banner {
+            background: linear-gradient(135deg, var(--forest-green) 0%, rgba(5,7,11,0.95) 100%);
+            border-radius: 12px; padding: 45px; border: 1px solid rgba(255,255,255,0.03);
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px;
+        }
+        .cover-txt h3 { font-size: 2.2rem; font-weight: 900; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .cover-txt p { font-size: 1rem; color: var(--primary); margin: 6px 0 0 0; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+
+        @media (max-width: 1200px) {
+            .manual-layout { flex-direction: column; height: auto; }
+            .manual-sidebar { width: 100%; height: auto; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .sommaire-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="manual-layout">
+    
+    <!-- NAVIGATION SIDEBAR -->
+    <aside class="manual-sidebar">
+        <div class="sidebar-header">
+            <a href="/documents/livret" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Retour au Livret</a>
+            <h1 class="manual-title">Engagement<span>& Fusillades</span></h1>
+        </div>
+        <nav class="nav-list">
+            <button id="nav-index" class="nav-item active" onclick="openPane('index-cover', this)"><div class="nav-item-meta"><i class="fas fa-list-ul"></i> <span>Sommaire Général</span></div><span class="page-badge">-</span></button>
+            <button id="nav-arrivee" class="nav-item" onclick="openPane('arrivee', this)"><div class="nav-item-meta"><i class="fas fa-truck-fast"></i> <span>Arrivée sur les lieux</span></div><span class="page-badge">P.3</span></button>
+            <button id="nav-procedures" class="nav-item" onclick="openPane('procedures', this)"><div class="nav-item-meta"><i class="fas fa-person-rifle"></i> <span>Procédures sur place</span></div><span class="page-badge">P.4</span></button>
+            <button id="nav-hopital" class="nav-item" onclick="openPane('hopital', this)"><div class="nav-item-meta"><i class="fas fa-hospital"></i> <span>À L'Hôpital</span></div><span class="page-badge">P.5</span></button>
+            <button id="nav-dossier" class="nav-item" onclick="openPane('dossier', this)"><div class="nav-item-meta"><i class="fas fa-folder-open"></i> <span>Dossier Fusillade</span></div><span class="page-badge">P.8</span></button>
+        </nav>
+    </aside>
+
+    <!-- CONTENT PANES CONTAINER -->
+    <main class="manual-content">
+        
+        <!-- PANE: INDEX COVER -->
+        <div id="index-cover" class="pane active">
+            <div class="cover-banner">
+                <div class="cover-txt">
+                    <h3>Engagement & Fusillades</h3>
+                    <p>Blaine County Sheriff's Office</p>
+                </div>
+                <i class="fas fa-crosshairs" style="font-size: 4.5rem; color: rgba(189,165,129,0.15);"></i>
+            </div>
+            
+            <div class="text-block-card">
+                <strong>Bienvenue dans le module tactique de gestion des fusillades.</strong> Ce protocole définit les règles strictes d'intervention, de sécurisation de zone, de coordination avec les services médicaux et de traitement procédural post-engagement.
+            </div>
+
+            <!-- SOMMAIRE VISUEL -->
+            <div class="sommaire-grid">
+                <button class="sommaire-btn" onclick="document.getElementById('nav-arrivee').click()">
+                    Sur Place <i class="fas fa-truck-fast"></i>
+                </button>
+                <button class="sommaire-btn" onclick="document.getElementById('nav-hopital').click()">
+                    À L'Hôpital <i class="fas fa-hospital"></i>
+                </button>
+                <button class="sommaire-btn" onclick="document.getElementById('nav-dossier').click()">
+                    Dossier Fusillade <i class="fas fa-folder-open"></i>
+                </button>
+                <button class="sommaire-btn" onclick="document.getElementById('nav-hopital').click()">
+                    Sécuriser L'Hôpital <i class="fas fa-shield-heart"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- PANE: ARRIVÉE SUR LES LIEUX -->
+        <div id="arrivee" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-truck-fast"></i> Arrivée sur les lieux</h2>
+                <p class="pane-desc">Protocoles de sécurisation immédiate et désignation des rôles.</p>
+            </div>
+
+            <div class="law-grid">
+                <div class="law-card">
+                    <div class="law-icon-holder"><i class="fas fa-triangle-exclamation"></i></div>
+                    <div class="law-content-text">
+                        <h4>Arrivée sur zone</h4>
+                        <p>S'assurer que plus aucun coup de feu n'est tiré. Si c'est le cas <strong>N'INTERVENEZ PAS</strong> sauf ordre Command Staff ou si les tirs vous atteignent.</p>
+                    </div>
+                </div>
+                
+                <div class="law-card">
+                    <div class="law-icon-holder"><i class="fas fa-shield-halved"></i></div>
+                    <div class="law-content-text">
+                        <h4>Sécurisation et mise en place des 10-38</h4>
+                        <p>Mise en place d'une zone sécurisée pour l'arrivée des médecins : zones d'arrêts, barrières, autour de la zone pour éviter toutes circulations d'individus.</p>
+                    </div>
+                </div>
+
+                <div class="law-card" style="border-left-color: var(--primary);">
+                    <div class="law-icon-holder"><i class="fas fa-star"></i></div>
+                    <div class="law-content-text">
+                        <h4>Désignation du Lead Terrain</h4>
+                        <p>Se chargera de rédiger le dossier fusillade, s'occuper de la sécurisation de l'hôpital et devra gérer le reste des procédures sur le ticket d'opération.<br><br>Il doit également appeler le SAMS à son arrivée sur les lieux <strong>UNE FOIS LA ZONE SÉCURISÉE</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANE: PROCÉDURES SUR PLACE -->
+        <div id="procedures" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-person-rifle"></i> Procédures sur place</h2>
+                <p class="pane-desc">Gestion des individus neutralisés et constitution des preuves.</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- SUR LE TERRAIN -->
+                <div class="tactical-side-card lead">
+                    <h3 class="card-badge-header"><i class="fas fa-map-location-dot"></i> Sur le terrain</h3>
+                    <div class="inner-desc">
+                        Vous avez rassemblé au préalable tous les blessés dans une même zone.<br><br>
+                        Les médecins s'occupent de stabiliser les blessés par balles.<br><br>
+                        C'est <strong>uniquement APRÈS la stabilisation</strong> que vous pouvez <strong>FAIRE UN TEST DE POUDRE SUR LES INDIVIDUS. SI C'EST POSITIF VOUS LE PALPEZ.</strong><br><br>
+                        Une fois l'étape d'au dessus terminée ils peuvent être transportés dans les ambulances.
+                    </div>
+                </div>
+
+                <!-- SUR LE DOSSIER D'OP -->
+                <div class="tactical-side-card agents">
+                    <h3 class="card-badge-header" style="color:#94a3b8;"><i class="fas fa-file-shield"></i> Sur le dossier d'op</h3>
+                    <div class="inner-desc">
+                        Poster (photos) les éléments suivants :
+                    </div>
+                    <ul class="bullet-list">
+                        <li><i class="fas fa-id-card"></i> Les identités</li>
+                        <li><i class="fas fa-phone"></i> Les numéros de téléphone</li>
+                        <li><i class="fas fa-microscope"></i> Le résultat du test (poudre)</li>
+                        <li><i class="fas fa-gun"></i> Si palpation il y a : L'arme de l'individu ainsi que ses munitions</li>
+                    </ul>
+                    <div class="inner-desc">
+                        L'arme doit être étiquetée du nom de son propriétaire.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-block-card">
+                <i class="fas fa-exclamation-circle" style="font-size: 1.5rem;"></i>
+                <span>À partir du moment où vous palpez un individu vous êtes responsable de lui jusqu'à la fin de la procédure (Hôpital + Poste).</span>
+            </div>
+        </div>
+
+        <!-- PANE: A L'HOPITAL -->
+        <div id="hopital" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-hospital"></i> À L'Hôpital</h2>
+                <p class="pane-desc">Prise en charge médicale et interrogatoire préliminaire.</p>
+            </div>
+
+            <div class="law-grid">
+                <div class="law-card">
+                    <div class="law-icon-holder"><i class="fas fa-lock"></i></div>
+                    <div class="law-content-text">
+                        <h4>Sécuriser</h4>
+                        <p>Voir page 14 du manuel général pour la sécurisation de l'hôpital si besoin.</p>
+                    </div>
+                </div>
+                
+                <div class="law-card">
+                    <div class="law-icon-holder"><i class="fas fa-user-nurse"></i></div>
+                    <div class="law-content-text">
+                        <h4>Prise en charge</h4>
+                        <p>Une fois que les médecins ont fini <strong>TOUTES</strong> leurs procédures et soins, vous pouvez faire la procédure directement à l'hôpital ou reconvoquer l'individu.</p>
+                    </div>
+                </div>
+
+                <div class="law-card">
+                    <div class="law-icon-holder"><i class="fas fa-calendar-plus"></i></div>
+                    <div class="law-content-text">
+                        <h4>Reconvocation ?</h4>
+                        <p>Si l'individu est dans un trop mauvais état pour celles-ci prenez toutes les informations (nom + téléphone) et signifiez lui qu'il sera convoqué le lendemain pour les procédures.</p>
+                    </div>
+                </div>
+
+                <div class="law-card" style="border-left-color: var(--primary); margin-top: 15px;">
+                    <div class="law-icon-holder"><i class="fas fa-scale-balanced"></i></div>
+                    <div class="law-content-text">
+                        <h4>Lecture des droits</h4>
+                        <p>Avant l'interrogatoire, il faut leur lire les droits pour les motifs suivants :</p>
+                        <ul style="color: #cbd5e1; margin-top: 10px; font-weight: 500;">
+                            <li>Possession d'arme illégale légère</li>
+                            <li>Possession de munitions non autorisées</li>
+                        </ul>
+                        <p style="margin-top: 10px;">C'est la base sur ce type d'opération.<br><br>Pour le reste des chefs d'inculpations c'est <strong>UN SUPERVISEUR/CS</strong> qui devra appeler le Procureur qui décidera lui-même des autres faits d'inculpations à rajouter.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-block-card">
+                <i class="fas fa-clipboard-check" style="font-size: 1.5rem;"></i>
+                <span>Tout au long de la procédure, n'oubliez pas de préciser tout ce que vous avez fait dans le dossier d'opération pour avoir un suivi.</span>
+            </div>
+        </div>
+
+        <!-- PANE: DOSSIER FUSILLADE -->
+        <div id="dossier" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-folder-open"></i> Dossier Fusillade</h2>
+                <p class="pane-desc">Obligations administratives et légales post-intervention pour le Lead Terrain.</p>
+            </div>
+
+            <div class="text-block-card">
+                <h3 style="color:#fff; font-weight:800; text-transform:uppercase; font-size:1.1rem; margin-top:0; margin-bottom:15px; letter-spacing:0.5px;">
+                    <i class="fas fa-file-signature" style="color:var(--primary); margin-right:8px;"></i> À Compléter
+                </h3>
+                <p>Lors d'une fusillade les documents à compléter sont obligatoirement :</p>
+                <ul class="bullet-list" style="margin-top: 15px;">
+                    <li><i class="fas fa-check"></i> Dossiers de fusillade par le Lead Terrain</li>
+                    <li><i class="fas fa-check"></i> Rapport d'interrogatoire (si il y en a eu)</li>
+                    <li><i class="fas fa-check"></i> Rapport d'arrestation</li>
+                    <li><i class="fas fa-check"></i> Un dossier d'opération propre</li>
+                </ul>
+                <p style="margin-top: 20px; color: #fff; font-weight: 700;">EN CAS DE PROBLÈME SUR LES PROCÉDURES FUSILLADES C'EST LE LEAD TERRAIN QUI EN ASSUMERA LES CONSÉQUENCES.</p>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // Moteur d'onglets
+    function openPane(paneId, button) {
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.pane').forEach(pane => pane.classList.remove('active'));
+        
+        button.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
