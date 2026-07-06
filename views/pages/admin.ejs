@@ -2,6 +2,30 @@
     :root {
         --primary: #bda581;
         --bg-card: rgba(15, 23, 42, 0.4);
+        --bg-dark: #07090e; /* 🚀 La couleur de fond premium */
+    }
+    
+    /* 🚀 Application du fond premium à la page entière */
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif;
+        color: #e2e8f0;
+        min-height: 100vh;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Conteneur principal pour animer l'entrée */
+    #admin-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-top: 40px;
+        padding-bottom: 70px;
+        animation: fadeIn 0.4s ease-out forwards;
     }
     
     /* Styles spécifiques au panel Admin */
@@ -168,237 +192,239 @@
     .btn-danger:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
 </style>
 
-<div class="page-header">
-    <div>
-        <h1>Haut Commandement</h1>
-        <p style="color: #94a3b8; font-size: 0.9rem; margin: 4px 0 0 0;">Gestion globale des accès et des effectifs BCSO</p>
-    </div>
-</div>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <i class="fas fa-user-shield"></i>
-        <div class="stat-info">
-            <div>Total Agents</div>
-            <span><%= agents.length %></span>
-        </div>
-    </div>
-    <div class="stat-card">
-        <i class="fas fa-lock"></i>
-        <div class="stat-info">
-            <div>Admins Web</div>
-            <span><%= agents.filter(a => a.isAdmin).length %></span>
-        </div>
-    </div>
-    <div class="stat-card">
-        <i class="fas fa-file-invoice"></i>
-        <div class="stat-info">
-            <div>Rapports Stockés</div>
-            <span><%= archivesCount %></span>
-        </div>
-    </div>
-</div>
-
-<div class="admin-grid">
-    <div class="panel-box">
-        <h2 style="font-size: 1.1rem;">Enregistrer un Agent</h2>
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-        
-        <form action="/admin/ajouter" method="POST">
-            <div class="form-group">
-                <label>Prénom</label>
-                <input type="text" name="prenom" class="form-control" required placeholder="John">
-            </div>
-            <div class="form-group">
-                <label>Nom</label>
-                <input type="text" name="nom" class="form-control" required placeholder="Doe">
-            </div>
-            <div class="form-group">
-                <label>Matricule</label>
-                <input type="text" name="matricule" class="form-control" required placeholder="55">
-            </div>
-            <div class="form-group">
-                <label>Téléphone (In-Game)</label>
-                <input type="text" name="telephone" class="form-control" placeholder="555-XXXX">
-            </div>
-            <div class="form-group">
-                <label>ID Discord <span style="color:#ef4444;">*</span></label>
-                <input type="text" name="discordId" class="form-control" placeholder="1247264549489610897">
-            </div>
-            <div class="form-group">
-                <label>Grade RP</label>
-                <select name="grade" class="form-control" required>
-                    <option value="Deputy Junior">Deputy Junior</option>
-                    <option value="Deputy I">Deputy I</option>
-                    <option value="Deputy II">Deputy II</option>
-                    <option value="Deputy III">Deputy III</option>
-                    <option value="SLO">SLO</option>
-                    <option value="Sergeant I">Sergeant I</option>
-                    <option value="Sergeant II">Sergeant II</option>
-                    <option value="Sergeant Chef">Sergeant Chef</option>
-                    <option value="Lieutenant">Lieutenant</option>
-                    <option value="Sheriff">Sheriff</option>
-                </select>
-            </div>
-
-            <div class="switch-container">
-                <div>
-                    <strong style="font-size: 0.85rem; display:block; color:#fff;">Accès Admin</strong>
-                    <small style="color: #94a3b8; font-size: 0.75rem;">Autoriser le panel MDT</small>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" name="isAdmin">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="switch-container">
-                <div>
-                    <strong style="font-size: 0.85rem; display:block; color:#fff;">Droit de Suppression</strong>
-                    <small style="color: #94a3b8; font-size: 0.75rem;">Autoriser la suppression des archives</small>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" name="canDeleteArchives">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            <button type="submit" class="btn" style="margin-top: 25px;"><i class="fas fa-plus" style="margin-right: 8px;"></i> Créer l'Agent</button>
-        </form>
-    </div>
-
-    <div class="panel-box">
-        <h2 style="font-size: 1.1rem;">Liste des Agents Enregistrés</h2>
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-
-        <div class="table-responsive">
-            <table class="agent-table">
-                <thead>
-                    <tr>
-                        <th>Matricule</th>
-                        <th>Identité</th>
-                        <th>Grade</th>
-                        <th>Permissions</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% if(agents.length === 0) { %>
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: #94a3b8; padding: 40px;">Aucun agent enregistré.</td>
-                        </tr>
-                    <% } %>
-                    <% agents.forEach(agent => { %>
-                        <tr>
-                            <td style="font-weight: 800; color: var(--primary);">#<%= agent.matricule %></td>
-                            <td style="color: #fff; font-weight: 600;"><%= agent.prenom %> <%= agent.nom %></td>
-                            <td style="color: #cbd5e1;"><%= agent.grade %></td>
-                            <td>
-                                <span class="badge <%= agent.isAdmin ? 'badge-admin' : 'badge-user' %>">
-                                    <%= agent.isAdmin ? 'Admin Site' : 'Agent' %>
-                                </span>
-                                <% if(agent.canDeleteArchives) { %>
-                                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); margin-left: 5px;">
-                                        Suppression
-                                    </span>
-                                <% } %>
-                            </td>
-                            <td class="actions-cell">
-                                <button class="btn-action edit" onclick="toggleEditRow('<%= agent._id %>')"><i class="fas fa-edit"></i></button>
-                                <form action="/admin/supprimer/<%= agent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet agent ?');">
-                                    <button type="submit" class="btn-action delete"><i class="fas fa-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-
-                        <tr id="edit-<%= agent._id %>" class="edit-row">
-                            <td colspan="5">
-                                <form action="/admin/modifier/<%= agent._id %>" method="POST">
-                                    <h3 style="font-size:1rem; margin-bottom:20px; color:var(--primary);"><i class="fas fa-user-edit" style="margin-right: 8px;"></i> Modifier <%= agent.prenom %> <%= agent.nom %></h3>
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
-                                        <div>
-                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Prénom</label>
-                                            <input type="text" name="prenom" value="<%= agent.prenom %>" class="form-control" required>
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Nom</label>
-                                            <input type="text" name="nom" value="<%= agent.nom %>" class="form-control" required>
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Matricule</label>
-                                            <input type="text" name="matricule" value="<%= agent.matricule %>" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
-                                        <div>
-                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Téléphone</label>
-                                            <input type="text" name="telephone" value="<%= agent.telephone %>" class="form-control">
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">ID Discord</label>
-                                            <input type="text" name="discordId" value="<%= agent.discordId %>" class="form-control">
-                                        </div>
-                                        <div>
-                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Grade</label>
-                                            <select name="grade" class="form-control" required>
-                                                <option value="Deputy Junior" <%= agent.grade === 'Deputy Junior' ? 'selected' : '' %>>Deputy Junior</option>
-                                                <option value="Deputy I" <%= agent.grade === 'Deputy I' ? 'selected' : '' %>>Deputy I</option>
-                                                <option value="Deputy II" <%= agent.grade === 'Deputy II' ? 'selected' : '' %>>Deputy II</option>
-                                                <option value="Deputy III" <%= agent.grade === 'Deputy III' ? 'selected' : '' %>>Deputy III</option>
-                                                <option value="SLO" <%= agent.grade === 'SLO' ? 'selected' : '' %>>SLO</option>
-                                                <option value="Sergeant I" <%= agent.grade === 'Sergeant I' ? 'selected' : '' %>>Sergeant I</option>
-                                                <option value="Sergeant II" <%= agent.grade === 'Sergeant II' ? 'selected' : '' %>>Sergeant II</option>
-                                                <option value="Sergeant Chef" <%= agent.grade === 'Sergeant Chef' ? 'selected' : '' %>>Sergeant Chef</option>
-                                                <option value="Lieutenant" <%= agent.grade === 'Lieutenant' ? 'selected' : '' %>>Lieutenant</option>
-                                                <option value="Sheriff" <%= agent.grade === 'Sheriff' ? 'selected' : '' %>>Sheriff</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top:20px; flex-wrap: wrap; gap: 10px;">
-                                        <div style="display: flex; gap: 15px;">
-                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
-                                                <span style="font-size: 0.85rem; font-weight:700; color:#fff;">Accès Admin</span>
-                                                <label class="switch">
-                                                    <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>>
-                                                    <span class="slider"></span>
-                                                </label>
-                                            </div>
-                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
-                                                <span style="font-size: 0.85rem; font-weight:700; color:#fff;">Suppression</span>
-                                                <label class="switch">
-                                                    <input type="checkbox" name="canDeleteArchives" <%= agent.canDeleteArchives ? 'checked' : '' %>>
-                                                    <span class="slider"></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div style="display:flex; gap:10px;">
-                                            <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color:#fff; width: auto;" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>
-                                            <button type="submit" class="btn" style="width: auto;">Sauvegarder</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="panel-box danger-zone">
-    <h2><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Zone de Danger Critique</h2>
-    <p style="color: #94a3b8; font-size: 0.9rem;">Les actions ci-dessous sont irréversibles. Soyez extrêmement vigilants.</p>
-    <hr style="border: 0; border-top: 1px solid rgba(239, 68, 68, 0.2); margin: 20px 0;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+<div id="admin-container">
+    <div class="page-header">
         <div>
-            <strong style="display: block; color: #f8fafc; font-size: 1rem; margin-bottom: 5px;">Purger tous les rapports d'opération</strong>
-            <span style="color: #94a3b8; font-size: 0.85rem;">Efface définitivement la totalité de la collection de données des tickets (<%= archivesCount %> éléments).</span>
+            <h1>Haut Commandement</h1>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin: 4px 0 0 0;">Gestion globale des accès et des effectifs BCSO</p>
         </div>
-        <form action="/admin/purge-rapports" method="POST" onsubmit="return confirm('⚠️ ALERTE CRITIQUE : Voulez-vous vraiment détruire l\'intégralité des rapports ? Cette action ne peut pas être annulée.');">
-            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can" style="margin-right: 8px;"></i> Exécuter la Purge</button>
-        </form>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-user-shield"></i>
+            <div class="stat-info">
+                <div>Total Agents</div>
+                <span><%= agents.length %></span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-lock"></i>
+            <div class="stat-info">
+                <div>Admins Web</div>
+                <span><%= agents.filter(a => a.isAdmin).length %></span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-file-invoice"></i>
+            <div class="stat-info">
+                <div>Rapports Stockés</div>
+                <span><%= archivesCount %></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+        <div class="panel-box">
+            <h2 style="font-size: 1.1rem;">Enregistrer un Agent</h2>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+            
+            <form action="/admin/ajouter" method="POST">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" class="form-control" required placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" class="form-control" required placeholder="Doe">
+                </div>
+                <div class="form-group">
+                    <label>Matricule</label>
+                    <input type="text" name="matricule" class="form-control" required placeholder="55">
+                </div>
+                <div class="form-group">
+                    <label>Téléphone (In-Game)</label>
+                    <input type="text" name="telephone" class="form-control" placeholder="555-XXXX">
+                </div>
+                <div class="form-group">
+                    <label>ID Discord <span style="color:#ef4444;">*</span></label>
+                    <input type="text" name="discordId" class="form-control" placeholder="1247264549489610897">
+                </div>
+                <div class="form-group">
+                    <label>Grade RP</label>
+                    <select name="grade" class="form-control" required>
+                        <option value="Deputy Junior">Deputy Junior</option>
+                        <option value="Deputy I">Deputy I</option>
+                        <option value="Deputy II">Deputy II</option>
+                        <option value="Deputy III">Deputy III</option>
+                        <option value="SLO">SLO</option>
+                        <option value="Sergeant I">Sergeant I</option>
+                        <option value="Sergeant II">Sergeant II</option>
+                        <option value="Sergeant Chef">Sergeant Chef</option>
+                        <option value="Lieutenant">Lieutenant</option>
+                        <option value="Sheriff">Sheriff</option>
+                    </select>
+                </div>
+
+                <div class="switch-container">
+                    <div>
+                        <strong style="font-size: 0.85rem; display:block; color:#fff;">Accès Admin</strong>
+                        <small style="color: #94a3b8; font-size: 0.75rem;">Autoriser le panel MDT</small>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="isAdmin">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="switch-container">
+                    <div>
+                        <strong style="font-size: 0.85rem; display:block; color:#fff;">Droit de Suppression</strong>
+                        <small style="color: #94a3b8; font-size: 0.75rem;">Autoriser la suppression des archives</small>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="canDeleteArchives">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn" style="margin-top: 25px;"><i class="fas fa-plus" style="margin-right: 8px;"></i> Créer l'Agent</button>
+            </form>
+        </div>
+
+        <div class="panel-box">
+            <h2 style="font-size: 1.1rem;">Liste des Agents Enregistrés</h2>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+
+            <div class="table-responsive">
+                <table class="agent-table">
+                    <thead>
+                        <tr>
+                            <th>Matricule</th>
+                            <th>Identité</th>
+                            <th>Grade</th>
+                            <th>Permissions</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(agents.length === 0) { %>
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #94a3b8; padding: 40px;">Aucun agent enregistré.</td>
+                            </tr>
+                        <% } %>
+                        <% agents.forEach(agent => { %>
+                            <tr>
+                                <td style="font-weight: 800; color: var(--primary);">#<%= agent.matricule %></td>
+                                <td style="color: #fff; font-weight: 600;"><%= agent.prenom %> <%= agent.nom %></td>
+                                <td style="color: #cbd5e1;"><%= agent.grade %></td>
+                                <td>
+                                    <span class="badge <%= agent.isAdmin ? 'badge-admin' : 'badge-user' %>">
+                                        <%= agent.isAdmin ? 'Admin Site' : 'Agent' %>
+                                    </span>
+                                    <% if(agent.canDeleteArchives) { %>
+                                        <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); margin-left: 5px;">
+                                            Suppression
+                                        </span>
+                                    <% } %>
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn-action edit" onclick="toggleEditRow('<%= agent._id %>')"><i class="fas fa-edit"></i></button>
+                                    <form action="/admin/supprimer/<%= agent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet agent ?');">
+                                        <button type="submit" class="btn-action delete"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <tr id="edit-<%= agent._id %>" class="edit-row">
+                                <td colspan="5">
+                                    <form action="/admin/modifier/<%= agent._id %>" method="POST">
+                                        <h3 style="font-size:1rem; margin-bottom:20px; color:var(--primary);"><i class="fas fa-user-edit" style="margin-right: 8px;"></i> Modifier <%= agent.prenom %> <%= agent.nom %></h3>
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Prénom</label>
+                                                <input type="text" name="prenom" value="<%= agent.prenom %>" class="form-control" required>
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Nom</label>
+                                                <input type="text" name="nom" value="<%= agent.nom %>" class="form-control" required>
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Matricule</label>
+                                                <input type="text" name="matricule" value="<%= agent.matricule %>" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Téléphone</label>
+                                                <input type="text" name="telephone" value="<%= agent.telephone %>" class="form-control">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">ID Discord</label>
+                                                <input type="text" name="discordId" value="<%= agent.discordId %>" class="form-control">
+                                            </div>
+                                            <div>
+                                                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Grade</label>
+                                                <select name="grade" class="form-control" required>
+                                                    <option value="Deputy Junior" <%= agent.grade === 'Deputy Junior' ? 'selected' : '' %>>Deputy Junior</option>
+                                                    <option value="Deputy I" <%= agent.grade === 'Deputy I' ? 'selected' : '' %>>Deputy I</option>
+                                                    <option value="Deputy II" <%= agent.grade === 'Deputy II' ? 'selected' : '' %>>Deputy II</option>
+                                                    <option value="Deputy III" <%= agent.grade === 'Deputy III' ? 'selected' : '' %>>Deputy III</option>
+                                                    <option value="SLO" <%= agent.grade === 'SLO' ? 'selected' : '' %>>SLO</option>
+                                                    <option value="Sergeant I" <%= agent.grade === 'Sergeant I' ? 'selected' : '' %>>Sergeant I</option>
+                                                    <option value="Sergeant II" <%= agent.grade === 'Sergeant II' ? 'selected' : '' %>>Sergeant II</option>
+                                                    <option value="Sergeant Chef" <%= agent.grade === 'Sergeant Chef' ? 'selected' : '' %>>Sergeant Chef</option>
+                                                    <option value="Lieutenant" <%= agent.grade === 'Lieutenant' ? 'selected' : '' %>>Lieutenant</option>
+                                                    <option value="Sheriff" <%= agent.grade === 'Sheriff' ? 'selected' : '' %>>Sheriff</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top:20px; flex-wrap: wrap; gap: 10px;">
+                                            <div style="display: flex; gap: 15px;">
+                                                <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
+                                                    <span style="font-size: 0.85rem; font-weight:700; color:#fff;">Accès Admin</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>>
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
+                                                    <span style="font-size: 0.85rem; font-weight:700; color:#fff;">Suppression</span>
+                                                    <label class="switch">
+                                                        <input type="checkbox" name="canDeleteArchives" <%= agent.canDeleteArchives ? 'checked' : '' %>>
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div style="display:flex; gap:10px;">
+                                                <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color:#fff; width: auto;" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>
+                                                <button type="submit" class="btn" style="width: auto;">Sauvegarder</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-box danger-zone">
+        <h2><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Zone de Danger Critique</h2>
+        <p style="color: #94a3b8; font-size: 0.9rem;">Les actions ci-dessous sont irréversibles. Soyez extrêmement vigilants.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(239, 68, 68, 0.2); margin: 20px 0;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <strong style="display: block; color: #f8fafc; font-size: 1rem; margin-bottom: 5px;">Purger tous les rapports d'opération</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem;">Efface définitivement la totalité de la collection de données des tickets (<%= archivesCount %> éléments).</span>
+            </div>
+            <form action="/admin/purge-rapports" method="POST" onsubmit="return confirm('⚠️ ALERTE CRITIQUE : Voulez-vous vraiment détruire l\'intégralité des rapports ? Cette action ne peut pas être annulée.');">
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can" style="margin-right: 8px;"></i> Exécuter la Purge</button>
+            </form>
+        </div>
     </div>
 </div>
 
