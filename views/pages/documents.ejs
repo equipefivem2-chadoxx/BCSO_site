@@ -98,6 +98,13 @@
         flex-grow: 1;
     }
 
+    .doc-desc img {
+        margin-top: 15px;
+        max-width: 100%;
+        border-radius: 8px;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+    }
+
     .doc-meta {
         font-size: 0.8rem;
         color: var(--primary);
@@ -155,13 +162,16 @@
             <a href="/documents/livret" class="btn-open">Consulter le livret <i class="fas fa-arrow-right"></i></a>
         </div>
 
-        <!-- EMPLACEMENT POUR FUTUR DOCUMENT (Grisé) -->
-        <div class="doc-card locked">
-            <div class="doc-meta">En construction</div>
-            <i class="fas fa-file-contract doc-icon"></i>
-            <div class="doc-title">Code Pénal</div>
-            <div class="doc-desc">Registre complet des infractions, délits, crimes et amendes de l'État de San Andreas. Document actuellement en cours de rédaction.</div>
-            <a href="#" class="btn-open"><i class="fas fa-lock"></i> Accès restreint</a>
+        <!-- ARBRE DE DÉCISION -->
+        <div class="doc-card">
+            <div class="doc-meta">Procédure Active</div>
+            <i class="fas fa-sitemap doc-icon"></i>
+            <div class="doc-title">Procédure d'Arrestations</div>
+            <div class="doc-desc">
+                Arbre de décision détaillant les étapes d'une procédure d'arrestation : palpation, lecture des droits, fouille, droits à l'avocat et placement en cellule.
+                <img src="image_f9574c.png" alt="Arbre de décision de la procédure d'arrestations">
+            </div>
+            <a href="image_f9574c.png" target="_blank" class="btn-open">Agrandir l'image <i class="fas fa-search-plus"></i></a>
         </div>
     </div>
 </div>
