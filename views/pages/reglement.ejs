@@ -2,93 +2,179 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>BCSO - Règlement</title>
+    <title>BCSO - Règlement Officiel</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --gold: #eab308;
-            --gold-glow: rgba(234, 179, 8, 0.2);
-            --bg-dark: #05070b;
+            /* Teinte Beige Premium */
+            --primary: #bda581; 
+            --primary-glow: rgba(189, 165, 129, 0.15);
+            --bg-dark: #07090e;
+            --bg-card: rgba(15, 23, 42, 0.4);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
         }
 
         body {
             margin: 0;
-            background: var(--bg-dark);
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
             font-family: 'Montserrat', sans-serif;
-            color: #e2e8f0;
+            color: var(--text-main);
+            min-height: 100vh;
         }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
 
         .bcso-page {
-            background: radial-gradient(circle at 50% -20%, #1e293b 0%, #05070b 80%);
-            min-height: 100vh;
-            padding-top: 60px;
+            padding: 60px 0 100px 0;
         }
 
+        /* En-tête */
         .title-gradient {
-            background: linear-gradient(to right, #fff, var(--gold));
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
+        .header-subtitle {
+            color: var(--primary);
+            letter-spacing: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Cartes Premium */
         .premium-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px;
-            transition: 0.3s ease;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(189, 165, 129, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .premium-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px var(--gold-glow);
-            border-color: var(--gold);
+            box-shadow: 0 15px 30px var(--primary-glow);
+            border-color: rgba(189, 165, 129, 0.3);
         }
 
-        .icon-circle {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: rgba(234,179,8,0.1);
+        /* Icônes */
+        .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(189, 165, 129, 0.1), rgba(189, 165, 129, 0.02));
+            border: 1px solid rgba(189, 165, 129, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--gold);
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
         }
 
+        /* Titres de section */
         .section-title {
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 50px;
+            margin-bottom: 30px;
         }
 
-        .badge-grave {
-            background: rgba(220,38,38,0.12);
-            border: 1px solid #dc2626;
-            color: #f87171;
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.8rem;
+        .section-title::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(to right, var(--primary), transparent);
+            opacity: 0.3;
         }
 
-        .step {
-            padding: 10px 15px;
-            border-left: 3px solid var(--gold);
-            background: rgba(0,0,0,0.3);
-            margin-bottom: 8px;
-            border-radius: 8px;
+        .article-title {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .small-text {
-            opacity: 0.75;
+        .article-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Protocoles (Étapes) */
+        .protocol-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .protocol-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--primary);
+            border-radius: 6px;
             font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .protocol-number {
+            font-weight: 900;
+            color: var(--primary);
+            opacity: 0.5;
+            font-size: 1.1rem;
+        }
+
+        /* Badges Fautes Graves */
+        .badge-grave {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #fca5a5;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .badge-grave:hover {
+            background: rgba(220, 38, 38, 0.2);
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -96,182 +182,173 @@
 <body>
 
 <div class="bcso-page">
-<div class="container">
+    <div class="container" style="max-width: 1100px;">
 
-    <!-- HEADER -->
-    <div class="text-center mb-5">
-        <h1 class="display-3 title-gradient">BCSO</h1>
-        <p class="text-uppercase" style="letter-spacing:4px;">Règlement Intérieur & Protocoles</p>
-    </div>
+        <!-- HEADER -->
+        <div class="text-center mb-5 animate-up">
+            <h1 class="display-3 title-gradient mb-2">BCSO</h1>
+            <p class="text-uppercase header-subtitle">Règlement Intérieur & Protocoles</p>
+        </div>
 
-    <!-- DEVISE -->
-    <div class="premium-card p-5 text-center mb-5">
-        <i class="fas fa-star text-warning fa-3x mb-3"></i>
-        <h3 class="fw-bold">HONOR • INTEGRITY • SERVICE</h3>
-        <p class="small-text mt-3 mx-auto" style="max-width:600px;">
-            Le Blaine County Sheriff's Office agit avec discipline, respect et professionnalisme afin de protéger les citoyens.
-        </p>
-    </div>
+        <!-- DEVISE -->
+        <div class="premium-card p-5 text-center mb-5 animate-up delay-1">
+            <i class="fas fa-star fa-2x mb-3" style="color: var(--primary);"></i>
+            <h3 class="fw-bold" style="letter-spacing: 2px;">HONOR • INTEGRITY • SERVICE</h3>
+            <p class="article-text mt-3 mx-auto" style="max-width: 600px;">
+                Le Blaine County Sheriff's Office agit avec discipline, respect et professionnalisme afin de protéger les citoyens.
+            </p>
+        </div>
 
-    <!-- I HRP -->
-    <h3 class="section-title mb-3">I. Règlement HRP</h3>
+        <!-- I HRP -->
+        <h3 class="section-title animate-up delay-1"><i class="fas fa-server" style="color: var(--primary);"></i> I. Règlement HRP</h3>
 
-    <div class="row g-3 mb-5">
-
-        <div class="col-md-6">
-            <div class="premium-card p-4 h-100">
-                <div class="icon-circle"><i class="fas fa-handshake"></i></div>
-                <h5>Article 1 - Respect</h5>
-                <p class="small-text">
-                    Respect obligatoire envers tous les joueurs et staff. Insultes HRP, toxicité et discrimination interdites.
-                </p>
+        <div class="row g-4 mb-5 animate-up delay-2">
+            <div class="col-lg-4 col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <div class="icon-wrapper"><i class="fas fa-handshake"></i></div>
+                    <h5 class="article-title">Article 1 - Respect</h5>
+                    <p class="article-text">Respect obligatoire envers tous les joueurs et le staff. Les insultes HRP, la toxicité et toute forme de discrimination sont strictement interdites.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <div class="icon-wrapper"><i class="fas fa-user-shield"></i></div>
+                    <h5 class="article-title">Article 2 - Professionnalisme</h5>
+                    <p class="article-text">Le BCSO est une faction à vocation sérieuse. Un comportement mature est exigé en toute circonstance, ainsi qu'un respect absolu de la hiérarchie.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <div class="icon-wrapper"><i class="fas fa-clock"></i></div>
+                    <h5 class="article-title">Article 3 - Activité</h5>
+                    <p class="article-text">Présence et implication requises. Toute absence prolongée doit être impérativement signalée sous peine de sanctions internes.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <div class="icon-wrapper"><i class="fas fa-lock"></i></div>
+                    <h5 class="article-title">Article 4 - Confidentialité</h5>
+                    <p class="article-text">Toutes les informations, documents et procédures internes au département sont strictement confidentiels.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <div class="icon-wrapper"><i class="fas fa-car"></i></div>
+                    <h5 class="article-title">Article 5 - Véhicules</h5>
+                    <p class="article-text">L'usage des véhicules de fonction est strictement professionnel. Le drift et la conduite irréaliste (NoRP) sont interdits.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <div class="icon-wrapper"><i class="fas fa-gavel"></i></div>
+                    <h5 class="article-title">Article 6 - Sanctions</h5>
+                    <p class="article-text">Tout manquement s'expose à : Avertissement, blâme, suspension temporaire, rétrogradation ou exclusion définitive.</p>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="premium-card p-4 h-100">
-                <div class="icon-circle"><i class="fas fa-user-shield"></i></div>
-                <h5>Article 2 - Professionnalisme</h5>
-                <p class="small-text">
-                    Le BCSO est une faction sérieuse. Comportement mature obligatoire et respect de la hiérarchie.
-                </p>
+        <!-- II RP -->
+        <h3 class="section-title animate-up delay-2"><i class="fas fa-user-tie" style="color: var(--primary);"></i> II. Règlement RP</h3>
+
+        <div class="row g-4 mb-5 animate-up delay-3">
+            <!-- Règles Simples -->
+            <div class="col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 1 - En service</h5>
+                    <p class="article-text">Uniforme réglementaire obligatoire, radio active et fonctionnelle, respect strict des canaux de communication.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 2 - Contrôle d’identité</h5>
+                    <p class="article-text">Justifié uniquement par une situation RP valide : Contrôle routier, individu suspect, infraction constatée ou appel citoyen.</p>
+                </div>
+            </div>
+            
+            <!-- Protocole Force (Pleine largeur) -->
+            <div class="col-12">
+                <div class="premium-card p-4">
+                    <h5 class="article-title"><i class="fas fa-shield-alt me-2" style="color: var(--primary);"></i> Article 3 - Protocole d'Usage de la force</h5>
+                    <p class="article-text mb-3">L'escalade de la force doit suivre ce protocole strict :</p>
+                    <div class="protocol-list">
+                        <div class="protocol-step"><span class="protocol-number">01.</span> Dialogue & Négociation</div>
+                        <div class="protocol-step"><span class="protocol-number">02.</span> Injonctions et ordres verbaux clairs</div>
+                        <div class="protocol-step"><span class="protocol-number">03.</span> Maîtrise physique (Menottage)</div>
+                        <div class="protocol-step"><span class="protocol-number">04.</span> Arme non-létale (Taser)</div>
+                        <div class="protocol-step"><span class="protocol-number">05.</span> Arme létale (Dernier recours absolu)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suite règles -->
+            <div class="col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 4 - Armes de service</h5>
+                    <p class="article-text">Les armes à feu ne doivent être sorties de leur holster qu'en cas de légitime défense ou de protection citoyenne immédiate.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 5 - Poursuites</h5>
+                    <p class="article-text">Communication radio (Call) obligatoire à chaque changement de direction. La conduite doit rester RP et réaliste.</p>
+                </div>
+            </div>
+            
+            <!-- Protocole Arrestation (Pleine largeur) -->
+            <div class="col-12">
+                <div class="premium-card p-4">
+                    <h5 class="article-title"><i class="fas fa-list-check me-2" style="color: var(--primary);"></i> Article 7 - Protocole d'Arrestation</h5>
+                    <div class="protocol-list">
+                        <div class="protocol-step"><span class="protocol-number">01.</span> Lecture des droits Miranda</div>
+                        <div class="protocol-step"><span class="protocol-number">02.</span> Menottage sécurisé de l'individu</div>
+                        <div class="protocol-step"><span class="protocol-number">03.</span> Fouille de palpation (Justifiée)</div>
+                        <div class="protocol-step"><span class="protocol-number">04.</span> Saisie et inventaire des biens illégaux</div>
+                        <div class="protocol-step"><span class="protocol-number">05.</span> Traitement au poste et rédaction du rapport (MDT)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 8 - Corruption</h5>
+                    <p class="article-text">Strictement interdite sauf accord HRP exceptionnel de l'administration du serveur.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 9 - Comportement</h5>
+                    <p class="article-text">Impartialité, sang-froid et politesse envers les citoyens sont exigés.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="premium-card p-4 h-100">
+                    <h5 class="article-title">Article 10 - Radio</h5>
+                    <p class="article-text">Les messages doivent être courts, précis (codes 10) et professionnels.</p>
+                </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="premium-card p-4 h-100">
-                <div class="icon-circle"><i class="fas fa-clock"></i></div>
-                <h5>Article 3 - Activité</h5>
-                <p class="small-text">
-                    Présence obligatoire. Absences longues à signaler sous peine de sanctions internes.
-                </p>
-            </div>
-        </div>
+        <!-- FAUTES GRAVES -->
+        <h3 class="section-title animate-up delay-3"><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> III. Fautes Graves</h3>
 
-        <div class="col-md-6">
-            <div class="premium-card p-4 h-100">
-                <div class="icon-circle"><i class="fas fa-lock"></i></div>
-                <h5>Article 4 - Confidentialité</h5>
-                <p class="small-text">
-                    Toutes les informations internes sont strictement confidentielles.
-                </p>
+        <div class="premium-card p-4 mb-5 border-danger animate-up delay-3" style="border-color: rgba(220,38,38,0.2) !important;">
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="badge-grave">Abus de pouvoir</span>
+                <span class="badge-grave">Free Arrest</span>
+                <span class="badge-grave">Free Jail</span>
+                <span class="badge-grave">Corruption non-autorisée</span>
+                <span class="badge-grave">NoRP / Fail RP</span>
+                <span class="badge-grave">Troll en service</span>
+                <span class="badge-grave">Divulgation d'informations</span>
+                <span class="badge-grave">Usage abusif des armes</span>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="premium-card p-4 h-100">
-                <div class="icon-circle"><i class="fas fa-car"></i></div>
-                <h5>Article 5 - Véhicules</h5>
-                <p class="small-text">
-                    Usage strictement professionnel. Drift et conduite irréaliste interdits.
-                </p>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="premium-card p-4 h-100">
-                <div class="icon-circle"><i class="fas fa-gavel"></i></div>
-                <h5>Article 6 - Sanctions</h5>
-                <p class="small-text">
-                    Avertissement, blâme, suspension, rétrogradation ou exclusion.
-                </p>
+            <div class="alert alert-danger bg-opacity-10 border-0 text-danger mb-0" style="background: rgba(220,38,38,0.1);">
+                <i class="fas fa-ban me-2"></i> <strong>Politique de tolérance zéro :</strong> Tout agent se rendant coupable de l'une de ces infractions s'expose à une exclusion immédiate et définitive des effectifs.
             </div>
         </div>
 
     </div>
-
-    <!-- II RP -->
-    <h3 class="section-title mb-3">II. Règlement RP</h3>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 1 - En service</h5>
-        <p class="small-text">Uniforme obligatoire, radio active, respect hiérarchie.</p>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 2 - Contrôle d’identité</h5>
-        <p class="small-text">Justifié uniquement par situation RP valide.</p>
-        <p class="small-text">✔ Routier ✔ Suspect ✔ Infraction ✔ Appel citoyen</p>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 3 - Usage de la force</h5>
-
-        <div class="step">Dialogue</div>
-        <div class="step">Ordres verbaux</div>
-        <div class="step">Menottage</div>
-        <div class="step">Taser</div>
-        <div class="step">Arme létale (dernier recours)</div>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 4 - Armes</h5>
-        <p class="small-text">Uniquement défense ou protection citoyenne.</p>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 5 - Poursuites</h5>
-        <p class="small-text">Communication radio obligatoire, conduite RP réaliste.</p>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 6 - Fouille</h5>
-        <p class="small-text">Toujours justifiée (arrestation, suspicion, danger).</p>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 7 - Arrestation</h5>
-        <div class="step">Lecture des droits</div>
-        <div class="step">Menottage</div>
-        <div class="step">Fouille</div>
-        <div class="step">Inventaire</div>
-        <div class="step">Rapport</div>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 8 - Corruption</h5>
-        <p class="small-text">Interdite sauf autorisation admin exceptionnelle.</p>
-    </div>
-
-    <div class="premium-card p-4 mb-4">
-        <h5>Article 9 - Comportement</h5>
-        <p class="small-text">Impartialité, sang-froid, respect des citoyens.</p>
-    </div>
-
-    <div class="premium-card p-4 mb-5">
-        <h5>Article 10 - Radio</h5>
-        <p class="small-text">Messages courts, clairs et professionnels.</p>
-    </div>
-
-    <!-- FAUTES GRAVES -->
-    <h3 class="section-title mb-3">III. Fautes Graves</h3>
-
-    <div class="premium-card p-4 mb-4">
-        <div class="d-flex flex-wrap gap-2">
-            <span class="badge-grave">Abus de pouvoir</span>
-            <span class="badge-grave">Free Arrest</span>
-            <span class="badge-grave">Free Jail</span>
-            <span class="badge-grave">Corruption</span>
-            <span class="badge-grave">NoRP</span>
-            <span class="badge-grave">Troll</span>
-            <span class="badge-grave">Divulgation</span>
-            <span class="badge-grave">Armes abusives</span>
-        </div>
-
-        <div class="alert alert-danger bg-opacity-10 mt-3">
-            <strong>Tolérance zéro :</strong> exclusion immédiate possible.
-        </div>
-    </div>
-
-    <!-- DEVISE -->
-    <div class="premium-card p-5 text-center mb-5">
-        <h3 class="fw-bold">HONOR • INTEGRITY • SERVICE</h3>
-        <p class="small-text mt-3">
-            Le BCSO garantit un RP réaliste, sérieux et professionnel.
-        </p>
-    </div>
-
-</div>
 </div>
 
 </body>
