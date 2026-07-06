@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BCSO - Livre des Lois</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            var(--primary): #bda581; 
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.15);
+            --bg-dark: #07090e;
+            --bg-card: rgba(15, 23, 42, 0.4);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-up {
+            animation: fadeUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .bcso-page {
+            padding: 60px 0 100px 0;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+
+        .header-subtitle {
+            color: var(--primary);
+            letter-spacing: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .premium-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(189, 165, 129, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--primary-glow);
+            border-color: rgba(189, 165, 129, 0.3);
+        }
+
+        .amend-badge {
+            background: rgba(189, 165, 129, 0.1);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(189, 165, 129, 0.2);
+            display: inline-block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .article-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Accent visuel sur la carte */
+        .card-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="bcso-page">
+    <div class="container" style="max-width: 1200px;">
+
+        <!-- HEADER -->
+        <div class="text-center mb-5 animate-up">
+            <h1 class="display-3 title-gradient mb-2">LIVRE DES LOIS</h1>
+            <p class="text-uppercase header-subtitle">Constitution Américaine & Droits Fondamentaux</p>
+        </div>
+
+        <!-- GRILLE DES AMENDEMENTS -->
+        <div class="row g-4 animate-up" style="animation-delay: 0.2s;">
+            
+            <% 
+            const amendements = [
+                { id: "1er", texte: "Les citoyens peuvent s'exprimer librement, dans le respect et la dignité, organiser des manifestations pacifiques sur les places publiques, pratiquer leur religion sans intervention de l'État, et se réunir pour défendre leurs causes." },
+                { id: "2ème", texte: "Les citoyens peuvent posséder des armes à feu pour leur protection personnelle, dans leur propriété privée, et à condition de respecter les règles strictes en matière de port d'armes, d'obtenir un permis et d'utilisation responsable." },
+                { id: "3ème", texte: "Aucune agence gouvernementale ou force de l'ordre ne peut réquisitionner le domicile d'un citoyen pour y loger du personnel sans son consentement, même en période de crise." },
+                { id: "4ème", texte: "Les citoyens sont protégés contre les perquisitions arbitraires de leur domicile, de leur véhicule ou de leurs biens. Toute fouille ou saisie doit être justifiée par un mandat légalement délivré par un juge ou en fonction de l'exception de la loi." },
+                { id: "5ème", texte: "Les citoyens ont le droit à ne pas être jugés deux fois pour le même crime (double incrimination) et à ne pas être forcés de témoigner contre eux-mêmes (droit de garder le silence). De plus, ils ont droit à une indemnisation en cas d'expropriation de biens pour des raisons publiques." },
+                { id: "6ème", texte: "Les citoyens ont droit à un procès public et rapide, avec un juge et un jury populaire. Ils ont également le droit d'être informés des charges retenues contre eux, de confronter les témoins, et de bénéficier d'une assistance juridique." },
+                { id: "7ème", texte: "En cas de litige civil, les citoyens ont droit à un procès avec un juge ou un jury populaire. Le verdict d'un juge doit être respecté." },
+                { id: "8ème", texte: "Les citoyens ne peuvent pas être soumis à des peines excessives ou cruelles. Les amendes et les cautions doivent être proportionnées au crime commis, et toute forme de traitement inhumain est interdite." },
+                { id: "9ème", texte: "Les citoyens ont d'autres droits fondamentaux en dehors de ceux explicitement mentionnés dans la charte municipale. Ces droits sont protégés et respectés par les autorités locales." },
+                { id: "10ème", texte: "Les pouvoirs qui ne sont pas délégués au gouvernement fédéral ou de l'État sont réservés à la municipalité et à ses citoyens. Cela signifie que la ville peut adopter ses propres règlements tant qu'ils respectent les lois supérieures." },
+                { id: "11ème", texte: "Les citoyens ne peuvent pas intenter des poursuites contre la ville en dehors des juridictions appropriées. Les litiges doivent être traités dans les tribunaux locaux selon les lois départementales." },
+                { id: "12ème", texte: "Les citoyens participent directement à l'élection du Gouverneur et des membres du Gouvernement, assurant une gouvernance locale qui reflète les intérêts et les besoins de la population." },
+                { id: "13ème", texte: "Toute forme de travail forcé ou de servitude est interdite. Les citoyens ont le droit de travailler librement, avec des protections contre l'exploitation et des conditions de travail justes." },
+                { id: "14ème", texte: "Tous les citoyens sont égaux devant la loi, quelle que soit leur origine, leur religion, ou leur quartier de résidence. Ils ont droit à une protection égale et à un traitement équitable par les autorités du département." },
+                { id: "15ème", texte: "Tous les citoyens, quelle que soit leur origine ethnique ou leur quartier, ont le droit de voter aux élections locales, garantissant une participation démocratique de toutes les communautés." },
+                { id: "16ème", texte: "Les citoyens payent un impôt sur le revenu pour financer les services publics comme le transport, les écoles et la sécurité. Cet impôt est progressif, donc plus vous gagnez, plus vous contribuez au bien-être de la ville." },
+                { id: "17ème", texte: "Les citoyens élisent directement leurs représentants au Gouvernement, qui défendent les intérêts des différents quartiers de la ville. Cela garantit que les préoccupations des résidents, quel que soit leur lieu de résidence, sont entendues." },
+                { id: "19ème", texte: "Les femmes ont les mêmes droits civiques que les hommes, y compris le droit de voter, d'occuper des postes publics et de participer pleinement à la vie sociale et économique de la ville." },
+                { id: "20ème", texte: "Les élus locaux commencent leur mandat tous les 3 mois. Cela permet une transition en douceur entre l'administration sortante et celle nouvellement élue." },
+                { id: "21ème", texte: "Le dix-huitième amendement à la Constitution est abrogé par le présent article." },
+                { id: "22ème", texte: "Les gouverneurs ne peuvent servir que deux mandats consécutifs, garantissant ainsi un renouvellement régulier des idées et des politiques locales." },
+                { id: "23ème", texte: "Les habitants n'appartenant à aucun État spécifique peuvent voter aux élections municipales, leur donnant une voix dans les décisions qui affectent leur vie quotidienne." },
+                { id: "24ème", texte: "Aucun citoyen ne doit payer une taxe pour voter. Cela garantit que le droit de vote est accessible à tous, indépendamment de leur situation financière." },
+                { id: "25ème", texte: "Si le gouverneur est incapable de remplir ses fonctions (en cas de destitution, décès ou démission), son adjoint prend la relève pour assurer la continuité de l'administration." },
+                { id: "26ème", texte: "Tous les citoyens peuvent voter dès l'âge de 18 ans, permettant aux jeunes adultes de participer activement à la démocratie locale dès qu'ils atteignent l'âge de la majorité." },
+                { id: "27ème", texte: "Toute augmentation de salaire pour les membres du Gouvernement ne peut entrer en vigueur qu'après les prochaines élections, assurant que les élus ne profitent pas immédiatement de leurs propres décisions salariales." }
+            ];
+            %>
+
+            <% amendements.forEach(function(amendement) { %>
+                <div class="col-lg-4 col-md-6">
+                    <div class="premium-card p-4 h-100">
+                        <div class="card-accent"></div>
+                        <div class="amend-badge"><i class="fas fa-file-contract me-2"></i><%= amendement.id %> Amendement</div>
+                        <p class="article-text"><%= amendement.texte %></p>
+                    </div>
+                </div>
+            <% }); %>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

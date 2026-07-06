@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Plus besoin d'axios ici, on a tout retiré pour optimiser !
 const authRoutes = require('./auth');
 const adminRoutes = require('./admin'); 
 const effectifsRoutes = require('./effectifs');
@@ -35,8 +34,6 @@ router.get('/dashboard', async (req, res) => {
         console.log('Attente de la création des collections...');
     }
 
-    // 🚀 LECTURE ULTRA RAPIDE : On lit la valeur envoyée par le bot et stockée en mémoire.
-    // Plus aucun chargement lent via l'API Discord !
     let ticketsEnCoursCount = req.app.locals.ticketsEnCoursCount || 0;
 
     res.render('pages/dashboard', { 
@@ -49,7 +46,7 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
-// 🚀 Route pour la page Règlement (NOUVEAU)
+// Route pour la page Règlement
 router.get('/reglement', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/reglement', { 
@@ -58,7 +55,16 @@ router.get('/reglement', (req, res) => {
     });
 });
 
-// 🚀 Route pour la page Formations
+// 🚀 NOUVELLE ROUTE : Livre des Lois
+router.get('/lois', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/lois', { 
+        title: 'BCSO - Livre des Lois',
+        user: req.session.user
+    });
+});
+
+// Route pour la page Formations
 router.get('/formations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formations', { 
@@ -67,7 +73,7 @@ router.get('/formations', (req, res) => {
     });
 });
 
-// 🚀 Route pour la page Documents
+// Route pour la page Documents
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 
