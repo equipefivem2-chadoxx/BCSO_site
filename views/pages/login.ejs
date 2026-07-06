@@ -3,189 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCSO - Authentification</title>
-    <!-- On reprend la même police que tes autres pages -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>BCSO - Portail MDT</title>
+    <!-- Police Montserrat pour le côté propre et institutionnel -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Exactement les mêmes variables que effectifs.ejs */
         :root {
             --primary: #bda581;
-            --primary-glow: rgba(189, 165, 129, 0.15);
-            --bg-card: rgba(15, 23, 42, 0.4);
-            --bg-dark: #07090e; 
+            --primary-bright: #d8c3a5;
+            --primary-glow: rgba(189, 165, 129, 0.3);
+            --bg-dark: #07090e;
+            --bg-card: rgba(15, 23, 42, 0.65);
         }
-        
+
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-dark);
-            /* Même fond premium exact */
+            /* Ajout d'une grille holographique très subtile et d'une grosse lueur centrale */
             background-image: 
-                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+                radial-gradient(circle at 50% 40%, rgba(189, 165, 129, 0.12), transparent 60%),
+                linear-gradient(rgba(189, 165, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 165, 129, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
             font-family: 'Montserrat', sans-serif;
-            color: #e2e8f0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
+            color: #fff;
         }
 
-        .login-wrapper {
-            animation: fadeUp 0.6s ease-out forwards;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
+        /* Animation d'entrée */
+        @keyframes scaleUp {
+            0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Lueur pulsante derrière la carte */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 40px rgba(189, 165, 129, 0.05); }
+            50% { box-shadow: 0 0 60px rgba(189, 165, 129, 0.15); }
+            100% { box-shadow: 0 0 40px rgba(189, 165, 129, 0.05); }
         }
 
-        /* Style de carte copié sur tes .agent-card */
         .login-card {
             background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-top: 1px solid rgba(189, 165, 129, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(189, 165, 129, 0.25);
             border-radius: 16px;
-            padding: 45px 40px;
+            padding: 50px;
+            width: 100%;
+            max-width: 420px;
             text-align: center;
             position: relative;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            animation: scaleUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, pulseGlow 4s infinite ease-in-out;
+            box-shadow: inset 0 0 30px rgba(189, 165, 129, 0.05), 0 20px 50px rgba(0,0,0,0.8);
         }
 
-        /* Petite ligne d'accentuation en haut identique aux cartes agents */
-        .card-accent-top {
+        /* Lignes d'ornement haut et bas pour structurer */
+        .card-decoration-top, .card-decoration-bottom {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
             height: 2px;
-            background: linear-gradient(to right, transparent, var(--primary), transparent);
-            opacity: 0.5;
-            border-radius: 16px 16px 0 0;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .card-decoration-top { top: 0; }
+        .card-decoration-bottom { bottom: 0; }
+
+        .logo-container {
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Halo fort derrière le logo */
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: var(--primary);
+            filter: blur(45px);
+            opacity: 0.25;
+            z-index: -1;
+            border-radius: 50%;
         }
 
         .login-logo {
-            width: 120px;
-            margin-bottom: 25px;
-            filter: drop-shadow(0px 5px 15px rgba(0,0,0,0.5));
+            width: 160px; /* Logo beaucoup plus grand et imposant */
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8));
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover .login-logo {
+            transform: scale(1.05);
         }
 
         .login-title {
-            margin: 0 0 5px 0;
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ffffff;
         }
 
         .login-title span {
-            /* Reprise du dégradé de ton h2 span */
-            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+            background: linear-gradient(to right, #fff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .login-subtitle {
-            color: #94a3b8;
+            font-family: monospace;
+            color: var(--primary);
             font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 35px;
-        }
-
-        /* Bouton Discord revu : Fini le gros bloc bleu, place à l'élégance */
-        .discord-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background-color: rgba(88, 101, 242, 0.05); /* Fond presque transparent */
-            color: #e2e8f0;
-            border: 1px solid rgba(88, 101, 242, 0.3); /* Bordure bleue subtile */
-            padding: 14px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .discord-btn i {
-            font-size: 18px;
-            color: #5865F2; /* Icône aux couleurs de Discord */
-            transition: all 0.3s ease;
-        }
-
-        .discord-btn:hover {
-            background-color: rgba(88, 101, 242, 0.15);
-            border-color: #5865F2;
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.15);
-        }
-
-        /* Messages d'erreur propres et intégrés */
-        .error-msg {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 25px;
+            margin-bottom: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            opacity: 0.8;
         }
-        
+
+        .login-subtitle::before, .login-subtitle::after {
+            content: '///';
+            color: rgba(189, 165, 129, 0.4);
+            letter-spacing: -1px;
+        }
+
+        /* Le Bouton : Fini le bleu ! Un bouton or massif transparent qui s'illumine */
+        .discord-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(189, 165, 129, 0.08);
+            border: 1px solid var(--primary);
+            color: var(--primary-bright);
+            padding: 16px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(189, 165, 129, 0.1);
+        }
+
+        .discord-btn i {
+            font-size: 20px;
+        }
+
+        /* Effet au survol hyper dynamique */
+        .discord-btn:hover {
+            background: var(--primary);
+            color: var(--bg-dark); /* Le texte devient sombre pour contraster avec le fond or */
+            box-shadow: 0 0 25px var(--primary-glow), inset 0 0 10px rgba(255,255,255,0.5);
+            transform: translateY(-3px);
+        }
+
+        .discord-btn:hover i {
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* Zone d'erreur stylisée terminal rouge */
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-left: 4px solid #ef4444;
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
         .error-msg i {
             color: #ef4444;
+            font-size: 18px;
         }
+
     </style>
 </head>
 <body>
 
-    <div class="login-wrapper">
-        <div class="login-card">
-            <div class="card-accent-top"></div>
-            
-            <img src="/images/bcso.png" alt="Sceau du BCSO" class="login-logo" onerror="this.style.display='none'">
-            
-            <h2 class="login-title">MDT <span>SYSTEM</span></h2>
-            <div class="login-subtitle">Accès restreint au personnel autorisé</div>
+    <div class="login-card">
+        <div class="card-decoration-top"></div>
 
-            <% if (typeof error !== 'undefined' && error) { %>
-                <div class="error-msg">
-                    <i class="fas fa-shield-alt"></i>
+        <div class="logo-container">
+            <!-- Toujours ton image -->
+            <img src="/images/bcso.png" alt="Sceau du BCSO" class="login-logo" onerror="this.style.display='none'">
+        </div>
+        
+        <h2 class="login-title">MDT <span>SYSTEM</span></h2>
+        <div class="login-subtitle">Portail Fédéral Restreint</div>
+
+        <!-- Gestion des erreurs EJS intacte -->
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-msg">
+                <i class="fas fa-lock"></i>
+                <div>
                     <% if (error === 'AccessDenied') { %>
-                        Habilitations insuffisantes.
+                        <strong>ACCÈS REFUSÉ</strong><br>Habilitations insuffisantes pour ce matricule.
                     <% } else if (error === 'NotOnServer') { %>
-                        Impossible de vérifier vos accréditations.
+                        <strong>ÉCHEC SYSTÈME</strong><br>Accréditation serveur introuvable.
                     <% } else if (error === 'NoCode') { %>
-                        Authentification annulée.
+                        <strong>ANNULATION</strong><br>Processus d'authentification interrompu.
                     <% } else { %>
-                        Une erreur système est survenue.
+                        <strong>ERREUR CRITIQUE</strong><br>Anomalie système détectée.
                     <% } %>
                 </div>
-            <% } %>
+            </div>
+        <% } %>
 
-            <a href="/auth/discord" class="discord-btn">
-                <i class="fab fa-discord"></i> Connexion sécurisée
-            </a>
-        </div>
+        <a href="/auth/discord" class="discord-btn">
+            <i class="fab fa-discord"></i> Initialiser la session
+        </a>
+
+        <div class="card-decoration-bottom"></div>
     </div>
 
 </body>
