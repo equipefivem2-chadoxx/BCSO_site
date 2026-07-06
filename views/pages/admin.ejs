@@ -1,13 +1,19 @@
 <style>
+    :root {
+        --primary: #bda581;
+        --bg-card: rgba(15, 23, 42, 0.4);
+    }
+    
     /* Styles spécifiques au panel Admin */
     h1, h2, h3 {
-        color: #d4af37;
+        color: var(--primary);
         margin-top: 0;
         text-transform: uppercase;
         letter-spacing: 1px;
+        font-weight: 800;
     }
     .page-header {
-        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
         padding-bottom: 15px;
         margin-bottom: 30px;
         display: flex;
@@ -23,35 +29,38 @@
         margin-bottom: 30px;
     }
     .stat-card {
-        background: #0f172a;
-        border: 1px solid #1e293b;
-        border-radius: 8px;
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 12px;
         padding: 20px;
         display: flex;
         align-items: center;
         gap: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     .stat-card i {
         font-size: 2.2rem;
-        color: #d4af37;
+        color: var(--primary);
     }
     .stat-info div {
         font-size: 0.8rem;
         color: #94a3b8;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
+        font-weight: 700;
     }
     .stat-info span {
         font-size: 1.6rem;
-        font-weight: bold;
+        font-weight: 800;
         color: #f8fafc;
     }
 
     /* Layout Formulaire / Tableau calibré */
     .admin-grid {
         display: grid;
-        grid-template-columns: 360px 1fr; /* Largeur fixe pour le formulaire, le reste pour le tableau */
+        grid-template-columns: 360px 1fr;
         gap: 25px;
         align-items: start;
     }
@@ -60,11 +69,13 @@
     }
 
     .panel-box {
-        background: #0f172a;
-        border: 1px solid #1e293b;
-        border-radius: 8px;
-        padding: 22px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
 
     /* Formulaires */
@@ -77,21 +88,24 @@
         font-size: 0.8rem;
         color: #94a3b8;
         text-transform: uppercase;
-        font-weight: 600;
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
     .form-control {
         width: 100%;
-        padding: 10px 12px;
-        background: #05070b;
-        border: 1px solid #334155;
-        border-radius: 5px;
+        padding: 12px;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
         color: #f8fafc;
         font-size: 0.9rem;
         transition: border-color 0.2s;
     }
     .form-control:focus {
         outline: none;
-        border-color: #d4af37;
+        border-color: var(--primary);
+        box-shadow: 0 0 10px rgba(189, 165, 129, 0.2);
+        background: rgba(0,0,0,0.5);
     }
 
     /* Custom Switch */
@@ -99,128 +113,59 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #05070b;
-        padding: 12px;
-        border-radius: 5px;
-        border: 1px solid #334155;
+        background: rgba(0,0,0,0.3);
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.05);
         margin-top: 15px;
     }
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 22px;
-        flex-shrink: 0;
-    }
+    .switch { position: relative; display: inline-block; width: 44px; height: 22px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-color: #334155;
-        transition: .3s;
-        border-radius: 22px;
-    }
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 16px; width: 16px;
-        left: 3px; bottom: 3px;
-        background-color: white;
-        transition: .3s;
-        border-radius: 50%;
-    }
-    input:checked + .slider { background-color: #d4af37; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .3s; border-radius: 22px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--primary); }
     input:checked + .slider:before { transform: translateX(22px); }
 
     .btn {
-        background: #d4af37;
+        background: var(--primary);
         color: #05070b;
         border: none;
-        padding: 11px 18px;
-        font-weight: bold;
-        border-radius: 5px;
+        padding: 12px 20px;
+        font-weight: 800;
+        border-radius: 8px;
         cursor: pointer;
         width: 100%;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
         font-size: 0.85rem;
-        transition: background 0.2s;
+        transition: all 0.3s;
     }
-    .btn:hover { background: #bfa030; }
+    .btn:hover { background: #e5d5b7; box-shadow: 0 0 15px rgba(189, 165, 129, 0.4); transform: translateY(-2px); }
 
     /* Tableau des Agents */
-    .table-responsive {
-        overflow-x: auto;
-    }
-    .agent-table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-    }
-    .agent-table th {
-        background: #05070b;
-        padding: 12px 14px;
-        color: #94a3b8;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        border-bottom: 2px solid #1e293b;
-    }
-    .agent-table td {
-        padding: 12px 14px;
-        border-bottom: 1px solid #1e293b;
-        font-size: 0.9rem;
-        vertical-align: middle;
-    }
-    .badge {
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-    .badge-admin { background: rgba(212, 175, 55, 0.15); color: #d4af37; border: 1px solid #d4af37; }
-    .badge-user { background: rgba(71, 85, 105, 0.2); color: #94a3b8; }
+    .table-responsive { overflow-x: auto; }
+    .agent-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .agent-table th { background: rgba(0,0,0,0.2); padding: 15px; color: #94a3b8; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(255,255,255,0.05); }
+    .agent-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.95rem; vertical-align: middle; }
     
-    .actions-cell {
-        display: flex;
-        gap: 8px;
-    }
-    .btn-action {
-        background: none;
-        border: 1px solid #334155;
-        color: #cbd5e1;
-        padding: 5px 9px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .btn-action.edit:hover { border-color: #38bdf8; color: #38bdf8; }
-    .btn-action.delete:hover { border-color: #ef4444; color: #ef4444; }
+    .badge { padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-admin { background: rgba(189, 165, 129, 0.15); color: var(--primary); border: 1px solid var(--primary); }
+    .badge-user { background: rgba(71, 85, 105, 0.2); color: #94a3b8; border: 1px solid rgba(71, 85, 105, 0.4); }
+    
+    .actions-cell { display: flex; gap: 10px; }
+    .btn-action { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .btn-action.edit:hover { border-color: var(--primary); color: var(--primary); background: rgba(189, 165, 129, 0.1); }
+    .btn-action.delete:hover { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1); }
 
     /* Ligne cachée pour modification */
-    .edit-row {
-        background: #05070b;
-        display: none;
-    }
-    .edit-row td {
-        padding: 20px;
-        border-bottom: 2px solid #d4af37;
-    }
+    .edit-row { background: rgba(0,0,0,0.4); display: none; }
+    .edit-row td { padding: 25px; border-bottom: 2px solid var(--primary); }
 
     /* Zone de Danger */
-    .danger-zone {
-        margin-top: 30px;
-        border: 1px dashed #ef4444;
-        background: rgba(239, 68, 68, 0.03);
-    }
+    .danger-zone { margin-top: 40px; border: 1px dashed rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05); }
     .danger-zone h2 { color: #ef4444; font-size: 1.2rem; }
-    .btn-danger {
-        background: #ef4444;
-        color: #fff;
-        width: auto;
-    }
-    .btn-danger:hover { background: #dc2626; }
+    .btn-danger { background: #ef4444; color: #fff; width: auto; }
+    .btn-danger:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
 </style>
 
 <div class="page-header">
@@ -257,7 +202,7 @@
 <div class="admin-grid">
     <div class="panel-box">
         <h2 style="font-size: 1.1rem;">Enregistrer un Agent</h2>
-        <hr style="border: 0; border-top: 1px solid #1e293b; margin-bottom: 18px;">
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
         
         <form action="/admin/ajouter" method="POST">
             <div class="form-group">
@@ -298,8 +243,8 @@
 
             <div class="switch-container">
                 <div>
-                    <strong style="font-size: 0.85rem; display:block;">Accès Admin</strong>
-                    <small style="color: #94a3b8; font-size: 0.7rem;">Autoriser le panel MDT</small>
+                    <strong style="font-size: 0.85rem; display:block; color:#fff;">Accès Admin</strong>
+                    <small style="color: #94a3b8; font-size: 0.75rem;">Autoriser le panel MDT</small>
                 </div>
                 <label class="switch">
                     <input type="checkbox" name="isAdmin">
@@ -309,8 +254,8 @@
 
             <div class="switch-container">
                 <div>
-                    <strong style="font-size: 0.85rem; display:block;">Droit de Suppression</strong>
-                    <small style="color: #94a3b8; font-size: 0.7rem;">Autoriser la suppression des archives</small>
+                    <strong style="font-size: 0.85rem; display:block; color:#fff;">Droit de Suppression</strong>
+                    <small style="color: #94a3b8; font-size: 0.75rem;">Autoriser la suppression des archives</small>
                 </div>
                 <label class="switch">
                     <input type="checkbox" name="canDeleteArchives">
@@ -318,13 +263,13 @@
                 </label>
             </div>
             
-            <button type="submit" class="btn" style="margin-top: 18px;"><i class="fas fa-plus"></i> Créer l'Agent</button>
+            <button type="submit" class="btn" style="margin-top: 25px;"><i class="fas fa-plus" style="margin-right: 8px;"></i> Créer l'Agent</button>
         </form>
     </div>
 
     <div class="panel-box">
         <h2 style="font-size: 1.1rem;">Liste des Agents Enregistrés</h2>
-        <hr style="border: 0; border-top: 1px solid #1e293b; margin-bottom: 18px;">
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
 
         <div class="table-responsive">
             <table class="agent-table">
@@ -340,20 +285,20 @@
                 <tbody>
                     <% if(agents.length === 0) { %>
                         <tr>
-                            <td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Aucun agent enregistré.</td>
+                            <td colspan="5" style="text-align: center; color: #94a3b8; padding: 40px;">Aucun agent enregistré.</td>
                         </tr>
                     <% } %>
                     <% agents.forEach(agent => { %>
                         <tr>
-                            <td style="font-weight: bold; color: #d4af37;">#<%= agent.matricule %></td>
-                            <td><%= agent.prenom %> <%= agent.nom %></td>
-                            <td><%= agent.grade %></td>
+                            <td style="font-weight: 800; color: var(--primary);">#<%= agent.matricule %></td>
+                            <td style="color: #fff; font-weight: 600;"><%= agent.prenom %> <%= agent.nom %></td>
+                            <td style="color: #cbd5e1;"><%= agent.grade %></td>
                             <td>
                                 <span class="badge <%= agent.isAdmin ? 'badge-admin' : 'badge-user' %>">
                                     <%= agent.isAdmin ? 'Admin Site' : 'Agent' %>
                                 </span>
                                 <% if(agent.canDeleteArchives) { %>
-                                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; margin-left: 5px;">
+                                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); margin-left: 5px;">
                                         Suppression
                                     </span>
                                 <% } %>
@@ -369,32 +314,32 @@
                         <tr id="edit-<%= agent._id %>" class="edit-row">
                             <td colspan="5">
                                 <form action="/admin/modifier/<%= agent._id %>" method="POST">
-                                    <h3 style="font-size:0.95rem; margin-bottom:12px; color:#38bdf8;"><i class="fas fa-user-edit"></i> Modifier l'agent <%= agent.prenom %></h3>
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom:12px;">
+                                    <h3 style="font-size:1rem; margin-bottom:20px; color:var(--primary);"><i class="fas fa-user-edit" style="margin-right: 8px;"></i> Modifier <%= agent.prenom %> <%= agent.nom %></h3>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
                                         <div>
-                                            <label style="font-size:0.7rem; color:#94a3b8;">Prénom</label>
+                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Prénom</label>
                                             <input type="text" name="prenom" value="<%= agent.prenom %>" class="form-control" required>
                                         </div>
                                         <div>
-                                            <label style="font-size:0.7rem; color:#94a3b8;">Nom</label>
+                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Nom</label>
                                             <input type="text" name="nom" value="<%= agent.nom %>" class="form-control" required>
                                         </div>
                                         <div>
-                                            <label style="font-size:0.7rem; color:#94a3b8;">Matricule</label>
+                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Matricule</label>
                                             <input type="text" name="matricule" value="<%= agent.matricule %>" class="form-control" required>
                                         </div>
                                     </div>
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom:12px;">
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
                                         <div>
-                                            <label style="font-size:0.7rem; color:#94a3b8;">Téléphone</label>
+                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Téléphone</label>
                                             <input type="text" name="telephone" value="<%= agent.telephone %>" class="form-control">
                                         </div>
                                         <div>
-                                            <label style="font-size:0.7rem; color:#94a3b8;">ID Discord</label>
+                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">ID Discord</label>
                                             <input type="text" name="discordId" value="<%= agent.discordId %>" class="form-control">
                                         </div>
                                         <div>
-                                            <label style="font-size:0.7rem; color:#94a3b8;">Grade</label>
+                                            <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Grade</label>
                                             <select name="grade" class="form-control" required>
                                                 <option value="Deputy Junior" <%= agent.grade === 'Deputy Junior' ? 'selected' : '' %>>Deputy Junior</option>
                                                 <option value="Deputy I" <%= agent.grade === 'Deputy I' ? 'selected' : '' %>>Deputy I</option>
@@ -409,17 +354,17 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top:12px; flex-wrap: wrap; gap: 10px;">
-                                        <div style="display: flex; gap: 10px;">
-                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 8px 12px;">
-                                                <span style="font-size: 0.8rem;">Accès Admin</span>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top:20px; flex-wrap: wrap; gap: 10px;">
+                                        <div style="display: flex; gap: 15px;">
+                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
+                                                <span style="font-size: 0.85rem; font-weight:700; color:#fff;">Accès Admin</span>
                                                 <label class="switch">
                                                     <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>>
                                                     <span class="slider"></span>
                                                 </label>
                                             </div>
-                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 8px 12px;">
-                                                <span style="font-size: 0.8rem;">Suppression</span>
+                                            <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
+                                                <span style="font-size: 0.85rem; font-weight:700; color:#fff;">Suppression</span>
                                                 <label class="switch">
                                                     <input type="checkbox" name="canDeleteArchives" <%= agent.canDeleteArchives ? 'checked' : '' %>>
                                                     <span class="slider"></span>
@@ -427,8 +372,8 @@
                                             </div>
                                         </div>
                                         <div style="display:flex; gap:10px;">
-                                            <button type="button" class="btn" style="background:#475569; color:#fff; width: auto;" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>
-                                            <button type="submit" class="btn" style="background:#38bdf8; color:#0f172a; width: auto;">Sauvegarder</button>
+                                            <button type="button" class="btn" style="background: rgba(255,255,255,0.1); color:#fff; width: auto;" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>
+                                            <button type="submit" class="btn" style="width: auto;">Sauvegarder</button>
                                         </div>
                                     </div>
                                 </form>
@@ -442,17 +387,17 @@
 </div>
 
 <div class="panel-box danger-zone">
-    <h2><i class="fas fa-exclamation-triangle"></i> Zone de Danger Critique</h2>
-    <p style="color: #94a3b8; font-size: 0.85rem;">Les actions ci-dessous sont irréversibles. Soyez extrêmement vigilants.</p>
-    <hr style="border: 0; border-top: 1px solid rgba(239, 68, 68, 0.2); margin: 15px 0;">
+    <h2><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Zone de Danger Critique</h2>
+    <p style="color: #94a3b8; font-size: 0.9rem;">Les actions ci-dessous sont irréversibles. Soyez extrêmement vigilants.</p>
+    <hr style="border: 0; border-top: 1px solid rgba(239, 68, 68, 0.2); margin: 20px 0;">
     
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
         <div>
-            <strong style="display: block; color: #f8fafc; font-size: 0.95rem;">Purger tous les rapports d'opération</strong>
-            <span style="color: #94a3b8; font-size: 0.8rem;">Efface définitivement la totalité de la collection de données des tickets (<%= archivesCount %> éléments).</span>
+            <strong style="display: block; color: #f8fafc; font-size: 1rem; margin-bottom: 5px;">Purger tous les rapports d'opération</strong>
+            <span style="color: #94a3b8; font-size: 0.85rem;">Efface définitivement la totalité de la collection de données des tickets (<%= archivesCount %> éléments).</span>
         </div>
         <form action="/admin/purge-rapports" method="POST" onsubmit="return confirm('⚠️ ALERTE CRITIQUE : Voulez-vous vraiment détruire l\'intégralité des rapports ? Cette action ne peut pas être annulée.');">
-            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can"></i> Exécuter la Purge</button>
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can" style="margin-right: 8px;"></i> Exécuter la Purge</button>
         </form>
     </div>
 </div>

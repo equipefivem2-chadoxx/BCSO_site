@@ -1,35 +1,61 @@
 <style>
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    #archives-container { max-width: 1400px; margin: 0 auto; padding-bottom: 60px; animation: fadeIn 0.4s ease-out; }
+    :root {
+        --primary: #bda581;
+        --bg-card: rgba(15, 23, 42, 0.4);
+    }
     
-    .archive-header { background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(5, 7, 11, 0) 100%); padding: 25px 30px; border-left: 4px solid #d4af37; border-radius: 8px; margin-bottom: 35px; }
-    .archive-header h2 { margin: 0; font-size: 24px; color: #fff; }
-    .archive-header p { margin: 5px 0 0 0; color: #9ca3af; font-size: 14px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    #archives-container { max-width: 1400px; margin: 0 auto; padding-bottom: 60px; animation: fadeIn 0.4s ease-out forwards; }
+    
+    .archive-header { 
+        background: linear-gradient(90deg, rgba(189, 165, 129, 0.1) 0%, transparent 100%); 
+        padding: 25px 30px; 
+        border-left: 4px solid var(--primary); 
+        border-radius: 12px; 
+        margin-bottom: 35px; 
+    }
+    .archive-header h2 { margin: 0; font-size: 24px; color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .archive-header p { margin: 5px 0 0 0; color: #94a3b8; font-size: 14px; }
 
-    .search-panel { background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 20px 30px; margin-bottom: 30px; backdrop-filter: blur(10px); }
+    .search-panel { 
+        background: var(--bg-card); 
+        border: 1px solid rgba(255, 255, 255, 0.03); 
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 16px; 
+        padding: 25px 30px; 
+        margin-bottom: 30px; 
+        backdrop-filter: blur(10px); 
+    }
     .search-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
     .search-group { display: flex; flex-direction: column; gap: 8px; }
-    .search-label { color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .search-label { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
     
-    .search-input { background: #0b0f19; border: 1px solid #1f2937; color: #fff; padding: 10px 15px; border-radius: 6px; font-size: 14px; min-width: 200px; transition: all 0.3s; }
-    .search-input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 8px rgba(212, 175, 55, 0.2); }
+    .search-input { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 15px; border-radius: 8px; font-size: 14px; min-width: 200px; transition: all 0.3s; }
+    .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(189, 165, 129, 0.2); background: rgba(0,0,0,0.5); }
     
-    .btn-search { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; padding: 10px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s; height: 41px; text-transform: uppercase; letter-spacing: 1px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-    .btn-search:hover { background: #d4af37; color: #000; }
+    .btn-search { background: rgba(189, 165, 129, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s; height: 45px; text-transform: uppercase; letter-spacing: 1px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+    .btn-search:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(189, 165, 129, 0.3); }
 
-    .table-panel { background: rgba(17, 24, 39, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; backdrop-filter: blur(10px); }
+    .table-panel { 
+        background: var(--bg-card); 
+        border: 1px solid rgba(255, 255, 255, 0.03); 
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 16px; 
+        padding: 25px; 
+        backdrop-filter: blur(10px); 
+    }
     .archive-table { width: 100%; border-collapse: collapse; }
-    .archive-table th { text-align: left; padding: 15px; color: #9ca3af; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #1f2937; letter-spacing: 1px; }
-    .archive-table td { padding: 18px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #e5e7eb; font-size: 14px; }
+    .archive-table th { text-align: left; padding: 15px; color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); letter-spacing: 1px; }
+    .archive-table td { padding: 18px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); color: #e2e8f0; font-size: 14px; }
     
-    .badge-motif { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); color: #d4af37; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-    .btn-view { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; padding: 8px 15px; border-radius: 6px; text-decoration: none; }
-    .btn-view:hover { background: #d4af37; color: #000; }
+    .badge-motif { background: rgba(189, 165, 129, 0.1); border: 1px solid rgba(189, 165, 129, 0.3); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+    .btn-view { background: rgba(189, 165, 129, 0.05); border: 1px solid rgba(189, 165, 129, 0.3); color: var(--primary); cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; padding: 8px 15px; border-radius: 6px; text-decoration: none; }
+    .btn-view:hover { background: var(--primary); color: #000; }
 </style>
 
 <div id="archives-container">
     <div class="archive-header">
-        <h2><i class="fas fa-folder-open"></i> Archives Centrales</h2>
+        <h2><i class="fas fa-folder-open" style="margin-right: 10px;"></i> Archives Centrales</h2>
         <p>Indexation automatisée des transcriptions de dossiers et d'interventions.</p>
     </div>
 
@@ -53,7 +79,7 @@
             </div>
             <button type="submit" class="btn-search"><i class="fas fa-filter"></i> Filtrer</button>
             <% if (typeof filters !== 'undefined' && Object.keys(filters).length > 0) { %>
-                <a href="/archives" class="btn-search" style="background: none; border-color: #4b5563; color: #9ca3af;">Réinitialiser</a>
+                <a href="/archives" class="btn-search" style="background: none; border-color: rgba(255,255,255,0.1); color: #94a3b8;">Réinitialiser</a>
             <% } %>
         </form>
     </div>
@@ -73,10 +99,10 @@
                 <tbody>
                     <% tickets.forEach(function(ticket) { %>
                         <tr>
-                            <td style="color: #9ca3af;"><%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></td>
-                            <td style="font-weight: 600; color: #fff;">#<%= ticket.channelName %></td>
+                            <td style="color: #94a3b8; font-weight: 600;"><%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></td>
+                            <td style="font-weight: 800; color: #fff; letter-spacing: 1px;">#<%= ticket.channelName %></td>
                             <td><span class="badge-motif"><%= ticket.motif %></span></td>
-                            <td style="color: #10b981; font-weight: 500;"><i class="fas fa-user-shield" style="font-size: 11px;"></i> <%= ticket.closedBy %></td>
+                            <td style="color: #10b981; font-weight: 600;"><i class="fas fa-user-shield" style="font-size: 12px; margin-right: 5px;"></i> <%= ticket.closedBy %></td>
                             <td style="display: flex; gap: 8px; align-items: center;">
                                 <a href="/archives/<%= ticket.channelName %>" class="btn-view">
                                     <i class="fas fa-external-link-alt"></i> Ouvrir le rapport
