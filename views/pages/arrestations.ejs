@@ -184,7 +184,7 @@
         .bullet-list li { padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.04); font-size: 0.88rem; color: #cbd5e1; display: flex; align-items: center; gap: 10px; }
         .bullet-list li i { color: var(--primary); font-size: 0.8rem; }
 
-        /* BOUTON MODAL (Remplacé) */
+        /* BOUTON MODAL */
         .btn-tactical-link {
             display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 12px;
             background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
@@ -244,14 +244,16 @@
         .cover-txt h3 { font-size: 2.2rem; font-weight: 900; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
         .cover-txt p { font-size: 1rem; color: var(--primary); margin: 6px 0 0 0; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
 
-        /* MODAL IMAGE CSS (Lightbox) */
+        /* MODAL IMAGE CSS (Lightbox - Mise à jour Flexbox pour centrage) */
         .img-modal {
-            display: none; position: fixed; z-index: 9999; padding-top: 5vh;
-            left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
+            display: none; /* Remplacé par flex en JS */
+            position: fixed; z-index: 9999;
+            left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center;
         }
         .img-modal-content {
-            margin: auto; display: block; max-width: 90%; max-height: 85vh;
+            display: block; max-width: 95vw; max-height: 95vh; width: auto; height: auto;
             border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             border: 1px solid rgba(189,165,129,0.3); animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             object-fit: contain;
@@ -259,6 +261,7 @@
         .close-modal {
             position: absolute; top: 20px; right: 40px; color: #cbd5e1;
             font-size: 45px; font-weight: 300; transition: 0.3s; cursor: pointer;
+            z-index: 10000;
         }
         .close-modal:hover, .close-modal:focus { color: var(--primary); text-decoration: none; }
 
@@ -281,8 +284,8 @@
     <!-- NAVIGATION SIDEBAR -->
     <aside class="manual-sidebar">
         <div class="sidebar-header">
-            <!-- LIEN RETOUR LIVRET CORRIGÉ -->
-            <a href="/livret" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Retour au Livret</a>
+            <!-- LIEN RETOUR LIVRET CORRIGÉ SUR /documents/livret -->
+            <a href="/documents/livret" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Retour au Livret</a>
             <h1 class="manual-title">Procédures<span>Dossiers & Interpellations</span></h1>
         </div>
         <nav class="nav-list">
@@ -313,7 +316,7 @@
                 <strong>Bienvenue dans le module réglementaire de traitement judiciaire.</strong> Ce livret regroupe l'intégralité des obligations légales, des structures de rapports et des cadres d'interpellations applicables sur l'ensemble de la juridiction de Blaine County. Tout manquement aux procédures énumérées ici est passible de sanctions administratives et de vices de procédure.
             </div>
 
-            <!-- SOMMAIRE VISUEL AJOUTÉ -->
+            <!-- SOMMAIRE VISUEL -->
             <div class="sommaire-grid">
                 <button class="sommaire-btn" onclick="document.getElementById('nav-arrestations').click()">
                     Arrestations <i class="fas fa-handcuffs"></i>
@@ -596,7 +599,8 @@
 
     // GESTION DU MODAL IMAGE (AFFICHER EN GRAND)
     function openImageModal(imgSrc) {
-        document.getElementById("fullImageModal").style.display = "block";
+        // Changement important ici : on utilise "flex" pour que l'image se centre automatiquement
+        document.getElementById("fullImageModal").style.display = "flex";
         document.getElementById("displayedImage").src = imgSrc;
     }
 
