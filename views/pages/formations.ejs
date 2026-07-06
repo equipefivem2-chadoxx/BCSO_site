@@ -1,66 +1,34 @@
 <style>
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    :root {
+        --primary: #bda581;
+        --bg-card: rgba(15, 23, 42, 0.4);
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
     .dev-container { 
         max-width: 800px; 
-        margin: 60px auto; 
-        padding: 40px; 
-        background: #0f172a; 
-        border: 1px solid #1e293b; 
-        border-radius: 12px; 
+        margin: 80px auto; 
+        padding: 50px; 
+        background: var(--bg-card); 
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.03); 
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 16px; 
         text-align: center; 
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-        animation: fadeIn 0.4s ease-out; 
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        animation: fadeUp 0.6s ease-out forwards; 
     }
-    .dev-icon {
-        font-size: 4rem;
-        color: #d4af37;
-        margin-bottom: 20px;
-    }
-    .dev-container h1 {
-        color: #d4af37;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-        font-size: 1.8rem;
-    }
-    .dev-container p {
-        color: #94a3b8;
-        font-size: 1rem;
-        margin-bottom: 25px;
-    }
-    .progress-bar-container {
-        background: #05070b;
-        border: 1px solid #334155;
-        border-radius: 20px;
-        padding: 4px;
-        margin-bottom: 30px;
-    }
-    .progress-bar {
-        background: linear-gradient(90deg, #bfa030 0%, #d4af37 100%);
-        height: 12px;
-        border-radius: 10px;
-        width: 35%; /* Pourcentage d'avancement factice */
-        transition: width 0.5s ease-in-out;
-    }
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(212, 175, 55, 0.1);
-        border: 1px solid #d4af37;
-        color: #d4af37;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: bold;
-        text-decoration: none;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        transition: all 0.3s;
-    }
-    .btn-back:hover {
-        background: #d4af37;
-        color: #05070b;
-    }
+    .dev-icon { font-size: 4rem; color: var(--primary); margin-bottom: 25px; filter: drop-shadow(0 0 15px rgba(189, 165, 129, 0.2)); }
+    .dev-container h1 { color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-size: 2rem; font-weight: 800; }
+    .dev-container p { color: #94a3b8; font-size: 1.05rem; margin-bottom: 35px; line-height: 1.6; }
+    
+    .dev-stats { text-align: left; margin-bottom: 10px; font-size: 0.85rem; color: #cbd5e1; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+    
+    .progress-bar-container { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 4px; margin-bottom: 40px; overflow: hidden; }
+    .progress-bar { background: linear-gradient(90deg, #8a7657 0%, var(--primary) 100%); height: 10px; border-radius: 10px; width: 35%; transition: width 1s ease-in-out; box-shadow: 0 0 10px rgba(189, 165, 129, 0.5); }
+    
+    .btn-back { display: inline-flex; align-items: center; gap: 10px; background: rgba(189, 165, 129, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 12px 25px; border-radius: 8px; font-weight: 700; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; transition: all 0.3s; letter-spacing: 1px; }
+    .btn-back:hover { background: var(--primary); color: #07090e; box-shadow: 0 0 15px rgba(189, 165, 129, 0.4); transform: translateY(-2px); }
 </style>
 
 <div class="dev-container">
@@ -70,7 +38,7 @@
     <h1>Module Formations</h1>
     <p>Cette section permettra de gérer le suivi, les brevets et les qualifications des agents du BCSO. Elle est actuellement en cours de développement par le Haut Commandement.</p>
     
-    <div style="text-align: left; margin-bottom: 8px; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">
+    <div class="dev-stats">
         Développement de la base de données : 35%
     </div>
     <div class="progress-bar-container">

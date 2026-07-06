@@ -1,31 +1,39 @@
 <style>
-    @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --bg-card: rgba(15, 23, 42, 0.4);
+    }
     
-    #roster-container { max-width: 1400px; margin: 0 auto; padding-bottom: 70px; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     
-    .roster-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 20px; margin-bottom: 40px; }
-    .roster-header h2 { margin: 0; color: #f3f4f6; font-size: 28px; font-weight: 600; }
-    .roster-header h2 span { color: #d4af37; }
-    .total-badge { background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); padding: 8px 20px; border-radius: 30px; color: #d4af37; font-weight: bold; letter-spacing: 1px; }
+    #roster-container { max-width: 1400px; margin: 0 auto; padding-bottom: 70px; animation: fadeUp 0.6s ease-out forwards; }
+    
+    .roster-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 40px; }
+    .roster-header h2 { margin: 0; color: #fff; font-size: 28px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .roster-header h2 span { background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .total-badge { background: rgba(189, 165, 129, 0.1); border: 1px solid rgba(189, 165, 129, 0.3); padding: 8px 20px; border-radius: 30px; color: var(--primary); font-weight: bold; letter-spacing: 1px; }
 
-    .grade-section { margin-bottom: 40px; animation: slideIn 0.5s ease-out backwards; }
-    .grade-title { color: #9ca3af; font-size: 16px; text-transform: uppercase; letter-spacing: 3px; border-left: 3px solid #d4af37; padding-left: 15px; margin-bottom: 25px; display: flex; align-items: center; }
+    .grade-section { margin-bottom: 50px; animation: fadeUp 0.6s ease-out backwards; }
+    .grade-title { color: #fff; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+    .grade-title::after { content: ''; height: 1px; flex-grow: 1; background: linear-gradient(to right, var(--primary), transparent); opacity: 0.3; }
     
     .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     
-    .agent-card { background: linear-gradient(145deg, #0b0f19 0%, #111827 100%); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; }
-    .agent-card:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-    .agent-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #d4af37; opacity: 0.5; }
+    .agent-card { background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(189, 165, 129, 0.1); border-radius: 16px; padding: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .agent-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--primary-glow); border-color: rgba(189, 165, 129, 0.3); }
     
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .matricule { font-size: 22px; font-weight: 800; color: #d4af37; font-family: monospace; }
-    .status-dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+    .card-accent-top { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(to right, transparent, var(--primary), transparent); opacity: 0.5; }
     
-    .agent-name { font-size: 18px; color: #f3f4f6; font-weight: 600; margin-bottom: 5px; }
+    .card-header-agent { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .matricule { font-size: 20px; font-weight: 900; color: var(--primary); font-family: monospace; letter-spacing: 1px; }
+    .status-dot { width: 10px; height: 10px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
     
-    /* 🚀 NOUVEAU : Style pour le téléphone */
-    .agent-phone { font-size: 13px; color: #9ca3af; font-family: monospace; display: flex; align-items: center; gap: 6px; }
-    .agent-phone i { color: #d4af37; font-size: 11px; }
+    .agent-name { font-size: 18px; color: #e2e8f0; font-weight: 700; margin-bottom: 8px; }
+    
+    .agent-phone { font-size: 13px; color: #94a3b8; font-family: monospace; display: flex; align-items: center; gap: 8px; }
+    .agent-phone i { color: var(--primary); font-size: 12px; }
 </style>
 
 <div id="roster-container">
@@ -46,12 +54,12 @@
                 <div class="agents-grid">
                     <% effectifsTries[grade].forEach(function(agent) { %>
                         <div class="agent-card">
-                            <div class="card-header">
+                            <div class="card-accent-top"></div>
+                            <div class="card-header-agent">
                                 <span class="matricule">[<%= agent.matricule %>]</span>
                                 <div class="status-dot"></div>
                             </div>
                             <div class="agent-name"><%= agent.prenom %> <%= agent.nom %></div>
-                            <!-- 🚀 AJOUT DU TÉLÉPHONE ICI -->
                             <div class="agent-phone">
                                 <i class="fas fa-phone-alt"></i> 
                                 <%= agent.telephone && agent.telephone !== 'Non renseigné' ? agent.telephone : 'Numéro masqué' %>
@@ -64,7 +72,7 @@
         }
     } else { 
     %>
-        <div style="text-align: center; padding: 100px 0; color: #6b7280;">
+        <div style="text-align: center; padding: 100px 0; color: #6b7280; animation: fadeUp 0.6s ease-out forwards;">
             <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 20px; opacity: 0.3;"></i>
             <p>Les dossiers des effectifs sont actuellement vides.</p>
         </div>
