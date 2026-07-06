@@ -2,61 +2,90 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>BCSO - Livret d'informations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSO - Livret d'informations Tactiques</title>
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
+        /* =========================================
+           VARIABLES GLOBALES
+        ========================================= */
         :root {
             --primary: #bda581;
             --primary-glow: rgba(189, 165, 129, 0.2);
+            --primary-hover: #cbb698;
             --bg-dark: #05070b;
             --bg-panel: rgba(11, 15, 25, 0.75);
             --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
             --border-glow: rgba(189, 165, 129, 0.25);
             --success: #10b981;
             --info: #38bdf8;
             --warning: #f59e0b;
             --danger: #ef4444;
+            --transition-speed: 0.3s;
         }
 
-        /* FOND IMMERSIF AVEC GRILLE TECHNOLOGIQUE */
+        /* =========================================
+           RESET & BASE
+        ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            margin: 0; background-color: var(--bg-dark);
+            background-color: var(--bg-dark);
             background-image: 
                 linear-gradient(rgba(189, 165, 129, 0.02) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(189, 165, 129, 0.02) 1px, transparent 1px);
             background-size: 30px 30px;
-            font-family: 'Montserrat', sans-serif; color: var(--text-main); min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        * { box-sizing: border-box; }
+        /* Animations */
+        @keyframes slideInRight { 
+            from { opacity: 0; transform: translateX(20px); } 
+            to { opacity: 1; transform: translateX(0); } 
+        }
 
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(189, 165, 129, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(189, 165, 129, 0.5); }
 
-        /* STRUCTURE GLOBALE DU MANUEL */
+        /* =========================================
+           LAYOUT PRINCIPAL
+        ========================================= */
         .manual-layout {
             display: flex;
+            width: 100%;
             max-width: 1650px;
-            margin: 25px auto;
-            height: calc(100vh - 50px);
+            height: calc(100vh - 40px);
             gap: 25px;
-            padding: 0 20px;
+            padding: 20px;
         }
 
-        /* SIDEBAR DU LIVRET */
+        /* Sidebar */
         .manual-sidebar {
-            width: 340px;
+            width: 320px;
             background: rgba(6, 9, 15, 0.85);
             backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-right: 1px solid var(--border-glow);
             border-radius: 16px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
             flex-shrink: 0;
         }
@@ -65,6 +94,7 @@
             padding: 25px;
             background: linear-gradient(180deg, rgba(189, 165, 129, 0.08) 0%, transparent 100%);
             border-bottom: 1px solid rgba(255,255,255,0.02);
+            border-radius: 16px 16px 0 0;
             position: relative;
         }
 
@@ -77,293 +107,230 @@
         .btn-back-hub {
             display: inline-flex;
             align-items: center; gap: 8px;
-            color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-            text-decoration: none; margin-bottom: 15px; transition: 0.3s;
+            color: var(--text-muted); font-size: 0.75rem; font-weight: 800; 
+            text-transform: uppercase; text-decoration: none; 
+            margin-bottom: 15px; transition: var(--transition-speed);
             letter-spacing: 1px;
         }
+        
         .btn-back-hub:hover { color: var(--primary); transform: translateX(-3px); }
 
-        .manual-title { font-size: 24px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+        .manual-title { font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
         .manual-title span { color: var(--primary); display: block; font-size: 13px; letter-spacing: 4px; margin-top: 4px; font-weight: 600; }
 
         .nav-list {
             padding: 20px 15px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             overflow-y: auto;
-            flex-grow: 1;
         }
 
         .nav-item {
             background: transparent;
-            border: 1px solid transparent; color: #94a3b8;
-            padding: 14px 18px; border-radius: 10px; text-align: left; font-family: 'Montserrat', sans-serif;
-            font-weight: 700; font-size: 0.8rem;
+            border: none; color: var(--text-muted);
+            padding: 14px 18px; border-radius: 10px; text-align: left; 
+            font-family: inherit; font-weight: 700; font-size: 0.85rem;
             text-transform: uppercase; letter-spacing: 1px;
             cursor: pointer; transition: all 0.25s ease;
             display: flex; align-items: center; gap: 12px;
         }
 
-        .nav-item i { font-size: 1rem; color: #475569; transition: 0.3s; width: 20px; text-align: center; }
+        .nav-item i { font-size: 1.1rem; color: #475569; transition: var(--transition-speed); width: 20px; text-align: center; }
         .nav-item:hover { background: rgba(255,255,255,0.02); color: #fff; transform: translateX(4px); }
-        .nav-item:hover i { color: #94a3b8; }
+        .nav-item:hover i { color: var(--text-muted); }
         
         .nav-item.active {
-            background: linear-gradient(90deg, rgba(189, 165, 129, 0.12) 0%, rgba(189,165,129,0.01) 100%);
+            background: linear-gradient(90deg, rgba(189, 165, 129, 0.12) 0%, transparent 100%);
             color: var(--primary);
             border-left: 4px solid var(--primary);
             border-radius: 4px 10px 10px 4px;
-            padding-left: 14px;
         }
         .nav-item.active i { color: var(--primary); filter: drop-shadow(0 0 6px var(--primary)); }
 
-        /* ZONE DE CONTENU PRINCIPALE */
+        /* Contenu principal */
         .manual-content {
             flex-grow: 1;
             background: var(--bg-panel);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-top: 1px solid var(--border-glow);
             border-radius: 16px;
-            padding: 45px;
+            padding: 40px 45px;
             overflow-y: auto;
             box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            position: relative;
         }
-
-        .manual-content::-webkit-scrollbar { width: 6px; }
-        .manual-content::-webkit-scrollbar-thumb { background: rgba(189, 165, 129, 0.25); border-radius: 10px; }
 
         .pane { display: none; animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .pane.active { display: block; }
 
         .pane-header { margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(189, 165, 129, 0.1); }
-        .pane-title { font-size: 28px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; display: flex; align-items: center; gap: 15px; }
+        .pane-title { font-size: 28px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 15px; }
         .pane-title i { color: var(--primary); filter: drop-shadow(0 2px 8px rgba(189,165,129,0.3)); }
-        .pane-desc { color: #94a3b8; font-size: 0.95rem; margin-top: 8px; font-weight: 500; }
+        .pane-desc { color: var(--text-muted); font-size: 0.95rem; margin-top: 8px; font-weight: 500; }
 
-        /* RECHERCHE RADIO */
-        .search-wrapper {
-            position: relative;
-            margin-bottom: 25px;
-            max-width: 500px;
-        }
-        .search-wrapper i {
-            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-            color: #475569; font-size: 1rem; transition: 0.3s;
-        }
-        .search-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 14px 16px 14px 45px;
-            color: #fff;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(189,165,129,0.15);
-            background: rgba(0, 0, 0, 0.6);
-        }
-        .search-input:focus + i { color: var(--primary); }
-
-        /* UTILITAIRES DE GRILLES */
+        /* =========================================
+           COMPOSANTS UI
+        ========================================= */
+        /* Grilles */
         .grid-1 { display: grid; grid-template-columns: 1fr; gap: 25px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 
-        /* =========================================
-           RE-DESIGN MODERN HIERARCHIE (TACTICAL DOSSIER)
-        ========================================= */
-        .tactical-hierarchy {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            width: 100%;
+        /* Barre de recherche */
+        .search-wrapper { position: relative; margin-bottom: 25px; max-width: 500px; }
+        .search-wrapper i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #475569; font-size: 1rem; transition: 0.3s; }
+        .search-input {
+            width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px; padding: 14px 16px 14px 45px; color: #fff; font-family: inherit;
+            font-weight: 600; font-size: 0.9rem; transition: 0.3s;
         }
-        .hierarchy-section {
-            background: rgba(10, 15, 30, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 25px;
-            position: relative;
-        }
-        .hierarchy-section::before {
-            content: ''; position: absolute; left: 0; top: 25px; bottom: 25px; width: 4px; border-radius: 0 4px 4px 0;
-        }
+        .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(189,165,129,0.15); background: rgba(0, 0, 0, 0.6); }
+        .search-input:focus + i { color: var(--primary); }
+
+        /* Cartes Hiérarchie */
+        .tactical-hierarchy { display: flex; flex-direction: column; gap: 30px; }
+        .hierarchy-section { background: rgba(10, 15, 30, 0.4); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 25px; position: relative; }
+        .hierarchy-section::before { content: ''; position: absolute; left: 0; top: 25px; bottom: 25px; width: 4px; border-radius: 0 4px 4px 0; }
         .hierarchy-section.command::before { background: var(--warning); box-shadow: 0 0 15px var(--warning); }
         .hierarchy-section.supervision::before { background: var(--info); box-shadow: 0 0 15px var(--info); }
         .hierarchy-section.application::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
 
-        .section-class-title {
-            font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 15px; display: flex; align-items: center; gap: 10px;
-        }
+        .section-class-title { font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; margin-left: 15px; display: flex; align-items: center; gap: 10px; }
         .hierarchy-section.command .section-class-title { color: var(--warning); }
         .hierarchy-section.supervision .section-class-title { color: var(--info); }
         .hierarchy-section.application .section-class-title { color: var(--success); }
 
-        .ranks-grid-fluid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            padding-left: 15px;
-        }
+        .ranks-grid-fluid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; padding-left: 15px; }
         .rank-tactical-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255,255,255,0.02);
-            border-radius: 8px;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: all 0.25s ease;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.02);
+            border-radius: 8px; padding: 16px 20px; display: flex; flex-direction: column; gap: 6px; transition: all 0.25s ease;
         }
-        .rank-tactical-card:hover {
-            background: rgba(255,255,255,0.02);
-            border-color: rgba(189, 165, 129, 0.15);
-            transform: translateY(-2px);
-        }
-        .rank-meta {
-            display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; margin-bottom: 4px;
-        }
-        .rank-name { font-weight: 800; font-size: 0.95rem; color: #fff; letter-spacing: 0.5px; text-transform: uppercase; }
-        .rank-label { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #94a3b8; }
+        .rank-tactical-card:hover { background: rgba(255,255,255,0.02); border-color: rgba(189, 165, 129, 0.15); transform: translateY(-2px); }
+        
+        .rank-meta { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; margin-bottom: 4px; }
+        .rank-name { font-weight: 800; font-size: 0.95rem; color: #fff; text-transform: uppercase; }
+        .rank-label { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; }
         
         .hierarchy-section.command .rank-label { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
         .hierarchy-section.supervision .rank-label { background: rgba(56, 189, 248, 0.1); color: var(--info); }
         .hierarchy-section.application .rank-label { background: rgba(16, 185, 129, 0.1); color: var(--success); }
-        
-        .rank-mission { font-size: 0.82rem; color: #94a3b8; line-height: 1.4; font-weight: 500; }
+        .rank-mission { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; font-weight: 500; }
 
-        /* Barrettes Ancienneté V2 */
-        .medal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
+        /* Ancienneté */
+        .medal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
         .medal-card {
-            background: rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            transition: 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 180px;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px; padding: 25px; text-align: center; transition: 0.3s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px;
         }
-        .medal-card:hover {
-            border-color: var(--primary);
-            background: rgba(189, 165, 129, 0.03);
-            transform: translateY(-3px);
-        }
-        .stripes-container {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-        .stripe-bar {
-            width: 6px;
-            height: 22px;
-            background: linear-gradient(180deg, #d4af37, #bfa030);
-            border-radius: 1px;
-            box-shadow: 0 0 8px rgba(212,175,55,0.4);
-            transform: skewX(-15deg);
-        }
-        .medal-card h4 { margin: 0 0 6px 0; font-size: 1.05rem; font-weight: 800; color: #fff; text-transform: uppercase; }
-        .medal-card p { margin: 0; font-size: 0.85rem; color: #94a3b8; font-weight: 500; }
-
-        /* Listes de codes & Badges */
-        .info-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 25px; transition: 0.3s; position: relative; overflow: hidden; }
-        .info-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
-        
-        .styled-list { list-style: none; padding: 0; margin: 0; }
-        .styled-list li { padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.04); font-size: 0.88rem; color: #cbd5e1; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
-        .styled-list li:last-child { border: none; padding-bottom: 0; }
-        .styled-list li.hidden { display: none !important; }
-        .styled-list li:hover { background: rgba(255,255,255,0.01); padding-left: 5px; }
-
-        .code-badge { background: rgba(189, 165, 129, 0.08); color: var(--primary); font-weight: 800; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; text-transform: uppercase; white-shadow: none; border: 1px solid rgba(189, 165, 129, 0.2); min-width: 85px; text-align: center; display: inline-block; }
+        .medal-card:hover { border-color: var(--primary); background: rgba(189, 165, 129, 0.03); transform: translateY(-3px); }
+        .stripes-container { display: flex; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.03); }
+        .stripe-bar { width: 6px; height: 22px; background: linear-gradient(180deg, #d4af37, #bfa030); border-radius: 1px; box-shadow: 0 0 8px rgba(212,175,55,0.4); transform: skewX(-15deg); }
+        .medal-card h4 { margin-bottom: 6px; font-size: 1.05rem; font-weight: 800; color: #fff; text-transform: uppercase; }
+        .medal-card p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
 
         /* Spécialisations */
-        .spec-box { text-align: center; padding: 25px 20px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); transition: 0.3s; }
+        .spec-box {
+            text-align: center; padding: 25px 20px; background: rgba(0,0,0,0.2); 
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); transition: var(--transition-speed); 
+        }
         .spec-box:hover { background: linear-gradient(180deg, rgba(189,165,129,0.06) 0%, transparent 100%); border-color: var(--primary); transform: translateY(-3px); }
         .spec-title { font-weight: 800; color: #fff; font-size: 1.05rem; text-transform: uppercase; margin-bottom: 4px; }
         .spec-sub { color: var(--primary); font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
-        .spec-desc { font-size: 0.82rem; color: #94a3b8; line-height: 1.5; font-weight: 500; }
+        .spec-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; font-weight: 500; }
+        
+        .spec-highlight { border-color: rgba(252, 211, 77, 0.4); }
+        .spec-highlight .spec-title { color: #fcd34d; }
 
-        /* CEVITAL */
-        .cevital-item { display: flex; gap: 20px; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 2px solid rgba(255,255,255,0.03); transition: 0.3s; }
-        .cevital-item:hover { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.04); transform: translateX(6px); }
-        .cevital-letter { font-size: 2.2rem; font-weight: 900; color: #ef4444; line-height: 1; text-shadow: 0 0 15px rgba(239, 68, 68, 0.3); width: 30px; text-align: center; }
-        .cevital-content h4 { margin: 0 0 4px 0; color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.95rem; }
-        .cevital-content p { margin: 0; color: #94a3b8; font-size: 0.85rem; line-height: 1.4; font-weight: 500; }
+        /* Listes de codes radio */
+        .info-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 25px; transition: 0.3s; position: relative; overflow: hidden; }
+        .info-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+        .info-card-header { color: #fff; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 15px; margin-bottom: 15px; font-size: 1.1rem; }
+        .info-card-header i { color: var(--primary); margin-right: 8px; }
+        
+        .styled-list { list-style: none; }
+        .styled-list li { padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.04); font-size: 0.88rem; color: #cbd5e1; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .styled-list li:last-child { border: none; padding-bottom: 0; }
+        .styled-list li.hidden { display: none !important; }
+        .styled-list li:hover { background: rgba(255,255,255,0.02); padding-left: 8px; border-radius: 4px;}
+        
+        .code-badge { background: rgba(189, 165, 129, 0.08); color: var(--primary); font-weight: 800; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; text-transform: uppercase; border: 1px solid rgba(189, 165, 129, 0.2); min-width: 85px; text-align: center; display: inline-block; }
+        .code-critical { background: #ef4444; color: #fff; border: none; box-shadow: 0 0 10px rgba(239,68,68,0.3); }
+        .code-warning { background: #ea580c; color: #fff; border: none; }
 
-        /* Images / Cartes Médias */
+        /* Cartes d'images */
         .image-card { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); height: 260px; display: flex; align-items: flex-end; background: #000; box-shadow: 0 15px 30px rgba(0,0,0,0.4); cursor: pointer; }
         .image-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.5s ease; }
         .image-card:hover img { opacity: 0.8; transform: scale(1.03); }
         .image-overlay { position: relative; z-index: 2; width: 100%; padding: 25px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); }
         .image-overlay h3 { margin: 0; color: #fff; font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: space-between; }
-        .image-overlay h3 i { font-size: 1rem; color: var(--primary); opacity: 0.7; }
+        .image-overlay h3 i { font-size: 1.1rem; color: var(--primary); opacity: 0.8; }
 
-        /* MODAL DE ZOOM INTERACTIF POUR LES AUTOROUTES */
-        .zoom-modal {
-            display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.95); backdrop-filter: blur(10px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .zoom-modal.active { display: flex; opacity: 1; }
-        .modal-container { position: relative; width: 90%; height: 90%; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; background: rgba(0,0,0,0.4); }
-        .modal-container img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.2s ease; cursor: grab; transform-origin: center center; }
-        .modal-container img:active { cursor: grabbing; }
-        .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 45px; height: 45px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; z-index: 10; }
-        .modal-close:hover { background: var(--danger); border-color: transparent; transform: scale(1.05); }
-        .zoom-instructions { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
+        /* CEVITAL */
+        .cevital-item { display: flex; gap: 20px; background: rgba(0,0,0,0.3); padding: 18px; border-radius: 10px; margin-bottom: 12px; border-left: 2px solid rgba(255,255,255,0.03); transition: var(--transition-speed); }
+        .cevital-item:hover { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.05); transform: translateX(6px); }
+        .cevital-letter { font-size: 2.2rem; font-weight: 900; color: var(--danger); line-height: 1; text-shadow: 0 0 15px rgba(239, 68, 68, 0.3); width: 30px; text-align: center; }
+        .cevital-content h4 { margin-bottom: 4px; color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.95rem; }
+        .cevital-content p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; font-weight: 500; }
 
-        /* Alertes */
+        /* Niveaux d'Alertes */
         .alerts-grid { display: flex; flex-direction: column; gap: 25px; }
-        .alert-master-card { border-radius: 16px; padding: 35px; display: grid; grid-template-columns: 240px 1fr; gap: 35px; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); }
+        .alert-master-card { border-radius: 16px; padding: 35px; display: grid; grid-template-columns: 240px 1fr; gap: 35px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); }
         .alert-header { display: flex; flex-direction: column; justify-content: center; border-right: 1px solid rgba(255,255,255,0.08); padding-right: 25px; }
-        .alert-header h3 { font-size: 2.2rem; font-weight: 900; margin: 0; line-height: 1; text-transform: uppercase; }
-        .alert-header p { margin: 10px 0 0 0; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .alert-header h3 { font-size: 2.2rem; font-weight: 900; line-height: 1; text-transform: uppercase; }
+        .alert-header p { margin-top: 10px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
         .alert-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .alert-data { background: rgba(0,0,0,0.35); padding: 12px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.02); }
         .alert-data span { display: block; color: rgba(255,255,255,0.4); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
-        .alert-data strong { display: block; color: #fff; font-size: 0.95rem; font-weight: 700; }
+        .alert-data strong { display: block; color: #fff; font-size: 0.95rem; font-weight: 700; line-height: 1.3;}
         .alert-data.full-width { grid-column: 1 / -1; }
 
         .theme-orange { background: radial-gradient(circle at 100% 0%, rgba(234, 88, 12, 0.15) 0%, rgba(10, 15, 26, 0.95) 100%); border-color: rgba(234, 88, 12, 0.25); }
         .theme-orange .alert-header h3 { color: #ea580c; text-shadow: 0 0 20px rgba(234, 88, 12, 0.3); }
         .theme-orange .alert-header p { color: #fdba74; }
+        
         .theme-rouge { background: radial-gradient(circle at 100% 0%, rgba(220, 38, 38, 0.15) 0%, rgba(10, 15, 26, 0.95) 100%); border-color: rgba(220, 38, 38, 0.25); }
         .theme-rouge .alert-header h3 { color: #dc2626; text-shadow: 0 0 20px rgba(220, 38, 38, 0.3); }
         .theme-rouge .alert-header p { color: #fca5a5; }
+        
         .theme-noir { background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(5, 7, 11, 0.98) 100%); border-color: rgba(255, 255, 255, 0.1); }
         .theme-noir .alert-header h3 { color: #f8fafc; text-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
-        .theme-noir .alert-header p { color: #94a3b8; }
-        
+        .theme-noir .alert-header p { color: var(--text-muted); }
+
+        /* Modal de zoom */
+        .zoom-modal {
+            display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; 
+            background: rgba(3, 5, 8, 0.95); backdrop-filter: blur(10px); justify-content: center; 
+            align-items: center; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .zoom-modal.active { display: flex; opacity: 1; }
+        .modal-container { position: relative; width: 90%; height: 90%; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; background: rgba(0,0,0,0.4); }
+        .modal-container img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.1s ease-out; cursor: grab; transform-origin: center center; }
+        .modal-container img:active { cursor: grabbing; }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 45px; height: 45px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; z-index: 10; }
+        .modal-close:hover { background: var(--danger); border-color: transparent; transform: scale(1.05); }
+        .zoom-instructions { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
+
+        /* =========================================
+           RESPONSIVE DESIGN
+        ========================================= */
         @media (max-width: 1100px) {
-            .manual-layout { flex-direction: column; height: auto; }
-            .manual-sidebar { width: 100%; height: auto; }
-            .manual-content { height: auto; padding: 25px; }
+            .manual-layout { flex-direction: column; height: auto; padding: 10px; }
+            .manual-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+            .sidebar-header { width: 100%; border-radius: 16px 16px 0 0; }
+            .nav-list { flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; padding: 15px; }
+            .nav-item { flex: 1 1 auto; min-width: 180px; justify-content: center; }
+            .manual-content { padding: 25px; height: auto; border-radius: 0 0 16px 16px; }
             .alert-master-card { grid-template-columns: 1fr; gap: 20px; padding: 25px; }
             .alert-header { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding-right: 0; padding-bottom: 15px; text-align: center; }
             .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); }
         }
-        @media (max-width: 650px) {
+        @media (max-width: 768px) {
             .grid-4, .grid-3, .grid-2, .alert-details { grid-template-columns: 1fr; }
+            .pane-title { font-size: 22px; }
         }
     </style>
 </head>
@@ -371,33 +338,35 @@
 
 <div class="manual-layout">
     
+    <!-- NAVIGATION LATERALE -->
     <aside class="manual-sidebar">
         <div class="sidebar-header">
             <a href="/documents" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Hub Documentaire</a>
             <h1 class="manual-title">Livret<span>BCSO V2.0</span></h1>
         </div>
         <nav class="nav-list">
-            <button class="nav-item active" onclick="openTab('hierarchie', this)"><i class="fas fa-sitemap"></i> Hiérarchie & Grades</button>
-            <button class="nav-item" onclick="openTab('anciennete', this)"><i class="fas fa-medal"></i> Ancienneté</button>
-            <button class="nav-item" onclick="openTab('specialisations', this)"><i class="fas fa-star"></i> Spécialisations</button>
-            <button class="nav-item" onclick="openTab('codes', this)"><i class="fas fa-walkie-talkie"></i> Transmissions Radio</button>
-            <button class="nav-item" onclick="openTab('positions', this)"><i class="fas fa-map-location-dot"></i> 10-20 & Positions</button>
-            <button class="nav-item" onclick="openTab('protocoles', this)"><i class="fas fa-handcuffs"></i> Protocoles d'Action</button>
-            <button class="nav-item" onclick="openTab('cevital', this)"><i class="fas fa-crosshairs"></i> ISTC & CEVITAL</button>
-            <button class="nav-item" onclick="openTab('alertes', this)"><i class="fas fa-triangle-exclamation"></i> Niveaux d'Alertes</button>
+            <button class="nav-item active" data-target="hierarchie"><i class="fas fa-sitemap"></i> Hiérarchie & Grades</button>
+            <button class="nav-item" data-target="anciennete"><i class="fas fa-medal"></i> Ancienneté</button>
+            <button class="nav-item" data-target="specialisations"><i class="fas fa-star"></i> Spécialisations</button>
+            <button class="nav-item" data-target="codes"><i class="fas fa-walkie-talkie"></i> Transmissions</button>
+            <button class="nav-item" data-target="positions"><i class="fas fa-map-location-dot"></i> Positions & Cartes</button>
+            <button class="nav-item" data-target="protocoles"><i class="fas fa-handcuffs"></i> Protocoles d'Action</button>
+            <button class="nav-item" data-target="cevital"><i class="fas fa-crosshairs"></i> ISTC & CEVITAL</button>
+            <button class="nav-item" data-target="alertes"><i class="fas fa-triangle-exclamation"></i> Niveaux d'Alertes</button>
         </nav>
     </aside>
 
+    <!-- CONTENU PRINCIPAL -->
     <main class="manual-content">
         
-        <!-- HIERARCHIE REDESIGNEE -->
-        <div id="hierarchie" class="pane active">
-            <div class="pane-header">
+        <!-- SECTION : HIERARCHIE -->
+        <article id="hierarchie" class="pane active">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-sitemap"></i> Chaîne de Commandement</h2>
                 <p class="pane-desc">Structure d'autorité opérationnelle et administrative officielle du Blaine County Sheriff's Office.</p>
-            </div>
+            </header>
             
-            <div class="tactical-hierarchy">
+            <section class="tactical-hierarchy">
                 <!-- COMMAND STAFF -->
                 <div class="hierarchy-section command">
                     <h3 class="section-class-title"><i class="fas fa-crown"></i> Command Staff</h3>
@@ -454,273 +423,229 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <div id="anciennete" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : ANCIENNETE -->
+        <article id="anciennete" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-medal"></i> Distinctions d'Ancienneté</h2>
                 <p class="pane-desc">Le nombre de barrettes officielles présentes sur la manche gauche de l'uniforme Classe A.</p>
-            </div>
+            </header>
             
-            <div class="medal-grid">
+            <section class="medal-grid">
                 <div class="medal-card">
                     <div class="stripes-container"><div class="stripe-bar"></div></div>
-                    <h4>1 Barrette</h4>
-                    <p>2 Mois de service ininterrompu</p>
+                    <h4>1 Barrette</h4><p>2 Mois de service ininterrompu</p>
                 </div>
                 <div class="medal-card">
                     <div class="stripes-container"><div class="stripe-bar"></div><div class="stripe-bar"></div></div>
-                    <h4>2 Barrettes</h4>
-                    <p>4 Mois de service ininterrompu</p>
+                    <h4>2 Barrettes</h4><p>4 Mois de service ininterrompu</p>
                 </div>
                 <div class="medal-card">
                     <div class="stripes-container"><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div></div>
-                    <h4>3 Barrettes</h4>
-                    <p>6 Mois de service ininterrompu</p>
+                    <h4>3 Barrettes</h4><p>6 Mois de service ininterrompu</p>
                 </div>
                 <div class="medal-card">
                     <div class="stripes-container"><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div></div>
-                    <h4>4 Barrettes</h4>
-                    <p>8 Mois de service ininterrompu</p>
+                    <h4>4 Barrettes</h4><p>8 Mois de service ininterrompu</p>
                 </div>
                 <div class="medal-card">
                     <div class="stripes-container"><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div></div>
-                    <h4>5 Barrettes</h4>
-                    <p>10 Mois de service ininterrompu</p>
+                    <h4>5 Barrettes</h4><p>10 Mois de service ininterrompu</p>
                 </div>
                 <div class="medal-card">
                     <div class="stripes-container"><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div><div class="stripe-bar"></div></div>
-                    <h4>6 Barrettes</h4>
-                    <p>1 An de service et plus</p>
+                    <h4>6 Barrettes</h4><p>1 An de service et plus</p>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <div id="specialisations" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : SPECIALISATIONS -->
+        <article id="specialisations" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-star"></i> Spécialisations & Divisions</h2>
                 <p class="pane-desc">Les différentes unités spécialisées composant les forces du BCSO.</p>
-            </div>
-            <div class="grid-4">
+            </header>
+            <section class="grid-4">
                 <div class="spec-box"><div class="spec-title">Academy</div><div class="spec-sub">Sheriff Dept.</div><div class="spec-desc">Recrutement, formation et suivi des effectifs.</div></div>
                 <div class="spec-box"><div class="spec-title">M.R.D</div><div class="spec-sub">Media Relations</div><div class="spec-desc">Promotion de l'image de la police via réseaux et presse.</div></div>
-                <div class="spec-box" style="border-color: #fcd34d;"><div class="spec-title" style="color: #fcd34d;">Traffic</div><div class="spec-sub">Division</div><div class="spec-desc">Unités spéciales terrestre, maritime et aérienne.</div></div>
+                <div class="spec-box spec-highlight"><div class="spec-title">Traffic</div><div class="spec-sub">Division</div><div class="spec-desc">Unités spéciales terrestre, maritime et aérienne.</div></div>
                 <div class="spec-box"><div class="spec-title">Highway Patrol</div><div class="spec-sub">Unité Autoroutière</div><div class="spec-desc">Surveillance du réseau rapide et gestion des accidents.</div></div>
                 
                 <div class="spec-box"><div class="spec-title">Air Support</div><div class="spec-sub">A.S.D</div><div class="spec-desc">Soutien aérien, poursuites, vols et surveillance de masse.</div></div>
                 <div class="spec-box"><div class="spec-title">Mary</div><div class="spec-sub">Moto Patrol</div><div class="spec-desc">Interventions rapides et précises. Deux roues, une mission.</div></div>
-                <div class="spec-box" style="border-color: #fcd34d;"><div class="spec-title" style="color: #fcd34d;">Major Crime</div><div class="spec-sub">Division</div><div class="spec-desc">Lutte anti-terroriste, blanchiment et grand banditisme.</div></div>
+                <div class="spec-box spec-highlight"><div class="spec-title">Major Crime</div><div class="spec-sub">Division</div><div class="spec-desc">Lutte anti-terroriste, blanchiment et grand banditisme.</div></div>
                 <div class="spec-box"><div class="spec-title">Detective</div><div class="spec-sub">Bureau</div><div class="spec-desc">Enquêtes criminelles complexes et dossiers approfondis.</div></div>
                 
                 <div class="spec-box"><div class="spec-title">Gang Unit</div><div class="spec-sub">Unité Spéciale</div><div class="spec-desc">Démantèlement des réseaux criminels urbains.</div></div>
                 <div class="spec-box"><div class="spec-title">Scientifique</div><div class="spec-sub">Investigation</div><div class="spec-desc">Analyse balistique, ADN, et investigations numériques.</div></div>
-                <div class="spec-box" style="border-color: #fcd34d;"><div class="spec-title" style="color: #fcd34d;">Metropolitan</div><div class="spec-sub">Division</div><div class="spec-desc">Section d'élite pour la haute criminalité.</div></div>
+                <div class="spec-box spec-highlight"><div class="spec-title">Metropolitan</div><div class="spec-sub">Division</div><div class="spec-desc">Section d'élite pour la haute criminalité.</div></div>
                 <div class="spec-box"><div class="spec-title">S.W.A.T</div><div class="spec-sub">Tactical Unit</div><div class="spec-desc">Interventions à très haut risque, otages, forcenés.</div></div>
                 
                 <div class="spec-box"><div class="spec-title">K-9</div><div class="spec-sub">Unité Canine</div><div class="spec-desc">Déploiement de maîtres-chiens pour pistage et neutralisation.</div></div>
                 <div class="spec-box"><div class="spec-title">Bombsquad</div><div class="spec-sub">Démineurs</div><div class="spec-desc">Neutralisation d'explosifs et sécurisation de périmètres.</div></div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <!-- CODES ET TRANSMISSIONS ENTIEREMENT MIS A JOUR -->
-        <div id="codes" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : CODES RADIO -->
+        <article id="codes" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-walkie-talkie"></i> Transmissions & Codes Radio</h2>
                 <p class="pane-desc">Lexique obligatoire pour toute communication sur la fréquence interne.</p>
-            </div>
+            </header>
             
             <div class="search-wrapper">
-                <input type="text" id="radioSearch" class="search-input" onkeyup="searchRadioCodes()" placeholder="Rechercher un code, un indicatif ou un mot-clé...">
+                <input type="text" id="radioSearch" class="search-input" placeholder="Rechercher un code, un indicatif ou un mot-clé...">
                 <i class="fas fa-search"></i>
             </div>
 
-            <div class="grid-3">
-                <!-- CODES OPERATIONNELS -->
+            <section class="grid-3">
+                <!-- CODES OPÉRATIONNELS -->
                 <div class="info-card">
-                    <h3 style="color:#fff; margin-top:0; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:10px; font-size:1.1rem;"><i class="fas fa-shield-halved" style="color:var(--primary); margin-right:8px;"></i> Codes Opérationnels</h3>
+                    <h3 class="info-card-header"><i class="fas fa-shield-halved"></i> Codes Opérationnels</h3>
                     <ul class="styled-list search-list">
-                        <li><span class="code-badge">Code 2</span> Prioritaire - Répondre avec gyrophare sans sirène[cite: 2]</li>
-                        <li><span class="code-badge">Code 3</span> Urgent - Répondre avec gyrophare et sirène[cite: 2]</li>
-                        <li><span class="code-badge">Code 4</span> Situation stable[cite: 2]</li>
-                        <li><span class="code-badge" style="background:#ea580c; color:#fff; border:none;">4-ADAM</span> PERTE DU VEHICULE, PRECISEZ SECTEUR[cite: 2]</li>
-                        <li><span class="code-badge">Code 5</span> En surveillance, situation connue éviter le lieu[cite: 2]</li>
-                        <li><span class="code-badge">Code 6</span> Arrivée sur scène[cite: 2]</li>
-                        <li><span class="code-badge">Code 7</span> Retour en patrouille[cite: 2]</li>
-                        <li><span class="code-badge" style="background:#ef4444; color:#fff; border:none; box-shadow: 0 0 10px rgba(239,68,68,0.3);">Code 99</span> Officier en danger - Besoin d'aide d'urgence[cite: 2]</li>
-                        <li><span class="code-badge">ROBERT</span> Requête pour déploiement d'arme lourde[cite: 2]</li>
-                        <li><span class="code-badge">SAM</span> Requête pour déploiement d'un Beanbag[cite: 2]</li>
-                        <li><span class="code-badge">Sitrep</span> État de la situation (Situation ReporT)[cite: 2]</li>
+                        <li><span class="code-badge">Code 2</span> Prioritaire - Répondre avec gyrophare sans sirène</li>
+                        <li><span class="code-badge">Code 3</span> Urgent - Répondre avec gyrophare et sirène</li>
+                        <li><span class="code-badge">Code 4</span> Situation stable</li>
+                        <li><span class="code-badge code-warning">4-ADAM</span> PERTE DU VÉHICULE, PRÉCISEZ SECTEUR</li>
+                        <li><span class="code-badge">Code 5</span> En surveillance, situation connue éviter le lieu</li>
+                        <li><span class="code-badge">Code 6</span> Arrivée sur scène</li>
+                        <li><span class="code-badge">Code 7</span> Retour en patrouille</li>
+                        <li><span class="code-badge code-critical">Code 99</span> Officier en danger - Besoin d'aide d'urgence</li>
+                        <li><span class="code-badge">ROBERT</span> Requête pour déploiement d'arme lourde</li>
+                        <li><span class="code-badge">SAM</span> Requête pour déploiement d'un Beanbag</li>
+                        <li><span class="code-badge">Sitrep</span> État de la situation (Situation ReporT)</li>
                     </ul>
                 </div>
 
-                <!-- INDICATIFS SPECIFIQUES -->
+                <!-- INDICATIFS -->
                 <div class="info-card">
-                    <h3 style="color:#fff; margin-top:0; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:10px; font-size:1.1rem;"><i class="fas fa-id-badge" style="color:var(--primary); margin-right:8px;"></i> Indicatifs Unités</h3>
+                    <h3 class="info-card-header"><i class="fas fa-id-badge"></i> Indicatifs Unités</h3>
                     <ul class="styled-list search-list">
-                        <li><span class="code-badge">Lincoln</span> Un Agent Seul en patrouille véhiculé[cite: 2]</li>
-                        <li><span class="code-badge">Adam</span> Deux Agents en patrouille véhiculé[cite: 2]</li>
-                        <li><span class="code-badge">Tango</span> Trois Agents présents en patrouille véhiculé[cite: 2]</li>
-                        <li><span class="code-badge">X-RAY</span> QUATRES Agents présents en patrouille véhiculé[cite: 2]</li>
-                        <li><span class="code-badge">K-9</span> Patrouille avec un officier canin[cite: 2]</li>
-                        <li><span class="code-badge">Queen</span> Patrouille avec un VIP[cite: 2]</li>
-                        <li><span class="code-badge">Sierra</span> Unité Highway Patrol[cite: 2]</li>
-                        <li><span class="code-badge">Henry</span> ASD (Support Hélicoptère)[cite: 2]</li>
-                        <li><span class="code-badge">Bravo</span> Unité Bateau / Maritime[cite: 2]</li>
-                        <li><span class="code-badge">Mary</span> Motorcycle Unit (Moto)[cite: 2]</li>
-                        <li><span class="code-badge">Victor</span> Unité en vélo[cite: 2]</li>
-                        <li><span class="code-badge">Oscar</span> Unités d'infiltration banalisées[cite: 2]</li>
-                        <li><span class="code-badge">ECHO</span> Unités d'intervention S.R.T[cite: 2]</li>
+                        <li><span class="code-badge">Lincoln</span> Un Agent Seul en patrouille véhiculé</li>
+                        <li><span class="code-badge">Adam</span> Deux Agents en patrouille véhiculé</li>
+                        <li><span class="code-badge">Tango</span> Trois Agents présents en patrouille véhiculé</li>
+                        <li><span class="code-badge">X-RAY</span> QUATRE Agents présents en patrouille véhiculé</li>
+                        <li><span class="code-badge">K-9</span> Patrouille avec un officier canin</li>
+                        <li><span class="code-badge">Queen</span> Patrouille avec un VIP</li>
+                        <li><span class="code-badge">Sierra</span> Unité Highway Patrol</li>
+                        <li><span class="code-badge">Henry</span> ASD (Support Hélicoptère)</li>
+                        <li><span class="code-badge">Bravo</span> Unité Bateau / Maritime</li>
+                        <li><span class="code-badge">Mary</span> Motorcycle Unit (Moto)</li>
+                        <li><span class="code-badge">Victor</span> Unité en vélo</li>
+                        <li><span class="code-badge">Oscar</span> Unités d'infiltration banalisées</li>
+                        <li><span class="code-badge">ECHO</span> Unités d'intervention S.R.T</li>
                     </ul>
                 </div>
 
                 <!-- TEN CODES -->
                 <div class="info-card">
-                    <h3 style="color:#fff; margin-top:0; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:10px; font-size:1.1rem;"><i class="fas fa-list-numeric" style="color:var(--primary); margin-right:8px;"></i> Codes 10 (Ten Codes)</h3>
+                    <h3 class="info-card-header"><i class="fas fa-list-numeric"></i> Codes 10 (Ten Codes)</h3>
                     <div style="max-height: 480px; overflow-y: auto; padding-right: 5px;">
                         <ul class="styled-list search-list">
-                            <li><span class="code-badge">10-1</span> FREQUENCE COMPROMISE[cite: 2]</li>
-                            <li><span class="code-badge">10-2</span> Signal clair, bonne réception[cite: 2]</li>
-                            <li><span class="code-badge">10-3</span> RETOUR / ARRIVEE radio / FREQUENCE[cite: 2]</li>
-                            <li><span class="code-badge">10-4</span> Bien reçu / Affirmatif[cite: 2]</li>
-                            <li><span class="code-badge">10-6</span> Occupé (Sauf urgence)[cite: 2]</li>
-                            <li><span class="code-badge">10-7</span> Indisponible (Sauf urgence, radio coupée)[cite: 2]</li>
-                            <li><span class="code-badge">10-8</span> Début de patrouille / SERVICE[cite: 2]</li>
-                            <li><span class="code-badge">10-9</span> Répéter la dernière transmission[cite: 2]</li>
-                            <li><span class="code-badge">10-10</span> Fin de patrouille / SERVICE[cite: 2]</li>
-                            <li><span class="code-badge">10-12</span> ATTENTE DE DISPATCH[cite: 2]</li>
-                            <li><span class="code-badge">10-14</span> Escorte ou convoi[cite: 2]</li>
-                            <li><span class="code-badge">10-15</span> Transport de suspect[cite: 2]</li>
-                            <li><span class="code-badge">10-17</span> Refuel / Mettre de l’essence[cite: 2]</li>
-                            <li><span class="code-badge">10-19</span> En route vers … (Préciser loc)[cite: 2]</li>
-                            <li><span class="code-badge">10-20</span> Votre localisation[cite: 2]</li>
-                            <li><span class="code-badge">10-22</span> Annuler / Ignorer la transmission[cite: 2]</li>
-                            <li><span class="code-badge">10-27</span> Sujet recherché[cite: 2]</li>
-                            <li><span class="code-badge">10-29</span> Vérification mandat / dossier citoyen[cite: 2]</li>
-                            <li><span class="code-badge">10-31</span> Coups de feu[cite: 2]</li>
-                            <li><span class="code-badge">10-32</span> Fusillade active[cite: 2]</li>
-                            <li><span class="code-badge">10-35</span> Demande de renfort (Préciser)[cite: 2]</li>
-                            <li><span class="code-badge">10-37</span> Cambriolage[cite: 2]</li>
-                            <li><span class="code-badge">10-38</span> Contrôle routier[cite: 2]</li>
-                            <li><span class="code-badge">10-40</span> Braquage supérette / BINCO[cite: 2]</li>
-                            <li><span class="code-badge">10-50</span> Accident de la circulation[cite: 2]</li>
-                            <li><span class="code-badge">10-51</span> ACCIDENT GRAVE (FIN DE POURSUITE)[cite: 2]</li>
-                            <li><span class="code-badge">10-52</span> Appel EMS / Secours médicaux[cite: 2]</li>
-                            <li><span class="code-badge">10-55</span> Délit de fuite[cite: 2]</li>
-                            <li><span class="code-badge">10-56</span> Refus d'obtempérer[cite: 2]</li>
-                            <li><span class="code-badge">10-57</span> Vol de véhicule[cite: 2]</li>
-                            <li><span class="code-badge">10-60</span> Vente de drogue[cite: 2]</li>
-                            <li><span class="code-badge">10-61</span> Braquage de banque actif[cite: 2]</li>
-                            <li><span class="code-badge">10-62</span> Braquage de bijouterie actif[cite: 2]</li>
-                            <li><span class="code-badge">10-74</span> Racket / Smash and Grab[cite: 2]</li>
+                            <li><span class="code-badge">10-1</span> FRÉQUENCE COMPROMISE</li>
+                            <li><span class="code-badge">10-2</span> Signal clair, bonne réception</li>
+                            <li><span class="code-badge">10-3</span> RETOUR / ARRIVÉE radio / FRÉQUENCE</li>
+                            <li><span class="code-badge">10-4</span> Bien reçu / Affirmatif</li>
+                            <li><span class="code-badge">10-6</span> Occupé (Sauf urgence)</li>
+                            <li><span class="code-badge">10-7</span> Indisponible (Sauf urgence, radio coupée)</li>
+                            <li><span class="code-badge">10-8</span> Début de patrouille / SERVICE</li>
+                            <li><span class="code-badge">10-9</span> Répéter la dernière transmission</li>
+                            <li><span class="code-badge">10-10</span> Fin de patrouille / SERVICE</li>
+                            <li><span class="code-badge">10-12</span> ATTENTE DE DISPATCH</li>
+                            <li><span class="code-badge">10-14</span> Escorte ou convoi</li>
+                            <li><span class="code-badge">10-15</span> Transport de suspect</li>
+                            <li><span class="code-badge">10-17</span> Ravitaillement carburant</li>
+                            <li><span class="code-badge">10-19</span> En route vers … (Préciser loc)</li>
+                            <li><span class="code-badge">10-20</span> Votre localisation</li>
+                            <li><span class="code-badge">10-22</span> Annuler / Ignorer la transmission</li>
+                            <li><span class="code-badge">10-27</span> Sujet recherché</li>
+                            <li><span class="code-badge">10-29</span> Vérification mandat / dossier citoyen</li>
+                            <li><span class="code-badge">10-31</span> Coups de feu</li>
+                            <li><span class="code-badge">10-32</span> Fusillade active</li>
+                            <li><span class="code-badge">10-35</span> Demande de renfort (Préciser)</li>
+                            <li><span class="code-badge">10-37</span> Cambriolage</li>
+                            <li><span class="code-badge">10-38</span> Contrôle routier</li>
+                            <li><span class="code-badge">10-40</span> Braquage supérette / BINCO</li>
+                            <li><span class="code-badge">10-50</span> Accident de la circulation</li>
+                            <li><span class="code-badge">10-51</span> ACCIDENT GRAVE (FIN DE POURSUITE)</li>
+                            <li><span class="code-badge">10-52</span> Appel EMS / Secours médicaux</li>
+                            <li><span class="code-badge">10-55</span> Délit de fuite</li>
+                            <li><span class="code-badge">10-56</span> Refus d'obtempérer</li>
+                            <li><span class="code-badge">10-57</span> Vol de véhicule</li>
+                            <li><span class="code-badge">10-60</span> Vente de drogue</li>
+                            <li><span class="code-badge">10-61</span> Braquage de banque actif</li>
+                            <li><span class="code-badge">10-62</span> Braquage de bijouterie actif</li>
+                            <li><span class="code-badge">10-74</span> Racket / Smash and Grab</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <!-- POSITIONS & CARTES MISE A JOUR -->
-        <div id="positions" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : POSITIONS & CARTES -->
+        <article id="positions" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-map-location-dot"></i> 10-20 & Positions Maps</h2>
                 <p class="pane-desc">Référentiel cartographique des secteurs de patrouille et des axes autoroutiers principaux.</p>
-            </div>
-            <div class="grid-2">
-                <!-- CARTE SAN ANDREAS (LIEN EXTERNE) -->
+            </header>
+            <section class="grid-2">
                 <div class="image-card" onclick="window.open('https://soukapic.github.io/LSPD-Carte-10-20/', '_blank')">
                     <img src="/images/sanandreas.png" alt="San Andreas Map" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000&auto=format&fit=crop'">
-                    <div class="image-overlay">
-                        <h3>Cartographie San Andreas <i class="fas fa-external-link-alt"></i></h3>
-                    </div>
+                    <div class="image-overlay"><h3>Cartographie San Andreas <i class="fas fa-external-link-alt"></i></h3></div>
                 </div>
-                <!-- CARTE AUTOROUTES (MODAL DE ZOOM INTERACTIF) -->
                 <div class="image-card" onclick="openZoomModal()">
                     <img src="/images/autoroutes.png" alt="Highway Map" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000&auto=format&fit=crop'">
-                    <div class="image-overlay">
-                        <h3>Réseau des Autoroutes <i class="fas fa-search-plus"></i></h3>
-                    </div>
+                    <div class="image-overlay"><h3>Réseau des Autoroutes <i class="fas fa-search-plus"></i></h3></div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <div id="protocoles" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : PROTOCOLES -->
+        <article id="protocoles" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-handcuffs"></i> Protocoles d'Action Tactiques</h2>
                 <p class="pane-desc">Procédures d'interventions standards en milieu hostile, routier ou carcéral.</p>
-            </div>
-            <div class="grid-2">
+            </header>
+            <section class="grid-2">
                 <div class="image-card">
                     <img src="/images/arrestations_placeholder.jpg" alt="Arrestations" onerror="this.src='https://images.unsplash.com/photo-1589994965851-a8f479c573a9?q=80&w=1000&auto=format&fit=crop'">
-                    <div class="image-overlay">
-                        <h3>Arrestations & Interpellations</h3>
-                    </div>
+                    <div class="image-overlay"><h3>Arrestations & Interpellations</h3></div>
                 </div>
                 <div class="image-card">
                     <img src="/images/fusillades_placeholder.jpg" alt="Fusillades" onerror="this.src='https://images.unsplash.com/photo-1519069450379-99a38f32dae6?q=80&w=1000&auto=format&fit=crop'">
-                    <div class="image-overlay">
-                        <h3>Engagements & Fusillades</h3>
-                    </div>
+                    <div class="image-overlay"><h3>Engagements & Fusillades</h3></div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <div id="cevital" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : CEVITAL -->
+        <article id="cevital" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-crosshairs"></i> Instruction au Tir & CEVITAL</h2>
                 <p class="pane-desc">Procédure règlementaire de tir en 7 temps (CEVITAL) et fondamentaux de sécurité de l'ISTC.</p>
-            </div>
-            <div class="grid-2">
+            </header>
+            <section class="grid-2">
                 <div>
-                    <h3 style="color:#fff; margin-bottom:20px; font-weight:800; text-transform:uppercase; font-size:1.1rem;"><i class="fas fa-bullseye" style="color:#ef4444; margin-right:8px;"></i> Procédure CEVITAL</h3>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">C</div>
-                        <div class="cevital-content">
-                            <h4>Certitude</h4><p>Être sûr d'avoir identifié sa cible formellement avant tout engagement.</p>
-                        </div>
+                    <h3 class="info-card-header"><i class="fas fa-bullseye" style="color:var(--danger);"></i> Procédure CEVITAL</h3>
+                    <div class="cevital-item"><div class="cevital-letter">C</div><div class="cevital-content"><h4>Certitude</h4><p>Être sûr d'avoir identifié sa cible formellement avant tout engagement.</p></div></div>
+                    <div class="cevital-item"><div class="cevital-letter">E</div><div class="cevital-content"><h4>Élévation</h4><p>Mouvement fluide amenant l'arme au niveau de la ligne des yeux.</p></div></div>
+                    <div class="cevital-item"><div class="cevital-letter">V</div><div class="cevital-content"><h4>Visée</h4><p>Alignement précis des organes de visée avec l'œil et la zone de la cible.</p></div></div>
+                    <div class="cevital-item"><div class="cevital-letter">I</div><div class="cevital-content"><h4>Index</h4><p>Placer l'index sur la queue de détente au dernier moment (volonté de tir).</p></div></div>
+                    <div class="cevital-item"><div class="cevital-letter">T</div><div class="cevital-content"><h4>Tir</h4><p>Pression contrôlée sur la détente pour assurer la neutralisation immédiate.</p></div></div>
+                    <div class="cevital-item"><div class="cevital-letter">A</div><div class="cevital-content"><h4>Analyse</h4><p>Abaisser l'arme à 45°. La cible est-elle traitée ? Dois-je réengager ?</p></div></div>
+                    <div class="cevital-item"><div class="cevital-letter">L</div><div class="cevital-content"><h4>Latérale / Liaison</h4><p>Balayage gauche/droite visuel des menaces. Prévenir la radio (Backup/EMS).</p></div></div>
+                    
+                    <div style="text-align:center; color:var(--danger); font-weight:800; font-size:0.85rem; margin-top:20px; background:rgba(239,68,68,0.1); padding:12px; border-radius:8px; border:1px solid rgba(239,68,68,0.2);">
+                        ⚠️ SI NOUVELLE CIBLE VISUELLE, RECOMMENCER LA SÉQUENCE CEVITAL !
                     </div>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">E</div>
-                        <div class="cevital-content">
-                            <h4>Élévation</h4><p>Mouvement fluide amenant l'arme au niveau de la ligne des yeux.</p>
-                        </div>
-                    </div>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">V</div>
-                        <div class="cevital-content">
-                            <h4>Visée</h4><p>Alignement précis des organes de visée avec l'œil et la zone de la cible.</p>
-                        </div>
-                    </div>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">I</div>
-                        <div class="cevital-content">
-                            <h4>Index</h4><p>Placer l'index sur la queue de détente au dernier moment (volonté de tir).</p>
-                        </div>
-                    </div>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">T</div>
-                        <div class="cevital-content">
-                            <h4>Tir</h4><p>Pression contrôlée sur la détente pour assurer la neutralisation immédiate.</p>
-                        </div>
-                    </div>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">A</div>
-                        <div class="cevital-content">
-                            <h4>Analyse</h4><p>Abaisser l'arme à 45°. La cible est-elle traitée ? Dois-je réengager ?</p>
-                        </div>
-                    </div>
-                    <div class="cevital-item">
-                        <div class="cevital-letter">L</div>
-                        <div class="cevital-content">
-                            <h4>Latérale / Liaison</h4><p>Balayage gauche/droite visuel des menaces. Prévenir la radio (Backup/EMS).</p>
-                        </div>
-                    </div>
-                    <div style="text-align:center; color:#ef4444; font-weight:800; font-size:0.8rem; margin-top:20px; letter-spacing:1px; background:rgba(239,68,68,0.1); padding:10px; border-radius:8px; border:1px solid rgba(239,68,68,0.2);">⚠️ SI NOUVELLE CIBLE VISUELLE, RECOMMENCER LA SÉQUENCE CEVITAL !</div>
                 </div>
                 
                 <div>
-                    <h3 style="color:#fff; margin-bottom:20px; font-weight:800; text-transform:uppercase; font-size:1.1rem;"><i class="fas fa-triangle-exclamation" style="color:var(--primary); margin-right:8px;"></i> Règles de sécurité (ISTC)</h3>
+                    <h3 class="info-card-header"><i class="fas fa-triangle-exclamation"></i> Règles de sécurité (ISTC)</h3>
                     <div class="info-card">
-                        <ul class="styled-list" style="font-size:1rem; line-height:1.6;">
+                        <ul class="styled-list" style="font-size:0.95rem; line-height:1.6;">
                             <li style="padding:18px 0;"><strong>1.</strong> Toute arme doit être considérée et manipulée comme si elle était chargée.</li>
                             <li style="padding:18px 0;"><strong>2.</strong> Ne jamais pointer ou laisser pointer le canon d'une arme sur quelque chose ou quelqu'un qu'on ne veut ni détruire, ni blesser.</li>
                             <li style="padding:18px 0;"><strong>3.</strong> Garder l'index hors de la queue de détente tant que les organes de visée ne sont pas alignés sur l'objectif identifié.</li>
@@ -728,20 +653,20 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
-        <div id="alertes" class="pane">
-            <div class="pane-header">
+        <!-- SECTION : ALERTES -->
+        <article id="alertes" class="pane">
+            <header class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-triangle-exclamation"></i> Niveaux d'Alertes Départementales</h2>
                 <p class="pane-desc">Réglementations, droits juridiques et déploiements d'armements selon le niveau de menace décrété.</p>
-            </div>
+            </header>
             
-            <div class="alerts-grid">
+            <section class="alerts-grid">
                 <div class="alert-master-card theme-orange">
                     <div class="alert-header">
-                        <h3>Code Orange</h3>
-                        <p>Sécurité Publique Menacée</p>
+                        <h3>Code Orange</h3><p>Sécurité Publique Menacée</p>
                     </div>
                     <div class="alert-details">
                         <div class="alert-data"><span>Durée Initiale</span><strong>01H00 à 48H00</strong></div>
@@ -751,15 +676,14 @@
                         <div class="alert-data full-width">
                             <span>Armement Autorisé</span>
                             <strong>Gilet Lourd port actif, Armes lourdes rangées dans le coffre</strong>
-                            <span style="font-size: 0.65rem; margin-top:4px; opacity:0.7; display:block;">(Utilisation létale réglementée strictement à la zone concernée)</span>
+                            <span style="font-size: 0.7rem; margin-top:6px; opacity:0.8; display:block; font-weight: 500;">(Utilisation létale réglementée strictement à la zone concernée)</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="alert-master-card theme-rouge">
                     <div class="alert-header">
-                        <h3>Code Rouge</h3>
-                        <p>Sécurité Publique Perturbée</p>
+                        <h3>Code Rouge</h3><p>Sécurité Publique Perturbée</p>
                     </div>
                     <div class="alert-details">
                         <div class="alert-data"><span>Durée Initiale</span><strong>01H00 à 48H00</strong></div>
@@ -769,15 +693,14 @@
                         <div class="alert-data full-width">
                             <span>Armement Autorisé</span>
                             <strong>Gilet Lourd port actif, Armes lourdes chargées en coffre</strong>
-                            <span style="font-size: 0.65rem; margin-top:4px; opacity:0.7; display:block;">(Utilisation tactique uniquement dans la zone concernée ou hostile)</span>
+                            <span style="font-size: 0.7rem; margin-top:6px; opacity:0.8; display:block; font-weight: 500;">(Utilisation tactique uniquement dans la zone concernée ou hostile)</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="alert-master-card theme-noir">
                     <div class="alert-header">
-                        <h3>Code Noir</h3>
-                        <p>Confinement Local Total</p>
+                        <h3>Code Noir</h3><p>Confinement Local Total</p>
                     </div>
                     <div class="alert-details">
                         <div class="alert-data"><span>Durée Initiale</span><strong>01H00 à 48H00</strong></div>
@@ -787,57 +710,66 @@
                         <div class="alert-data full-width">
                             <span>Armement Autorisé</span>
                             <strong>Gilet Lourd équipé, Armes lourdes en main (Déploiement MAX)</strong>
-                            <span style="font-size: 0.65rem; margin-top:4px; opacity:0.7; display:block;">(Utilisation active autorisée selon les règles strictes d'engagement)</span>
+                            <span style="font-size: 0.7rem; margin-top:6px; opacity:0.8; display:block; font-weight: 500;">(Utilisation active autorisée selon les règles strictes d'engagement)</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </article>
 
     </main>
 </div>
 
-<!-- LIGHTBOX MODAL POUR LE ZOOM DE LA CARTE DES AUTOROUTES -->
+<!-- LIGHTBOX MODAL (ZOOM MAP) -->
 <div id="highwayModal" class="zoom-modal" onclick="closeZoomModal(event)">
-    <button class="modal-close" onclick="closeZoomModal(event)"><i class="fas fa-times"></i></button>
+    <button class="modal-close" onclick="closeZoomModal(event)" aria-label="Fermer"><i class="fas fa-times"></i></button>
     <div class="modal-container">
         <img id="zoomableHighwayImg" src="/images/roads.png" alt="Detailed Highways Map" onclick="event.stopPropagation()">
-        <div class="zoom-instructions"><i class="fas fa-mouse"></i> Utilisez la molette pour zoomer / Cliquez et glissez pour déplacer</div>
+        <div class="zoom-instructions"><i class="fas fa-mouse"></i> Molette pour zoomer / Cliquez et glissez pour déplacer</div>
     </div>
 </div>
 
 <script>
-    // Navigation dynamique par onglets
-    function openTab(tabId, buttonElement) {
-        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.pane').forEach(pane => pane.classList.remove('active'));
-        
-        buttonElement.classList.add('active');
-        document.getElementById(tabId).classList.add('active');
-        
+    document.addEventListener("DOMContentLoaded", () => {
+        // --- GESTION DES ONGLETS ---
+        const navItems = document.querySelectorAll('.nav-item');
+        const panes = document.querySelectorAll('.pane');
         const searchInput = document.getElementById('radioSearch');
-        if(searchInput) {
-            searchInput.value = '';
-            searchRadioCodes();
-        }
-    }
 
-    // Moteur de recherche instantané pour les codes radio
-    function searchRadioCodes() {
-        const query = document.getElementById('radioSearch').value.toLowerCase().trim();
-        const listItems = document.querySelectorAll('.search-list li');
-        
-        listItems.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            if (query === '' || text.includes(query)) {
-                item.classList.remove('hidden');
-            } else {
-                item.classList.add('hidden');
-            }
+        navItems.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active classes
+                navItems.forEach(nav => nav.classList.remove('active'));
+                panes.forEach(pane => pane.classList.remove('active'));
+                
+                // Add active class to clicked
+                btn.classList.add('active');
+                const targetId = btn.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+                
+                // Reset search if leaving/entering codes pane
+                if(searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+            });
         });
-    }
 
-    // LOGIQUE DE ZOOM ET DEPLACEMENT INTERACTIF POUR LA MAP "ROADS"
+        // --- MOTEUR DE RECHERCHE ---
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const listItems = document.querySelectorAll('.search-list li');
+                
+                listItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.classList.toggle('hidden', query !== '' && !text.includes(query));
+                });
+            });
+        }
+    });
+
+    // --- LOGIQUE DE ZOOM MODAL ---
     const modal = document.getElementById('highwayModal');
     const img = document.getElementById('zoomableHighwayImg');
     let scale = 1;
@@ -845,50 +777,55 @@
     let startX, startY, translateX = 0, translateY = 0;
 
     function openZoomModal() {
-        modal.classList.add('active');
-        scale = 1; translateX = 0; translateY = 0;
-        updateTransform();
+        if(modal) {
+            modal.classList.add('active');
+            scale = 1; translateX = 0; translateY = 0;
+            updateTransform();
+        }
     }
 
     function closeZoomModal(e) {
-        modal.classList.remove('active');
+        if (e && e.target !== modal && e.target.closest('.modal-close') === null) return;
+        if(modal) modal.classList.remove('active');
     }
 
     function updateTransform() {
-        img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        if(img) img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
     }
 
-    // Gestion du zoom avec la molette
-    img.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const zoomFactor = 0.15;
-        if (e.deltaY < 0) {
-            scale = Math.min(scale + zoomFactor, 4);
-        } else {
-            scale = Math.max(scale - zoomFactor, 0.8);
-        }
-        updateTransform();
-    });
+    if(img) {
+        // Zoom avec la molette
+        img.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = 0.15;
+            scale = e.deltaY < 0 ? Math.min(scale + zoomFactor, 4) : Math.max(scale - zoomFactor, 0.8);
+            updateTransform();
+        });
 
-    // Gestion du Drag-and-Drop pour déplacer la carte une fois zoomée
-    img.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
-        img.style.cursor = 'grabbing';
-    });
+        // Drag & Drop
+        img.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            img.style.cursor = 'grabbing';
+            img.style.transition = 'none'; // Désactive la transition fluide pendant le drag
+        });
 
-    window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        translateX = e.clientX - startX;
-        translateY = e.clientY - startY;
-        updateTransform();
-    });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+        });
 
-    window.addEventListener('mouseup', () => {
-        isDragging = false;
-        if(img) img.style.cursor = 'grab';
-    });
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                img.style.cursor = 'grab';
+                img.style.transition = 'transform 0.1s ease-out'; // Remet la transition
+            }
+        });
+    }
 </script>
 
 </body>
