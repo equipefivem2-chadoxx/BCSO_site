@@ -13,7 +13,11 @@
             --bg-dark: #05070b;
             --bg-panel: rgba(11, 15, 25, 0.75);
             --text-main: #e2e8f0;
-            --border-glow: rgba(189, 165, 129, 0.15);
+            --border-glow: rgba(189, 165, 129, 0.25);
+            --success: #10b981;
+            --info: #38bdf8;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         /* FOND IMMERSIF AVEC GRILLE TECHNOLOGIQUE */
@@ -42,13 +46,13 @@
             padding: 0 20px;
         }
 
-        /* SIDEBAR DU LIVRET (SOMMAIRE) */
+        /* SIDEBAR DU LIVRET */
         .manual-sidebar {
             width: 340px;
             background: rgba(6, 9, 15, 0.85);
             backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.02);
-            border-right: 1px solid rgba(189, 165, 129, 0.25);
+            border-right: 1px solid var(--border-glow);
             border-radius: 16px;
             display: flex;
             flex-direction: column;
@@ -169,57 +173,73 @@
         .search-input:focus + i { color: var(--primary); }
 
         /* UTILITAIRES DE GRILLES */
+        .grid-1 { display: grid; grid-template-columns: 1fr; gap: 25px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 
         /* =========================================
-           DESIGN PRO COMPOSANTS
+           RE-DESIGN MODERN HIERARCHIE (TACTICAL DOSSIER)
         ========================================= */
-
-        /* Organigramme Hiérarchie V2 */
-        .hierarchy-tree {
+        .tactical-hierarchy {
             display: flex;
             flex-direction: column;
-            gap: 25px;
-            align-items: center;
+            gap: 30px;
             width: 100%;
-            margin-top: 10px;
         }
-        .tree-level {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        .tree-level.full-width { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-        
-        .rank-card {
-            background: rgba(7, 10, 18, 0.6);
-            border: 1px solid rgba(255,255,255,0.03);
+        .hierarchy-section {
+            background: rgba(10, 15, 30, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-radius: 12px;
-            padding: 22px;
+            padding: 25px;
             position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            transition: 0.3s ease;
         }
-        .rank-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        .hierarchy-section::before {
+            content: ''; position: absolute; left: 0; top: 25px; bottom: 25px; width: 4px; border-radius: 0 4px 4px 0;
         }
-        .rank-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
-        }
-        .rank-card.staff::before { background: #f59e0b; }
-        .rank-card.supervision::before { background: #38bdf8; }
-        .rank-card.application::before { background: #10b981; }
+        .hierarchy-section.command::before { background: var(--warning); box-shadow: 0 0 15px var(--warning); }
+        .hierarchy-section.supervision::before { background: var(--info); box-shadow: 0 0 15px var(--info); }
+        .hierarchy-section.application::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
 
-        .rank-badge-title {
-            font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; display: inline-block; padding: 4px 10px; border-radius: 6px;
+        .section-class-title {
+            font-size: 1.1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 20px 15px; display: flex; align-items: center; gap: 10px;
         }
-        .rank-card.staff .rank-badge-title { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
-        .rank-card.supervision .rank-badge-title { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
-        .rank-card.application .rank-badge-title { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .hierarchy-section.command .section-class-title { color: var(--warning); }
+        .hierarchy-section.supervision .section-class-title { color: var(--info); }
+        .hierarchy-section.application .section-class-title { color: var(--success); }
+
+        .ranks-grid-fluid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            padding-left: 15px;
+        }
+        .rank-tactical-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255,255,255,0.02);
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.25s ease;
+        }
+        .rank-tactical-card:hover {
+            background: rgba(255,255,255,0.02);
+            border-color: rgba(189, 165, 129, 0.15);
+            transform: translateY(-2px);
+        }
+        .rank-meta {
+            display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; margin-bottom: 4px;
+        }
+        .rank-name { font-weight: 800; font-size: 0.95rem; color: #fff; letter-spacing: 0.5px; text-transform: uppercase; }
+        .rank-label { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: #94a3b8; }
+        
+        .hierarchy-section.command .rank-label { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .hierarchy-section.supervision .rank-label { background: rgba(56, 189, 248, 0.1); color: var(--info); }
+        .hierarchy-section.application .rank-label { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        
+        .rank-mission { font-size: 0.82rem; color: #94a3b8; line-height: 1.4; font-weight: 500; }
 
         /* Barrettes Ancienneté V2 */
         .medal-grid {
@@ -276,7 +296,7 @@
         .styled-list li.hidden { display: none !important; }
         .styled-list li:hover { background: rgba(255,255,255,0.01); padding-left: 5px; }
 
-        .code-badge { background: rgba(189, 165, 129, 0.08); color: var(--primary); font-weight: 800; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; text-transform: uppercase; white-shadow: none; border: 1px solid rgba(189, 165, 129, 0.2); min-width: 75px; text-align: center; display: inline-block; }
+        .code-badge { background: rgba(189, 165, 129, 0.08); color: var(--primary); font-weight: 800; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; text-transform: uppercase; white-shadow: none; border: 1px solid rgba(189, 165, 129, 0.2); min-width: 85px; text-align: center; display: inline-block; }
 
         /* Spécialisations */
         .spec-box { text-align: center; padding: 25px 20px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); transition: 0.3s; }
@@ -293,11 +313,24 @@
         .cevital-content p { margin: 0; color: #94a3b8; font-size: 0.85rem; line-height: 1.4; font-weight: 500; }
 
         /* Images / Cartes Médias */
-        .image-card { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); height: 260px; display: flex; align-items: flex-end; background: #000; box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+        .image-card { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); height: 260px; display: flex; align-items: flex-end; background: #000; box-shadow: 0 15px 30px rgba(0,0,0,0.4); cursor: pointer; }
         .image-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.5s ease; }
         .image-card:hover img { opacity: 0.8; transform: scale(1.03); }
         .image-overlay { position: relative; z-index: 2; width: 100%; padding: 25px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 60%, transparent 100%); }
-        .image-overlay h3 { margin: 0; color: #fff; font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; }
+        .image-overlay h3 { margin: 0; color: #fff; font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: space-between; }
+        .image-overlay h3 i { font-size: 1rem; color: var(--primary); opacity: 0.7; }
+
+        /* MODAL DE ZOOM INTERACTIF POUR LES AUTOROUTES */
+        .zoom-modal {
+            display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.95); backdrop-filter: blur(10px); justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .zoom-modal.active { display: flex; opacity: 1; }
+        .modal-container { position: relative; width: 90%; height: 90%; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; background: rgba(0,0,0,0.4); }
+        .modal-container img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.2s ease; cursor: grab; transform-origin: center center; }
+        .modal-container img:active { cursor: grabbing; }
+        .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 45px; height: 45px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; z-index: 10; }
+        .modal-close:hover { background: var(--danger); border-color: transparent; transform: scale(1.05); }
+        .zoom-instructions { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 8px 18px; border-radius: 20px; font-size: 0.8rem; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.05); pointer-events: none; }
 
         /* Alertes */
         .alerts-grid { display: flex; flex-direction: column; gap: 25px; }
@@ -357,43 +390,68 @@
 
     <main class="manual-content">
         
+        <!-- HIERARCHIE REDESIGNEE -->
         <div id="hierarchie" class="pane active">
             <div class="pane-header">
-                <h2 class="pane-title"><i class="fas fa-sitemap"></i> Hiérarchie du Département</h2>
-                <p class="pane-desc">Chaîne de commandement officielle du Blaine County Sheriff's Office.</p>
+                <h2 class="pane-title"><i class="fas fa-sitemap"></i> Chaîne de Commandement</h2>
+                <p class="pane-desc">Structure d'autorité opérationnelle et administrative officielle du Blaine County Sheriff's Office.</p>
             </div>
             
-            <div class="hierarchy-tree">
-                <div class="tree-level">
-                    <div class="rank-card staff" style="width: 100%; max-width: 500px;">
-                        <span class="rank-badge-title"><i class="fas fa-crown"></i> Command Staff</span>
-                        <ul class="styled-list">
-                            <li><span class="code-badge">Sheriff</span> Responsable absolu du département</li>
-                            <li><span class="code-badge">Lieutenant</span> Bras droit, gestion globale et opérationnelle</li>
-                        </ul>
+            <div class="tactical-hierarchy">
+                <!-- COMMAND STAFF -->
+                <div class="hierarchy-section command">
+                    <h3 class="section-class-title"><i class="fas fa-crown"></i> Command Staff</h3>
+                    <div class="ranks-grid-fluid">
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Sheriff</span><span class="rank-label">Direction</span></div>
+                            <span class="rank-mission">Responsable absolu, autorité suprême du département.</span>
+                        </div>
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Lieutenant</span><span class="rank-label">Commandement</span></div>
+                            <span class="rank-mission">Bras droit du Sheriff, superviseur de la gestion globale et opérationnelle.</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="tree-level">
-                    <div class="rank-card supervision" style="width: 100%; max-width: 600px;">
-                        <span class="rank-badge-title"><i class="fas fa-user-shield"></i> Supervision Staff</span>
-                        <ul class="styled-list">
-                            <li><span class="code-badge">Sergeant II</span> Superviseur senior, encadrement des équipes et patrouilles</li>
-                            <li><span class="code-badge">Sergeant I</span> Superviseur d'équipe, gestion directe du terrain</li>
-                        </ul>
+                <!-- SUPERVISION STAFF -->
+                <div class="hierarchy-section supervision">
+                    <h3 class="section-class-title"><i class="fas fa-user-shield"></i> Supervision Staff</h3>
+                    <div class="ranks-grid-fluid">
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Sergeant II</span><span class="rank-label">Encadrement Sr.</span></div>
+                            <span class="rank-mission">Superviseur senior, encadrement stratégique des équipes et régulation des patrouilles.</span>
+                        </div>
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Sergeant I</span><span class="rank-label">Superviseur</span></div>
+                            <span class="rank-mission">Superviseur d'équipe opérationnel, gestion directe et arbitrage du terrain.</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="tree-level full-width">
-                    <div class="rank-card application">
-                        <span class="rank-badge-title"><i class="fas fa-users"></i> Corps d'Application</span>
-                        <ul class="styled-list">
-                            <li><span class="code-badge">SLO</span> Senior Lead Officer (Dep III+1) - Référent d'unité</li>
-                            <li><span class="code-badge">Deputy III</span> Agent Expérimenté - Autonomie complète</li>
-                            <li><span class="code-badge">Deputy II</span> Agent Titulaire - Coeur du département</li>
-                            <li><span class="code-badge">Deputy I</span> Agent Confirmé - Fin de probation</li>
-                            <li><span class="code-badge">Dep. Junior</span> Période probatoire - Apprentissage terrain</li>
-                        </ul>
+                <!-- CORPS D'APPLICATION -->
+                <div class="hierarchy-section application">
+                    <h3 class="section-class-title"><i class="fas fa-users"></i> Corps d'Application</h3>
+                    <div class="ranks-grid-fluid">
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">SLO</span><span class="rank-label">Référent d'Unité</span></div>
+                            <span class="rank-mission">Senior Lead Officer (Dep III+1) - Agent cadre et formateur de pointe.</span>
+                        </div>
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Deputy III</span><span class="rank-label">Agent Expérimenté</span></div>
+                            <span class="rank-mission">Agent de confiance possédant une autonomie complète sur le terrain.</span>
+                        </div>
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Deputy II</span><span class="rank-label">Titulaire</span></div>
+                            <span class="rank-mission">Agent titulaire confirmé, cœur des effectifs opérationnels du BCSO.</span>
+                        </div>
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Deputy I</span><span class="rank-label">Confirmé</span></div>
+                            <span class="rank-mission">Fin de période probatoire réussie, versement dans les effectifs actifs.</span>
+                        </div>
+                        <div class="rank-tactical-card">
+                            <div class="rank-meta"><span class="rank-name">Dep. Junior</span><span class="rank-label">Probatoire</span></div>
+                            <span class="rank-mission">Phase d'apprentissage terrain sous surveillance stricte d'un superviseur.</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -402,7 +460,7 @@
         <div id="anciennete" class="pane">
             <div class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-medal"></i> Distinctions d'Ancienneté</h2>
-                <p class="pane-desc">Lecture des barrettes officielles présentes sur la manche gauche de l'uniforme Classe A.</p>
+                <p class="pane-desc">Le nombre de barrettes officielles présentes sur la manche gauche de l'uniforme Classe A.</p>
             </div>
             
             <div class="medal-grid">
@@ -465,6 +523,7 @@
             </div>
         </div>
 
+        <!-- CODES ET TRANSMISSIONS ENTIEREMENT MIS A JOUR -->
         <div id="codes" class="pane">
             <div class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-walkie-talkie"></i> Transmissions & Codes Radio</h2>
@@ -477,77 +536,108 @@
             </div>
 
             <div class="grid-3">
+                <!-- CODES OPERATIONNELS -->
                 <div class="info-card">
                     <h3 style="color:#fff; margin-top:0; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:10px; font-size:1.1rem;"><i class="fas fa-shield-halved" style="color:var(--primary); margin-right:8px;"></i> Codes Opérationnels</h3>
                     <ul class="styled-list search-list">
-                        <li><span class="code-badge">Code 2</span> Prioritaire (Gyro sans sirène)</li>
-                        <li><span class="code-badge">Code 3</span> Urgent (Gyro + Sirène)</li>
-                        <li><span class="code-badge">Code 4</span> Situation Stable</li>
-                        <li><span class="code-badge">C-4 Adam</span> Perte de visuel</li>
-                        <li><span class="code-badge">Code 5</span> Surveillance (Éviter la zone)</li>
-                        <li><span class="code-badge">Code 6</span> Arrivée sur scène</li>
-                        <li><span class="code-badge">Code 7</span> Retour en patrouille</li>
-                        <li><span class="code-badge" style="background:#ef4444; color:#fff; border:none; box-shadow: 0 0 10px rgba(239,68,68,0.3);">Code 99</span> Officier en danger de mort !</li>
-                        <li><span class="code-badge">Robert</span> Requête armement lourd</li>
-                        <li><span class="code-badge">Sam</span> Requête fusil Beanbag / Moins léthal</li>
-                        <li><span class="code-badge">Sitrep</span> Rapport de situation actuel</li>
+                        <li><span class="code-badge">Code 2</span> Prioritaire - Répondre avec gyrophare sans sirène[cite: 2]</li>
+                        <li><span class="code-badge">Code 3</span> Urgent - Répondre avec gyrophare et sirène[cite: 2]</li>
+                        <li><span class="code-badge">Code 4</span> Situation stable[cite: 2]</li>
+                        <li><span class="code-badge" style="background:#ea580c; color:#fff; border:none;">4-ADAM</span> PERTE DU VEHICULE, PRECISEZ SECTEUR[cite: 2]</li>
+                        <li><span class="code-badge">Code 5</span> En surveillance, situation connue éviter le lieu[cite: 2]</li>
+                        <li><span class="code-badge">Code 6</span> Arrivée sur scène[cite: 2]</li>
+                        <li><span class="code-badge">Code 7</span> Retour en patrouille[cite: 2]</li>
+                        <li><span class="code-badge" style="background:#ef4444; color:#fff; border:none; box-shadow: 0 0 10px rgba(239,68,68,0.3);">Code 99</span> Officier en danger - Besoin d'aide d'urgence[cite: 2]</li>
+                        <li><span class="code-badge">ROBERT</span> Requête pour déploiement d'arme lourde[cite: 2]</li>
+                        <li><span class="code-badge">SAM</span> Requête pour déploiement d'un Beanbag[cite: 2]</li>
+                        <li><span class="code-badge">Sitrep</span> État de la situation (Situation ReporT)[cite: 2]</li>
                     </ul>
                 </div>
+
+                <!-- INDICATIFS SPECIFIQUES -->
                 <div class="info-card">
                     <h3 style="color:#fff; margin-top:0; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:10px; font-size:1.1rem;"><i class="fas fa-id-badge" style="color:var(--primary); margin-right:8px;"></i> Indicatifs Unités</h3>
                     <ul class="styled-list search-list">
-                        <li><span class="code-badge">Lincoln</span> Patrouille - Agent seul</li>
-                        <li><span class="code-badge">Adam</span> Patrouille - Deux agents</li>
-                        <li><span class="code-badge">Tango</span> Patrouille - Trois agents</li>
-                        <li><span class="code-badge">X-Ray</span> Patrouille - Quatre agents</li>
-                        <li><span class="code-badge">K-9</span> Patrouille canine spécialisée</li>
-                        <li><span class="code-badge">Queen</span> Escorte officielle ou VIP</li>
-                        <li><span class="code-badge">Sierra</span> Unité Highway Patrol</li>
-                        <li><span class="code-badge">Henry</span> A.S.D (Support Hélicoptère)</li>
-                        <li><span class="code-badge">Bravo</span> Unité Marine / Nautique</li>
-                        <li><span class="code-badge">Mary</span> Unité Moto tactique</li>
-                        <li><span class="code-badge">Victor</span> Unité Vélo / Proximité</li>
-                        <li><span class="code-badge">Oscar</span> Unité d'infiltration banalisée</li>
-                        <li><span class="code-badge">Echo</span> Unité d'intervention S.R.T</li>
+                        <li><span class="code-badge">Lincoln</span> Un Agent Seul en patrouille véhiculé[cite: 2]</li>
+                        <li><span class="code-badge">Adam</span> Deux Agents en patrouille véhiculé[cite: 2]</li>
+                        <li><span class="code-badge">Tango</span> Trois Agents présents en patrouille véhiculé[cite: 2]</li>
+                        <li><span class="code-badge">X-RAY</span> QUATRES Agents présents en patrouille véhiculé[cite: 2]</li>
+                        <li><span class="code-badge">K-9</span> Patrouille avec un officier canin[cite: 2]</li>
+                        <li><span class="code-badge">Queen</span> Patrouille avec un VIP[cite: 2]</li>
+                        <li><span class="code-badge">Sierra</span> Unité Highway Patrol[cite: 2]</li>
+                        <li><span class="code-badge">Henry</span> ASD (Support Hélicoptère)[cite: 2]</li>
+                        <li><span class="code-badge">Bravo</span> Unité Bateau / Maritime[cite: 2]</li>
+                        <li><span class="code-badge">Mary</span> Motorcycle Unit (Moto)[cite: 2]</li>
+                        <li><span class="code-badge">Victor</span> Unité en vélo[cite: 2]</li>
+                        <li><span class="code-badge">Oscar</span> Unités d'infiltration banalisées[cite: 2]</li>
+                        <li><span class="code-badge">ECHO</span> Unités d'intervention S.R.T[cite: 2]</li>
                     </ul>
                 </div>
+
+                <!-- TEN CODES -->
                 <div class="info-card">
                     <h3 style="color:#fff; margin-top:0; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:10px; font-size:1.1rem;"><i class="fas fa-list-numeric" style="color:var(--primary); margin-right:8px;"></i> Codes 10 (Ten Codes)</h3>
-                    <ul class="styled-list search-list">
-                        <li><span class="code-badge">10-1</span> Fréquence compromise</li>
-                        <li><span class="code-badge">10-3</span> Demande silence radio / Retour</li>
-                        <li><span class="code-badge">10-4</span> Message bien reçu / Affirmatif</li>
-                        <li><span class="code-badge">10-8</span> Prise de service active</li>
-                        <li><span class="code-badge">10-10</span> Fin de service officielle</li>
-                        <li><span class="code-badge">10-14</span> Escorte en cours / Convoi</li>
-                        <li><span class="code-badge">10-20</span> Localisation ou position actuelle</li>
-                        <li><span class="code-badge">10-31</span> Signalement de coups de feu</li>
-                        <li><span class="code-badge">10-32</span> Fusillade active signalée</li>
-                        <li><span class="code-badge">10-50</span> Accident de la circulation</li>
-                        <li><span class="code-badge">10-55</span> Délit de fuite en cours</li>
-                        <li><span class="code-badge">10-60</span> Constat de vente de drogue</li>
-                        <li><span class="code-badge">10-61</span> Braquage de banque actif</li>
-                    </ul>
+                    <div style="max-height: 480px; overflow-y: auto; padding-right: 5px;">
+                        <ul class="styled-list search-list">
+                            <li><span class="code-badge">10-1</span> FREQUENCE COMPROMISE[cite: 2]</li>
+                            <li><span class="code-badge">10-2</span> Signal clair, bonne réception[cite: 2]</li>
+                            <li><span class="code-badge">10-3</span> RETOUR / ARRIVEE radio / FREQUENCE[cite: 2]</li>
+                            <li><span class="code-badge">10-4</span> Bien reçu / Affirmatif[cite: 2]</li>
+                            <li><span class="code-badge">10-6</span> Occupé (Sauf urgence)[cite: 2]</li>
+                            <li><span class="code-badge">10-7</span> Indisponible (Sauf urgence, radio coupée)[cite: 2]</li>
+                            <li><span class="code-badge">10-8</span> Début de patrouille / SERVICE[cite: 2]</li>
+                            <li><span class="code-badge">10-9</span> Répéter la dernière transmission[cite: 2]</li>
+                            <li><span class="code-badge">10-10</span> Fin de patrouille / SERVICE[cite: 2]</li>
+                            <li><span class="code-badge">10-12</span> ATTENTE DE DISPATCH[cite: 2]</li>
+                            <li><span class="code-badge">10-14</span> Escorte ou convoi[cite: 2]</li>
+                            <li><span class="code-badge">10-15</span> Transport de suspect[cite: 2]</li>
+                            <li><span class="code-badge">10-17</span> Refuel / Mettre de l’essence[cite: 2]</li>
+                            <li><span class="code-badge">10-19</span> En route vers … (Préciser loc)[cite: 2]</li>
+                            <li><span class="code-badge">10-20</span> Votre localisation[cite: 2]</li>
+                            <li><span class="code-badge">10-22</span> Annuler / Ignorer la transmission[cite: 2]</li>
+                            <li><span class="code-badge">10-27</span> Sujet recherché[cite: 2]</li>
+                            <li><span class="code-badge">10-29</span> Vérification mandat / dossier citoyen[cite: 2]</li>
+                            <li><span class="code-badge">10-31</span> Coups de feu[cite: 2]</li>
+                            <li><span class="code-badge">10-32</span> Fusillade active[cite: 2]</li>
+                            <li><span class="code-badge">10-35</span> Demande de renfort (Préciser)[cite: 2]</li>
+                            <li><span class="code-badge">10-37</span> Cambriolage[cite: 2]</li>
+                            <li><span class="code-badge">10-38</span> Contrôle routier[cite: 2]</li>
+                            <li><span class="code-badge">10-40</span> Braquage supérette / BINCO[cite: 2]</li>
+                            <li><span class="code-badge">10-50</span> Accident de la circulation[cite: 2]</li>
+                            <li><span class="code-badge">10-51</span> ACCIDENT GRAVE (FIN DE POURSUITE)[cite: 2]</li>
+                            <li><span class="code-badge">10-52</span> Appel EMS / Secours médicaux[cite: 2]</li>
+                            <li><span class="code-badge">10-55</span> Délit de fuite[cite: 2]</li>
+                            <li><span class="code-badge">10-56</span> Refus d'obtempérer[cite: 2]</li>
+                            <li><span class="code-badge">10-57</span> Vol de véhicule[cite: 2]</li>
+                            <li><span class="code-badge">10-60</span> Vente de drogue[cite: 2]</li>
+                            <li><span class="code-badge">10-61</span> Braquage de banque actif[cite: 2]</li>
+                            <li><span class="code-badge">10-62</span> Braquage de bijouterie actif[cite: 2]</li>
+                            <li><span class="code-badge">10-74</span> Racket / Smash and Grab[cite: 2]</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- POSITIONS & CARTES MISE A JOUR -->
         <div id="positions" class="pane">
             <div class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-map-location-dot"></i> 10-20 & Positions Maps</h2>
                 <p class="pane-desc">Référentiel cartographique des secteurs de patrouille et des axes autoroutiers principaux.</p>
             </div>
             <div class="grid-2">
-                <div class="image-card">
-                    <img src="/images/sanandreas_placeholder.jpg" alt="San Andreas" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000&auto=format&fit=crop'">
+                <!-- CARTE SAN ANDREAS (LIEN EXTERNE) -->
+                <div class="image-card" onclick="window.open('https://soukapic.github.io/LSPD-Carte-10-20/', '_blank')">
+                    <img src="/images/sanandreas.png" alt="San Andreas Map" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000&auto=format&fit=crop'">
                     <div class="image-overlay">
-                        <h3>Cartographie San Andreas</h3>
+                        <h3>Cartographie San Andreas <i class="fas fa-external-link-alt"></i></h3>
                     </div>
                 </div>
-                <div class="image-card">
-                    <img src="/images/autoroutes_placeholder.jpg" alt="Autoroutes" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000&auto=format&fit=crop'">
+                <!-- CARTE AUTOROUTES (MODAL DE ZOOM INTERACTIF) -->
+                <div class="image-card" onclick="openZoomModal()">
+                    <img src="/images/autoroutes.png" alt="Highway Map" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000&auto=format&fit=crop'">
                     <div class="image-overlay">
-                        <h3>Réseau des Autoroutes</h3>
+                        <h3>Réseau des Autoroutes <i class="fas fa-search-plus"></i></h3>
                     </div>
                 </div>
             </div>
@@ -707,6 +797,15 @@
     </main>
 </div>
 
+<!-- LIGHTBOX MODAL POUR LE ZOOM DE LA CARTE DES AUTOROUTES -->
+<div id="highwayModal" class="zoom-modal" onclick="closeZoomModal(event)">
+    <button class="modal-close" onclick="closeZoomModal(event)"><i class="fas fa-times"></i></button>
+    <div class="modal-container">
+        <img id="zoomableHighwayImg" src="/images/roads.png" alt="Detailed Highways Map" onclick="event.stopPropagation()">
+        <div class="zoom-instructions"><i class="fas fa-mouse"></i> Utilisez la molette pour zoomer / Cliquez et glissez pour déplacer</div>
+    </div>
+</div>
+
 <script>
     // Navigation dynamique par onglets
     function openTab(tabId, buttonElement) {
@@ -716,7 +815,6 @@
         buttonElement.classList.add('active');
         document.getElementById(tabId).classList.add('active');
         
-        // Si on change d'onglet, on remet à zéro la recherche radio si elle existe
         const searchInput = document.getElementById('radioSearch');
         if(searchInput) {
             searchInput.value = '';
@@ -738,6 +836,59 @@
             }
         });
     }
+
+    // LOGIQUE DE ZOOM ET DEPLACEMENT INTERACTIF POUR LA MAP "ROADS"
+    const modal = document.getElementById('highwayModal');
+    const img = document.getElementById('zoomableHighwayImg');
+    let scale = 1;
+    let isDragging = false;
+    let startX, startY, translateX = 0, translateY = 0;
+
+    function openZoomModal() {
+        modal.classList.add('active');
+        scale = 1; translateX = 0; translateY = 0;
+        updateTransform();
+    }
+
+    function closeZoomModal(e) {
+        modal.classList.remove('active');
+    }
+
+    function updateTransform() {
+        img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    }
+
+    // Gestion du zoom avec la molette
+    img.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoomFactor = 0.15;
+        if (e.deltaY < 0) {
+            scale = Math.min(scale + zoomFactor, 4);
+        } else {
+            scale = Math.max(scale - zoomFactor, 0.8);
+        }
+        updateTransform();
+    });
+
+    // Gestion du Drag-and-Drop pour déplacer la carte une fois zoomée
+    img.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        img.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        updateTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        if(img) img.style.cursor = 'grab';
+    });
 </script>
 
 </body>
