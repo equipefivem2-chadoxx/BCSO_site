@@ -33,6 +33,7 @@
         * { box-sizing: border-box; }
 
         @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         .manual-layout {
             display: flex;
@@ -109,6 +110,7 @@
             flex-grow: 1; background: var(--bg-panel); backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.02); border-top: 1px solid var(--border-glow);
             border-radius: 16px; padding: 45px; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         .manual-content::-webkit-scrollbar { width: 6px; }
@@ -130,7 +132,7 @@
         }
         .text-block-card strong { color: #fff; font-weight: 700; }
 
-        /* NOUVEAU MENU SOMMAIRE */
+        /* MENU SOMMAIRE */
         .sommaire-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
         .sommaire-btn {
             background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.04);
@@ -144,7 +146,7 @@
         .sommaire-btn i { color: var(--primary); font-size: 1.5rem; opacity: 0.5; transition: 0.3s; }
         .sommaire-btn:hover i { opacity: 1; transform: scale(1.1); }
 
-        /* GRID LOGIC STRIPS (PROCEDURES WORKFLOW) */
+        /* GRID LOGIC STRIPS */
         .workflow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
         
         .workflow-card {
@@ -162,7 +164,7 @@
         .workflow-title { font-size: 0.88rem; font-weight: 800; color: #fff; text-transform: uppercase; margin: 0; }
         .workflow-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
 
-        /* DOUBLE COLUMN LAYOUT (DOSSIER D'OPERATION) */
+        /* DOUBLE COLUMN LAYOUT */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .tactical-side-card {
             background: rgba(5, 7, 11, 0.5); border: 1px solid rgba(255, 255, 255, 0.03);
@@ -182,11 +184,13 @@
         .bullet-list li { padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.04); font-size: 0.88rem; color: #cbd5e1; display: flex; align-items: center; gap: 10px; }
         .bullet-list li i { color: var(--primary); font-size: 0.8rem; }
 
+        /* BOUTON MODAL (Remplacé) */
         .btn-tactical-link {
             display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 12px;
             background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
             color: #fff; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
-            text-decoration: none; transition: 0.2s; gap: 8px; margin-top: auto;
+            text-decoration: none; transition: 0.2s; gap: 8px; margin-top: auto; cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
         }
         .btn-tactical-link:hover { background: var(--primary); color: #000; border-color: transparent; box-shadow: 0 4px 15px var(--primary-glow); }
 
@@ -211,7 +215,7 @@
         }
         .copy-btn:hover { background: #fff; transform: scale(1.02); }
 
-        /* MATRIX LAYOUT (RAPPORT D'OPERATION) */
+        /* MATRIX LAYOUT */
         .matrix-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .matrix-item {
             background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255,255,255,0.03);
@@ -220,7 +224,7 @@
         }
         .matrix-item i { color: var(--primary); font-size: 0.85rem; background: rgba(189,165,129,0.06); padding: 8px; border-radius: 6px; }
 
-        /* LAW DASHBOARD (A SAVOIR) */
+        /* LAW DASHBOARD */
         .law-grid { display: flex; flex-direction: column; gap: 12px; }
         .law-card {
             background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255,255,255,0.03);
@@ -239,6 +243,24 @@
         }
         .cover-txt h3 { font-size: 2.2rem; font-weight: 900; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
         .cover-txt p { font-size: 1rem; color: var(--primary); margin: 6px 0 0 0; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+
+        /* MODAL IMAGE CSS (Lightbox) */
+        .img-modal {
+            display: none; position: fixed; z-index: 9999; padding-top: 5vh;
+            left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+        }
+        .img-modal-content {
+            margin: auto; display: block; max-width: 90%; max-height: 85vh;
+            border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 1px solid rgba(189,165,129,0.3); animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            object-fit: contain;
+        }
+        .close-modal {
+            position: absolute; top: 20px; right: 40px; color: #cbd5e1;
+            font-size: 45px; font-weight: 300; transition: 0.3s; cursor: pointer;
+        }
+        .close-modal:hover, .close-modal:focus { color: var(--primary); text-decoration: none; }
 
         @media (max-width: 1200px) {
             .manual-layout { flex-direction: column; height: auto; }
@@ -259,7 +281,8 @@
     <!-- NAVIGATION SIDEBAR -->
     <aside class="manual-sidebar">
         <div class="sidebar-header">
-            <a href="#" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Retour au Livret</a>
+            <!-- LIEN RETOUR LIVRET CORRIGÉ -->
+            <a href="/livret" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Retour au Livret</a>
             <h1 class="manual-title">Procédures<span>Dossiers & Interpellations</span></h1>
         </div>
         <nav class="nav-list">
@@ -313,7 +336,7 @@
             </div>
         </div>
 
-        <!-- PANE: ARRESTATIONS (AVANT L'ARRIVÉE AU POSTE) -->
+        <!-- PANE: ARRESTATIONS -->
         <div id="arrestations" class="pane">
             <div class="pane-header">
                 <h2 class="pane-title"><i class="fas fa-handcuffs"></i> Arrestation</h2>
@@ -448,8 +471,8 @@
                         Une fois les procédures terminées il doit s'occuper de remplir un <strong>rapport d'opération</strong>, celui-ci servira d'archive pour le bureau d'enquête (si enquête).<br><br>
                         Pensez également au travail du Procureur qui a accès à celui-ci, veillez à ce qu'il soit organisé proprement et que l'on ait pas besoin de 5 minutes pour trouver une information.
                     </div>
-                    <!-- LIEN MODIFIÉ POUR L'IMAGE DE L'EXEMPLE DU DOSSIER -->
-                    <a href="exempledossier.png" target="_blank" class="btn-tactical-link"><i class="fas fa-file-pdf"></i> Exemple d'un dossier d'arrestation</a>
+                    <!-- BOUTON DÉCLENCHEUR DE LA MODAL -->
+                    <button onclick="openImageModal('images/exempledossier.png')" class="btn-tactical-link"><i class="fas fa-file-pdf"></i> Exemple d'un dossier d'arrestation</button>
                 </div>
 
                 <!-- AGENTS -->
@@ -466,8 +489,8 @@
                     <div class="inner-desc">
                         Rassemblez tout en un seul message. De prendre également son numéro de téléphone (modifier sa fiche MDT). De tenir au courant le lead terrain dans le dossier de l'avancement des procédures (si convocation ou report).
                     </div>
-                    <!-- LIEN MODIFIÉ POUR L'IMAGE DE L'EXEMPLE DE MESSAGE -->
-                    <a href="exemplemessage.png" target="_blank" class="btn-tactical-link"><i class="fas fa-comment-alt"></i> Exemple message suite arrestation</a>
+                    <!-- BOUTON DÉCLENCHEUR DE LA MODAL -->
+                    <button onclick="openImageModal('images/exemplemessage.png')" class="btn-tactical-link"><i class="fas fa-comment-alt"></i> Exemple message suite arrestation</button>
                 </div>
             </div>
         </div>
@@ -555,6 +578,12 @@
     </main>
 </div>
 
+<!-- L'ÉCRAN MODAL POUR AFFICHER LES IMAGES EN GRAND -->
+<div id="fullImageModal" class="img-modal">
+    <span class="close-modal" onclick="closeImageModal()">&times;</span>
+    <img class="img-modal-content" id="displayedImage">
+</div>
+
 <script>
     // Moteur d'onglets
     function openPane(paneId, button) {
@@ -563,6 +592,25 @@
         
         button.classList.add('active');
         document.getElementById(paneId).classList.add('active');
+    }
+
+    // GESTION DU MODAL IMAGE (AFFICHER EN GRAND)
+    function openImageModal(imgSrc) {
+        document.getElementById("fullImageModal").style.display = "block";
+        document.getElementById("displayedImage").src = imgSrc;
+    }
+
+    function closeImageModal() {
+        document.getElementById("fullImageModal").style.display = "none";
+        document.getElementById("displayedImage").src = ""; // Vide la source à la fermeture
+    }
+
+    // Fermer le modal si on clique à l'extérieur de l'image
+    window.onclick = function(event) {
+        var modal = document.getElementById("fullImageModal");
+        if (event.target == modal) {
+            closeImageModal();
+        }
     }
 
     // Copie rapide du texte Miranda
