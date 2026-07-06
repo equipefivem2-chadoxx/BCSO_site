@@ -82,11 +82,20 @@ router.get('/documents', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : LE LIVRET D'INFORMATIONS INTERACTIF
+// 🚀 ROUTE : LE LIVRET D'INFORMATIONS INTERACTIF
 router.get('/documents/livret', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/livret', { 
         title: 'BCSO - Livret d\'informations',
+        user: req.session.user
+    });
+});
+
+// 🚀 NOUVELLE ROUTE : ARRESTATIONS ET PROCÉDURES
+router.get('/arrestations', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/arrestations', { 
+        title: 'BCSO - Arrestations & Procédures',
         user: req.session.user
     });
 });
