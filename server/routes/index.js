@@ -55,7 +55,7 @@ router.get('/reglement', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : Livre des Lois
+// Route pour la page Livre des Lois
 router.get('/lois', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/lois', { 
@@ -73,11 +73,20 @@ router.get('/formations', (req, res) => {
     });
 });
 
-// Route pour la page Documents
+// 🚀 LE HUB DOCUMENTAIRE
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 
-        title: 'BCSO - Documents',
+        title: 'BCSO - Base Documentaire',
+        user: req.session.user
+    });
+});
+
+// 🚀 NOUVELLE ROUTE : LE LIVRET D'INFORMATIONS INTERACTIF
+router.get('/documents/livret', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/livret', { 
+        title: 'BCSO - Livret d\'informations',
         user: req.session.user
     });
 });
