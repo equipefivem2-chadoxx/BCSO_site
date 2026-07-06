@@ -1,99 +1,264 @@
-<style>
-    :root {
-        --primary: #bda581;
-        --primary-glow: rgba(189, 165, 129, 0.15);
-        --bg-card: rgba(15, 23, 42, 0.4);
-        --bg-dark: #07090e; /* 🚀 La couleur de fond premium */
-    }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSO - Authentification Système</title>
+    <!-- Importation de la police du thème -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    /* 🚀 NOUVEAU : Application du fond premium à la page entière */
-    body {
-        margin: 0;
-        background-color: var(--bg-dark);
-        background-image: 
-            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
-            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
-        font-family: 'Montserrat', sans-serif;
-        color: #e2e8f0;
-        min-height: 100vh;
-    }
+    <style>
+        :root {
+            /* Reprise EXACTE des variables de ta page effectifs */
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.15);
+            --bg-card: rgba(15, 23, 42, 0.4);
+            --bg-dark: #07090e;
+        }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    
-    #roster-container { 
-        max-width: 1400px; 
-        margin: 0 auto; 
-        padding-top: 40px; 
-        padding-bottom: 70px; 
-        animation: fadeUp 0.6s ease-out forwards; 
-    }
-    
-    .roster-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 40px; }
-    .roster-header h2 { margin: 0; color: #fff; font-size: 28px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-    .roster-header h2 span { background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .total-badge { background: rgba(189, 165, 129, 0.1); border: 1px solid rgba(189, 165, 129, 0.3); padding: 8px 20px; border-radius: 30px; color: var(--primary); font-weight: bold; letter-spacing: 1px; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            font-family: 'Montserrat', sans-serif;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
 
-    .grade-section { margin-bottom: 50px; animation: fadeUp 0.6s ease-out backwards; }
-    .grade-title { color: #fff; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
-    .grade-title::after { content: ''; height: 1px; flex-grow: 1; background: linear-gradient(to right, var(--primary), transparent); opacity: 0.3; }
-    
-    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    
-    .agent-card { background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(189, 165, 129, 0.1); border-radius: 16px; padding: 25px; transition: all 0.3s ease; position: relative; overflow: hidden; }
-    .agent-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--primary-glow); border-color: rgba(189, 165, 129, 0.3); }
-    
-    .card-accent-top { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(to right, transparent, var(--primary), transparent); opacity: 0.5; }
-    
-    .card-header-agent { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .matricule { font-size: 20px; font-weight: 900; color: var(--primary); font-family: monospace; letter-spacing: 1px; }
-    .status-dot { width: 10px; height: 10px; background-color: #10b981; border-radius: 50%; box-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
-    
-    .agent-name { font-size: 18px; color: #e2e8f0; font-weight: 700; margin-bottom: 8px; }
-    
-    .agent-phone { font-size: 13px; color: #94a3b8; font-family: monospace; display: flex; align-items: center; gap: 8px; }
-    .agent-phone i { color: var(--primary); font-size: 12px; }
-</style>
+        @keyframes fadeUp { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(189, 165, 129, 0.05); }
+            50% { box-shadow: 0 0 30px rgba(189, 165, 129, 0.15); }
+            100% { box-shadow: 0 0 20px rgba(189, 165, 129, 0.05); }
+        }
 
-<div id="roster-container">
-    <div class="roster-header">
-        <h2>Effectifs du <span>Blaine County Sheriff Office</span></h2>
-        <div class="total-badge"><i class="fas fa-users"></i> <%= (typeof total !== 'undefined') ? total : 0 %> AGENTS ACCRÉDITÉS</div>
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* La carte : Calquée sur .agent-card mais dimensionnée pour le login */
+        .login-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(189, 165, 129, 0.2);
+            border-radius: 16px;
+            padding: 45px 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: pulseGlow 4s infinite alternate ease-in-out;
+            overflow: hidden;
+        }
+
+        /* L'accentuation en haut, identique à card-accent-top */
+        .card-accent-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+            opacity: 0.5;
+        }
+
+        /* Lueur subtile derrière le logo */
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        .logo-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            filter: blur(40px);
+            opacity: 0.15;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .login-logo {
+            width: 130px;
+            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.6));
+        }
+
+        .login-title {
+            margin: 0;
+            color: #fff;
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .login-title span {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            font-family: monospace;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-subtitle::before, .login-subtitle::after {
+            content: '';
+            height: 1px;
+            width: 20px;
+            background: rgba(189, 165, 129, 0.3);
+        }
+
+        /* Le Bouton Discord : Totalement intégré au thème, zéro bleu flashy */
+        .discord-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            background: rgba(189, 165, 129, 0.05);
+            border: 1px solid rgba(189, 165, 129, 0.2);
+            color: #e2e8f0;
+            padding: 15px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discord-btn i {
+            color: var(--primary);
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .discord-btn:hover {
+            background: rgba(189, 165, 129, 0.15);
+            border-color: rgba(189, 165, 129, 0.5);
+            color: #ffffff;
+            box-shadow: 0 10px 25px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .discord-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        /* Zone d'erreur stylisée façon terminal */
+        .error-msg {
+            background: rgba(239, 68, 68, 0.05);
+            border-left: 3px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .error-msg i {
+            color: #ef4444;
+            font-size: 16px;
+        }
+        
+        .security-badge {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark);
+            border: 1px solid rgba(189, 165, 129, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            color: var(--primary);
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- La ligne dorée au sommet -->
+            <div class="card-accent-top"></div>
+            
+            <div class="logo-wrapper">
+                <img src="/images/bcso.png" alt="Sceau du BCSO" class="login-logo" onerror="this.style.display='none'">
+            </div>
+            
+            <h2 class="login-title">MDT <span>SYSTEM</span></h2>
+            <div class="login-subtitle">Accès restreint</div>
+
+            <!-- Gestion des erreurs EJS -->
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="error-msg">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <% if (error === 'AccessDenied') { %>
+                            <strong>REFUSÉ :</strong> Habilitations insuffisantes.
+                        <% } else if (error === 'NotOnServer') { %>
+                            <strong>ERREUR :</strong> Accréditation serveur introuvable.
+                        <% } else if (error === 'NoCode') { %>
+                            <strong>ANNULÉ :</strong> Processus d'authentification interrompu.
+                        <% } else { %>
+                            <strong>SYSTÈME :</strong> Une erreur inattendue est survenue.
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Bouton totalement fondu dans l'identité visuelle -->
+            <a href="/auth/discord" class="discord-btn">
+                <i class="fab fa-discord"></i> Initialiser la session
+            </a>
+
+            <!-- Petit détail "Roleplay" qui rend la carte pro -->
+            <div class="security-badge">CONNEXION CHIFFRÉE</div>
+        </div>
     </div>
 
-    <% 
-    if (typeof effectifsTries !== 'undefined' && Object.keys(effectifsTries).length > 0) {
-        let grades = Object.keys(effectifsTries);
-        for(let i = 0; i < grades.length; i++) {
-            let grade = grades[i];
-            let delay = i * 0.1;
-    %>
-            <div class="grade-section" <%- 'style="animation-delay: ' + delay + 's;"' %>>
-                <h3 class="grade-title"><%= grade %></h3>
-                <div class="agents-grid">
-                    <% effectifsTries[grade].forEach(function(agent) { %>
-                        <div class="agent-card">
-                            <div class="card-accent-top"></div>
-                            <div class="card-header-agent">
-                                <span class="matricule">[<%= agent.matricule %>]</span>
-                                <div class="status-dot"></div>
-                            </div>
-                            <div class="agent-name"><%= agent.prenom %> <%= agent.nom %></div>
-                            <div class="agent-phone">
-                                <i class="fas fa-phone-alt"></i> 
-                                <%= agent.telephone && agent.telephone !== 'Non renseigné' ? agent.telephone : 'Numéro masqué' %>
-                            </div>
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
-    <% 
-        }
-    } else { 
-    %>
-        <div style="text-align: center; padding: 100px 0; color: #6b7280; animation: fadeUp 0.6s ease-out forwards;">
-            <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 20px; opacity: 0.3;"></i>
-            <p>Les dossiers des effectifs sont actuellement vides.</p>
-        </div>
-    <% } %>
-</div>
+</body>
+</html>
