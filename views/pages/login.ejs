@@ -3,272 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCSO - Authentification Système MDT Premium</title>
-    <!-- Chargement des Polices Premium Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>BCSO - Authentification</title>
+    <!-- On reprend la même police que tes autres pages -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* Reset de base et variables */
+        /* Exactement les mêmes variables que effectifs.ejs */
         :root {
-            --bg-deep-night: #030611;
-            --bg-glass: rgba(10, 15, 30, 0.85);
-            --bg-glass-active: rgba(15, 20, 35, 0.95);
-            --primary-blue: #0A1A2E;
-            --premium-gold: #D4AF37;
-            --premium-copper: #B87333; /* Pour un dégradé plus riche */
-            --glow-gold: rgba(212, 175, 55, 0.15);
-            --error-red: #EF4444;
-            --text-gold-subtle: rgba(212, 175, 55, 0.8);
-            --discord-brand: #5865F2;
-            --discord-hover: #4752C4;
-            --font-titles: 'Montserrat', sans-serif;
-            --font-body: 'Open Sans', sans-serif;
-            --shadow-sophisticated: 0 15px 45px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.15);
+            --bg-card: rgba(15, 23, 42, 0.4);
+            --bg-dark: #07090e; 
         }
-
+        
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-deep-night);
-            /* Fond complexe et profond avec dégradé radial et texture subtile */
+            background-color: var(--bg-dark);
+            /* Même fond premium exact */
             background-image: 
-                radial-gradient(circle at center, #1A2E44 0%, var(--bg-deep-night) 100%),
-                url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYSkib3BhY2l0eT0iMC4wNSIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZiIgc3RvcC1vcGFjaXR5PSIwLjAyIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiB5dG9wLWNvbG9yPSIjZmZmIiBzdG9wLW9wYWNpdHk9IjAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4=');
-            font-family: var(--font-body);
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            font-family: 'Montserrat', sans-serif;
+            color: #e2e8f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #ffffff;
             overflow: hidden;
-            background-blend-mode: color-burn; /* Pour la texture */
         }
 
-        /* Conteneur principal pour un centrage parfait et une lueur de fond */
-        .page-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .login-wrapper {
+            animation: fadeUp 0.6s ease-out forwards;
             width: 100%;
-            height: 100%;
+            max-width: 400px;
+            padding: 20px;
         }
 
-        /* Lueur dorée subtile derrière la carte pour un effet de profondeur */
-        .page-container::before {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--glow-gold);
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.6;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Carte de connexion Premium Glassmorphism */
-        .login-card-premium {
-            background-color: var(--bg-glass);
-            padding: 50px 60px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-sophisticated);
+        /* Style de carte copié sur tes .agent-card */
+        .login-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(189, 165, 129, 0.2);
+            border-radius: 16px;
+            padding: 45px 40px;
             text-align: center;
-            width: 100%;
-            max-width: 460px;
-            /* Ligne premium dorée avec dégradé et lueur */
-            border-top: 4px solid;
-            border-image: linear-gradient(to right, var(--premium-copper), var(--premium-gold), var(--premium-copper)) 1;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), var(--shadow-sophisticated);
-            backdrop-filter: blur(25px);
             position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
         }
 
-        .login-card-premium:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(212, 175, 55, 0.2);
-        }
-
-        /* Texture de scanline ou de grille subtile à l'intérieur de la carte */
-        .login-card-premium::after {
-            content: '';
+        /* Petite ligne d'accentuation en haut identique aux cartes agents */
+        .card-accent-top {
             position: absolute;
-            inset: 0;
-            background-image: repeating-linear-gradient(rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px, transparent 1px, transparent 2px);
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
             opacity: 0.5;
+            border-radius: 16px 16px 0 0;
         }
 
-        /* Logo avec effet de profondeur et lueur dorée douce */
-        .card-logo {
-            width: 160px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0px 6px 12px rgba(0,0,0,0.7));
-            transition: all 0.3s ease;
-        }
-        
-        .card-logo:hover {
-            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.9));
+        .login-logo {
+            width: 120px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0px 5px 15px rgba(0,0,0,0.5));
         }
 
-        /* Titre Sophistiqué avec Police Montserrat et Effet Métallique subtil */
-        .card-title {
-            margin-bottom: 8px;
-            font-family: var(--font-titles);
-            font-size: 30px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--text-gold-subtle);
+        .login-title {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+            font-weight: 800;
             text-transform: uppercase;
-            background: linear-gradient(135deg, #FFF 20%, #AAA 100%);
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .login-title span {
+            /* Reprise du dégradé de ton h2 span */
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.5);
         }
 
-        /* Sous-titre Professionnel */
-        .card-subtitle {
-            font-family: var(--font-body);
-            color: #A0B3C9;
-            margin-bottom: 40px;
-            font-size: 15px;
-            font-weight: 400;
-            letter-spacing: 0.8px;
+        .login-subtitle {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 35px;
         }
 
-        /* Bouton Discord Haut de Gamme avec Dégradé et Effets Avancés */
-        .discord-btn-premium {
+        /* Bouton Discord revu : Fini le gros bloc bleu, place à l'élégance */
+        .discord-btn {
             display: flex;
-            justify-content: center;
             align-items: center;
-            background-image: linear-gradient(145deg, #5865F2, #4752C4);
-            color: white;
-            padding: 16px 30px;
+            justify-content: center;
+            gap: 12px;
+            background-color: rgba(88, 101, 242, 0.05); /* Fond presque transparent */
+            color: #e2e8f0;
+            border: 1px solid rgba(88, 101, 242, 0.3); /* Bordure bleue subtile */
+            padding: 14px 24px;
             border-radius: 8px;
             text-decoration: none;
-            font-family: var(--font-titles);
-            font-weight: 600;
-            font-size: 16px;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            box-shadow: 0 4px 10px rgba(88, 101, 242, 0.3);
-            width: 100%;
-            max-width: 320px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        /* Lueur dorée subtile au survol pour le bouton Discord */
-        .discord-btn-premium:hover {
-            background-image: linear-gradient(145deg, #4752C4, #3B44B3);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.6), 0 0 10px var(--glow-gold);
-            border-color: rgba(212, 175, 55, 0.2);
-        }
-
-        /* Petite lueur interne lors du clic */
-        .discord-btn-premium:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4), 0 0 5px var(--glow-gold);
-        }
-
-        /* Texte du bouton avec icône intégrée en douceur */
-        .btn-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Icône Discord stylisée et intégrée */
-        .discord-icon-svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
-        }
-
-        /* Notification d'Erreur Translucide et Sophistiquée (CONDITIONNELLE EJS) */
-        .error-notification {
-            color: var(--error-red);
-            background-color: rgba(239, 68, 68, 0.08);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            font-family: var(--font-body);
             font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .discord-btn i {
+            font-size: 18px;
+            color: #5865F2; /* Icône aux couleurs de Discord */
+            transition: all 0.3s ease;
+        }
+
+        .discord-btn:hover {
+            background-color: rgba(88, 101, 242, 0.15);
+            border-color: #5865F2;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.15);
+        }
+
+        /* Messages d'erreur propres et intégrés */
+        .error-msg {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-
-        /* Icône d'erreur stylisée */
-        .error-icon {
-            font-size: 16px;
-            color: #EF4444;
+        
+        .error-msg i {
+            color: #ef4444;
         }
-
-        /* Subtle "SYSTEM ACTIVE" indicator text */
-        .system-status {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            font-family: monospace;
-            font-size: 11px;
-            color: rgba(160, 179, 201, 0.4);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            pointer-events: none;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="page-container">
-        <div class="login-card-premium">
-            <!-- Chemin du logo parfaitement préservé : /images/bcso.png -->
-            <img src="/images/bcso.png" alt="Sceau du BCSO" class="card-logo" onerror="this.style.display='none'">
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="card-accent-top"></div>
             
-            <h2 class="card-title">MDT SYSTEM</h2>
-            <p class="card-subtitle">Accès restreint au personnel autorisé</p>
+            <img src="/images/bcso.png" alt="Sceau du BCSO" class="login-logo" onerror="this.style.display='none'">
+            
+            <h2 class="login-title">MDT <span>SYSTEM</span></h2>
+            <div class="login-subtitle">Accès restreint au personnel autorisé</div>
 
-            <!-- Gestion des erreurs PARFAITEMENT PRÉSERVÉE -->
             <% if (typeof error !== 'undefined' && error) { %>
-                <div class="error-notification">
-                    <span class="error-icon">⚠</span>
-                    <span class="error-message">
-                        <% if (error === 'AccessDenied') { %>
-                            Accès refusé : Habilitations insuffisantes ou profil non reconnu.
-                        <% } else if (error === 'NotOnServer') { %>
-                            Erreur : Impossible de vérifier vos accréditations serveur.
-                        <% } else if (error === 'NoCode') { %>
-                            Erreur : Authentification sécurisée annulée.
-                        <% } else { %>
-                            Une erreur système majeure est survenue.
-                        <% } %>
-                    </span>
+                <div class="error-msg">
+                    <i class="fas fa-shield-alt"></i>
+                    <% if (error === 'AccessDenied') { %>
+                        Habilitations insuffisantes.
+                    <% } else if (error === 'NotOnServer') { %>
+                        Impossible de vérifier vos accréditations.
+                    <% } else if (error === 'NoCode') { %>
+                        Authentification annulée.
+                    <% } else { %>
+                        Une erreur système est survenue.
+                    <% } %>
                 </div>
             <% } %>
 
-            <!-- Chemin de connexion Discord parfaitement préservé : /auth/discord -->
-            <a href="/auth/discord" class="discord-btn-premium">
-                <span class="btn-content">
-                    <svg class="discord-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
-                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.78,56.63.48,80.21a105.73,105.73,0,0,0,32.11,16.15,77.39,77.39,0,0,0,6.89-11.11,67.27,67.27,0,0,1-11-5.22c.93-.68,1.84-1.39,2.72-2.12a74.54,74.54,0,0,0,64.72,0c.87.73,1.79,1.44,2.72,2.12a67.88,67.88,0,0,1-11.11,5.23,77.9,77.9,0,0,0,6.89,11.11,105.2,105.2,0,0,0,32.19-16.14C129.21,50.45,124.83,26.51,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5.12-12.67,11.41-12.67S54,46,53.86,53,48.74,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.12-12.67,11.41-12.67S96.08,46,95.94,53,90.81,65.69,84.69,65.69Z"/>
-                    </svg>
-                    Connexion sécurisée via Discord
-                </span>
+            <a href="/auth/discord" class="discord-btn">
+                <i class="fab fa-discord"></i> Connexion sécurisée
             </a>
-            
-            <div class="system-status">SECURED ACCESS</div>
         </div>
     </div>
 
