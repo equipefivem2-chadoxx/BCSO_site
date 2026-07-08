@@ -135,6 +135,7 @@
         justify-content: center;
         align-items: center;
         gap: 10px;
+        margin-top: auto;
     }
 
     .btn-open:hover {
@@ -142,8 +143,6 @@
         color: #07090e;
         box-shadow: 0 0 15px rgba(189, 165, 129, 0.4);
     }
-    
-    .doc-card.locked { opacity: 0.6; filter: grayscale(100%); pointer-events: none; }
 </style>
 
 <div id="hub-container" class="hub-container">
@@ -159,19 +158,29 @@
             <i class="fas fa-book-open doc-icon"></i>
             <div class="doc-title">Livret d'Informations</div>
             <div class="doc-desc">Manuel complet contenant la hiérarchie, les spécialisations, les codes radio, le protocole CEVITAL et les niveaux d'alertes.</div>
-            <a href="/documents/livret" class="btn-open">Consulter le livret <i class="fas fa-arrow-right"></i></a>
+            <a href="/documents/livret" class="btn-open">Ouvrir le document <i class="fas fa-arrow-right"></i></a>
         </div>
 
-        <!-- ARBRE DE DÉCISION -->
+        <!-- ARBRE DE DÉCISION: ARRESTATIONS -->
         <div class="doc-card">
             <div class="doc-meta">Procédure Active</div>
-            <i class="fas fa-sitemap doc-icon"></i>
-            <div class="doc-title">Procédure d'Arrestations</div>
+            <i class="fas fa-handcuffs doc-icon"></i>
+            <div class="doc-title">Arrestations</div>
             <div class="doc-desc">
                 Arbre de décision détaillant les étapes d'une procédure d'arrestation : palpation, lecture des droits, fouille, droits à l'avocat et placement en cellule.
-                <img src="arbrearesstation.png" alt="Arbre de décision de la procédure d'arrestations">
             </div>
-            <a href="arbrearesstation.png" target="_blank" class="btn-open">Agrandir l'image <i class="fas fa-search-plus"></i></a>
+            <a href="/documents/arrestations" class="btn-open">Ouvrir le diagramme <i class="fas fa-sitemap"></i></a>
+        </div>
+
+        <!-- ARBRE DE DÉCISION: FUSILLADES -->
+        <div class="doc-card">
+            <div class="doc-meta" style="color: #ef4444; background: rgba(239, 68, 68, 0.1);">Règles d'Engagement</div>
+            <i class="fas fa-crosshairs doc-icon" style="color: #ef4444; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.3));"></i>
+            <div class="doc-title">Engagements & Fusillades</div>
+            <div class="doc-desc">
+                Protocole d'intervention selon le niveau de menace : sans arme, arme blanche, ou arme à feu. Règlements concernant le tir sur pneus.
+            </div>
+            <a href="/documents/fusillades" class="btn-open" style="border-color: #ef4444; color: #ef4444;">Ouvrir le diagramme <i class="fas fa-sitemap"></i></a>
         </div>
     </div>
 </div>

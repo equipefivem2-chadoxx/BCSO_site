@@ -82,7 +82,7 @@ router.get('/documents', (req, res) => {
     });
 });
 
-// 🚀 ROUTE : LE LIVRET D'INFORMATIONS INTERACTIF
+// 🚀 ROUTE : LE LIVRET D'INFORMATIONS
 router.get('/documents/livret', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/livret', { 
@@ -91,19 +91,19 @@ router.get('/documents/livret', (req, res) => {
     });
 });
 
-// 🚀 ROUTE : ARRESTATIONS ET PROCÉDURES
-router.get('/arrestations', (req, res) => {
+// 🚀 ROUTE : ARRESTATIONS ET PROCÉDURES (Renommé doc-arrestations pour éviter le conflit)
+router.get('/documents/arrestations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-    res.render('pages/arrestations', { 
-        title: 'BCSO - Arrestations & Procédures',
+    res.render('pages/doc-arrestations', { 
+        title: 'BCSO - Procédure d\'Arrestations',
         user: req.session.user
     });
 });
 
-// 🚀 NOUVELLE ROUTE : ENGAGEMENTS ET FUSILLADES
-router.get('/fusillades', (req, res) => {
+// 🚀 ROUTE : ENGAGEMENTS ET FUSILLADES
+router.get('/documents/fusillades', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-    res.render('pages/fusillades', { 
+    res.render('pages/doc-fusillades', { 
         title: 'BCSO - Engagements & Fusillades',
         user: req.session.user
     });

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.2);
+            --bg-dark: #05070b;
+            --bg-panel: rgba(11, 15, 25, 0.7);
+            --text-main: #e2e8f0;
+            
+            /* Couleurs du schéma d'engagement */
+            --threat-blue: #3b82f6;
+            --threat-yellow: #eab308;
+            --threat-orange: #f97316;
+            --threat-red: #ef4444;
+            --threat-green: #10b981;
+        }
+
+        body {
+            margin: 0; background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(189, 165, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 165, 129, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Montserrat', sans-serif; color: var(--text-main); min-height: 100vh;
+        }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .proc-wrapper { max-width: 1300px; margin: 40px auto 80px auto; padding: 0 20px; animation: fadeUp 0.6s ease-out forwards; }
+
+        /* HEADER */
+        .proc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; background: var(--bg-panel); padding: 30px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-back { background: rgba(189, 165, 129, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 12px 20px; border-radius: 8px; font-weight: 800; text-transform: uppercase; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+        .btn-back:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary-glow); }
+        .proc-title { margin: 0; text-align: right; }
+        .proc-title h1 { font-size: 28px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+        .proc-title p { color: #ef4444; margin: 5px 0 0 0; font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* GRILLE PRINCIPALE (3 COLONNES) */
+        .engagement-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 40px; }
+        @media (max-width: 900px) { .engagement-grid { grid-template-columns: 1fr; } }
+
+        .column { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; display: flex; flex-direction: column; position: relative; }
+        .column-blue { border-top: 4px solid var(--threat-blue); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1); }
+        .column-yellow { border-top: 4px solid var(--threat-yellow); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); }
+        .column-red { border-top: 4px solid var(--threat-red); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.1); }
+
+        .column-header { text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        .column-header h2 { font-size: 18px; font-weight: 900; text-transform: uppercase; margin: 0; letter-spacing: 1px; }
+        .column-blue .column-header h2 { color: var(--threat-blue); }
+        .column-yellow .column-header h2 { color: var(--threat-yellow); }
+        .column-red .column-header h2 { color: var(--threat-red); }
+
+        /* CARTES D'ÉTAPES */
+        .step-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; text-align: center; display: flex; justify-content: center; align-items: center; min-height: 80px; position: relative; }
+        .step-card h4 { margin: 0; font-size: 13px; font-weight: 800; color: #e2e8f0; text-transform: uppercase; letter-spacing: 1px; line-height: 1.4; }
+        
+        .card-blue { border-top: 3px solid var(--threat-blue); background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%); }
+        .card-yellow { border-top: 3px solid var(--threat-yellow); background: linear-gradient(180deg, rgba(234, 179, 8, 0.05) 0%, transparent 100%); }
+        .card-orange { border-top: 3px solid var(--threat-orange); background: linear-gradient(180deg, rgba(249, 115, 22, 0.05) 0%, transparent 100%); }
+        .card-red { border-top: 3px solid var(--threat-red); background: linear-gradient(180deg, rgba(239, 68, 68, 0.1) 0%, transparent 100%); }
+        .card-green { border-top: 3px solid var(--threat-green); background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%); }
+
+        /* FLÈCHES VERTICALES */
+        .arrow-down { text-align: center; color: rgba(255,255,255,0.2); font-size: 20px; margin: 15px 0; }
+
+        /* SÉPARATION ET BRANCHES (Pour la colonne du milieu) */
+        .split-branch { display: flex; gap: 15px; margin-top: 15px; }
+        .branch { flex: 1; display: flex; flex-direction: column; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.02); }
+        .branch-title { text-align: center; color: #94a3b8; font-size: 11px; text-transform: uppercase; margin: 0 0 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; font-weight: 700; letter-spacing: 1px; }
+
+        /* ALERTE PNEUS */
+        .tire-alert { background: linear-gradient(90deg, rgba(127, 29, 29, 0.8) 0%, rgba(153, 27, 27, 0.4) 100%); border: 1px solid #b91c1c; border-left: 5px solid #ef4444; padding: 25px 30px; border-radius: 12px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .tire-alert i { font-size: 40px; color: #fca5a5; }
+        .tire-content h3 { margin: 0 0 5px 0; color: #fff; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .tire-content p { margin: 0; color: #fecaca; font-size: 14px; font-weight: 600; line-height: 1.5; }
+        
+        .btn-view-image { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.3s; margin-top: 30px; width: 100%; text-decoration: none; }
+        .btn-view-image:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="proc-wrapper">
+    
+    <!-- EN-TÊTE -->
+    <div class="proc-header">
+        <a href="/documents" class="btn-back"><i class="fas fa-arrow-left"></i> Hub</a>
+        <div class="proc-title">
+            <h1>Engagements & Fusillades</h1>
+            <p>Règles d'Ouverture du Feu</p>
+        </div>
+    </div>
+
+    <!-- GRILLE DES MENACES -->
+    <div class="engagement-grid">
+        
+        <!-- COLONNE 1 : SANS ARME -->
+        <div class="column column-blue">
+            <div class="column-header">
+                <h2>Menace Sans Arme</h2>
+            </div>
+            
+            <div class="step-card card-yellow"><h4>Utilisation Taser</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-yellow"><h4>Demande de Renforts</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-blue"><h4>Maîtrise de l'individu</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-green"><h4>Arrestation</h4></div>
+        </div>
+
+        <!-- COLONNE 2 : ARME BLANCHE -->
+        <div class="column column-yellow">
+            <div class="column-header">
+                <h2>Menace Armée (Arme Blanche)</h2>
+            </div>
+            
+            <div class="step-card card-orange"><h4>Sommations au Taser ou Arme Létale</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="split-branch">
+                <!-- Sous-branche 1 : Coopération -->
+                <div class="branch">
+                    <h5 class="branch-title">Coopération</h5>
+                    <div class="step-card card-blue"><h4>Maîtrise</h4></div>
+                    <div class="arrow-down"><i class="fas fa-arrow-down" style="font-size: 14px;"></i></div>
+                    <div class="step-card card-green" style="flex-grow: 1;"><h4>Arrestation</h4></div>
+                </div>
+                
+                <!-- Sous-branche 2 : Refus -->
+                <div class="branch">
+                    <h5 class="branch-title">Refus d'obtempérer</h5>
+                    <div class="step-card card-red"><h4>Utilisation Taser / Arme Létale (Si danger)</h4></div>
+                    <div class="arrow-down"><i class="fas fa-arrow-down" style="font-size: 14px;"></i></div>
+                    <div class="step-card card-green"><h4>Arrestation / Soins EMS</h4></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLONNE 3 : ARME À FEU -->
+        <div class="column column-red">
+            <div class="column-header">
+                <h2>Menace Armée (Arme à Feu)</h2>
+            </div>
+            
+            <div class="step-card card-red"><h4>Feu autorisé (Sans sommation)</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-red"><h4>Code 99 / Demande de Renforts</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-red"><h4>Abattre la menace</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-orange"><h4>Sécurisation</h4></div>
+            <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+            
+            <div class="step-card card-green"><h4>Soins EMS</h4></div>
+        </div>
+    </div>
+
+    <!-- RÈGLE SPÉCIALE : PNEUS -->
+    <div class="tire-alert">
+        <i class="fas fa-car-burst"></i>
+        <div class="tire-content">
+            <h3>Tir sur les Pneus</h3>
+            <p>Autorisé si la vie d'autrui est en danger ou lors d'une poursuite avec un véhicule à haut risque.</p>
+        </div>
+    </div>
+
+    <!-- BOUTON POUR VOIR L'IMAGE ORIGINALE -->
+    <a href="/images/image_555602.png" target="_blank" class="btn-view-image">
+        <i class="fas fa-image"></i> Afficher le diagramme d'origine
+    </a>
+
+</div>
+
+</body>
+</html>
