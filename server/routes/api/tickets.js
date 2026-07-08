@@ -7,13 +7,10 @@ router.post('/transcript', async (req, res) => {
     try {
         const { ticketId, channelName, openedBy, closedBy, motif, messages } = req.body;
         
-        // Sécurité basique : s'assurer que les données minimales sont présentes
         if (!ticketId || !channelName || !messages) {
             return res.status(400).json({ success: false, message: 'Données incomplètes.' });
         }
 
-        // 🚀 Sauvegarde MongoDB directe !
-        // (Les images sont déjà hébergées sur Cloudinary par le bot, "messages" contient les URLs propres)
         const nouveauTicket = new Ticket({
             ticketId,
             channelName,
@@ -32,13 +29,12 @@ router.post('/transcript', async (req, res) => {
     }
 });
 
-// 🚀 ROUTE : Le bot envoie le nombre de tickets en cours ici
+// ROUTE : Le bot envoie le nombre de tickets en cours ici
 router.post('/sync-count', (req, res) => {
     try {
         const { count } = req.body;
         
         if (typeof count === 'number') {
-            // Sauvegarde dans la mémoire globale d'Express (ultra rapide)
             req.app.locals.ticketsEnCoursCount = count;
             return res.status(200).json({ success: true, message: 'Compteur mis à jour' });
         }
@@ -55,10 +51,14 @@ router.get('/live-data', async (req, res) => {
         const enCoursCount = req.app.locals.ticketsEnCoursCount || 0;
         const archivesCount = await Ticket.countDocuments();
         
+        // 🚀 NOUVEAU : On récupère aussi les 5 derniers tickets pour le flux en direct
+        const recentTickets = await Ticket.find({}).sort({ dateCreation: -1 }).limit(5);
+        
         return res.json({
             success: true,
             ticketsEnCoursCount: enCoursCount,
-            ticketsArchivesCount: archivesCount
+            ticketsArchivesCount: archivesCount,
+            recentTickets: recentTickets
         });
     } catch (error) {
         console.error('Erreur lors de la récupération des données live:', error);

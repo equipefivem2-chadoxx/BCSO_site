@@ -2,10 +2,9 @@
     :root {
         --primary: #bda581;
         --bg-card: rgba(15, 23, 42, 0.4);
-        --bg-dark: #07090e; /* 🚀 La couleur de fond premium */
+        --bg-dark: #07090e; 
     }
     
-    /* 🚀 NOUVEAU : On force le fond de la page pour qu'il soit identique aux autres */
     body {
         margin: 0;
         background-color: var(--bg-dark);
@@ -21,29 +20,21 @@
     #archives-container { 
         max-width: 1400px; 
         margin: 0 auto; 
-        padding-top: 40px; /* Ajout d'un petit espace en haut pour s'aligner avec le reste */
+        padding-top: 40px; 
         padding-bottom: 60px; 
         animation: fadeIn 0.4s ease-out forwards; 
     }
     
     .archive-header { 
         background: linear-gradient(90deg, rgba(189, 165, 129, 0.1) 0%, transparent 100%); 
-        padding: 25px 30px; 
-        border-left: 4px solid var(--primary); 
-        border-radius: 12px; 
-        margin-bottom: 35px; 
+        padding: 25px 30px; border-left: 4px solid var(--primary); border-radius: 12px; margin-bottom: 35px; 
     }
     .archive-header h2 { margin: 0; font-size: 24px; color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
     .archive-header p { margin: 5px 0 0 0; color: #94a3b8; font-size: 14px; }
 
     .search-panel { 
-        background: var(--bg-card); 
-        border: 1px solid rgba(255, 255, 255, 0.03); 
-        border-top: 1px solid rgba(189, 165, 129, 0.1);
-        border-radius: 16px; 
-        padding: 25px 30px; 
-        margin-bottom: 30px; 
-        backdrop-filter: blur(10px); 
+        background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 16px; padding: 25px 30px; margin-bottom: 30px; backdrop-filter: blur(10px); 
     }
     .search-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
     .search-group { display: flex; flex-direction: column; gap: 8px; }
@@ -56,12 +47,8 @@
     .btn-search:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(189, 165, 129, 0.3); }
 
     .table-panel { 
-        background: var(--bg-card); 
-        border: 1px solid rgba(255, 255, 255, 0.03); 
-        border-top: 1px solid rgba(189, 165, 129, 0.1);
-        border-radius: 16px; 
-        padding: 25px; 
-        backdrop-filter: blur(10px); 
+        background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 16px; padding: 25px; backdrop-filter: blur(10px); transition: all 0.3s;
     }
     .archive-table { width: 100%; border-collapse: collapse; }
     .archive-table th { text-align: left; padding: 15px; color: #94a3b8; font-size: 12px; font-weight: 700; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); letter-spacing: 1px; }
@@ -103,7 +90,7 @@
         </form>
     </div>
 
-    <div class="table-panel">
+    <div class="table-panel" id="live-table-panel">
         <% if (typeof tickets !== 'undefined' && tickets.length > 0) { %>
             <table class="archive-table">
                 <thead>
@@ -147,3 +134,37 @@
         <% } %>
     </div>
 </div>
+
+<!-- 🚀 SCRIPT D'ACTUALISATION SANS CLIGNOTEMENT -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const fetchLiveArchives = async () => {
+            try {
+                const response = await fetch(window.location.href);
+                const html = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newTablePanel = doc.getElementById('live-table-panel');
+                const currentTablePanel = document.getElementById('live-table-panel');
+                
+                if (newTablePanel && currentTablePanel) {
+                    // 🚀 CONDITIONS DE MISE À JOUR :
+                    // On ne remplace le HTML que s'il y a un réel changement (nouveau ticket ou suppression)
+                    if (currentTablePanel.innerHTML !== newTablePanel.innerHTML) {
+                        currentTablePanel.innerHTML = newTablePanel.innerHTML;
+                        
+                        // Petit effet visuel optionnel pour confirmer la mise à jour
+                        currentTablePanel.style.boxShadow = "0 0 20px rgba(189, 165, 129, 0.3)";
+                        setTimeout(() => currentTablePanel.style.boxShadow = "none", 800);
+                    }
+                }
+            } catch (error) {
+                console.error("Erreur actualisation archives:", error);
+            }
+        };
+
+        // Actualisation en fond toutes les 5 secondes
+        setInterval(fetchLiveArchives, 5000);
+    });
+</script>

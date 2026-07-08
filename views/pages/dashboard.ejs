@@ -3,10 +3,9 @@
         --primary: #bda581;
         --primary-glow: rgba(189, 165, 129, 0.15);
         --bg-card: rgba(15, 23, 42, 0.4);
-        --bg-dark: #07090e; /* 🚀 Fond uniforme */
+        --bg-dark: #07090e;
     }
 
-    /* 🚀 NOUVEAU : Application du fond premium à la page entière */
     body {
         margin: 0;
         background-color: var(--bg-dark);
@@ -19,7 +18,6 @@
         overflow-x: hidden;
     }
 
-    /* 🚀 ANIMATIONS FLUIDES EN CASCADE */
     @keyframes fadeUp {
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
@@ -43,7 +41,6 @@
         margin: 0 auto;
     }
 
-    /* BANNIÈRE DE BIENVENUE 2.0 */
     .master-header {
         position: relative;
         overflow: hidden;
@@ -110,7 +107,6 @@
         animation: shine 4s infinite;
     }
 
-    /* GRILLE DES STATISTIQUES (KPIs) 2.0 */
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -172,7 +168,6 @@
     .kpi-data h3 { margin: 0; font-size: 13px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
     .kpi-data p { margin: 5px 0 0 0; font-size: 38px; font-weight: 900; color: #ffffff; letter-spacing: -1px; }
 
-    /* SECTION ACTIVITÉ RÉCENTE 2.0 */
     .recent-section {
         background: var(--bg-card);
         border: 1px solid rgba(255, 255, 255, 0.03);
@@ -234,7 +229,6 @@
     .empty-pulse i { font-size: 45px; margin-bottom: 20px; opacity: 0.5; animation: pulse 2s infinite; color: var(--primary); }
     @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 0.3; } }
 
-    /* LISTE DU FLUX EN DIRECT */
     .recent-list { display: flex; flex-direction: column; gap: 15px; }
     .recent-item { 
         background: rgba(0,0,0,0.25);
@@ -325,7 +319,7 @@
         </div>
     </div>
 
-    <div class="recent-section">
+    <div class="recent-section" id="dynamic-recent-section">
         <div class="recent-header">
             <h3><i class="fas fa-satellite-dish" style="color: var(--primary);"></i> Flux de données en direct</h3>
             <div class="sync-status">
@@ -333,63 +327,97 @@
             </div>
         </div>
         
-        <% if (typeof recentTickets !== 'undefined' && recentTickets.length > 0) { %>
-            <div class="recent-list">
-                <% recentTickets.forEach(ticket => { %>
-                    <div class="recent-item">
-                        <div class="recent-info">
-                            <div class="recent-title">Dossier <span>#<%= ticket.channelName %></span></div>
-                            <div class="recent-meta">
-                                <span><i class="fas fa-user-shield"></i> Validé par : <%= ticket.closedBy %></span>
-                                <span><i class="fas fa-folder-open"></i> Type : <%= ticket.motif.charAt(0).toUpperCase() + ticket.motif.slice(1) %></span>
-                                <span><i class="fas fa-clock"></i> <%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></span>
+        <!-- 🚀 Conteneur Cible pour l'actualisation du JS -->
+        <div id="dynamic-recent-list">
+            <% if (typeof recentTickets !== 'undefined' && recentTickets.length > 0) { %>
+                <div class="recent-list">
+                    <% recentTickets.forEach(ticket => { %>
+                        <div class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-title">Dossier <span>#<%= ticket.channelName %></span></div>
+                                <div class="recent-meta">
+                                    <span><i class="fas fa-user-shield"></i> Validé par : <%= ticket.closedBy %></span>
+                                    <span><i class="fas fa-folder-open"></i> Type : <%= ticket.motif.charAt(0).toUpperCase() + ticket.motif.slice(1) %></span>
+                                    <span><i class="fas fa-clock"></i> <%= new Date(ticket.dateCreation).toLocaleDateString('fr-FR') %></span>
+                                </div>
                             </div>
+                            <a href="/archives/<%= ticket._id %>" class="btn-open">Ouvrir <i class="fas fa-chevron-right"></i></a>
                         </div>
-                        <a href="/archives/<%= ticket._id %>" class="btn-open">Ouvrir <i class="fas fa-chevron-right"></i></a>
-                    </div>
-                <% }); %>
-            </div>
-        <% } else { %>
-            <div class="empty-pulse">
-                <i class="fas fa-database"></i>
-                <p style="font-weight: 600; letter-spacing: 1px;">EN ATTENTE DES TRANSMISSIONS DU BOT DISCORD...</p>
-            </div>
-        <% } %>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="empty-pulse">
+                    <i class="fas fa-database"></i>
+                    <p style="font-weight: 600; letter-spacing: 1px;">EN ATTENTE DES TRANSMISSIONS DU BOT DISCORD...</p>
+                </div>
+            <% } %>
+        </div>
     </div>
 
 </div>
 
+<!-- 🚀 SCRIPT AMÉLIORÉ : Actualise les compteurs ET la liste des dossiers -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const enCoursCounter = document.getElementById('live-tickets-encours');
         const archivesCounter = document.getElementById('live-tickets-archives');
+        const recentListContainer = document.getElementById('dynamic-recent-list');
 
-        // Demande au serveur les nouvelles données en tâche de fond
+        // Construit le HTML de la liste des dossiers récents
+        const updateRecentTickets = (tickets) => {
+            if (!tickets || tickets.length === 0) return;
+            
+            let html = '<div class="recent-list">';
+            tickets.forEach(ticket => {
+                const dateObj = new Date(ticket.dateCreation);
+                const dateStr = dateObj.toLocaleDateString('fr-FR');
+                const motif = ticket.motif ? (ticket.motif.charAt(0).toUpperCase() + ticket.motif.slice(1)) : 'Inconnu';
+                
+                html += `
+                    <div class="recent-item">
+                        <div class="recent-info">
+                            <div class="recent-title">Dossier <span>#${ticket.channelName}</span></div>
+                            <div class="recent-meta">
+                                <span><i class="fas fa-user-shield"></i> Validé par : ${ticket.closedBy || 'Inconnu'}</span>
+                                <span><i class="fas fa-folder-open"></i> Type : ${motif}</span>
+                                <span><i class="fas fa-clock"></i> ${dateStr}</span>
+                            </div>
+                        </div>
+                        <a href="/archives/${ticket._id}" class="btn-open">Ouvrir <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            // 🚀 Ne remplace le code HTML QUE s'il y a un vrai changement (évite les bugs d'affichage)
+            if (recentListContainer.innerHTML.replace(/\s+/g, '') !== html.replace(/\s+/g, '')) {
+                recentListContainer.innerHTML = html;
+            }
+        };
+
         const fetchLiveStats = async () => {
             try {
                 const response = await fetch('/api/tickets/live-data');
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Met à jour les valeurs si elles ont changé
                     updateCounter(enCoursCounter, data.ticketsEnCoursCount);
                     updateCounter(archivesCounter, data.ticketsArchivesCount);
+                    updateRecentTickets(data.recentTickets); // 🚀 Ajout Magique
                 }
             } catch (error) {
                 console.error("Erreur de synchronisation en arrière-plan :", error);
             }
         };
 
-        // Gère l'effet visuel fluide lors du changement de valeur
         const updateCounter = (element, newValue) => {
             if (element && element.innerText != newValue) {
                 element.style.transition = "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s";
                 element.style.transform = "scale(1.35)";
-                element.style.color = "var(--primary)"; // Flash couleur Or
+                element.style.color = "var(--primary)"; 
                 
                 element.innerText = newValue;
                 
-                // Retour à la normale après l'animation
                 setTimeout(() => {
                     element.style.transform = "scale(1)";
                     element.style.color = "";
@@ -397,7 +425,6 @@
             }
         };
 
-        // Vérification automatique toutes les 5 secondes (5000ms)
         setInterval(fetchLiveStats, 5000);
     });
 </script>
