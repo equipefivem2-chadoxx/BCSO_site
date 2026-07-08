@@ -63,7 +63,8 @@
     .master-header::before {
         content: '';
         position: absolute;
-        top: 0; left: 0; width: 5px; height: 100%;
+        top: 0;
+        left: 0; width: 5px; height: 100%;
         background: linear-gradient(to bottom, transparent, var(--primary), transparent);
         box-shadow: 0 0 20px var(--primary);
     }
@@ -102,7 +103,8 @@
     .badge-premium::after {
         content: '';
         position: absolute;
-        top: 0; left: -100%; width: 50%; height: 100%;
+        top: 0;
+        left: -100%; width: 50%; height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         transform: skewX(-20deg);
         animation: shine 4s infinite;
@@ -146,7 +148,8 @@
     .kpi-card::before {
         content: '';
         position: absolute;
-        bottom: 0; right: 0; width: 150px; height: 150px;
+        bottom: 0;
+        right: 0; width: 150px; height: 150px;
         background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
         opacity: 0;
         transition: 0.4s;
@@ -220,7 +223,8 @@
     }
     
     .sync-dot {
-        width: 8px; height: 8px;
+        width: 8px;
+        height: 8px;
         background: #10b981;
         border-radius: 50%;
         animation: pulse-green 2s infinite;
@@ -233,17 +237,17 @@
     /* LISTE DU FLUX EN DIRECT */
     .recent-list { display: flex; flex-direction: column; gap: 15px; }
     .recent-item { 
-        background: rgba(0,0,0,0.25); 
+        background: rgba(0,0,0,0.25);
         border: 1px solid rgba(255,255,255,0.02); 
         border-left: 4px solid transparent;
         border-radius: 10px; 
         padding: 20px 25px; 
-        display: flex; justify-content: space-between; align-items: center; 
+        display: flex; justify-content: space-between; align-items: center;
         transition: all 0.3s ease; 
     }
     
     .recent-item:hover { 
-        border-color: rgba(189,165,129,0.3); 
+        border-color: rgba(189,165,129,0.3);
         border-left-color: var(--primary);
         background: linear-gradient(90deg, rgba(189,165,129,0.05) 0%, transparent 100%);
         transform: translateX(8px); 
@@ -258,7 +262,7 @@
     .recent-meta i { color: var(--primary); font-size: 14px; }
     
     .btn-open { 
-        background: rgba(189,165,129,0.1); 
+        background: rgba(189,165,129,0.1);
         color: var(--primary); 
         padding: 12px 25px; 
         border-radius: 8px; 
@@ -266,14 +270,14 @@
         font-weight: 800; 
         font-size: 13px; 
         border: 1px solid rgba(189,165,129,0.2); 
-        transition: all 0.3s; 
+        transition: all 0.3s;
         display: flex; align-items: center; gap: 10px; 
         text-transform: uppercase;
         letter-spacing: 1px;
     }
     .btn-open:hover { 
         background: var(--primary); 
-        color: #07090e; 
+        color: #07090e;
         box-shadow: 0 0 20px var(--primary-glow); 
         transform: scale(1.05);
     }
@@ -290,29 +294,26 @@
     </div>
 
     <div class="kpi-grid">
-        <!-- Tickers en cours -->
         <div class="kpi-card">
             <div class="kpi-icon" style="color: #60a5fa; background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.2);">
                 <i class="fas fa-headset"></i>
             </div>
             <div class="kpi-data">
                 <h3>Tickets en cours</h3>
-                <p><%= locals.ticketsEnCoursCount || 0 %></p>
+                <p id="live-tickets-encours"><%= locals.ticketsEnCoursCount || 0 %></p>
             </div>
         </div>
 
-        <!-- Rapports Validés -->
         <div class="kpi-card">
             <div class="kpi-icon" style="color: var(--primary); background: rgba(189, 165, 129, 0.1); border: 1px solid rgba(189, 165, 129, 0.2);">
                 <i class="fas fa-file-signature"></i>
             </div>
             <div class="kpi-data">
                 <h3>Rapports Validés</h3>
-                <p><%= locals.ticketsArchivesCount || 0 %></p>
+                <p id="live-tickets-archives"><%= locals.ticketsArchivesCount || 0 %></p>
             </div>
         </div>
 
-        <!-- Effectifs Accrédités -->
         <div class="kpi-card">
             <div class="kpi-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);">
                 <i class="fas fa-id-card-clip"></i>
@@ -357,3 +358,46 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const enCoursCounter = document.getElementById('live-tickets-encours');
+        const archivesCounter = document.getElementById('live-tickets-archives');
+
+        // Demande au serveur les nouvelles données en tâche de fond
+        const fetchLiveStats = async () => {
+            try {
+                const response = await fetch('/api/tickets/live-data');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Met à jour les valeurs si elles ont changé
+                    updateCounter(enCoursCounter, data.ticketsEnCoursCount);
+                    updateCounter(archivesCounter, data.ticketsArchivesCount);
+                }
+            } catch (error) {
+                console.error("Erreur de synchronisation en arrière-plan :", error);
+            }
+        };
+
+        // Gère l'effet visuel fluide lors du changement de valeur
+        const updateCounter = (element, newValue) => {
+            if (element && element.innerText != newValue) {
+                element.style.transition = "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s";
+                element.style.transform = "scale(1.35)";
+                element.style.color = "var(--primary)"; // Flash couleur Or
+                
+                element.innerText = newValue;
+                
+                // Retour à la normale après l'animation
+                setTimeout(() => {
+                    element.style.transform = "scale(1)";
+                    element.style.color = "";
+                }, 400);
+            }
+        };
+
+        // Vérification automatique toutes les 5 secondes (5000ms)
+        setInterval(fetchLiveStats, 5000);
+    });
+</script>

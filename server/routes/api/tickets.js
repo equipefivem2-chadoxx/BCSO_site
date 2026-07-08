@@ -47,4 +47,21 @@ router.post('/sync-count', (req, res) => {
     }
 });
 
+// 🚀 ROUTE D'ACTUALISATION EN DIRECT (Interrogée en tâche de fond par le Dashboard)
+router.get('/live-data', async (req, res) => {
+    try {
+        const enCoursCount = req.app.locals.ticketsEnCoursCount || 0;
+        const archivesCount = await Ticket.countDocuments();
+        
+        return res.json({
+            success: true,
+            ticketsEnCoursCount: enCoursCount,
+            ticketsArchivesCount: archivesCount
+        });
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données live:', error);
+        return res.status(500).json({ success: false });
+    }
+});
+
 module.exports = router;
