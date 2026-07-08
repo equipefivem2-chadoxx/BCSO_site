@@ -22,8 +22,9 @@ app.set('layout', 'layouts/main');
 
 // 2. Middlewares natifs
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// 🚀 NOUVEAU : On augmente la limite à 50 Mo pour accepter les lourdes images Base64 des archives
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // 3. Configuration de la session (Modulaire)
 app.use(session({
