@@ -43,16 +43,16 @@
     .evidence-img { height: 120px; border-radius: 8px; border: 1px solid rgba(189, 165, 129, 0.3); cursor: pointer; transition: 0.2s; object-fit: cover; }
     .evidence-img:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(189, 165, 129, 0.2); border-color: var(--primary); }
 
-    .final-report-wrapper { margin-top: 50px; background: var(--bg-card); border: 1px solid var(--primary); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; backdrop-filter: blur(10px); }
+    .final-report-wrapper { margin-top: 20px; background: var(--bg-card); border: 1px solid var(--primary); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; backdrop-filter: blur(10px); }
     .final-report-wrapper::before { content: 'DOCUMENT OFFICIEL'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #07090e; color: var(--primary); padding: 4px 20px; font-weight: 800; letter-spacing: 3px; font-size: 12px; border: 1px solid var(--primary); border-radius: 20px; }
     .final-report-body { padding: 40px; }
     .report-field { margin-bottom: 25px; }
     .report-label { color: var(--primary); font-size: 12px; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; display: block; letter-spacing: 1.5px; opacity: 0.9; }
-    
     .report-value { background: rgba(0, 0, 0, 0.3); padding: 18px 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; line-height: 1.7; font-size: 14px; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-    
     .report-hr { border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(189, 165, 129, 0.5), transparent); margin: 35px 0; }
 </style>
+
+<div id="messages-secure-data" style="display: none;" data-json="<%= JSON.stringify(ticket.messages || []) %>"></div>
 
 <div id="mdt-container">
     <div class="mdt-header">
@@ -60,11 +60,10 @@
         <div class="mdt-title">ARCHIVE <span>#<%= ticket.channelName %></span></div>
         <div>
             <% 
-            const gradesAutorises = ['admin', 'Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I'];
-            const userGrade = (user && user.grade) ? user.grade : (user && user.role) ? user.role : '';
-            if (gradesAutorises.map(g => g.toLowerCase()).includes(userGrade.toLowerCase()) || userGrade.toLowerCase() === 'admin') { 
+            const aLeDroit = (typeof agentConnecte !== 'undefined' && agentConnecte && (agentConnecte.canDeleteArchives || agentConnecte.isAdmin));
+            if (aLeDroit) { 
             %>
-                <form action="/archives/delete/<%= ticket._id.toString() %>" method="POST" onsubmit="return confirm('⚠️ ATTENTION : Supprimer définitivement ce dossier du BCSO ? Cette action est irréversible.');">
+                <form action="/archives/supprimer/<%= ticket._id.toString() %>" method="POST" onsubmit="return confirm('⚠️ ATTENTION : Supprimer définitivement ce dossier du BCSO ? Cette action est irréversible.');">
                     <button type="submit" class="btn-delete"><i class="fas fa-trash-alt"></i> SUPPRIMER</button>
                 </form>
             <% } else { %>
@@ -93,58 +92,111 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const rawMessages = `<%- JSON.stringify(ticket.messages).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"') %>`;
-        const messages = JSON.parse(rawMessages);
+        // Lecture sécurisée du conteneur HTML invisible
+        const secureContainer = document.getElementById('messages-secure-data');
+        const messages = JSON.parse(secureContainer.getAttribute('data-json') || '[]');
         
         const container = document.getElementById('dynamic-content');
         const threads = { "GÉNÉRAL": [] };
         let currentThread = "GÉNÉRAL";
         let finalReportHtml = "";
 
+        // Fonction de nettoyage et parsing ultra robuste du rapport d'opération
+        function parseFinalReport(text) {
+            let cleanText = text
+                .replace(/╔════════════════════╗/g, '')
+                .replace(/🚨 TITRE OPÉRATION 🚨/g, '')
+                .replace(/╚════════════════════╝/g, '')
+                .replace(/━━━━━━━━━━━━━━━━━━━━/g, '<hr class="report-hr">')
+                .replace(/Décrivez précisément les faits, le déroulement de l'intervention et son dénouement\.\.\./g, '');
+
+            // Liste de détection des balises de champs
+            const regexFields = /(📅 Date \/ Heure :|📍 Secteur :|⚖️ Infraction :|👥 Suspects(?:\s*:)??|🎭 Otages(?:\s*:)??|🚗 Véhicules Impliqués(?:\s*:)??|🚗 Véhicules(?:\s*:)??|📢 Revendications(?:\s*:)??|🎖️ Lead Terrain :|🤝 Lead Négociations :|📝 Rapport d'Opération|Compte-rendu :|COMPTE-RENDU :)/gi;
+
+            let parts = cleanText.split(regexFields);
+            let parsedOutput = "";
+            let currentLabel = "";
+
+            for (let i = 0; i < parts.length; i++) {
+                let part = parts[i] ? parts[i].trim() : '';
+                if (!part) continue;
+
+                if (part.match(regexFields)) {
+                    currentLabel = part;
+                } else {
+                    if (currentLabel) {
+                        parsedOutput += `
+                            <div class="report-field">
+                                <span class="report-label">${currentLabel}</span>
+                                <div class="report-value">${part}</div>
+                            </div>
+                        `;
+                        currentLabel = "";
+                    } else {
+                        if(part !== '<hr class="report-hr">') {
+                            parsedOutput += `<div class="report-value" style="margin-bottom: 15px;">${part}</div>`;
+                        } else {
+                            parsedOutput += part;
+                        }
+                    }
+                }
+            }
+            return parsedOutput;
+        }
+
+        // Formatage intelligent du timestamp Discord / MongoDB
+        function formatTime(timeStr) {
+            if (!timeStr) return "Date inconnue";
+            const d = new Date(timeStr);
+            return !isNaN(d.getTime()) ? d.toLocaleString('fr-FR') : timeStr;
+        }
+
         messages.forEach(msg => {
             let contentText = msg.content ? msg.content.trim() : '';
 
             if (contentText === '*Message vide ou embed non pris en charge*') return;
 
-            const sectionMatch = contentText.match(/DÉBUT DE LA SECTION : (.*?)\*\*/);
+            // Détection du changement de section / salon interne
+            const sectionMatch = contentText.match(/DÉBUT DE LA SECTION : (.*?)\*\*/i);
             if (sectionMatch) {
                 currentThread = sectionMatch[1].trim().toUpperCase();
                 if (!threads[currentThread]) threads[currentThread] = [];
                 return;
             }
 
+            // Détection et extraction du format de rapport d'opération global
             if (contentText.includes('🚨 TITRE OPÉRATION 🚨') || contentText.includes('╔════════════════════╗')) {
-                finalReportHtml = contentText
-                    .replace(/╔════════════════════╗/g, '')
-                    .replace(/🚨 TITRE OPÉRATION 🚨/g, '')
-                    .replace(/╚════════════════════╝/g, '')
-                    .replace(/━━━━━━━━━━━━━━━━━━━━/g, '<hr class="report-hr">')
-                    .replace(/Décrivez précisément les faits, le déroulement de l'intervention et son dénouement\.\.\./g, '')
-                    .replace(/(📅 Date \/ Heure :|📍 Secteur :|⚖️ Infraction :|👥 Suspects|🎭 Otages|🚗 Véhicules|📢 Revendications|🎖️ Lead Terrain :|🤝 Lead Négociations :|📝 Rapport d'Opération|Compte-rendu :|COMPTE-RENDU :)/gi, 
-                             '</div><div class="report-field"><span class="report-label">$1</span><div class="report-value">');
-                
-                finalReportHtml = finalReportHtml.replace('</div>', '');
+                finalReportHtml += parseFinalReport(contentText);
                 return;
             }
 
+            // Analyse et extraction des images
             let images = [];
+            
+            // Format 1 : Extraction via tag textuel [IMAGE]
             if (contentText.includes('[IMAGE]')) {
                 const parts = contentText.split('[IMAGE]');
                 contentText = parts[0].trim();
-                
                 const urlStr = parts[1].trim();
-                const urls = urlStr.split(/\s+/); 
+                const urls = urlStr.split(/\s+/);
                 urls.forEach(url => { 
-                    if (url && url.startsWith('http')) {
-                        images.push(url); 
-                    }
+                    if (url && url.startsWith('http')) images.push(url); 
+                });
+            }
+            
+            // Format 2 : Support natif si pièce jointe de base de données structurée
+            if (msg.attachments && Array.isArray(msg.attachments)) {
+                msg.attachments.forEach(att => {
+                    if (att.url) images.push(att.url);
+                    else if (typeof att === 'string' && att.startsWith('http')) images.push(att);
                 });
             }
 
+            // Push du message traité s'il contient du contenu valide
             if (contentText !== "" || images.length > 0) {
                 threads[currentThread].push({
-                    author: msg.author,
-                    time: msg.timestamp,
+                    author: msg.author || "Système",
+                    time: msg.timestamp || "",
                     text: contentText,
                     pics: images
                 });
@@ -153,13 +205,27 @@
 
         let htmlOutput = "";
 
+        // Injection du Rapport d'Opération en haut de page si détecté
+        if (finalReportHtml !== "") {
+            htmlOutput += `
+                <div class="final-report-wrapper">
+                    <div class="final-report-body">
+                        <h3 style="color: var(--primary); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-top: 0; margin-bottom: 30px; text-align: center;"><i class="fas fa-file-invoice"></i> COMPTE-RENDU SYNTHÉTIQUE</h3>
+                        ${finalReportHtml}
+                    </div>
+                </div>
+                <div style="height: 40px;"></div>
+            `;
+        }
+
+        // Injection chronologique des salons et discussions indexées
         for (const [threadName, msgs] of Object.entries(threads)) {
             if (msgs.length === 0) continue;
 
             htmlOutput += `
                 <div class="thread-section">
                     <div class="thread-header">
-                        <i class="fas fa-folder-open thread-icon"></i>
+                        <i class="fas fa-comments thread-icon"></i>
                         <span class="thread-title-text">${threadName}</span>
                     </div>
                     <div class="thread-body">
@@ -181,27 +247,22 @@
                     <div class="msg-item">
                         <div class="msg-header">
                             <span class="msg-author"><i class="fas fa-user-circle"></i> ${m.author}</span>
-                            <span class="msg-date">${m.time}</span>
+                            <span class="msg-date">${formatTime(m.time)}</span>
                         </div>
                         ${textHtml}
                         ${picsHtml}
                     </div>
                 `;
             });
-
             htmlOutput += `</div></div>`;
         }
 
-        if (finalReportHtml !== "") {
-            htmlOutput += `
-                <div class="final-report-wrapper">
-                    <div class="final-report-body">
-                        ${finalReportHtml}
-                    </div>
-                </div>
-            `;
-        }
-
-        container.innerHTML = htmlOutput;
+        // Rendu final ou message d'erreur élégant si vide
+        container.innerHTML = htmlOutput || `
+            <div style="text-align: center; color: #94a3b8; padding: 50px 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(189,165,129,0.2);">
+                <i class="fas fa-folder-open" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
+                <p style="margin: 0; font-weight: 600;">Aucune transcription textuelle ou rapport trouvé pour ce dossier.</p>
+            </div>
+        `;
     });
 </script>

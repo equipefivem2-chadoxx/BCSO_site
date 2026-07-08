@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Ticket = require('../models/Ticket');
-const Agent = require('../models/Agent'); // 🚀 NOUVEAU : On importe le modèle Agent
+const Agent = require('../models/Agent'); 
 
+// 🚀 AFFICHAGE DE LA LISTE DES ARCHIVES
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -30,7 +31,6 @@ router.get('/', async (req, res) => {
 
         const tickets = await Ticket.find(query).sort({ dateCreation: -1 });
 
-        // 🚀 NOUVEAU : On cherche l'agent en base de données pour vérifier ses droits (bouton corbeille EJS)
         let agentConnecte = null;
         if (req.session.user && req.session.user.id) {
             agentConnecte = await Agent.findOne({ discordId: req.session.user.id });
@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
             title: 'BCSO - Archives & Transcriptions',
             tickets: tickets,
             filters: req.query,
-            agentConnecte: agentConnecte // On envoie l'agent à la vue EJS
+            agentConnecte: agentConnecte 
         });
     } catch (error) {
         console.error('Erreur affichage archives:', error);
@@ -48,17 +48,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+// 🚀 AFFICHAGE DU DÉTAIL D'UNE ARCHIVE
 router.get('/:ticketId', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
     try {
         let ticket;
         
-        // 🚀 CORRECTION : On cherche d'abord par l'ID unique (qui ne fait jamais de doublons)
+        // Recherche par ID unique de base de données
         if (req.params.ticketId.match(/^[0-9a-fA-F]{24}$/)) {
             ticket = await Ticket.findById(req.params.ticketId);
         } else {
-            // Sécurité pour la rétrocompatibilité (si un lien a gardé l'ancien format, on prend le plus récent)
+            // Rétrocompatibilité par nom de channel
             ticket = await Ticket.findOne({ channelName: req.params.ticketId }).sort({ dateCreation: -1 });
         }
         
@@ -66,10 +67,17 @@ router.get('/:ticketId', async (req, res) => {
             return res.status(404).render('pages/404', { message: 'Dossier introuvable', title: '404' });
         }
 
+        // Récupération de l'agent pour synchroniser les permissions d'affichage du bouton de suppression
+        let agentConnecte = null;
+        if (req.session.user && req.session.user.id) {
+            agentConnecte = await Agent.findOne({ discordId: req.session.user.id });
+        }
+
         res.render('pages/archive-detail', {
             title: `Dossier #${ticket.channelName}`,
             ticket: ticket,
-            user: req.session.user
+            user: req.session.user,
+            agentConnecte: agentConnecte
         });
     } catch (error) {
         console.error('Erreur ouverture dossier:', error);
@@ -77,35 +85,23 @@ router.get('/:ticketId', async (req, res) => {
     }
 });
 
-// 🚀 NOUVEAU : Route de suppression mise à jour (renommée en /supprimer pour matcher l'EJS)
+// 🚀 ROUTE DE SUPPRESSION SÉCURISÉE VIA LA BASE DE DONNÉES
 router.post('/supprimer/:id', async (req, res) => {
-    // 1. Vérification de connexion de base
     if (!req.session.user) return res.redirect('/auth/login');
     
     try {
-        // 2. On récupère l'agent lié à la session
         const agentConnecte = await Agent.findOne({ discordId: req.session.user.id });
         
-        // 3. On vérifie les vraies permissions via le modèle Agent
         if (agentConnecte && (agentConnecte.canDeleteArchives || agentConnecte.isAdmin)) {
-            console.log(`Tentative de suppression de l'archive ID: ${req.params.id} par ${agentConnecte.prenom} ${agentConnecte.nom}`);
-            
-            // Suppression dans la base de données
-            const deletedTicket = await Ticket.findByIdAndDelete(req.params.id);
-            
-            if (deletedTicket) {
-                console.log('✅ Dossier supprimé avec succès.');
-            } else {
-                console.log('❌ Erreur : Dossier introuvable dans la base de données.');
-            }
+            console.log(`✅ Suppression validée de l'archive ID: ${req.params.id} par ${agentConnecte.prenom} ${agentConnecte.nom}`);
+            await Ticket.findByIdAndDelete(req.params.id);
         } else {
-            console.log(`⛔ Action refusée : L'agent ${req.session.user.username} n'a pas les droits requis.`);
+            console.log(`⛔ Action refusée : Droits insuffisants pour supprimer.`);
         }
     } catch (error) {
-        console.error('❌ Erreur critique lors de la suppression du dossier:', error);
+        console.error('❌ Erreur lors de la suppression du dossier:', error);
     }
     
-    // 4. Redirection vers la liste des archives
     res.redirect('/archives');
 });
 
