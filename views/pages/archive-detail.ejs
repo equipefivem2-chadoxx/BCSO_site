@@ -1,63 +1,144 @@
-<style>
-    :root {
-        --primary: #bda581;
-        --bg-card: rgba(15, 23, 42, 0.4);
-    }
-    
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    #mdt-container { max-width: 1200px; margin: 40px auto; padding-bottom: 80px; animation: slideUp 0.4s ease-out; font-family: 'Montserrat', sans-serif; }
-    
-    .mdt-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 25px; margin-bottom: 30px; }
-    .btn-back { background: rgba(189, 165, 129, 0.05); color: var(--primary); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; border: 1px solid rgba(189, 165, 129, 0.3); transition: 0.3s; display: flex; align-items: center; gap: 8px; }
-    .btn-back:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(189, 165, 129, 0.3); }
-    
-    .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
-    .btn-delete:hover { background: #ef4444; color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BCSO - Détail Archive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 
-    .mdt-title { font-size: 26px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
-    .mdt-title span { color: var(--primary); }
+    <style>
+        :root {
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.15);
+            --bg-dark: #07090e;
+            --bg-card: rgba(15, 23, 42, 0.4);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
 
-    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
-    .info-card { background: var(--bg-card); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.03); border-top: 1px solid rgba(189, 165, 129, 0.1); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; }
-    .info-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--primary); opacity: 0.8; }
-    .info-label { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; display: block; }
-    .info-value { color: #fff; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-    .info-icon { color: var(--primary); background: rgba(189, 165, 129, 0.1); padding: 8px; border-radius: 6px; font-size: 14px; }
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
 
-    .thread-section { background: rgba(0,0,0,0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; margin-bottom: 30px; overflow: hidden; backdrop-filter: blur(5px); }
-    .thread-header { background: rgba(189, 165, 129, 0.05); padding: 15px 25px; border-bottom: 1px solid rgba(189, 165, 129, 0.1); display: flex; align-items: center; gap: 12px; }
-    .thread-icon { color: var(--primary); font-size: 18px; }
-    .thread-title-text { color: var(--primary); font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-    .thread-body { padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-    
-    .msg-item { display: flex; flex-direction: column; gap: 8px; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); padding-bottom: 15px; }
-    .msg-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .msg-header { display: flex; justify-content: space-between; align-items: center; }
-    .msg-author { color: #fff; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-    .msg-author i { color: var(--primary); font-size: 14px; }
-    .msg-date { color: #6b7280; font-size: 12px; font-weight: 600; }
-    
-    .msg-content { color: #cbd5e1; font-size: 14px; line-height: 1.6; white-space: pre-wrap; padding-left: 20px; border-left: 2px solid rgba(189, 165, 129, 0.3); word-wrap: break-word; overflow-wrap: break-word; }
-    
-    .msg-images { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-left: 20px; }
-    .evidence-img { height: 120px; border-radius: 8px; border: 1px solid rgba(189, 165, 129, 0.3); cursor: pointer; transition: 0.2s; object-fit: cover; }
-    .evidence-img:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(189, 165, 129, 0.2); border-color: var(--primary); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .final-report-wrapper { margin-top: 20px; background: var(--bg-card); border: 1px solid var(--primary); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; backdrop-filter: blur(10px); }
-    .final-report-wrapper::before { content: 'DOCUMENT OFFICIEL'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #07090e; color: var(--primary); padding: 4px 20px; font-weight: 800; letter-spacing: 3px; font-size: 12px; border: 1px solid var(--primary); border-radius: 20px; }
-    .final-report-body { padding: 40px; }
-    .report-field { margin-bottom: 25px; }
-    .report-label { color: var(--primary); font-size: 12px; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; display: block; letter-spacing: 1.5px; opacity: 0.9; }
-    .report-value { background: rgba(0, 0, 0, 0.3); padding: 18px 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); color: #f8fafc; line-height: 1.7; font-size: 14px; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
-    .report-hr { border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(189, 165, 129, 0.5), transparent); margin: 35px 0; }
-</style>
+        #mdt-container { 
+            max-width: 1200px; 
+            margin: 60px auto; 
+            padding: 0 20px 100px 20px; 
+            animation: fadeUp 0.6s ease-out forwards; 
+        }
+        
+        .mdt-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid rgba(189, 165, 129, 0.2); 
+            padding-bottom: 25px; margin-bottom: 40px; 
+        }
+        
+        .btn-back { 
+            background: rgba(189, 165, 129, 0.05); color: var(--primary); 
+            padding: 10px 20px; border-radius: 8px; text-decoration: none; 
+            font-weight: 700; border: 1px solid rgba(189, 165, 129, 0.3); 
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; 
+        }
+        .btn-back:hover { 
+            background: var(--primary); color: #000; 
+            box-shadow: 0 0 15px var(--primary-glow); 
+        }
+        
+        .btn-delete { 
+            background: rgba(239, 68, 68, 0.1); color: #ef4444; 
+            border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 20px; 
+            border-radius: 8px; font-weight: 700; cursor: pointer; 
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; 
+        }
+        .btn-delete:hover { 
+            background: #ef4444; color: #fff; 
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); 
+        }
 
+        .title-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-size: 2.2rem;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 24px; margin-bottom: 50px; 
+        }
+        
+        .premium-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(189, 165, 129, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .premium-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px var(--primary-glow); border-color: rgba(189, 165, 129, 0.3); }
+        .card-accent { position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--primary), transparent); opacity: 0.8; }
+        
+        .info-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; margin-bottom: 12px; display: block; }
+        .info-value { color: #fff; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+        .info-icon { color: var(--primary); background: rgba(189, 165, 129, 0.1); padding: 10px; border-radius: 8px; font-size: 14px; }
+
+        .thread-section { background: rgba(15, 23, 42, 0.2); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 16px; margin-bottom: 30px; overflow: hidden; backdrop-filter: blur(5px); }
+        .thread-header { background: rgba(189, 165, 129, 0.03); padding: 20px 30px; border-bottom: 1px solid rgba(189, 165, 129, 0.1); display: flex; align-items: center; gap: 15px; }
+        .thread-icon { color: var(--primary); font-size: 18px; }
+        .thread-title-text { color: var(--primary); font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .thread-body { padding: 30px; display: flex; flex-direction: column; gap: 25px; }
+        
+        .msg-item { display: flex; flex-direction: column; gap: 12px; border-bottom: 1px dashed rgba(255, 255, 255, 0.05); padding-bottom: 20px; }
+        .msg-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .msg-header { display: flex; justify-content: space-between; align-items: center; }
+        .msg-author { color: #fff; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+        .msg-author i { color: var(--primary); font-size: 16px; }
+        .msg-date { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; }
+        
+        .msg-content { color: var(--text-main); font-size: 0.95rem; line-height: 1.7; white-space: pre-wrap; padding-left: 26px; border-left: 2px solid rgba(189, 165, 129, 0.3); word-wrap: break-word; overflow-wrap: break-word; }
+        
+        .msg-images { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; padding-left: 26px; }
+        .evidence-img { height: 150px; border-radius: 10px; border: 1px solid rgba(189, 165, 129, 0.3); cursor: pointer; transition: 0.3s; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .evidence-img:hover { transform: translateY(-5px); box-shadow: 0 10px 20px var(--primary-glow); border-color: var(--primary); }
+        .broken-img-badge { background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 10px 15px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-block; }
+
+        .final-report-wrapper { margin-top: 50px; background: var(--bg-card); border: 1px solid var(--primary); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative; backdrop-filter: blur(10px); }
+        .final-report-wrapper::before { content: 'RAPPORT OFFICIEL'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--bg-dark); color: var(--primary); padding: 4px 25px; font-weight: 900; letter-spacing: 4px; font-size: 0.8rem; border: 1px solid var(--primary); border-radius: 20px; }
+        .final-report-body { padding: 50px 40px; }
+        
+        .report-field { margin-bottom: 30px; }
+        .report-label { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; font-weight: 900; margin-bottom: 12px; display: block; letter-spacing: 2px; }
+        .report-value { background: rgba(0, 0, 0, 0.4); padding: 20px 25px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.03); color: #f8fafc; line-height: 1.8; font-size: 0.95rem; white-space: pre-wrap; word-wrap: break-word; border-left: 3px solid rgba(189, 165, 129, 0.5); }
+        .report-hr { border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(189, 165, 129, 0.4), transparent); margin: 40px 0; }
+    </style>
+</head>
+<body>
+
+<!-- 🔒 Données sécurisées -->
 <div id="messages-secure-data" style="display: none;" data-json="<%= JSON.stringify(ticket.messages || []) %>"></div>
 
 <div id="mdt-container">
     <div class="mdt-header">
         <a href="/archives" class="btn-back"><i class="fas fa-arrow-left"></i> RETOUR</a>
-        <div class="mdt-title">ARCHIVE <span>#<%= ticket.channelName %></span></div>
+        <h1 class="title-gradient">ARCHIVE #<%= ticket.channelName %></h1>
         <div>
             <% 
             const aLeDroit = (typeof agentConnecte !== 'undefined' && agentConnecte && (agentConnecte.canDeleteArchives || agentConnecte.isAdmin));
@@ -73,15 +154,18 @@
     </div>
 
     <div class="info-grid">
-        <div class="info-card">
+        <div class="premium-card">
+            <div class="card-accent"></div>
             <span class="info-label">Date de clôture</span>
             <div class="info-value"><i class="fas fa-calendar-check info-icon"></i> <%= new Date(ticket.dateCreation).toLocaleString('fr-FR') %></div>
         </div>
-        <div class="info-card">
+        <div class="premium-card">
+            <div class="card-accent"></div>
             <span class="info-label">Ouvert par</span>
             <div class="info-value"><i class="fas fa-folder-open info-icon"></i> <%= ticket.openedBy %></div>
         </div>
-        <div class="info-card">
+        <div class="premium-card">
+            <div class="card-accent"></div>
             <span class="info-label">Clôturé par</span>
             <div class="info-value"><i class="fas fa-user-shield info-icon"></i> <%= ticket.closedBy %></div>
         </div>
@@ -92,7 +176,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // Lecture sécurisée du conteneur HTML invisible
         const secureContainer = document.getElementById('messages-secure-data');
         const messages = JSON.parse(secureContainer.getAttribute('data-json') || '[]');
         
@@ -101,7 +184,7 @@
         let currentThread = "GÉNÉRAL";
         let finalReportHtml = "";
 
-        // Fonction de nettoyage et parsing ultra robuste du rapport d'opération
+        // Parseur du Rapport Final
         function parseFinalReport(text) {
             let cleanText = text
                 .replace(/╔════════════════════╗/g, '')
@@ -110,7 +193,6 @@
                 .replace(/━━━━━━━━━━━━━━━━━━━━/g, '<hr class="report-hr">')
                 .replace(/Décrivez précisément les faits, le déroulement de l'intervention et son dénouement\.\.\./g, '');
 
-            // Liste de détection des balises de champs
             const regexFields = /(📅 Date \/ Heure :|📍 Secteur :|⚖️ Infraction :|👥 Suspects(?:\s*:)??|🎭 Otages(?:\s*:)??|🚗 Véhicules Impliqués(?:\s*:)??|🚗 Véhicules(?:\s*:)??|📢 Revendications(?:\s*:)??|🎖️ Lead Terrain :|🤝 Lead Négociations :|📝 Rapport d'Opération|Compte-rendu :|COMPTE-RENDU :)/gi;
 
             let parts = cleanText.split(regexFields);
@@ -134,7 +216,7 @@
                         currentLabel = "";
                     } else {
                         if(part !== '<hr class="report-hr">') {
-                            parsedOutput += `<div class="report-value" style="margin-bottom: 15px;">${part}</div>`;
+                            parsedOutput += `<div class="report-value" style="margin-bottom: 20px;">${part}</div>`;
                         } else {
                             parsedOutput += part;
                         }
@@ -144,19 +226,18 @@
             return parsedOutput;
         }
 
-        // Formatage intelligent du timestamp Discord / MongoDB
         function formatTime(timeStr) {
             if (!timeStr) return "Date inconnue";
             const d = new Date(timeStr);
             return !isNaN(d.getTime()) ? d.toLocaleString('fr-FR') : timeStr;
         }
 
+        // Nettoyage et organisation des messages
         messages.forEach(msg => {
             let contentText = msg.content ? msg.content.trim() : '';
 
             if (contentText === '*Message vide ou embed non pris en charge*') return;
 
-            // Détection du changement de section / salon interne
             const sectionMatch = contentText.match(/DÉBUT DE LA SECTION : (.*?)\*\*/i);
             if (sectionMatch) {
                 currentThread = sectionMatch[1].trim().toUpperCase();
@@ -164,35 +245,34 @@
                 return;
             }
 
-            // Détection et extraction du format de rapport d'opération global
             if (contentText.includes('🚨 TITRE OPÉRATION 🚨') || contentText.includes('╔════════════════════╗')) {
                 finalReportHtml += parseFinalReport(contentText);
                 return;
             }
 
-            // Analyse et extraction des images
             let images = [];
             
-            // Format 1 : Extraction via tag textuel [IMAGE]
+            // 🚀 CORRECTION IMAGES : Extraction d'URL ultra robuste via Regex
             if (contentText.includes('[IMAGE]')) {
                 const parts = contentText.split('[IMAGE]');
                 contentText = parts[0].trim();
-                const urlStr = parts[1].trim();
-                const urls = urlStr.split(/\s+/);
-                urls.forEach(url => { 
-                    if (url && url.startsWith('http')) images.push(url); 
-                });
+                
+                // On cherche n'importe quelle URL valide (http ou https) dans ce qui suit le tag
+                const urlRegex = /(https?:\/\/[^\s"'<>]+)/g;
+                const urlsTrouvees = parts[1].match(urlRegex);
+                
+                if (urlsTrouvees) {
+                    urlsTrouvees.forEach(url => images.push(url));
+                }
             }
             
-            // Format 2 : Support natif si pièce jointe de base de données structurée
             if (msg.attachments && Array.isArray(msg.attachments)) {
                 msg.attachments.forEach(att => {
-                    if (att.url) images.push(att.url);
-                    else if (typeof att === 'string' && att.startsWith('http')) images.push(att);
+                    let url = att.url || (typeof att === 'string' ? att : '');
+                    if (url.startsWith('http')) images.push(url);
                 });
             }
 
-            // Push du message traité s'il contient du contenu valide
             if (contentText !== "" || images.length > 0) {
                 threads[currentThread].push({
                     author: msg.author || "Système",
@@ -205,20 +285,7 @@
 
         let htmlOutput = "";
 
-        // Injection du Rapport d'Opération en haut de page si détecté
-        if (finalReportHtml !== "") {
-            htmlOutput += `
-                <div class="final-report-wrapper">
-                    <div class="final-report-body">
-                        <h3 style="color: var(--primary); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-top: 0; margin-bottom: 30px; text-align: center;"><i class="fas fa-file-invoice"></i> COMPTE-RENDU SYNTHÉTIQUE</h3>
-                        ${finalReportHtml}
-                    </div>
-                </div>
-                <div style="height: 40px;"></div>
-            `;
-        }
-
-        // Injection chronologique des salons et discussions indexées
+        // 1. On injecte D'ABORD les discussions et salons
         for (const [threadName, msgs] of Object.entries(threads)) {
             if (msgs.length === 0) continue;
 
@@ -236,7 +303,15 @@
                 if (m.pics.length > 0) {
                     picsHtml = `<div class="msg-images">`;
                     m.pics.forEach(pic => {
-                        picsHtml += `<a href="${pic}" target="_blank"><img src="${pic}" class="evidence-img" alt="Preuve non disponible"></a>`;
+                        // Ajout d'une sécurité onerror : si l'image Discord est expirée, on affiche un badge propre au lieu d'une image cassée.
+                        picsHtml += `
+                            <div>
+                                <a href="${pic}" target="_blank">
+                                    <img src="${pic}" class="evidence-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                                    <span class="broken-img-badge" style="display:none;"><i class="fas fa-link-slash"></i> Lien image expiré</span>
+                                </a>
+                            </div>
+                        `;
                     });
                     picsHtml += `</div>`;
                 }
@@ -257,12 +332,26 @@
             htmlOutput += `</div></div>`;
         }
 
-        // Rendu final ou message d'erreur élégant si vide
+        // 2. On injecte ENSUITE le rapport d'opération (tout en bas)
+        if (finalReportHtml !== "") {
+            htmlOutput += `
+                <div class="final-report-wrapper">
+                    <div class="final-report-body">
+                        <h3 style="color: var(--primary); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-top: 0; margin-bottom: 40px; text-align: center;"><i class="fas fa-file-signature"></i> COMPTE-RENDU SYNTHÉTIQUE</h3>
+                        ${finalReportHtml}
+                    </div>
+                </div>
+            `;
+        }
+
         container.innerHTML = htmlOutput || `
-            <div style="text-align: center; color: #94a3b8; padding: 50px 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(189,165,129,0.2);">
+            <div style="text-align: center; color: var(--text-muted); padding: 50px 20px; background: var(--bg-card); border-radius: 16px; border: 1px dashed rgba(189,165,129,0.2);">
                 <i class="fas fa-folder-open" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
                 <p style="margin: 0; font-weight: 600;">Aucune transcription textuelle ou rapport trouvé pour ce dossier.</p>
             </div>
         `;
     });
 </script>
+
+</body>
+</html>
