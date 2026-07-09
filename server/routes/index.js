@@ -91,8 +91,8 @@ router.get('/documents/livret', (req, res) => {
     });
 });
 
-// 🚀 ROUTE 2 DU HUB : LA NOUVELLE PAGE ARBRE DE PROCÉDURE
-router.get('/documents/arbre-arrestations', (req, res) => {
+// 🚀 ROUTE 2 DU HUB : LA PAGE ARBRE DE PROCÉDURE (Lien corrigé en doc-arrestations !)
+router.get('/documents/doc-arrestations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-arrestations', { 
         title: 'BCSO - Arbre d\'Arrestations',
