@@ -7,9 +7,6 @@ const effectifsRoutes = require('./effectifs');
 const archivesRoutes = require('./archives');
 const apiTicketsRoutes = require('./api/tickets');
 
-// 🚀 AJOUT DU NOUVEAU MODULE COMMANDEMENT
-const superviseurRoutes = require('./superviseur');
-
 router.get('/', (req, res) => {
     if (req.session.user) {
         res.redirect('/dashboard');
@@ -136,9 +133,6 @@ router.use('/admin', adminRoutes);
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
-
-// 🚀 LIAISON DU NOUVEAU MODULE SUPERVISEUR
-router.use('/superviseur', superviseurRoutes);
 
 router.use((req, res) => {
     res.status(404).render('pages/404', { message: 'Page introuvable', title: '404' });

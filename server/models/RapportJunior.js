@@ -22,7 +22,7 @@ const rapportJuniorSchema = new mongoose.Schema({
     impartialite: { type: String, default: 'Non Evalué' },
     contactProximite: { type: String, default: 'Non Evalué' },
     
-    // Remarque générale
+    // Remarques
     remarques: { type: String, default: '' },
     dateCreation: { type: Date, default: Date.now }
 });
