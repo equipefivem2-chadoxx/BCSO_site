@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #bda581;
+            --primary-glow: rgba(189, 165, 129, 0.2);
+            --bg-dark: #05070b;
+            --bg-panel: rgba(15, 23, 42, 0.6);
+            --text-main: #e2e8f0;
+
+            /* Couleurs des catégories du tableur adaptées au mode sombre */
+            --c-artisanale: #f97316; /* Orange */
+            --c-legere: #8b5cf6;     /* Violet */
+            --c-lourde: #3b82f6;     /* Bleu */
+            --c-guerre: #ef4444;     /* Rouge */
+            --c-blanche: #9ca3af;    /* Gris */
+            --c-contondante: #ec4899; /* Rose */
+            --c-incendiaire: #14b8a6; /* Turquoise */
+        }
+
+        body {
+            margin: 0; background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(189, 165, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 165, 129, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Montserrat', sans-serif; color: var(--text-main); min-height: 100vh;
+        }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .proc-wrapper { max-width: 1400px; margin: 40px auto 80px auto; padding: 0 20px; animation: fadeUp 0.6s ease-out forwards; }
+
+        /* HEADER */
+        .proc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; background: var(--bg-panel); padding: 30px; border-radius: 20px; border: 1px solid rgba(189, 165, 129, 0.2); backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .btn-back { background: rgba(189, 165, 129, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 12px 20px; border-radius: 8px; font-weight: 800; text-transform: uppercase; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
+        .btn-back:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary-glow); }
+        .proc-title { text-align: right; }
+        .proc-title h1 { font-size: 28px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+        .proc-title p { color: var(--primary); margin: 5px 0 0 0; font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* GRILLE DES ARMES */
+        .weapons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            align-items: start;
+        }
+
+        /* CATÉGORIE CARD */
+        .weapon-category {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .weapon-category:hover { transform: translateY(-5px); }
+
+        .cat-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Thèmes de couleurs */
+        .cat-artisanales .cat-header { background: rgba(249, 115, 22, 0.15); border-bottom: 2px solid var(--c-artisanale); color: var(--c-artisanale); }
+        .cat-legeres .cat-header { background: rgba(139, 92, 246, 0.15); border-bottom: 2px solid var(--c-legere); color: var(--c-legere); }
+        .cat-lourdes .cat-header { background: rgba(59, 130, 246, 0.15); border-bottom: 2px solid var(--c-lourde); color: var(--c-lourde); }
+        .cat-guerres .cat-header { background: rgba(239, 68, 68, 0.15); border-bottom: 2px solid var(--c-guerre); color: var(--c-guerre); }
+        .cat-blanches .cat-header { background: rgba(156, 163, 175, 0.15); border-bottom: 2px solid var(--c-blanche); color: var(--c-blanche); }
+        .cat-contondantes .cat-header { background: rgba(236, 72, 153, 0.15); border-bottom: 2px solid var(--c-contondante); color: var(--c-contondante); }
+        .cat-incendiaires .cat-header { background: rgba(20, 184, 166, 0.15); border-bottom: 2px solid var(--c-incendiaire); color: var(--c-incendiaire); }
+
+        /* TABLEAUX */
+        .weapon-table { width: 100%; border-collapse: collapse; }
+        .weapon-table th {
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .weapon-table td {
+            padding: 12px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #e2e8f0;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            text-align: center;
+        }
+        .weapon-table tr:hover td { background: rgba(255,255,255,0.02); }
+        
+        .ammo-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #cbd5e1;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="proc-wrapper">
+    
+    <!-- EN-TÊTE -->
+    <div class="proc-header">
+        <a href="/documents" class="btn-back"><i class="fas fa-arrow-left"></i> Retour au Hub</a>
+        <div class="proc-title">
+            <h1>Armurerie Centrale</h1>
+            <p>Classification Officielle des Armes</p>
+        </div>
+    </div>
+
+    <!-- GRILLE DES ARMES -->
+    <div class="weapons-grid">
+
+        <!-- ARTISANALES -->
+        <div class="weapon-category cat-artisanales">
+            <div class="cat-header"><i class="fas fa-hammer"></i> Artisanales</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th><th>Munitions</th></tr></thead>
+                <tbody>
+                    <tr><td>.38 SPECIAL</td><td><span class="ammo-badge">45.ACP</span></td></tr>
+                    <tr><td>Colt.M1911</td><td><span class="ammo-badge">45.ACP</span></td></tr>
+                    <tr><td>Remington M87</td><td><span class="ammo-badge">CAL.12</span></td></tr>
+                    <tr><td>RUGER SR40</td><td><span class="ammo-badge">45.ACP</span></td></tr>
+                    <tr><td>Smith & Wesson Model 15</td><td><span class="ammo-badge">45.ACP</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- LÉGÈRES -->
+        <div class="weapon-category cat-legeres">
+            <div class="cat-header"><i class="fas fa-gun"></i> Légères</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th><th>Munitions</th></tr></thead>
+                <tbody>
+                    <tr><td>AUTO MAG AMP MODEL 180</td><td><span class="ammo-badge">44.MAGNUM</span></td></tr>
+                    <tr><td>BERETTA 92FS</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>DESERT EAGLE</td><td><span class="ammo-badge">44.MAGNUM</span></td></tr>
+                    <tr><td>GLOCK.18C</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>GLOCK.19</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>HK P30</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>PYTHON .357 MAGNUM CTG</td><td><span class="ammo-badge">44.MAGNUM</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- LOURDES -->
+        <div class="weapon-category cat-lourdes">
+            <div class="cat-header"><i class="fas fa-person-rifle"></i> Lourdes</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th><th>Munitions</th></tr></thead>
+                <tbody>
+                    <tr><td>HECKLER & KOCH MP5</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>IMI UZI</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>INTRATECH TEC-DC9</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>MILITARY.A CORPORATION MAC-10</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>MOSSBERG 500</td><td><span class="ammo-badge">CAL.12</span></td></tr>
+                    <tr><td>MOSSBERG 590</td><td><span class="ammo-badge">CAL.12</span></td></tr>
+                    <tr><td>REMINGTON 870 1.0</td><td><span class="ammo-badge">CAL.12</span></td></tr>
+                    <tr><td>SKORPION VZ.61</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>THOMPSON M1928A1</td><td><span class="ammo-badge">45.ACP</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- GUERRES -->
+        <div class="weapon-category cat-guerres">
+            <div class="cat-header"><i class="fas fa-jet-fighter"></i> Guerres</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th><th>Munitions</th></tr></thead>
+                <tbody>
+                    <tr><td>AK-47</td><td><span class="ammo-badge">7,62mm</span></td></tr>
+                    <tr><td>AK-74U</td><td><span class="ammo-badge">7,62mm</span></td></tr>
+                    <tr><td>IMI GALIL</td><td><span class="ammo-badge">5,56mm</span></td></tr>
+                    <tr><td>RPD</td><td><span class="ammo-badge">9mm</span></td></tr>
+                    <tr><td>SAUER 101 HUNTING RIFLE</td><td><span class="ammo-badge">-</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BLANCHES -->
+        <div class="weapon-category cat-blanches">
+            <div class="cat-header"><i class="fas fa-khanda"></i> Blanches</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th></tr></thead>
+                <tbody>
+                    <tr><td>Bouteille cassée</td></tr>
+                    <tr><td>Couteau</td></tr>
+                    <tr><td>Couteau à cran d'arrêt</td></tr>
+                    <tr><td>Dague</td></tr>
+                    <tr><td>Hache</td></tr>
+                    <tr><td>Hache de guerre</td></tr>
+                    <tr><td>Hache en pierre</td></tr>
+                    <tr><td>Hachette</td></tr>
+                    <tr><td>Machette</td></tr>
+                    <tr><td>Poing Américain</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- CONTONDANTES -->
+        <div class="weapon-category cat-contondantes">
+            <div class="cat-header"><i class="fas fa-baseball-bat-ball"></i> Contondantes</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th></tr></thead>
+                <tbody>
+                    <tr><td>Batte de Baseball</td></tr>
+                    <tr><td>Clé Anglaise</td></tr>
+                    <tr><td>Flashlight</td></tr>
+                    <tr><td>Golf Club</td></tr>
+                    <tr><td>Marteau</td></tr>
+                    <tr><td>Matraque</td></tr>
+                    <tr><td>Pied de biche</td></tr>
+                    <tr><td>Queue de Billard</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- INCENDIAIRES -->
+        <div class="weapon-category cat-incendiaires">
+            <div class="cat-header"><i class="fas fa-fire"></i> Incendiaires</div>
+            <table class="weapon-table">
+                <thead><tr><th>Noms</th></tr></thead>
+                <tbody>
+                    <tr><td>Bombe artisanale</td></tr>
+                    <tr><td>C4</td></tr>
+                    <tr><td>Cocktail Molotov</td></tr>
+                    <tr><td>Grenade</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

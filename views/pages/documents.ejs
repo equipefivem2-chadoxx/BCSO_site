@@ -47,13 +47,12 @@
         color: #94a3b8; font-size: 1rem; margin-top: 10px; font-weight: 500;
     }
 
-    /* 🚀 Centrage parfait pour 2 cartes */
+    /* 🚀 Grille ajustée pour 3 cartes */
     .doc-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
         gap: 30px;
-        max-width: 900px; 
-        margin: 0 auto;
+        width: 100%;
     }
 
     .doc-card {
@@ -148,7 +147,7 @@
     </div>
 
     <div class="doc-grid">
-        <!-- LE LIVRET V2 -->
+        <!-- CARTE 1 : LE LIVRET V2 -->
         <div class="doc-card">
             <div class="doc-meta">V2.0 - Officiel</div>
             <i class="fas fa-book-open doc-icon"></i>
@@ -157,7 +156,7 @@
             <a href="/documents/livret" class="btn-open">Ouvrir le document <i class="fas fa-arrow-right"></i></a>
         </div>
 
-        <!-- ARBRE DE DÉCISION: ARRESTATIONS -->
+        <!-- CARTE 2 : ARBRE DE DÉCISION: ARRESTATIONS -->
         <div class="doc-card">
             <div class="doc-meta">Procédure Active</div>
             <i class="fas fa-handcuffs doc-icon"></i>
@@ -165,8 +164,18 @@
             <div class="doc-desc">
                 Arbre de décision détaillant les étapes d'une procédure d'arrestation : palpation, lecture des droits, fouille, droits à l'avocat et placement en cellule.
             </div>
-            <!-- Ce bouton redirige vers ton doc-arrestations.ejs magnifique -->
             <a href="/documents/doc-arrestations" class="btn-open">Ouvrir le diagramme <i class="fas fa-sitemap"></i></a>
+        </div>
+
+        <!-- CARTE 3 : CATÉGORIES DES ARMES -->
+        <div class="doc-card">
+            <div class="doc-meta" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);">Base de Données</div>
+            <i class="fas fa-crosshairs doc-icon" style="color: #f59e0b; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));"></i>
+            <div class="doc-title">Catégories d'Armes</div>
+            <div class="doc-desc">
+                Classification officielle de l'armement : armes artisanales, légères, lourdes, de guerre, blanches, contondantes et incendiaires.
+            </div>
+            <a href="/documents/armes" class="btn-open" style="border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.05);">Consulter l'Armurerie <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </div>
