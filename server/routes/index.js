@@ -91,20 +91,11 @@ router.get('/documents/livret', (req, res) => {
     });
 });
 
-// 🚀 ROUTE : ARRESTATIONS ET PROCÉDURES (Renommé doc-arrestations pour éviter le conflit)
+// 🚀 ROUTE : ARRESTATIONS ET PROCÉDURES
 router.get('/documents/arrestations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-arrestations', { 
         title: 'BCSO - Procédure d\'Arrestations',
-        user: req.session.user
-    });
-});
-
-// 🚀 ROUTE : ENGAGEMENTS ET FUSILLADES
-router.get('/documents/fusillades', (req, res) => {
-    if (!req.session.user) return res.redirect('/auth/login');
-    res.render('pages/doc-fusillades', { 
-        title: 'BCSO - Engagements & Fusillades',
         user: req.session.user
     });
 });

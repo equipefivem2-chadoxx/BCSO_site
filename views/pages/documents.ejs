@@ -47,10 +47,13 @@
         color: #94a3b8; font-size: 1rem; margin-top: 10px; font-weight: 500;
     }
 
+    /* 🚀 Centrage parfait pour 2 cartes */
     .doc-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
         gap: 30px;
+        max-width: 900px; 
+        margin: 0 auto;
     }
 
     .doc-card {
@@ -96,13 +99,6 @@
         line-height: 1.6;
         margin-bottom: 30px;
         flex-grow: 1;
-    }
-
-    .doc-desc img {
-        margin-top: 15px;
-        max-width: 100%;
-        border-radius: 8px;
-        border: 1px solid rgba(189, 165, 129, 0.3);
     }
 
     .doc-meta {
@@ -169,18 +165,8 @@
             <div class="doc-desc">
                 Arbre de décision détaillant les étapes d'une procédure d'arrestation : palpation, lecture des droits, fouille, droits à l'avocat et placement en cellule.
             </div>
+            <!-- Ce bouton redirige vers ton doc-arrestations.ejs magnifique -->
             <a href="/documents/arrestations" class="btn-open">Ouvrir le diagramme <i class="fas fa-sitemap"></i></a>
-        </div>
-
-        <!-- ARBRE DE DÉCISION: FUSILLADES -->
-        <div class="doc-card">
-            <div class="doc-meta" style="color: #ef4444; background: rgba(239, 68, 68, 0.1);">Règles d'Engagement</div>
-            <i class="fas fa-crosshairs doc-icon" style="color: #ef4444; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.3));"></i>
-            <div class="doc-title">Engagements & Fusillades</div>
-            <div class="doc-desc">
-                Protocole d'intervention selon le niveau de menace : sans arme, arme blanche, ou arme à feu. Règlements concernant le tir sur pneus.
-            </div>
-            <a href="/documents/fusillades" class="btn-open" style="border-color: #ef4444; color: #ef4444;">Ouvrir le diagramme <i class="fas fa-sitemap"></i></a>
         </div>
     </div>
 </div>
