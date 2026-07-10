@@ -3,88 +3,77 @@
 <style>
     :root { --primary: #bda581; --primary-glow: rgba(189, 165, 129, 0.2); --bg-panel: rgba(11, 15, 25, 0.8); }
     body { margin: 0; background-color: #07090e; font-family: 'Montserrat', sans-serif; color: #e2e8f0; padding-left: 280px; background-image: radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%), radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%); min-height: 100vh; }
-    .form-wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px; animation: fadeUp 0.5s ease-out forwards; }
+    .form-wrapper { max-width: 1000px; margin: 40px auto; padding: 0 20px; animation: fadeUp 0.5s ease-out forwards; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
     .form-panel { background: var(--bg-panel); border: 1px solid rgba(189, 165, 129, 0.2); border-radius: 16px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(15px); }
-    .form-title { color: #fff; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; display: flex; align-items: center; gap: 15px; }
-    .form-title i { color: var(--primary); }
+    .form-title { color: #fff; font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-top: 0; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+    .form-title i { color: var(--primary); font-size: 30px; }
     
-    .btn-back { display: inline-flex; align-items: center; gap: 8px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; transition: 0.3s; }
-    .btn-back:hover { color: var(--primary); }
-
-    .form-group { margin-bottom: 30px; }
-    .form-group label { display: block; color: var(--primary); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .form-group { margin-bottom: 35px; }
+    .form-group label { display: block; color: var(--primary); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
     
-    .select-rookie { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 15px; border-radius: 8px; font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .select-rookie { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 18px; border-radius: 8px; font-size: 15px; font-family: inherit; font-weight: 600; cursor: pointer; transition: 0.3s; }
     .select-rookie:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(189, 165, 129, 0.2); }
 
-    .eval-grid { display: grid; grid-template-columns: 1fr; gap: 15px; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-    .eval-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.05); }
-    .eval-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .eval-label { font-size: 14px; font-weight: 600; width: 65%; color: #e2e8f0; }
+    .eval-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: rgba(0,0,0,0.3); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .eval-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px; }
+    .eval-label { font-size: 13px; font-weight: 600; color: #e2e8f0; line-height: 1.4; }
     
-    .eval-select { width: 30%; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+    .eval-select { width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 6px; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
     .eval-select:focus { outline: none; border-color: var(--primary); }
-    
-    /* Couleurs pour les options du select (Chrome/Edge limitent un peu le style des options, mais ça reste propre) */
-    .eval-select option[value="Non Evalué"] { color: #94a3b8; }
-    .eval-select option[value="Non Acquis"] { color: #ef4444; }
-    .eval-select option[value="Partiellement Acquis"] { color: #f59e0b; }
-    .eval-select option[value="Acquis"] { color: #10b981; }
 
-    textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 15px; border-radius: 8px; font-family: inherit; font-size: 14px; min-height: 120px; resize: vertical; box-sizing: border-box; transition: 0.3s; }
+    textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 18px; border-radius: 8px; font-family: inherit; font-size: 14px; min-height: 150px; resize: vertical; transition: 0.3s; }
     textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px rgba(189, 165, 129, 0.2); }
 
-    .btn-submit { background: var(--primary); color: #000; border: none; width: 100%; padding: 18px; border-radius: 8px; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-submit { background: var(--primary); color: #000; border: none; width: 100%; padding: 20px; border-radius: 8px; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
     .btn-submit:hover { box-shadow: 0 0 25px rgba(189, 165, 129, 0.5); transform: translateY(-2px); }
 </style>
 
 <div class="form-wrapper">
-    <a href="/superviseur" class="btn-back"><i class="fas fa-arrow-left"></i> Retour au commandement</a>
     <div class="form-panel">
-        <h2 class="form-title"><i class="fas fa-file-contract"></i> Rapport d'Évaluation (Instructeur)</h2>
+        <h2 class="form-title"><i class="fas fa-shield-alt"></i> Rapport d'Évaluation (Instructeur)</h2>
         
         <form action="/superviseur/nouveau-rapport" method="POST">
             
             <div class="form-group">
-                <label><i class="fas fa-id-badge" style="margin-right: 5px;"></i> Agent Évalué :</label>
+                <label><i class="fas fa-id-badge"></i> Agent Évalué (Deputy Junior uniquement) :</label>
                 <select name="rookieId" class="select-rookie" required>
-                    <option value="" disabled selected>-- Sélectionnez le Deputy ou Junior --</option>
+                    <option value="" disabled selected>-- Sélectionnez le Deputy Junior --</option>
                     <% if(rookies && rookies.length > 0) { %>
                         <% rookies.forEach(rookie => { %>
-                            <option value="<%= rookie._id %>"><%= rookie.grade.toUpperCase() %> - <%= rookie.prenom %> <%= rookie.nom %> [<%= rookie.matricule %>]</option>
+                            <option value="<%= rookie._id %>"><%= rookie.prenom %> <%= rookie.nom %> [<%= rookie.matricule %>]</option>
                         <% }) %>
                     <% } else { %>
-                        <option value="" disabled>Aucun agent Junior/Deputy trouvé dans la base de données</option>
+                        <option value="" disabled>Aucun Deputy Junior trouvé dans la base de données</option>
                     <% } %>
                 </select>
             </div>
 
             <div class="form-group">
-                <label><i class="fas fa-list-check" style="margin-right: 5px;"></i> Grille de Compétences :</label>
+                <label><i class="fas fa-list-check"></i> Grille de Compétences :</label>
                 <div class="eval-grid">
                     <% 
                     const competences = [
-                        { name: "evalMiseEnDanger", label: "Évaluation de la mise en danger de l'agent et d'autrui" },
-                        { name: "analyseSituation", label: "Savoir analyser une situation rapidement" },
+                        { name: "evalMiseEnDanger", label: "Mise en danger de l'agent et d'autrui" },
+                        { name: "analyseSituation", label: "Analyse d'une situation rapidement" },
                         { name: "fluiditeRadio", label: "Fluidité des Calls Radio" },
                         { name: "reponseSystematique", label: "Réponse Radio Systématique" },
                         { name: "reponseRapide", label: "Réponse Radio Rapide" },
                         { name: "tenirPoursuite", label: "Savoir tenir une poursuite" },
-                        { name: "coherence1020", label: "Effectuer des 10-20 cohérents et réguliers en poursuite" },
+                        { name: "coherence1020", label: "Cohérence des 10-20 en poursuite" },
                         { name: "gestionDispatch", label: "Gestion de la Carte du Dispatch" },
                         { name: "respectCodeRoute", label: "Respect du Code de la Route" },
                         { name: "controleRoutier", label: "Réalisation d'un contrôle routier" },
                         { name: "gestionArrestation", label: "Gestion d'une Arrestation" },
-                        { name: "redactionRapport", label: "Rédaction d'un Rapport d'Arrestation" },
-                        { name: "impartialite", label: "Évaluation de l'impartialité et du sang-froid" },
-                        { name: "contactProximite", label: "Évaluation du contact de proximité" }
+                        { name: "redactionRapport", label: "Rédaction d'un Rapport" },
+                        { name: "impartialite", label: "Impartialité et sang-froid" },
+                        { name: "contactProximite", label: "Contact de proximité avec les civils" }
                     ];
                     %>
 
                     <% competences.forEach(comp => { %>
-                        <div class="eval-row">
+                        <div class="eval-box">
                             <div class="eval-label"><%= comp.label %></div>
                             <select name="<%= comp.name %>" class="eval-select">
                                 <option value="Non Evalué" selected>Non Evalué</option>
@@ -98,17 +87,16 @@
             </div>
 
             <div class="form-group">
-                <label><i class="fas fa-pen-to-square" style="margin-right: 5px;"></i> Remarques de l'Instructeur :</label>
-                <textarea name="remarques" placeholder="Saisissez vos observations détaillées, les points forts et les points à améliorer de l'agent..."></textarea>
+                <label><i class="fas fa-pen-to-square"></i> Remarques de l'Instructeur :</label>
+                <textarea name="remarques" placeholder="Saisissez vos observations détaillées, les points forts et les points à améliorer du Deputy Junior..."></textarea>
             </div>
 
-            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Valider et Archiver le Rapport</button>
+            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Transmettre au Commandement</button>
         </form>
     </div>
 </div>
 
 <script>
-    // Petit script pour colorer dynamiquement le select selon le choix
     document.querySelectorAll('.eval-select').forEach(select => {
         select.addEventListener('change', function() {
             if(this.value === 'Non Evalué') { this.style.color = '#94a3b8'; this.style.borderColor = '#334155'; }
