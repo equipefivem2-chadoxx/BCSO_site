@@ -2,52 +2,61 @@
 
 <style>
     :root { --primary: #bda581; --bg-card: rgba(15, 23, 42, 0.4); --bg-dark: #07090e; }
-    body { margin: 0; background-color: var(--bg-dark); background-image: radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%), radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%); font-family: 'Montserrat', sans-serif; color: #e2e8f0; min-height: 100vh; padding-left: 280px; }
-    .sup-container { max-width: 1200px; margin: 0 auto; padding: 40px 40px; animation: fadeUp 0.6s ease-out forwards; }
+    body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: #e2e8f0; min-height: 100vh; padding-left: 280px; }
+    .sup-container { max-width: 1200px; margin: 0 auto; padding: 40px; animation: fadeUp 0.6s ease-out forwards; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     
-    .sup-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 40px; background: rgba(11, 15, 25, 0.6); padding: 30px; border-radius: 20px; backdrop-filter: blur(15px); border: 1px solid rgba(189, 165, 129, 0.1); }
+    .sup-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 40px; background: rgba(11, 15, 25, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(189, 165, 129, 0.1); }
     .sup-header h2 { margin: 0; color: #fff; font-size: 28px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 15px; }
     .sup-header h2 i { color: var(--primary); }
-    .btn-create { background: var(--primary); color: #000; padding: 12px 25px; border-radius: 8px; font-weight: 800; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; letter-spacing: 1px; }
-    .btn-create:hover { box-shadow: 0 0 20px rgba(189, 165, 129, 0.4); transform: translateY(-2px); }
     
-    .rapport-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+    .rapport-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
     .rapport-table th { background: rgba(0,0,0,0.5); padding: 18px 20px; text-align: left; color: var(--primary); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; border-bottom: 1px solid rgba(189, 165, 129, 0.2); }
     .rapport-table td { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 14px; font-weight: 600; }
     .rapport-table tr:hover { background: rgba(255,255,255,0.03); }
-    .badge-rookie { background: rgba(59, 130, 246, 0.1); color: #60a5fa; padding: 6px 12px; border-radius: 6px; font-weight: 800; border: 1px solid rgba(59, 130, 246, 0.2); display: inline-block; }
+    
+    .badge-rookie { background: rgba(59, 130, 246, 0.1); color: #60a5fa; padding: 6px 12px; border-radius: 6px; font-weight: 800; border: 1px solid rgba(59, 130, 246, 0.2); }
+    
+    .action-btns { display: flex; gap: 10px; }
+    .btn-del { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.3s; }
+    .btn-del:hover { background: #ef4444; color: #fff; }
 </style>
 
 <div class="sup-container">
     <div class="sup-header">
-        <h2><i class="fas fa-clipboard-user"></i> Centre de Commandement</h2>
-        <a href="/superviseur/nouveau-rapport" class="btn-create"><i class="fas fa-plus"></i> Évaluer un agent</a>
+        <h2><i class="fas fa-folder-open"></i> Archives du Commandement</h2>
     </div>
 
     <% if (rapports && rapports.length > 0) { %>
         <table class="rapport-table">
             <thead>
                 <tr>
-                    <th>Date d'évaluation</th>
-                    <th>Superviseur / Instructeur</th>
-                    <th>Agent Évalué</th>
+                    <th>Date</th>
+                    <th>Instructeur</th>
+                    <th>Junior Évalué</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <% rapports.forEach(rap => { %>
                     <tr>
-                        <td style="color: #94a3b8;"><i class="fas fa-calendar-alt" style="margin-right:8px;"></i> <%= new Date(rap.dateCreation).toLocaleDateString('fr-FR') %></td>
+                        <td style="color: #94a3b8;"><%= new Date(rap.dateCreation).toLocaleDateString('fr-FR') %></td>
                         <td style="color: #fff;"><i class="fas fa-user-shield" style="color: var(--primary); margin-right:8px;"></i> <%= rap.instructeurNom %></td>
-                        <td><span class="badge-rookie"><i class="fas fa-id-badge" style="margin-right:5px;"></i> <%= rap.rookieNom %></span></td>
+                        <td><span class="badge-rookie"><i class="fas fa-id-badge"></i> <%= rap.rookieNom %></span></td>
+                        <td>
+                            <div class="action-btns">
+                                <form action="/superviseur/supprimer/<%= rap._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Supprimer définitivement ce rapport ?');">
+                                    <button type="submit" class="btn-del"><i class="fas fa-trash"></i> Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                 <% }) %>
             </tbody>
         </table>
     <% } else { %>
         <div style="text-align: center; padding: 60px; background: var(--bg-card); border-radius: 16px; border: 1px dashed rgba(189, 165, 129, 0.3);">
-            <i class="fas fa-folder-open" style="font-size: 50px; color: #64748b; margin-bottom: 20px;"></i>
-            <p style="color: #94a3b8; font-size: 16px; font-weight: 600;">Aucun rapport d'évaluation n'a encore été soumis par le commandement.</p>
+            <p style="color: #94a3b8; font-size: 16px;">Aucun rapport d'évaluation n'a encore été transmis.</p>
         </div>
     <% } %>
 </div>

@@ -10,7 +10,6 @@
     .bcso-sidebar {
         width: var(--sidebar-width);
         background-color: var(--bg-dark);
-        /* Subtile ligne de séparation reprenant le code couleur du thème */
         border-right: 1px solid rgba(189, 165, 129, 0.15);
         display: flex;
         flex-direction: column;
@@ -25,7 +24,6 @@
         transition: all 0.3s ease;
     }
 
-    /* Halo lumineux derrière le logo calqué sur tes radial-gradients */
     .sidebar-logo-container {
         text-align: center;
         margin-bottom: 40px;
@@ -56,7 +54,6 @@
         transform: scale(1.03);
     }
 
-    /* Menu de Navigation */
     .sidebar-nav {
         display: flex;
         flex-direction: column;
@@ -70,7 +67,6 @@
         width: 0px; 
     }
 
-    /* Liens - Typographie calquée sur les titres du roster (clairs, espacés, pro) */
     .nav-item-premium {
         display: flex;
         align-items: center;
@@ -87,7 +83,6 @@
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    /* Force l'alignement strict des icônes */
     .nav-item-premium i {
         width: 20px;
         text-align: center;
@@ -95,7 +90,6 @@
         transition: transform 0.3s ease;
     }
 
-    /* Effet Hover (Survol) - Glissement sobre + coloration de l'icône */
     .nav-item-premium:hover {
         color: #ffffff;
         background: rgba(189, 165, 129, 0.03);
@@ -108,7 +102,6 @@
         transform: scale(1.1);
     }
 
-    /* Effet Active (Page en cours) - Reprend le style de la "total-badge" et des "agent-card" */
     .nav-item-premium.active {
         background: rgba(189, 165, 129, 0.08);
         color: #ffffff;
@@ -122,7 +115,6 @@
         text-shadow: 0 0 10px var(--primary-glow-strong);
     }
 
-    /* Séparateur Administration style "grade-title::after" */
     .admin-divider {
         height: 1px;
         background: linear-gradient(to right, transparent, rgba(189, 165, 129, 0.3), transparent);
@@ -130,7 +122,16 @@
         opacity: 0.5;
     }
 
-    /* Style Premium Spécifique Admin */
+    .cat-title {
+        color: var(--primary);
+        font-size: 10px;
+        margin: 5px 20px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        opacity: 0.8;
+    }
+
     .admin-link {
         border-bottom: 1px solid rgba(220, 38, 38, 0.05);
     }
@@ -146,6 +147,27 @@
     }
 </style>
 
+<!-- 🚀 LOGIQUE DE SÉCURITÉ EJS POUR AFFICHER LES ONGLETS -->
+<% 
+    let isSuperviseur = false;
+    let isAdmin = false;
+    const commandGrades = ['Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I'];
+    
+    if (typeof user !== 'undefined' && user) {
+        if (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true) {
+            isAdmin = true;
+            isSuperviseur = true; // Un admin voit tout
+        }
+        
+        // On vérifie le grade de l'agent si la variable est présente dans la vue
+        if (typeof agentActuel !== 'undefined' && agentActuel) {
+            if (commandGrades.includes(agentActuel.grade)) isSuperviseur = true;
+        } else if (user.grade && commandGrades.includes(user.grade)) {
+            isSuperviseur = true;
+        }
+    }
+%>
+
 <aside class="bcso-sidebar">
     <div class="sidebar-logo-container">
         <img src="/images/bcso.png" alt="BCSO Logo" class="sidebar-logo">
@@ -160,7 +182,16 @@
         <a href="/formations" class="nav-item-premium"><i class="fas fa-graduation-cap"></i> Formations</a>
         <a href="/documents" class="nav-item-premium"><i class="fas fa-file-signature"></i> Documents</a>
         
-        <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true)) { %>
+        <!-- Affichage du Commandement uniquement pour Sergent+ -->
+        <% if (isSuperviseur) { %>
+            <div class="admin-divider"></div>
+            <div class="cat-title">Commandement</div>
+            <a href="/superviseur" class="nav-item-premium">
+                <i class="fas fa-clipboard-user"></i> Rapports Juniors
+            </a>
+        <% } %>
+
+        <% if (isAdmin) { %>
             <div class="admin-divider"></div>
             <a href="/admin" class="nav-item-premium admin-link">
                 <i class="fas fa-cogs"></i> Administration
@@ -176,7 +207,8 @@
         
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href') === currentUrl) {
+            if (currentUrl.startsWith(link.getAttribute('href')) && link.getAttribute('href') !== '/') {
+                if(link.getAttribute('href') === '/dashboard' && currentUrl !== '/dashboard') return;
                 link.classList.add('active');
             }
         });
