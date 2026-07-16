@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
             });
         }
 
-        // Tentative de récupération des rapports (En attendant que la BDD soit prête)
+        // Récupération des rapports
         let rapports = [];
         try {
             const RapportJunior = require('../models/RapportJunior');
@@ -49,6 +49,67 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error('Erreur lors du chargement du panel superviseur:', error);
         res.redirect('/dashboard');
+    }
+});
+
+// 🚀 Route pour lire une évaluation détaillée
+router.get('/rapport/:id', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const RapportJunior = require('../models/RapportJunior');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const rapport = await RapportJunior.findById(req.params.id);
+        if (!rapport) return res.redirect('/superviseur');
+
+        res.render('pages/rapport-detail', {
+            title: `Évaluation - ${rapport.nomJunior}`,
+            user: req.session.user,
+            rapport: rapport,
+            isUserAdmin: isUserAdmin
+        });
+
+    } catch (err) {
+        console.error("Erreur lecture rapport:", err);
+        res.redirect('/superviseur');
+    }
+});
+
+// 🚀 Route pour changer le statut (Valider)
+router.post('/rapport/:id/valider', async (req, res) => {
+    try {
+        const RapportJunior = require('../models/RapportJunior');
+        await RapportJunior.findByIdAndUpdate(req.params.id, { statut: 'valide' });
+        res.redirect(`/superviseur/rapport/${req.params.id}`);
+    } catch (err) {
+        res.redirect('/superviseur');
+    }
+});
+
+// 🚀 Route pour supprimer un rapport (Admin)
+router.post('/rapport/:id/supprimer', async (req, res) => {
+    try {
+        const RapportJunior = require('../models/RapportJunior');
+        await RapportJunior.findByIdAndDelete(req.params.id);
+        res.redirect('/superviseur');
+    } catch (err) {
+        res.redirect('/superviseur');
     }
 });
 

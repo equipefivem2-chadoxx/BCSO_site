@@ -1,29 +1,39 @@
 const mongoose = require('mongoose');
 
+const critereSchema = new mongoose.Schema({
+    nom: { type: String, required: true },
+    etat: { 
+        type: String, 
+        enum: ['Acquis', 'Partiellement Acquis', 'Non Acquis', 'Non Evalué'],
+        default: 'Non Evalué'
+    },
+    remarque: { type: String, default: '' }
+}, { _id: false });
+
 const rapportJuniorSchema = new mongoose.Schema({
-    instructeurId: { type: String, required: true },
-    instructeurNom: { type: String, required: true },
-    rookieId: { type: String, required: true },
-    rookieNom: { type: String, required: true },
+    evaluateurId: { type: String, required: true }, // L'ID MongoDB ou Discord de l'évaluateur
+    nomEvaluateur: { type: String, required: true },
+    gradeEvaluateur: { type: String, required: true },
     
-    // Compétences évaluées
-    evalMiseEnDanger: { type: String, default: 'Non Evalué' },
-    analyseSituation: { type: String, default: 'Non Evalué' },
-    fluiditeRadio: { type: String, default: 'Non Evalué' },
-    reponseSystematique: { type: String, default: 'Non Evalué' },
-    reponseRapide: { type: String, default: 'Non Evalué' },
-    tenirPoursuite: { type: String, default: 'Non Evalué' },
-    coherence1020: { type: String, default: 'Non Evalué' },
-    gestionDispatch: { type: String, default: 'Non Evalué' },
-    respectCodeRoute: { type: String, default: 'Non Evalué' },
-    controleRoutier: { type: String, default: 'Non Evalué' },
-    gestionArrestation: { type: String, default: 'Non Evalué' },
-    redactionRapport: { type: String, default: 'Non Evalué' },
-    impartialite: { type: String, default: 'Non Evalué' },
-    contactProximite: { type: String, default: 'Non Evalué' },
+    juniorId: { type: String, required: true }, // L'ID MongoDB du Junior évalué
+    nomJunior: { type: String, required: true },
+    matriculeJunior: { type: String, required: true },
+
+    criteres: [critereSchema], // Tableau contenant chaque critère évalué
     
-    // Remarques
-    remarques: { type: String, default: '' },
+    remarqueGlobale: { type: String, default: '' },
+    avis: { 
+        type: String, 
+        enum: ['Favorable', 'Défavorable', 'Réservé'], 
+        required: true 
+    },
+    
+    statut: { 
+        type: String, 
+        enum: ['en_attente', 'valide'], 
+        default: 'en_attente' 
+    },
+    
     dateCreation: { type: Date, default: Date.now }
 });
 

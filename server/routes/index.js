@@ -6,7 +6,7 @@ const adminRoutes = require('./admin');
 const effectifsRoutes = require('./effectifs');
 const archivesRoutes = require('./archives');
 const apiTicketsRoutes = require('./api/tickets');
-const superviseurRoutes = require('./superviseur'); // 🚀 NOUVEAU : Import des routes superviseur
+const superviseurRoutes = require('./superviseur');
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -47,7 +47,6 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
-// Route pour la page Règlement
 router.get('/reglement', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/reglement', { 
@@ -56,7 +55,6 @@ router.get('/reglement', (req, res) => {
     });
 });
 
-// Route pour la page Livre des Lois
 router.get('/lois', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/lois', { 
@@ -65,7 +63,6 @@ router.get('/lois', (req, res) => {
     });
 });
 
-// Route pour la page Formations
 router.get('/formations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formations', { 
@@ -74,7 +71,6 @@ router.get('/formations', (req, res) => {
     });
 });
 
-// 🚀 LE HUB DOCUMENTAIRE
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 
@@ -83,7 +79,6 @@ router.get('/documents', (req, res) => {
     });
 });
 
-// 🚀 ROUTE 1 DU HUB : LE LIVRET
 router.get('/documents/livret', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/livret', { 
@@ -92,7 +87,6 @@ router.get('/documents/livret', (req, res) => {
     });
 });
 
-// 🚀 ROUTE 2 DU HUB : LA PAGE ARBRE DE PROCÉDURE
 router.get('/documents/doc-arrestations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-arrestations', { 
@@ -101,7 +95,6 @@ router.get('/documents/doc-arrestations', (req, res) => {
     });
 });
 
-// 🚀 ROUTE 3 DU HUB : LA NOUVELLE PAGE ARMURERIE
 router.get('/documents/armes', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-armes', { 
@@ -110,7 +103,6 @@ router.get('/documents/armes', (req, res) => {
     });
 });
 
-// 🚀 ROUTE 4 DU HUB : SÉLECTION DU JUNIOR À ÉVALUER (Vérification BDD en temps réel)
 router.get('/documents/evaluer-junior', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
@@ -161,7 +153,6 @@ router.get('/documents/evaluer-junior', async (req, res) => {
     }
 });
 
-// 🚀 ROUTE 5 DU HUB : PAGE DE FORMULAIRE (Vérification BDD en temps réel)
 router.get('/documents/evaluer-junior/formulaire/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
@@ -197,9 +188,43 @@ router.get('/documents/evaluer-junior/formulaire/:id', async (req, res) => {
     }
 });
 
-// ========================================================
-// 🔵 ANCIENNES ROUTES (INTACTES POUR LE MENU DU LIVRET)
-// ========================================================
+// 🚀 ROUTE POUR SAUVEGARDER L'ÉVALUATION
+router.post('/documents/evaluer-junior/sauvegarder', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const RapportJunior = require('../models/RapportJunior');
+        const Agent = require('../models/Agent');
+
+        const evaluateurDiscordId = req.session.user.id || req.session.user.discordId;
+        const evaluateurDB = await Agent.findOne({ discordId: evaluateurDiscordId });
+        
+        const nomEval = evaluateurDB ? `${evaluateurDB.prenom} ${evaluateurDB.nom}` : req.session.user.username;
+        const gradeEval = evaluateurDB ? evaluateurDB.grade : 'Admin';
+
+        const nouveauRapport = new RapportJunior({
+            evaluateurId: evaluateurDiscordId,
+            nomEvaluateur: nomEval,
+            gradeEvaluateur: gradeEval,
+            
+            juniorId: req.body.juniorId,
+            nomJunior: req.body.nomJunior,
+            matriculeJunior: req.body.matriculeJunior,
+            
+            criteres: req.body.criteres, 
+            remarqueGlobale: req.body.remarqueGlobale,
+            avis: req.body.avis
+        });
+
+        await nouveauRapport.save();
+        res.redirect('/documents/evaluer-junior?success=1');
+        
+    } catch (err) {
+        console.error("Erreur lors de la sauvegarde du rapport :", err);
+        res.redirect('/documents/evaluer-junior?error=1');
+    }
+});
+
 router.get('/arrestations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/arrestations', { 
@@ -218,7 +243,7 @@ router.get('/fusillades', (req, res) => {
 
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
-router.use('/superviseur', superviseurRoutes); // 🚀 NOUVEAU : Montage de la route
+router.use('/superviseur', superviseurRoutes); 
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);

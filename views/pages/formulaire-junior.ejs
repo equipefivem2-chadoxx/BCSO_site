@@ -4,70 +4,299 @@
 <style>
     :root {
         --primary: #bda581;
-        --bg-darker: #05070a;
-        --card-bg: #0d111a;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
     }
 
-    .main-content {
-        margin-left: 280px;
-        padding: 40px;
-        min-height: 100vh;
-        background-color: var(--bg-darker);
-        color: #fff;
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
         font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
     }
 
-    .container-box {
-        background: var(--card-bg);
-        border: 1px solid rgba(189, 165, 129, 0.2);
-        border-radius: 12px;
-        padding: 30px;
-        max-width: 800px;
-        margin: 0 auto;
+    #form-container {
+        margin-left: 280px;
+        padding: 40px 60px 80px 60px;
+        max-width: 1200px;
+        animation: fadeIn 0.5s ease-out forwards;
     }
 
-    .agent-header {
-        border-bottom: 1px solid rgba(189, 165, 129, 0.15);
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
         padding-bottom: 20px;
+        margin-bottom: 40px;
+    }
+
+    .btn-back {
+        background: rgba(189, 165, 129, 0.05);
+        color: var(--primary);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+    .btn-back:hover { background: var(--primary); color: #000; }
+
+    .eval-box {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .eval-title {
+        text-align: center;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
         margin-bottom: 30px;
     }
 
-    .agent-header h2 {
-        color: var(--primary);
-        margin: 0 0 5px 0;
-        font-size: 24px;
-        text-transform: uppercase;
+    .eval-title span { color: var(--primary); }
+
+    .table-eval {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
     }
 
-    .agent-header p {
+    .table-eval th {
+        background: rgba(0,0,0,0.3);
         color: #94a3b8;
-        margin: 0;
+        padding: 15px;
+        text-align: left;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    .placeholder-content {
-        text-align: center;
-        padding: 40px;
-        color: #64748b;
-        border: 1px dashed rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
+    .table-eval td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        vertical-align: middle;
     }
+
+    .critere-name { font-weight: 600; font-size: 14px; }
+
+    .select-etat {
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 13px;
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+    }
+
+    /* Couleurs dynamiques via JS, mais styles de base ici */
+    .select-etat option[value="Acquis"] { background: #064e3b; color: #34d399; }
+    .select-etat option[value="Partiellement Acquis"] { background: #78350f; color: #fbbf24; }
+    .select-etat option[value="Non Acquis"] { background: #7f1d1d; color: #f87171; }
+    .select-etat option[value="Non Evalué"] { background: #1e293b; color: #94a3b8; }
+
+    .input-remarque {
+        width: 100%;
+        background: rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #e2e8f0;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 13px;
+    }
+
+    .input-remarque:focus { border-color: var(--primary); outline: none; }
+
+    .global-section { margin-top: 40px; }
+    
+    .global-label {
+        display: block;
+        color: var(--primary);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .textarea-global {
+        width: 100%;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        min-height: 120px;
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        margin-bottom: 25px;
+    }
+    .textarea-global:focus { border-color: var(--primary); outline: none; }
+
+    .avis-container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .radio-label {
+        flex: 1;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+
+    .radio-label input { display: none; }
+
+    .radio-label:has(input[value="Favorable"]:checked) { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981; }
+    .radio-label:has(input[value="Réservé"]:checked) { background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; color: #f59e0b; }
+    .radio-label:has(input[value="Défavorable"]:checked) { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444; }
+
+    .btn-submit {
+        width: 100%;
+        background: var(--primary);
+        color: #000;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-submit:hover { box-shadow: 0 0 20px var(--primary-glow-strong); transform: translateY(-2px); }
+
 </style>
 
-<div class="main-content">
-    <div class="container-box">
-        <div class="agent-header">
-            <h2>Évaluation : <%= junior.prenom %> <%= junior.nom %></h2>
-            <p>Matricule : [ <%= junior.matricule %> ] | Grade : <%= junior.grade %></p>
-        </div>
+<div id="form-container">
+    <div class="header-section">
+        <a href="/documents/evaluer-junior" class="btn-back"><i class="fas fa-arrow-left"></i> RETOUR</a>
+    </div>
 
-        <div class="placeholder-content">
-            <i class="fas fa-tools" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
-            <h3>Formulaire en cours de préparation</h3>
-            <p>Le système d'évaluation pour cet agent sera intégré ici plus tard.</p>
-            <br>
-            <a href="/documents/evaluer-junior" style="color: var(--primary); text-decoration: none; font-weight: bold;">
-                <i class="fas fa-arrow-left"></i> Retour à la liste des Juniors
-            </a>
-        </div>
+    <div class="eval-box">
+        <div class="eval-title">Rapport d'évaluation : <span>[<%= junior.matricule %>] <%= junior.prenom %> <%= junior.nom %></span></div>
+        
+        <form action="/documents/evaluer-junior/sauvegarder" method="POST">
+            <input type="hidden" name="juniorId" value="<%= junior._id %>">
+            <input type="hidden" name="nomJunior" value="<%= junior.prenom %> <%= junior.nom %>">
+            <input type="hidden" name="matriculeJunior" value="<%= junior.matricule %>">
+
+            <% 
+            const criteresList = [
+                "Évaluation de la mise en danger de l'agent et d'autrui",
+                "Savoir analyser une situation rapidement",
+                "Fluidité des Calls Radio",
+                "Réponse Radio Systématique",
+                "Réponse Radio Rapide",
+                "Savoir tenir une poursuite",
+                "Effectuer des 10-20 cohérents et réguliers en poursuite",
+                "Gestion de la Carte du Dispatch",
+                "Respect du Code de la Route",
+                "Réalisation d'un contrôle routier",
+                "Gestion d'une Arrestation",
+                "Rédaction d'un Rapport d'Arrestation",
+                "Évaluation de l'impartialité et du sang-froid",
+                "Évaluation du contact de proximité"
+            ];
+            %>
+
+            <table class="table-eval">
+                <thead>
+                    <tr>
+                        <th style="width: 45%;">Compétence Évaluée</th>
+                        <th style="width: 20%;">État</th>
+                        <th style="width: 35%;">Remarques</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% criteresList.forEach((critere, index) => { %>
+                        <tr>
+                            <td class="critere-name">
+                                <input type="hidden" name="criteres[<%= index %>][nom]" value="<%= critere %>">
+                                <%= critere %>
+                            </td>
+                            <td>
+                                <select name="criteres[<%= index %>][etat]" class="select-etat" onchange="updateSelectColor(this)">
+                                    <option value="Non Evalué" selected>Non Évalué</option>
+                                    <option value="Acquis">Acquis</option>
+                                    <option value="Partiellement Acquis">Partiellement Acquis</option>
+                                    <option value="Non Acquis">Non Acquis</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="criteres[<%= index %>][remarque]" class="input-remarque" placeholder="Observation optionnelle...">
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
+            <div class="global-section">
+                <label class="global-label"><i class="fas fa-comment-dots"></i> Remarque Globale</label>
+                <textarea name="remarqueGlobale" class="textarea-global" placeholder="Rédigez ici vos observations générales sur la patrouille, l'attitude de l'agent..."></textarea>
+                
+                <label class="global-label"><i class="fas fa-gavel"></i> Avis Final de l'Évaluateur</label>
+                <div class="avis-container">
+                    <label class="radio-label">
+                        <input type="radio" name="avis" value="Favorable" required> Favorable
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="avis" value="Réservé"> Réservé
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="avis" value="Défavorable"> Défavorable
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane" style="margin-right: 8px;"></i> SOUMETTRE L'ÉVALUATION</button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    // Met à jour la couleur du select en fonction du choix
+    function updateSelectColor(select) {
+        const val = select.value;
+        select.style.color = '#fff';
+        if (val === 'Acquis') select.style.backgroundColor = '#064e3b'; // Vert foncé
+        else if (val === 'Partiellement Acquis') select.style.backgroundColor = '#78350f'; // Orange/Marron
+        else if (val === 'Non Acquis') select.style.backgroundColor = '#7f1d1d'; // Rouge foncé
+        else select.style.backgroundColor = '#1e293b'; // Gris (Non évalué)
+    }
+</script>
