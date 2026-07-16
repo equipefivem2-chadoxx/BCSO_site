@@ -149,7 +149,6 @@
         color: #ef4444 !important;
     }
 
-    /* 🚀 NOUVEAU STYLE POUR AFFICHER LE NOM EN BAS */
     .sidebar-user-profile {
         margin-top: auto;
         padding: 20px;
@@ -198,7 +197,6 @@
     </div>
     
     <div class="sidebar-nav">
-        <!-- POUR CHANGER LE NOM DES BOUTONS, MODIFIE LE TEXTE APRÈS LA BALISE <i> -->
         <a href="/dashboard" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-home"></i> Vue d'ensemble</div></a>
         <a href="/archives" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-folder-open"></i> Base de Données</div></a>
         <a href="/reglement" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-gavel"></i> Règlement</div></a>
@@ -222,7 +220,7 @@
         <% if (isSuperviseur) { %>
             <div class="sidebar-category">Supervision</div>
             <a href="/superviseur" class="nav-item-premium">
-                <div class="nav-item-content"><i class="fas fa-inbox"></i> Évaluations Reçues</div>
+                <div class="nav-item-content"><i class="fas fa-chart-line"></i> Dashboard Superviseur</div>
             </a>
         <% } %>
 
@@ -234,14 +232,12 @@
         <% } %>
     </div>
 
-    <!-- 🚀 AFFICHAGE DU NOM EN BAS DE LA SIDEBAR -->
     <% if (typeof user !== 'undefined' && user) { %>
         <div class="sidebar-user-profile">
             <div class="profile-icon">
                 <i class="fas fa-user-shield"></i>
             </div>
             <div class="profile-details">
-                <!-- Affiche le nom d'utilisateur (modifie 'username' par 'nom' si ta bdd utilise 'nom') -->
                 <span class="profile-name"><%= user.username || user.nom || 'Agent BCSO' %></span>
                 <span class="profile-grade"><%= user.grade || 'Effectif' %></span>
             </div>
@@ -257,7 +253,6 @@
             const href = link.getAttribute('href');
             link.classList.remove('active');
             
-            // 🚀 CORRECTION ICI : Si l'URL actuelle "commence par" le lien (ex: /superviseur/rapport/...), ça s'active !
             if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
                 link.classList.add('active');
             }
