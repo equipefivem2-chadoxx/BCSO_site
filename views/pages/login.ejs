@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BCSO - Portail MDT</title>
     
-    <!-- 🚀 AJOUT DU LOGO DANS L'ONGLET -->
     <link rel="icon" type="image/png" href="/images/bcso.png">
-
-    <!-- Police Montserrat pour le côté propre et institutionnel -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -25,7 +22,6 @@
             margin: 0;
             padding: 0;
             background-color: var(--bg-dark);
-            /* Ajout d'une grille holographique très subtile et d'une grosse lueur centrale */
             background-image: 
                 radial-gradient(circle at 50% 40%, rgba(189, 165, 129, 0.12), transparent 60%),
                 linear-gradient(rgba(189, 165, 129, 0.03) 1px, transparent 1px),
@@ -40,13 +36,11 @@
             color: #fff;
         }
 
-        /* Animation d'entrée */
         @keyframes scaleUp {
             0% { opacity: 0; transform: scale(0.95) translateY(20px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* Lueur pulsante derrière la carte */
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 40px rgba(189, 165, 129, 0.05); }
             50% { box-shadow: 0 0 60px rgba(189, 165, 129, 0.15); }
@@ -68,7 +62,6 @@
             box-shadow: inset 0 0 30px rgba(189, 165, 129, 0.05), 0 20px 50px rgba(0,0,0,0.8);
         }
 
-        /* Lignes d'ornement haut et bas pour structurer */
         .card-decoration-top, .card-decoration-bottom {
             position: absolute;
             left: 50%;
@@ -87,7 +80,6 @@
             display: inline-block;
         }
 
-        /* Halo fort derrière le logo */
         .logo-container::before {
             content: '';
             position: absolute;
@@ -104,7 +96,7 @@
         }
 
         .login-logo {
-            width: 160px; /* Logo beaucoup plus grand et imposant */
+            width: 160px;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8));
             transition: transform 0.3s ease;
         }
@@ -147,7 +139,6 @@
             letter-spacing: -1px;
         }
 
-        /* Le Bouton : Fini le bleu ! Un bouton or massif transparent qui s'illumine */
         .discord-btn {
             display: flex;
             align-items: center;
@@ -173,10 +164,9 @@
             font-size: 20px;
         }
 
-        /* Effet au survol hyper dynamique */
         .discord-btn:hover {
             background: var(--primary);
-            color: var(--bg-dark); /* Le texte devient sombre pour contraster avec le fond or */
+            color: var(--bg-dark); 
             box-shadow: 0 0 25px var(--primary-glow), inset 0 0 10px rgba(255,255,255,0.5);
             transform: translateY(-3px);
         }
@@ -190,7 +180,6 @@
             50% { transform: translateY(-3px); }
         }
 
-        /* Zone d'erreur stylisée terminal rouge */
         .error-msg {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
@@ -220,14 +209,12 @@
         <div class="card-decoration-top"></div>
 
         <div class="logo-container">
-            <!-- Toujours ton image -->
             <img src="/images/bcso.png" alt="Sceau du BCSO" class="login-logo" onerror="this.style.display='none'">
         </div>
         
         <h2 class="login-title">MDT <span>SYSTEM</span></h2>
         <div class="login-subtitle">Portail Fédéral Restreint</div>
 
-        <!-- Gestion des erreurs EJS intacte -->
         <% if (typeof error !== 'undefined' && error) { %>
             <div class="error-msg">
                 <i class="fas fa-lock"></i>
@@ -247,6 +234,11 @@
 
         <a href="/auth/discord" class="discord-btn">
             <i class="fab fa-discord"></i> Initialiser la session
+        </a>
+
+        <!-- 🚀 NOUVEAU : Bouton Connexion Entreprise -->
+        <a href="/entreprise/login" class="discord-btn" style="margin-top: 15px; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); color: #cbd5e1;">
+            <i class="fas fa-building" style="color: var(--primary);"></i> Connexion Entreprise
         </a>
 
         <div class="card-decoration-bottom"></div>

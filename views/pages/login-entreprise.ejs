@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>BCSO - Portail Partenaire</title>
+    <link rel="icon" type="image/png" href="/images/bcso.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #bda581; --bg-dark: #07090e; --bg-card: rgba(15, 23, 42, 0.75); }
+        body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #fff; }
+        .login-card { background: var(--bg-card); border: 1px solid rgba(189, 165, 129, 0.3); border-top: 4px solid var(--primary); border-radius: 12px; padding: 40px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .login-logo { width: 110px; margin-bottom: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8)); }
+        h2 { margin: 0 0 5px 0; font-size: 22px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #fff; }
+        p { color: var(--primary); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; }
+        .form-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; font-size: 14px; margin-bottom: 15px; box-sizing: border-box; }
+        .form-input:focus { outline: none; border-color: var(--primary); }
+        .btn-submit { width: 100%; background: var(--primary); color: #000; border: none; padding: 14px; border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-submit:hover { background: #fff; box-shadow: 0 0 20px rgba(189, 165, 129, 0.4); }
+        .btn-retour { display: inline-block; margin-top: 25px; color: #94a3b8; font-size: 12px; text-decoration: none; }
+        .btn-retour:hover { color: #fff; }
+        .error-msg { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <img src="/images/bcso.png" alt="BCSO" class="login-logo">
+        <h2>Accès Partenaire</h2>
+        <p>Annuaire Fédéral des Effectifs</p>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-msg"><i class="fas fa-exclamation-triangle"></i> Identifiant ou mot de passe incorrect.</div>
+        <% } %>
+
+        <form action="/entreprise/login" method="POST">
+            <input type="text" name="identifiant" class="form-input" placeholder="Identifiant entreprise" required autocomplete="off">
+            <input type="password" name="motDePasse" class="form-input" placeholder="Mot de passe" required>
+            <button type="submit" class="btn-submit"><i class="fas fa-key"></i> Se connecter</button>
+        </form>
+        
+        <a href="/" class="btn-retour"><i class="fas fa-arrow-left"></i> Retour au portail MDT</a>
+    </div>
+</body>
+</html>

@@ -7,6 +7,28 @@ const effectifsRoutes = require('./effectifs');
 const archivesRoutes = require('./archives');
 const apiTicketsRoutes = require('./api/tickets');
 const superviseurRoutes = require('./superviseur');
+const entrepriseRoutes = require('./entreprise'); // 🚀 NOUVEAU : Import des routes entreprise
+
+// 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
+// Actualise le grade et les permissions de la session à chaque chargement de page
+router.use(async (req, res, next) => {
+    if (req.session.user) {
+        try {
+            const Agent = require('../models/Agent');
+            const discordId = req.session.user.id || req.session.user.discordId;
+            const agentDB = await Agent.findOne({ discordId: discordId });
+            
+            if (agentDB) {
+                req.session.user.grade = agentDB.grade;
+                req.session.user.isAdmin = agentDB.isAdmin;
+                req.session.user.canDeleteArchives = agentDB.canDeleteArchives;
+            }
+        } catch (err) {
+            console.error("Erreur de synchronisation de session :", err);
+        }
+    }
+    next();
+});
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -254,6 +276,7 @@ router.use('/superviseur', superviseurRoutes);
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
+router.use('/entreprise', entrepriseRoutes); // 🚀 NOUVEAU : Montage de la route entreprise
 
 router.use((req, res) => {
     res.status(404).render('pages/404', { message: 'Page introuvable', title: '404' });
