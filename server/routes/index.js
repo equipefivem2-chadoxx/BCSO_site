@@ -6,6 +6,7 @@ const adminRoutes = require('./admin');
 const effectifsRoutes = require('./effectifs');
 const archivesRoutes = require('./archives');
 const apiTicketsRoutes = require('./api/tickets');
+const superviseurRoutes = require('./superviseur'); // 🚀 NOUVEAU : Import des routes superviseur
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -116,17 +117,13 @@ router.get('/documents/evaluer-junior', async (req, res) => {
     try {
         const Agent = require('../models/Agent');
         const discordId = req.session.user.id || req.session.user.discordId;
-        
-        // On va chercher la vraie fiche fraîche de l'agent en direct de la base de données
         const agentDB = await Agent.findOne({ discordId: discordId });
 
-        // Vérification des privilèges administrateurs
         const isUserAdmin = req.session.user.isAdmin === true || 
                             req.session.user.role === 'admin' || 
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
-        // Cas 1 : Agent introuvable en base de données et pas admin
         if (!agentDB && !isUserAdmin) {
             return res.render('pages/rapport-junior', {
                 title: 'BCSO - Accès Refusé',
@@ -138,7 +135,6 @@ router.get('/documents/evaluer-junior', async (req, res) => {
             });
         }
 
-        // Cas 2 : L'agent a le grade Deputy Junior en direct de la BDD et n'est pas admin
         const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
         if (currentGrade === 'Deputy Junior' && !isUserAdmin) {
             return res.render('pages/rapport-junior', {
@@ -151,7 +147,6 @@ router.get('/documents/evaluer-junior', async (req, res) => {
             });
         }
 
-        // Si tout est bon (ex: il vient de passer Deputy I en BDD !), on charge la liste
         const juniors = await Agent.find({ grade: 'Deputy Junior' }).sort({ nom: 1 });
 
         res.render('pages/rapport-junior', { 
@@ -223,6 +218,7 @@ router.get('/fusillades', (req, res) => {
 
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
+router.use('/superviseur', superviseurRoutes); // 🚀 NOUVEAU : Montage de la route
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
