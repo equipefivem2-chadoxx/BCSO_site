@@ -68,7 +68,7 @@
     .nav-item-premium {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        gap: 16px;
         padding: 13px 20px;
         color: #94a3b8;
         text-decoration: none;
@@ -79,7 +79,6 @@
         border-radius: 10px;
         border: 1px solid transparent;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        cursor: pointer;
     }
 
     .nav-item-content {
@@ -118,61 +117,6 @@
     .nav-item-premium.active i {
         color: var(--primary);
         text-shadow: 0 0 10px var(--primary-glow-strong);
-    }
-
-    /* Menu déroulant pour Documents */
-    .nav-sub-menu {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease-out;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding-left: 15px;
-        margin-top: -4px;
-    }
-
-    .nav-sub-menu.open {
-        max-height: 300px;
-        margin-bottom: 8px;
-    }
-
-    .sub-nav-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 15px;
-        color: #64748b;
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        border-left: 1px solid rgba(189, 165, 129, 0.1);
-    }
-
-    .sub-nav-item:hover {
-        color: #e2e8f0;
-        background: rgba(255, 255, 255, 0.02);
-        border-left-color: var(--primary);
-        transform: translateX(3px);
-    }
-
-    .sub-nav-item.active {
-        color: var(--primary);
-        background: rgba(189, 165, 129, 0.05);
-        border-left: 2px solid var(--primary);
-        font-weight: 600;
-    }
-
-    .chevron-icon {
-        transition: transform 0.3s ease;
-        font-size: 12px !important;
-    }
-
-    .nav-item-premium.open .chevron-icon {
-        transform: rotate(180deg);
     }
 
     .admin-divider {
@@ -261,23 +205,12 @@
         <a href="/lois" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-scale-balanced"></i> Livre des Lois</div></a>
         <a href="/effectifs" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-users"></i> Effectifs</div></a>
         <a href="/formations" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div></a>
+        <a href="/documents" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-file-signature"></i> Documents</div></a>
         
-        <!-- Menu Déroulant Documents -->
-        <div class="nav-item-premium" id="docs-menu-btn" onclick="toggleDocsMenu()">
-            <div class="nav-item-content">
-                <i class="fas fa-file-signature"></i> Documents
-            </div>
-            <i class="fas fa-chevron-down chevron-icon"></i>
-        </div>
-        <div class="nav-sub-menu" id="docs-sub-menu">
-            <a href="/documents" class="sub-nav-item"><i class="fas fa-book"></i> Base Documentaire</a>
-            <a href="/documents/livret" class="sub-nav-item"><i class="fas fa-info-circle"></i> Livret d'accueil</a>
-            <a href="/documents/doc-arrestations" class="sub-nav-item"><i class="fas fa-sitemap"></i> Arbre d'Arrestations</a>
-            <a href="/documents/armes" class="sub-nav-item"><i class="fas fa-crosshairs"></i> Armurerie</a>
-            <a href="/documents/evaluer-junior" class="sub-nav-item" onclick="checkEvaluationAccess(event)">
-                <i class="fas fa-clipboard-check"></i> Évaluer Junior
-            </a>
-        </div>
+        <!-- Nouveau bouton simple sous Documents -->
+        <a href="/documents/evaluer-junior" class="nav-item-premium" onclick="checkEvaluationAccess(event)">
+            <div class="nav-item-content"><i class="fas fa-clipboard-check"></i> Évaluer Junior</div>
+        </a>
         
         <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true)) { %>
             <div class="admin-divider"></div>
@@ -315,13 +248,6 @@
         document.getElementById('juniorAlertModal').style.display = 'none';
     }
 
-    function toggleDocsMenu() {
-        const btn = document.getElementById('docs-menu-btn');
-        const menu = document.getElementById('docs-sub-menu');
-        btn.classList.toggle('open');
-        menu.classList.toggle('open');
-    }
-
     document.addEventListener("DOMContentLoaded", () => {
         const currentUrl = window.location.pathname;
         
@@ -331,19 +257,5 @@
                 link.classList.add('active');
             }
         });
-
-        document.querySelectorAll('.sub-nav-item').forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === currentUrl) {
-                link.classList.add('active');
-                document.getElementById('docs-menu-btn').classList.add('open', 'active');
-                document.getElementById('docs-sub-menu').classList.add('open');
-            }
-        });
-        
-        if(currentUrl.startsWith('/documents')) {
-            document.getElementById('docs-menu-btn').classList.add('open', 'active');
-            document.getElementById('docs-sub-menu').classList.add('open');
-        }
     });
 </script>
