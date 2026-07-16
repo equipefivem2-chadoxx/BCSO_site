@@ -1,0 +1,55 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --bg-card: rgba(15, 23, 42, 0.4);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+    }
+
+    body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: var(--text-main); }
+    #supervision-hub { margin-left: 280px; padding: 50px 60px; max-width: 1400px; animation: fadeUp 0.4s ease-out; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    .page-header { border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 35px; }
+    .page-header h1 { color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 28px; }
+
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    
+    .tool-card {
+        background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-top: 3px solid var(--primary);
+        border-radius: 12px; padding: 30px; text-decoration: none; color: #fff; transition: 0.3s;
+        display: flex; flex-direction: column; align-items: flex-start; gap: 15px;
+    }
+    .tool-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(189, 165, 129, 0.15); border-color: rgba(189, 165, 129, 0.4); }
+    .tool-icon { font-size: 35px; color: var(--primary); }
+    .tool-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .tool-desc { color: #94a3b8; font-size: 13px; line-height: 1.5; }
+</style>
+
+<div id="supervision-hub">
+    <div class="page-header">
+        <h1>Hub Supervision</h1>
+        <p style="color: #94a3b8; margin-top: 5px;">Outils de gestion et de suivi des effectifs</p>
+    </div>
+
+    <div class="tools-grid">
+        <a href="/superviseur/evaluations" class="tool-card">
+            <i class="fas fa-clipboard-check tool-icon"></i>
+            <div class="tool-title">Évaluations Juniors</div>
+            <div class="tool-desc">Consultez les rapports de période probatoire, validez les acquis et analysez les remarques des évaluateurs.</div>
+            <div style="background: rgba(189,165,129,0.1); color: var(--primary); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-top: 10px;">
+                <%= rapports ? rapports.filter(r => r.statut === 'en_attente').length : 0 %> en attente
+            </div>
+        </a>
+
+        <!-- Emplacement prêt pour tes futures pages ! -->
+        <div class="tool-card" style="opacity: 0.5; cursor: default; border-top-color: #475569;">
+            <i class="fas fa-calendar-times tool-icon" style="color: #94a3b8;"></i>
+            <div class="tool-title" style="color: #94a3b8;">Gestion des Absences</div>
+            <div class="tool-desc">Module en cours de développement...</div>
+        </div>
+    </div>
+</div>
