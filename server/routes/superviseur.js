@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// 🚀 Route Principale : Affichage du Panel Supervision
+// 🚀 Route 1 : Affichage du Hub (index.ejs)
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -10,7 +10,6 @@ router.get('/', async (req, res) => {
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
 
-        // Liste des grades autorisés pour la supervision
         const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
         const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
 
@@ -19,18 +18,15 @@ router.get('/', async (req, res) => {
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
-        // Si l'agent n'a ni le grade SLO+, ni les droits admin -> Refus
         if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
-            return res.render('pages/superviseur', {
+            // CORRECTION: On pointe vers le fichier refus dans le dossier
+            return res.render('pages/superviseur/refus', {
                 title: 'BCSO - Accès Refusé',
                 user: req.session.user,
-                accessDenied: true,
-                currentGrade: currentGrade || 'Non habilité',
-                rapports: []
+                currentGrade: currentGrade || 'Non habilité'
             });
         }
 
-        // Récupération des rapports
         let rapports = [];
         try {
             const RapportJunior = require('../models/RapportJunior');
@@ -39,16 +35,57 @@ router.get('/', async (req, res) => {
             console.log("Modèle RapportJunior en attente d'initialisation...");
         }
 
-        res.render('pages/superviseur', { 
-            title: 'BCSO - Panel Supervision',
+        // CORRECTION: On pointe vers l'index dans le dossier
+        res.render('pages/superviseur/index', { 
+            title: 'BCSO - Hub Supervision',
             user: req.session.user,
-            accessDenied: false,
             rapports: rapports
         });
 
     } catch (error) {
-        console.error('Erreur lors du chargement du panel superviseur:', error);
+        console.error('Erreur hub superviseur:', error);
         res.redirect('/dashboard');
+    }
+});
+
+// 🚀 NOUVELLE ROUTE : La liste des évaluations (le tableau)
+router.get('/evaluations', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.render('pages/superviseur/refus', {
+                title: 'BCSO - Accès Refusé',
+                user: req.session.user,
+                currentGrade: currentGrade || 'Non habilité'
+            });
+        }
+
+        const RapportJunior = require('../models/RapportJunior');
+        const rapports = await RapportJunior.find().sort({ dateCreation: -1 });
+
+        // On pointe vers le fichier evaluations.ejs
+        res.render('pages/superviseur/evaluations', { 
+            title: 'BCSO - Évaluations Juniors',
+            user: req.session.user,
+            rapports: rapports
+        });
+
+    } catch (error) {
+        console.error('Erreur liste evaluations:', error);
+        res.redirect('/superviseur');
     }
 });
 
@@ -78,7 +115,8 @@ router.get('/rapport/:id', async (req, res) => {
         const rapport = await RapportJunior.findById(req.params.id);
         if (!rapport) return res.redirect('/superviseur');
 
-        res.render('pages/rapport-detail', {
+        // CORRECTION: On pointe vers le sous-dossier
+        res.render('pages/superviseur/rapport-detail', {
             title: `Évaluation - ${rapport.nomJunior}`,
             user: req.session.user,
             rapport: rapport,
@@ -107,7 +145,7 @@ router.post('/rapport/:id/supprimer', async (req, res) => {
     try {
         const RapportJunior = require('../models/RapportJunior');
         await RapportJunior.findByIdAndDelete(req.params.id);
-        res.redirect('/superviseur');
+        res.redirect('/superviseur/evaluations');
     } catch (err) {
         res.redirect('/superviseur');
     }
