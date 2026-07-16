@@ -6,7 +6,8 @@ router.get('/login', (req, res) => {
     if (req.session.entreprise) return res.redirect('/entreprise/portail');
     res.render('pages/login-entreprise', { 
         title: 'BCSO - Connexion Partenaire',
-        error: req.query.error
+        error: req.query.error,
+        layout: false // 🚨 OBLIGATOIRE : Désactive la sidebar et le header policier
     });
 });
 
@@ -21,7 +22,6 @@ router.post('/login', async (req, res) => {
             return res.redirect('/entreprise/login?error=1');
         }
 
-        // On crée une session propre à l'entreprise
         req.session.entreprise = entreprise;
         res.redirect('/entreprise/portail');
     } catch (err) {
@@ -36,13 +36,13 @@ router.get('/portail', async (req, res) => {
 
     try {
         const Agent = require('../models/Agent');
-        // On récupère uniquement les agents enregistrés, triés par matricule
         const agents = await Agent.find().sort({ matricule: 1 });
 
         res.render('pages/portal-entreprise', {
             title: `Annuaire BCSO - ${req.session.entreprise.nom}`,
             entreprise: req.session.entreprise,
-            agents: agents
+            agents: agents,
+            layout: false // 🚨 OBLIGATOIRE : Désactive la sidebar et le header policier
         });
     } catch (err) {
         res.redirect('/entreprise/login');
