@@ -88,9 +88,27 @@
     .info-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
     .info-val { font-size: 16px; color: #fff; font-weight: bold; margin-top: 5px; }
 
-    .table-eval { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+    /* 🛠️ FIX TABLEAU: On force le layout fixe */
+    .table-eval { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin-bottom: 40px; 
+        table-layout: fixed; 
+    }
     .table-eval th { background: rgba(0,0,0,0.4); padding: 15px; color: var(--primary); text-align: left; }
-    .table-eval td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    
+    /* Définition propre de la largeur des colonnes */
+    .table-eval th:nth-child(1) { width: 45%; }
+    .table-eval th:nth-child(2) { width: 15%; }
+    .table-eval th:nth-child(3) { width: 40%; }
+
+    /* 🛠️ FIX TEXT OVERFLOW: Empêche les remarques de déborder */
+    .table-eval td { 
+        padding: 15px; 
+        border-bottom: 1px solid rgba(255,255,255,0.05); 
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
 
     .badge { padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
     .b-acquis { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
@@ -98,11 +116,14 @@
     .b-nonacquis { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
     .b-noneval { background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: 1px solid #64748b; }
 
+    /* 🛠️ FIX OBSERVATION GLOBALE: Coupe le texte continu s'il dépasse */
     .remarque-box {
         background: rgba(0,0,0,0.4);
         padding: 25px;
         border-left: 4px solid var(--primary);
         border-radius: 8px;
+        word-break: break-word;
+        overflow-wrap: anywhere;
     }
 </style>
 
