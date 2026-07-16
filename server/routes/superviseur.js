@@ -10,19 +10,26 @@ router.get('/', async (req, res) => {
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
 
-        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
         const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
 
         const isUserAdmin = req.session.user.isAdmin === true || 
                             req.session.user.role === 'admin' || 
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
+        // 🚀 CORRECTION : On fusionne la BDD et la session pour la Sidebar
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
         if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
-            // CORRECTION: On pointe vers le fichier refus dans le dossier
             return res.render('pages/superviseur/refus', {
                 title: 'BCSO - Accès Refusé',
-                user: req.session.user,
+                user: viewUser, // On utilise viewUser au lieu de req.session.user
                 currentGrade: currentGrade || 'Non habilité'
             });
         }
@@ -35,10 +42,9 @@ router.get('/', async (req, res) => {
             console.log("Modèle RapportJunior en attente d'initialisation...");
         }
 
-        // CORRECTION: On pointe vers l'index dans le dossier
         res.render('pages/superviseur/index', { 
             title: 'BCSO - Hub Supervision',
-            user: req.session.user,
+            user: viewUser, // On utilise viewUser
             rapports: rapports
         });
 
@@ -48,7 +54,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE : La liste des évaluations (le tableau)
+// 🚀 Route 2 : La liste des évaluations
 router.get('/evaluations', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -57,18 +63,26 @@ router.get('/evaluations', async (req, res) => {
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
 
-        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
         const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
 
         const isUserAdmin = req.session.user.isAdmin === true || 
                             req.session.user.role === 'admin' || 
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
+        // 🚀 CORRECTION : Objet utilisateur pour la Sidebar
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
         if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
             return res.render('pages/superviseur/refus', {
                 title: 'BCSO - Accès Refusé',
-                user: req.session.user,
+                user: viewUser, 
                 currentGrade: currentGrade || 'Non habilité'
             });
         }
@@ -76,10 +90,9 @@ router.get('/evaluations', async (req, res) => {
         const RapportJunior = require('../models/RapportJunior');
         const rapports = await RapportJunior.find().sort({ dateCreation: -1 });
 
-        // On pointe vers le fichier evaluations.ejs
         res.render('pages/superviseur/evaluations', { 
             title: 'BCSO - Évaluations Juniors',
-            user: req.session.user,
+            user: viewUser, 
             rapports: rapports
         });
 
@@ -89,7 +102,7 @@ router.get('/evaluations', async (req, res) => {
     }
 });
 
-// 🚀 Route pour lire une évaluation détaillée
+// 🚀 Route 3 : Lire une évaluation détaillée (Celle qui plantait 500)
 router.get('/rapport/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -108,6 +121,14 @@ router.get('/rapport/:id', async (req, res) => {
         const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
         const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
 
+        // 🚀 CORRECTION : Objet utilisateur pour la Sidebar
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
         if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
             return res.redirect('/superviseur');
         }
@@ -115,10 +136,9 @@ router.get('/rapport/:id', async (req, res) => {
         const rapport = await RapportJunior.findById(req.params.id);
         if (!rapport) return res.redirect('/superviseur');
 
-        // CORRECTION: On pointe vers le sous-dossier
         res.render('pages/superviseur/rapport-detail', {
             title: `Évaluation - ${rapport.nomJunior}`,
-            user: req.session.user,
+            user: viewUser, // 🚀 On utilise viewUser
             rapport: rapport,
             isUserAdmin: isUserAdmin
         });
