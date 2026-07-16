@@ -3,11 +3,20 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
-const connectDB = require('./database/config'); // 🧱 Import du module de Base de Données
-const Agent = require('./server/models/Agent'); // 👮‍♂️ Import du modèle Agent pour la vérification globale
+const connectDB = require('./database/config'); 
+const Agent = require('./server/models/Agent'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// 🔌 NOUVEAU : Configuration Socket.io pour le temps réel
+const http = require('http');
+const { Server } = require('socket.io');
+const server = http.createServer(app);
+const io = new Server(server);
+
+// On rend "io" accessible partout dans les routes (très pratique !)
+app.set('io', io);
 
 // 🚀 Initialisation de la Base de Données MongoDB
 connectDB();
@@ -22,7 +31,6 @@ app.set('layout', 'layouts/main');
 
 // 2. Middlewares natifs
 app.use(express.static(path.join(__dirname, 'public')));
-// 🚀 NOUVEAU : On augmente la limite à 50 Mo pour accepter les lourdes images Base64 des archives
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -34,18 +42,17 @@ app.use(session({
     cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 } // 24 heures
 }));
 
-// 4. Injection des variables globales pour les vues EJS (Mise à jour avec vérification BDD)
+// 4. Injection des variables globales pour les vues EJS 
 app.use(async (req, res, next) => {
-    // On initialise la variable locale avec l'utilisateur en session s'il existe
     res.locals.user = req.session.user || null;
     
-    // Si l'utilisateur est connecté via Discord, on va chercher son statut en Base de Données
     if (req.session.user) {
         try {
             const agentBDD = await Agent.findOne({ discordId: req.session.user.id });
             if (agentBDD) {
-                // On injecte dynamiquement le statut 'isAdmin' de la BDD pour que EJS (sidebar) le lise
                 res.locals.user.isAdmin = agentBDD.isAdmin || false;
+                // 🚀 CORRECTION DU BUG SLO : On met à jour le grade en direct depuis la BDD !
+                res.locals.user.grade = agentBDD.grade; 
             } else {
                 res.locals.user.isAdmin = false;
             }
@@ -62,7 +69,7 @@ app.use(async (req, res, next) => {
 const indexRouter = require('./server/routes/index');
 app.use('/', indexRouter);
 
-// 6. Lancement du serveur
-app.listen(PORT, () => {
+// 6. Lancement du serveur (Attention : On utilise "server.listen" et pas "app.listen")
+server.listen(PORT, () => {
     console.log(`[BCSO MDT] 🟢 Système en ligne sur le port ${PORT}`);
 });

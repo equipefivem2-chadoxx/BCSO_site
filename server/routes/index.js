@@ -217,6 +217,13 @@ router.post('/documents/evaluer-junior/sauvegarder', async (req, res) => {
         });
 
         await nouveauRapport.save();
+
+        // 🔌 NOUVEAU : Déclencheur Temps Réel Socket.io
+        // Si Socket.io est bien initialisé, on envoie le signal à tous les clients connectés
+        if (req.app.get('io')) {
+            req.app.get('io').emit('nouvelle-evaluation', nouveauRapport);
+        }
+
         res.redirect('/documents/evaluer-junior?success=1');
         
     } catch (err) {
