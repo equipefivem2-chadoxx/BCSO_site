@@ -65,7 +65,6 @@
 
     .sidebar-nav::-webkit-scrollbar { width: 0px; }
 
-    /* 🚀 STYLE DES EN-TÊTES DE CATÉGORIE (SUPERVISION & ADMINISTRATION) */
     .sidebar-category {
         color: #475569;
         font-size: 11px;
@@ -149,6 +148,48 @@
     .admin-link:hover i {
         color: #ef4444 !important;
     }
+
+    /* 🚀 NOUVEAU STYLE POUR AFFICHER LE NOM EN BAS */
+    .sidebar-user-profile {
+        margin-top: auto;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.25);
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .profile-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(189, 165, 129, 0.15);
+        border: 1px solid var(--primary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 16px;
+    }
+    
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .profile-name {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .profile-grade {
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 600;
+    }
 </style>
 
 <aside class="bcso-sidebar" id="bcsoSidebar">
@@ -157,6 +198,7 @@
     </div>
     
     <div class="sidebar-nav">
+        <!-- POUR CHANGER LE NOM DES BOUTONS, MODIFIE LE TEXTE APRÈS LA BALISE <i> -->
         <a href="/dashboard" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-home"></i> Vue d'ensemble</div></a>
         <a href="/archives" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-folder-open"></i> Base de Données</div></a>
         <a href="/reglement" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-gavel"></i> Règlement</div></a>
@@ -165,12 +207,10 @@
         <a href="/formations" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div></a>
         <a href="/documents" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-file-signature"></i> Documents</div></a>
         
-        <!-- Bouton pour initier une évaluation (Deputy I minimum) -->
         <a href="/documents/evaluer-junior" class="nav-item-premium">
             <div class="nav-item-content"><i class="fas fa-clipboard-check"></i> Évaluer Junior</div>
         </a>
         
-        <!-- 🚀 CATÉGORIE SUPERVISION (Réservée SLO, Sergeants, Lieutenants, Sheriff & Admins) -->
         <% 
         const isSuperviseur = (typeof user !== 'undefined' && user && (
             user.isAdmin === true || 
@@ -186,7 +226,6 @@
             </a>
         <% } %>
 
-        <!-- 🚀 CATÉGORIE ADMINISTRATION -->
         <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true)) { %>
             <div class="sidebar-category">Administration</div>
             <a href="/admin" class="nav-item-premium admin-link">
@@ -194,6 +233,20 @@
             </a>
         <% } %>
     </div>
+
+    <!-- 🚀 AFFICHAGE DU NOM EN BAS DE LA SIDEBAR -->
+    <% if (typeof user !== 'undefined' && user) { %>
+        <div class="sidebar-user-profile">
+            <div class="profile-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="profile-details">
+                <!-- Affiche le nom d'utilisateur (modifie 'username' par 'nom' si ta bdd utilise 'nom') -->
+                <span class="profile-name"><%= user.username || user.nom || 'Agent BCSO' %></span>
+                <span class="profile-grade"><%= user.grade || 'Effectif' %></span>
+            </div>
+        </div>
+    <% } %>
 </aside>
 
 <script>
@@ -201,8 +254,11 @@
         const currentUrl = window.location.pathname;
         
         document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
+            const href = link.getAttribute('href');
             link.classList.remove('active');
-            if (link.getAttribute('href') === currentUrl) {
+            
+            // 🚀 CORRECTION ICI : Si l'URL actuelle "commence par" le lien (ex: /superviseur/rapport/...), ça s'active !
+            if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
                 link.classList.add('active');
             }
         });

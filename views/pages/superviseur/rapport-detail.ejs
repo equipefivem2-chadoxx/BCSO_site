@@ -117,7 +117,7 @@
                 </form>
             <% } %>
 
-            <% if (isUserAdmin) { %>
+            <% if (typeof isUserAdmin !== 'undefined' && isUserAdmin) { %>
                 <form action="/superviseur/rapport/<%= rapport._id %>/supprimer" method="POST" onsubmit="return confirm('Supprimer définitivement ce rapport ?');">
                     <button type="submit" class="btn-action btn-danger"><i class="fas fa-trash"></i> SUPPRIMER</button>
                 </form>
