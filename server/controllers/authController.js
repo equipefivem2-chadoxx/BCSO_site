@@ -1,8 +1,7 @@
 const axios = require('axios');
+const Agent = require('../models/Agent'); // 🚀 NOUVEAU : Import du modèle Agent
 
 exports.loginPage = (req, res) => {
-    // Affiche la page de connexion EJS SANS le layout global
-    // On passe "error" pour que la vue EJS puisse afficher les messages de refus
     res.render('pages/login', { 
         layout: false, 
         error: req.query.error 
@@ -11,12 +10,9 @@ exports.loginPage = (req, res) => {
 
 exports.loginDiscord = (req, res) => {
     const clientId = process.env.DISCORD_CLIENT_ID;
-    
-    // ⚠️ L'URL en dur pour contourner les bugs de formatage des variables sur Railway
     const rawUrl = "https://bcso-noface.up.railway.app/auth/discord/callback";
     const redirectUri = encodeURIComponent(rawUrl);
     
-    // Scopes importants : identify (profil basique) + guilds.members.read (pour lire ses rôles)
     const url = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds.members.read`;
     res.redirect(url);
 };
@@ -26,7 +22,6 @@ exports.callbackDiscord = async (req, res) => {
         const code = req.query.code;
         if (!code) return res.redirect('/auth/login?error=NoCode');
 
-        // ⚠️ Il faut utiliser EXACTEMENT la même URL en dur ici pour la validation du token
         const rawUrl = "https://bcso-noface.up.railway.app/auth/discord/callback";
 
         // 1. Échanger le code contre un Token d'accès
@@ -35,7 +30,7 @@ exports.callbackDiscord = async (req, res) => {
         params.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
         params.append('grant_type', 'authorization_code');
         params.append('code', code);
-        params.append('redirect_uri', rawUrl); // On passe l'URL propre ici
+        params.append('redirect_uri', rawUrl);
 
         const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', params, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -49,36 +44,39 @@ exports.callbackDiscord = async (req, res) => {
             headers: { Authorization: `Bearer ${accessToken}` }
         });
 
-        const userRoles = memberResponse.data.roles; // Tableau contenant les IDs des rôles
+        const userRoles = memberResponse.data.roles;
         const userInfo = memberResponse.data.user;
 
         // 3. Attribution des accès selon le rôle Discord
         let systemRole = null;
         
-        // Le rôle Capitaine est reconnu comme le vrai lead et obtient les droits d'administration
         if (userRoles.includes(process.env.ROLE_CAPTAIN_ID) || userRoles.includes(process.env.ROLE_ADMIN_ID)) {
             systemRole = 'admin';
         } else if (userRoles.includes(process.env.ROLE_OFFICER_ID)) {
             systemRole = 'officer';
         }
 
-        // Si aucun rôle correspondant, on bloque l'accès
         if (!systemRole) {
             return res.redirect('/auth/login?error=AccessDenied');
         }
 
-        // 🚀 4. Sauvegarde dans la session (Avec gestion du pseudo serveur)
-        // S'il n'y a pas de rename sur le serveur (nick), on se rabat sur le pseudo global, puis classique.
+        // 🚀 4. RECHERCHE EN BASE DE DONNÉES DE L'AGENT VIA SON ID DISCORD
+        const agentDB = await Agent.findOne({ discordId: userInfo.id });
+
         const serverNickname = memberResponse.data.nick || userInfo.global_name || userInfo.username;
 
+        // 🚀 5. SAUVEGARDE COMPLÈTE EN SESSION (Avec le vrai grade DB !)
         req.session.user = {
             id: userInfo.id,
             username: serverNickname,
             avatar: userInfo.avatar,
-            role: systemRole
+            role: systemRole,
+            // Si on trouve l'agent en BDD, on stocke ses infos, sinon valeurs par défaut
+            grade: agentDB ? agentDB.grade : 'Non assigné',
+            matricule: agentDB ? agentDB.matricule : null,
+            isAdmin: (systemRole === 'admin' || userInfo.id === '1247264549489610897' || (agentDB && agentDB.isAdmin === true))
         };
 
-        // Redirection vers le dashboard après connexion réussie
         res.redirect('/dashboard');
 
     } catch (error) {

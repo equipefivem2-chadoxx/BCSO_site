@@ -113,14 +113,22 @@ router.get('/documents/armes', (req, res) => {
 router.get('/documents/evaluer-junior', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
-    // Sécurité Backend : Rejeter les Juniors qui tentent d'accéder via l'URL
-    const isUserAdmin = req.session.user.isAdmin || req.session.user.role === 'admin' || req.session.user.id === '1247264549489610897';
-    if (req.session.user.grade === 'Deputy Junior' && !isUserAdmin) {
-        return res.status(403).send("Accès Refusé : Vous devez être Deputy I minimum pour évaluer un agent.");
-    }
-
     try {
         const Agent = require('../models/Agent');
+        
+        // 🚀 Lecture en temps réel du grade en base de données selon l'ID Discord
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        // Vérification des droits administrateur (passe-droit)
+        const isUserAdmin = req.session.user.isAdmin || req.session.user.role === 'admin' || discordId === '1247264549489610897' || (agentDB && agentDB.isAdmin === true);
+        
+        // Si l'agent est Deputy Junior dans la BDD (ou dans la session), on bloque l'accès
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        if (currentGrade === 'Deputy Junior' && !isUserAdmin) {
+            return res.status(403).send("Accès Refusé : Vous n'êtes pas habilité à évaluer un agent (Grade requis : Deputy I minimum).");
+        }
+
         const juniors = await Agent.find({ grade: 'Deputy Junior' }).sort({ nom: 1 });
 
         res.render('pages/rapport-junior', { 
@@ -138,15 +146,21 @@ router.get('/documents/evaluer-junior', async (req, res) => {
 router.get('/documents/evaluer-junior/formulaire/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
-    const isUserAdmin = req.session.user.isAdmin || req.session.user.role === 'admin' || req.session.user.id === '1247264549489610897';
-    if (req.session.user.grade === 'Deputy Junior' && !isUserAdmin) {
-        return res.status(403).send("Accès Refusé : Vous devez être Deputy I minimum pour évaluer un agent.");
-    }
-
     try {
         const Agent = require('../models/Agent');
-        const junior = await Agent.findById(req.params.id);
         
+        // 🚀 Lecture en temps réel du grade en base de données selon l'ID Discord
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin || req.session.user.role === 'admin' || discordId === '1247264549489610897' || (agentDB && agentDB.isAdmin === true);
+        
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        if (currentGrade === 'Deputy Junior' && !isUserAdmin) {
+            return res.status(403).send("Accès Refusé : Vous n'êtes pas habilité à évaluer un agent (Grade requis : Deputy I minimum).");
+        }
+
+        const junior = await Agent.findById(req.params.id);
         if (!junior) return res.redirect('/documents/evaluer-junior');
 
         res.render('pages/formulaire-junior', {
