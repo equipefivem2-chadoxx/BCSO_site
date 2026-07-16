@@ -1,0 +1,33 @@
+<style>
+    .dash-header { border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 30px; }
+    .dash-header h1 { color: #bda581; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; }
+    .dash-header p { color: #94a3b8; font-size: 14px; }
+    
+    .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .dash-card { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); border-top: 3px solid #bda581; border-radius: 12px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .dash-card h3 { color: #fff; font-size: 16px; text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .dash-card h3 i { color: #bda581; font-size: 20px; }
+    .dash-card p { color: #cbd5e1; font-size: 14px; line-height: 1.6; margin-bottom: 15px; }
+    
+    .btn-action { display: inline-block; background: rgba(189, 165, 129, 0.1); color: #bda581; border: 1px solid #bda581; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; transition: 0.3s; }
+    .btn-action:hover { background: #bda581; color: #000; box-shadow: 0 0 15px rgba(189, 165, 129, 0.4); }
+</style>
+
+<div class="dash-header">
+    <h1>Bienvenue, <%= locals.entreprise.nom %></h1>
+    <p>Portail de gestion de votre partenariat avec le Blaine County Sheriff's Office.</p>
+</div>
+
+<div class="dash-grid">
+    <div class="dash-card">
+        <h3><i class="fas fa-address-book"></i> Annuaire des Effectifs</h3>
+        <p>Consultez la liste de tous nos agents actifs, leurs grades et leurs numéros de téléphone professionnels pour faciliter vos communications.</p>
+        <a href="/entreprise/annuaire" class="btn-action">Ouvrir l'annuaire</a>
+    </div>
+
+    <div class="dash-card" style="border-top-color: #38bdf8;">
+        <h3 style="color: #38bdf8;"><i class="fas fa-file-contract" style="color: #38bdf8;"></i> Suivi de Contrat</h3>
+        <p>Retrouvez ici les détails de votre contrat avec le BCSO, vos factures et les clauses spécifiques de notre collaboration.</p>
+        <a href="/entreprise/contrat" class="btn-action" style="border-color: #38bdf8; color: #38bdf8;">Voir mon contrat</a>
+    </div>
+</div>

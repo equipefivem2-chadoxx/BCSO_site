@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= locals.title || 'BCSO Partenaire' %></title>
+    
+    <link rel="icon" type="image/png" href="/images/bcso.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #07090e; 
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            color: #f3f4f6;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+        .main-content-wrapper {
+            margin-left: 280px; 
+            padding-bottom: 50px; 
+            min-height: 100vh;
+            width: calc(100% - 280px);
+            padding-top: 40px; 
+            padding-left: 40px; 
+            padding-right: 40px; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR ENTREPRISE -->
+    <%- include('partials/sidebar-entreprise') %>
+    
+    <!-- CONTENU CENTRAL -->
+    <main class="main-content-wrapper">
+        <%- body %>
+    </main>
+
+    <!-- BARRE DU BAS ENTREPRISE -->
+    <%- include('partials/header-entreprise') %>
+
+</body>
+</html>

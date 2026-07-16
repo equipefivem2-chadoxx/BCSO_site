@@ -1,44 +1,65 @@
 const express = require('express');
 const router = express.Router();
+const Agent = require('../models/Agent');
+const Entreprise = require('../models/Entreprise');
 
-// 🚀 Page de connexion Entreprise
+// 🚀 Middleware de vérification de session entreprise
+const checkEntreprise = (req, res, next) => {
+    if (!req.session.entreprise) {
+        return res.redirect('/entreprise/login');
+    }
+    // Rend l'objet entreprise disponible dans toutes les vues
+    res.locals.entreprise = req.session.entreprise;
+    next();
+};
+
+// 1. Page de connexion
 router.get('/login', (req, res) => {
-    if (req.session.entreprise) return res.redirect('/entreprise/portail');
+    if (req.session.entreprise) return res.redirect('/entreprise/dashboard');
     res.render('pages/login-entreprise', { 
         title: 'BCSO - Connexion Partenaire',
         error: req.query.error,
-        layout: false // 🚨 OBLIGATOIRE : Désactive la sidebar et le header policier
+        layout: false 
     });
 });
 
-// 🚀 Traitement de la connexion
 router.post('/login', async (req, res) => {
     try {
-        const Entreprise = require('../models/Entreprise');
         const { identifiant, motDePasse } = req.body;
-
         const entreprise = await Entreprise.findOne({ identifiant, motDePasse });
-        if (!entreprise) {
-            return res.redirect('/entreprise/login?error=1');
-        }
-
+        if (!entreprise) return res.redirect('/entreprise/login?error=1');
+        
         req.session.entreprise = entreprise;
-        res.redirect('/entreprise/portail');
+        res.redirect('/entreprise/dashboard');
     } catch (err) {
         console.error("Erreur login entreprise :", err);
         res.redirect('/entreprise/login?error=1');
     }
 });
 
-// 🚀 L'annuaire téléphonique officiel (Portail)
-router.get('/portail', async (req, res) => {
-    if (!req.session.entreprise) return res.redirect('/entreprise/login');
+// 🚀 Applique le middleware sur toutes les routes ci-dessous
+router.use(checkEntreprise);
 
+// 2. Dashboard Accueil
+router.get('/dashboard', (req, res) => {
+    res.render('pages/entreprise/dashboard', {
+        title: `Dashboard - ${req.session.entreprise.nom}`,
+        layout: 'layout-entreprise' // 🚨 Utilise le layout partenaire
+    });
+});
+
+// 3. Page Contrat (En développement)
+router.get('/contrat', (req, res) => {
+    res.render('pages/entreprise/contrat', {
+        title: `Contrat - ${req.session.entreprise.nom}`,
+        layout: 'layout-entreprise'
+    });
+});
+
+// 4. Annuaire BCSO
+router.get('/annuaire', async (req, res) => {
     try {
-        const Agent = require('../models/Agent');
         const agents = await Agent.find();
-
-        // 🚀 Tri des agents par ordre de grade
         const ordreGrades = [
             'Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I', 
             'SLO', 'Deputy III', 'Deputy II', 'Deputy I', 'Deputy Junior'
@@ -48,22 +69,20 @@ router.get('/portail', async (req, res) => {
             const indexA = ordreGrades.indexOf(a.grade);
             const indexB = ordreGrades.indexOf(b.grade);
             if (indexA !== indexB) return indexA - indexB;
-            // Si même grade, tri par matricule
             return a.matricule.localeCompare(b.matricule, undefined, { numeric: true, sensitivity: 'base' });
         });
 
-        res.render('pages/portal-entreprise', {
+        res.render('pages/entreprise/annuaire', {
             title: `Annuaire BCSO - ${req.session.entreprise.nom}`,
-            entreprise: req.session.entreprise,
             agents: agents,
-            layout: false // 🚨 OBLIGATOIRE : Désactive la sidebar et le header policier
+            layout: 'layout-entreprise'
         });
     } catch (err) {
-        res.redirect('/entreprise/login');
+        res.redirect('/entreprise/dashboard');
     }
 });
 
-// 🚀 Déconnexion
+// 5. Déconnexion
 router.get('/logout', (req, res) => {
     delete req.session.entreprise;
     res.redirect('/entreprise/login');

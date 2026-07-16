@@ -1,0 +1,48 @@
+<style>
+    .dev-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        text-align: center;
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px dashed rgba(189, 165, 129, 0.3);
+        border-radius: 12px;
+        padding: 40px;
+    }
+    .dev-icon {
+        font-size: 60px;
+        color: #bda581;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .dev-title {
+        color: #fff;
+        font-size: 24px;
+        text-transform: uppercase;
+        font-weight: 900;
+        margin-bottom: 10px;
+    }
+    .dev-desc {
+        color: #94a3b8;
+        font-size: 15px;
+        max-width: 500px;
+        line-height: 1.6;
+    }
+</style>
+
+<div class="dev-container">
+    <i class="fas fa-tools dev-icon"></i>
+    <h2 class="dev-title">Module en développement</h2>
+    <p class="dev-desc">
+        La gestion numérique des contrats de partenariat est actuellement en cours de conception par le Haut Commandement.
+        <br><br>
+        Ce module vous permettra bientôt de consulter vos termes, signer des accords et télécharger vos factures directement depuis ce portail.
+    </p>
+</div>
