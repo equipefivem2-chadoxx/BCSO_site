@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
         if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
             return res.render('pages/superviseur/refus', {
                 title: 'BCSO - Accès Refusé',
-                user: viewUser, // On utilise viewUser au lieu de req.session.user
+                user: viewUser, 
                 currentGrade: currentGrade || 'Non habilité'
             });
         }
@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
 
         res.render('pages/superviseur/index', { 
             title: 'BCSO - Hub Supervision',
-            user: viewUser, // On utilise viewUser
+            user: viewUser, 
             rapports: rapports
         });
 
@@ -102,7 +102,7 @@ router.get('/evaluations', async (req, res) => {
     }
 });
 
-// 🚀 Route 3 : Lire une évaluation détaillée (Celle qui plantait 500)
+// 🚀 Route 3 : Lire une évaluation détaillée
 router.get('/rapport/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -138,7 +138,7 @@ router.get('/rapport/:id', async (req, res) => {
 
         res.render('pages/superviseur/rapport-detail', {
             title: `Évaluation - ${rapport.nomJunior}`,
-            user: viewUser, // 🚀 On utilise viewUser
+            user: viewUser, 
             rapport: rapport,
             isUserAdmin: isUserAdmin
         });
@@ -160,7 +160,7 @@ router.post('/rapport/:id/valider', async (req, res) => {
     }
 });
 
-// 🚀 Route pour supprimer un rapport (Admin)
+// 🚀 Route pour supprimer UN rapport
 router.post('/rapport/:id/supprimer', async (req, res) => {
     try {
         const RapportJunior = require('../models/RapportJunior');
@@ -168,6 +168,40 @@ router.post('/rapport/:id/supprimer', async (req, res) => {
         res.redirect('/superviseur/evaluations');
     } catch (err) {
         res.redirect('/superviseur');
+    }
+});
+
+// 🚀 NOUVELLE ROUTE : SUPPRIMER TOUS LES RAPPORTS (Réservé aux Admins)
+router.post('/evaluations/supprimer-tout', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        // Vérification de sécurité stricte : Seuls les admins peuvent TOUT détruire
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        if (!isUserAdmin) {
+            console.log("Tentative de suppression globale refusée (non-admin).");
+            return res.redirect('/superviseur/evaluations');
+        }
+
+        const RapportJunior = require('../models/RapportJunior');
+        
+        // deleteMany({}) avec un objet vide supprime TOUS les documents de la collection
+        await RapportJunior.deleteMany({});
+        
+        console.log(`L'administrateur ${discordId} a purgé toutes les évaluations.`);
+        res.redirect('/superviseur/evaluations?success=purged');
+
+    } catch (err) {
+        console.error("Erreur lors de la purge globale:", err);
+        res.redirect('/superviseur/evaluations');
     }
 });
 
