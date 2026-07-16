@@ -139,61 +139,9 @@
     .admin-link:hover i {
         color: #ef4444 !important;
     }
-
-    /* Modal Alerte Junior */
-    .custom-modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(5px);
-    }
-    .custom-modal {
-        background: #0d111a;
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        padding: 30px;
-        border-radius: 12px;
-        text-align: center;
-        max-width: 400px;
-        box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
-    }
-    .custom-modal h3 {
-        color: #ef4444;
-        margin-bottom: 15px;
-        font-size: 18px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .custom-modal p {
-        color: #94a3b8;
-        font-size: 14px;
-        margin-bottom: 25px;
-        line-height: 1.5;
-    }
-    .custom-modal-btn {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
-        border: 1px solid rgba(239, 68, 68, 0.4);
-        padding: 10px 25px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s;
-    }
-    .custom-modal-btn:hover {
-        background: #ef4444;
-        color: #fff;
-    }
 </style>
 
-<!-- Injection propre des permissions dans des attributs HTML data-* pour éviter les erreurs JS -->
-<aside class="bcso-sidebar" id="bcsoSidebar" 
-       data-user-grade="<%= (typeof user !== 'undefined' && user && user.grade) ? user.grade : '' %>" 
-       data-is-admin="<%= (typeof user !== 'undefined' && user && (user.isAdmin === true || user.role === 'admin' || user.id === '1247264549489610897')) ? 'true' : 'false' %>">
-    
+<aside class="bcso-sidebar" id="bcsoSidebar">
     <div class="sidebar-logo-container">
         <img src="/images/bcso.png" alt="BCSO Logo" class="sidebar-logo">
     </div>
@@ -207,8 +155,8 @@
         <a href="/formations" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div></a>
         <a href="/documents" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-file-signature"></i> Documents</div></a>
         
-        <!-- Nouveau bouton simple sous Documents -->
-        <a href="/documents/evaluer-junior" class="nav-item-premium" onclick="checkEvaluationAccess(event)">
+        <!-- Le lien part directement au serveur sans aucun blocage JS -->
+        <a href="/documents/evaluer-junior" class="nav-item-premium">
             <div class="nav-item-content"><i class="fas fa-clipboard-check"></i> Évaluer Junior</div>
         </a>
         
@@ -221,33 +169,7 @@
     </div>
 </aside>
 
-<!-- Popup Erreur Grade -->
-<div class="custom-modal-overlay" id="juniorAlertModal">
-    <div class="custom-modal">
-        <i class="fas fa-exclamation-triangle" style="font-size: 30px; color: #ef4444; margin-bottom: 15px;"></i>
-        <h3>Accès Refusé</h3>
-        <p>Vous n'êtes pas habilité à accéder à cette section.<br><strong>Requis :</strong> Deputy I minimum.</p>
-        <button class="custom-modal-btn" onclick="closeModal()">Compris</button>
-    </div>
-</div>
-
 <script>
-    function checkEvaluationAccess(e) {
-        const sidebar = document.getElementById('bcsoSidebar');
-        const userGrade = sidebar ? sidebar.getAttribute('data-user-grade') : '';
-        const isAdmin = sidebar ? sidebar.getAttribute('data-is-admin') === 'true' : false;
-
-        // Si l'utilisateur est Deputy Junior (et pas admin), on bloque le clic et on affiche la modal
-        if (userGrade === 'Deputy Junior' && !isAdmin) {
-            e.preventDefault();
-            document.getElementById('juniorAlertModal').style.display = 'flex';
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('juniorAlertModal').style.display = 'none';
-    }
-
     document.addEventListener("DOMContentLoaded", () => {
         const currentUrl = window.location.pathname;
         
