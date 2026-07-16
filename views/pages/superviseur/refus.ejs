@@ -1,0 +1,160 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+        --text-muted: #94a3b8;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    #supervision-container {
+        margin-left: 280px;
+        padding: 50px 60px;
+        min-height: 100vh;
+        box-sizing: border-box;
+        animation: fadeUp 0.5s ease-out forwards;
+    }
+
+    .refus-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 140px);
+        width: 100%;
+        padding-right: 40px; 
+    }
+
+    .access-denied-box {
+        width: 100%;
+        max-width: 580px;
+        background: rgba(13, 17, 26, 0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        border-top: 4px solid #ef4444;
+        border-radius: 16px;
+        padding: 45px 40px;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(239, 68, 68, 0.12);
+    }
+
+    .access-denied-icon {
+        width: 76px;
+        height: 76px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px auto;
+        color: #ef4444;
+        font-size: 34px;
+        box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+    }
+
+    .access-denied-box h2 {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0 0 8px 0;
+    }
+
+    .error-subtitle {
+        color: #ef4444;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 24px;
+    }
+
+    .access-denied-box p {
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 0 30px 0;
+    }
+
+    .agent-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 12px 22px;
+        border-radius: 8px;
+        margin-bottom: 32px;
+        color: #cbd5e1;
+        font-family: monospace;
+        font-size: 13px;
+    }
+
+    .btn-return {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(189, 165, 129, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        padding: 12px 28px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+    }
+
+    .btn-return:hover {
+        background: var(--primary);
+        color: #05070b;
+        box-shadow: 0 0 20px rgba(189, 165, 129, 0.4);
+        transform: translateY(-2px);
+    }
+</style>
+
+<div id="supervision-container">
+    <div class="refus-wrapper">
+        <div class="access-denied-box">
+            <div class="access-denied-icon">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h2>Accès Restreint</h2>
+            <div class="error-subtitle">Réservé au Staff de Supervision (SLO & +)</div>
+            
+            <p>Ce terminal est consacré au suivi de carrière et à la validation des périodes probatoires. Votre grade actuel ne vous permet pas de consulter les archives de la supervision.</p>
+
+            <div class="agent-status-badge">
+                <i class="fas fa-lock" style="color: #ef4444;"></i>
+                <span>STATUT ACTUEL : <strong style="color: #fff;"><%= typeof currentGrade !== 'undefined' ? currentGrade : 'Non habilité' %></strong></span>
+            </div>
+
+            <div>
+                <a href="/dashboard" class="btn-return">
+                    <i class="fas fa-arrow-left"></i> Retour au Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
