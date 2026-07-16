@@ -5,7 +5,8 @@
     :root {
         --primary: #bda581;
         --primary-glow: rgba(189, 165, 129, 0.15);
-        --bg-card: rgba(15, 23, 42, 0.4);
+        --primary-glow-strong: rgba(189, 165, 129, 0.4);
+        --bg-card: rgba(15, 23, 42, 0.5);
         --bg-dark: #07090e;
         --text-main: #e2e8f0;
         --text-muted: #94a3b8;
@@ -27,48 +28,52 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .main-content {
-        margin-left: 280px;
-        padding: 40px;
-        min-height: 100vh;
-    }
-
+    /* 🚀 Conteneur Principal : S'aligne strictement après les 280px de la sidebar sans vide inutile */
     #evaluation-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding-top: 20px;
-        padding-bottom: 70px;
-        animation: fadeUp 0.6s ease-out forwards;
+        margin-left: 280px;
+        padding: 50px 60px 80px 60px;
+        min-height: 100vh;
+        box-sizing: border-box;
+        animation: fadeUp 0.5s ease-out forwards;
     }
 
-    /* 🚀 STYLES POUR LA PAGE D'ERREUR ET DE REFUS (100% DA BCSO) */
+    /* =========================================================
+       🔴 STYLE DU PANNEAU DE REFUS (PARFAITEMENT CENTRÉ)
+       ========================================================= */
+    .refus-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 100px);
+        width: 100%;
+    }
+
     .access-denied-box {
-        max-width: 650px;
-        margin: 80px auto;
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(239, 68, 68, 0.3);
+        width: 100%;
+        max-width: 580px;
+        background: rgba(13, 17, 26, 0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(239, 68, 68, 0.35);
         border-top: 4px solid #ef4444;
         border-radius: 16px;
-        padding: 40px 30px;
+        padding: 45px 40px;
         text-align: center;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(239, 68, 68, 0.1);
-        animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(239, 68, 68, 0.12);
     }
 
     .access-denied-icon {
-        width: 80px;
-        height: 80px;
+        width: 76px;
+        height: 76px;
         background: rgba(239, 68, 68, 0.1);
         border: 1px solid rgba(239, 68, 68, 0.3);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 25px auto;
+        margin: 0 auto 24px auto;
         color: #ef4444;
-        font-size: 36px;
-        box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        font-size: 34px;
+        box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
     }
 
     .access-denied-box h2 {
@@ -77,21 +82,21 @@
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 2px;
-        margin: 0 0 10px 0;
+        margin: 0 0 8px 0;
     }
 
-    .access-denied-box .error-subtitle {
+    .error-subtitle {
         color: #ef4444;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 13px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 25px;
+        letter-spacing: 1.5px;
+        margin-bottom: 24px;
     }
 
     .access-denied-box p {
         color: var(--text-muted);
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1.6;
         margin: 0 0 30px 0;
     }
@@ -100,14 +105,14 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 12px 22px;
         border-radius: 8px;
-        margin-bottom: 30px;
-        color: #e2e8f0;
+        margin-bottom: 32px;
+        color: #cbd5e1;
         font-family: monospace;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .btn-return {
@@ -117,11 +122,11 @@
         background: rgba(189, 165, 129, 0.1);
         color: var(--primary);
         border: 1px solid rgba(189, 165, 129, 0.3);
-        padding: 12px 25px;
+        padding: 12px 28px;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 800;
-        font-size: 13px;
+        font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: all 0.3s;
@@ -130,17 +135,19 @@
     .btn-return:hover {
         background: var(--primary);
         color: #05070b;
-        box-shadow: 0 0 15px var(--primary-glow);
+        box-shadow: 0 0 20px var(--primary-glow-strong);
         transform: translateY(-2px);
     }
 
-    /* STYLES INTERFACE NORMALE */
+    /* =========================================================
+       🟡 STYLE DU HUB D'ÉVALUATION (ALIGNEMENT PROPRE)
+       ========================================================= */
     .eval-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid rgba(189, 165, 129, 0.2);
-        padding-bottom: 20px;
+        padding-bottom: 24px;
         margin-bottom: 40px;
     }
 
@@ -148,9 +155,9 @@
         margin: 0;
         color: #fff;
         font-size: 28px;
-        font-weight: 800;
+        font-weight: 900;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
     }
 
     .eval-header h1 span {
@@ -161,7 +168,7 @@
 
     .eval-subtitle {
         color: var(--text-muted);
-        margin: 6px 0 0 0;
+        margin: 8px 0 0 0;
         font-size: 14px;
         font-weight: 400;
     }
@@ -169,12 +176,12 @@
     .total-badge {
         background: rgba(189, 165, 129, 0.1);
         border: 1px solid rgba(189, 165, 129, 0.3);
-        padding: 8px 20px;
+        padding: 10px 22px;
         border-radius: 30px;
         color: var(--primary);
-        font-weight: bold;
+        font-weight: 800;
         letter-spacing: 1px;
-        font-size: 13px;
+        font-size: 12px;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -182,31 +189,29 @@
 
     .juniors-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 24px;
-        animation: fadeUp 0.6s ease-out backwards;
-        animation-delay: 0.2s;
     }
 
     .junior-card {
         background: var(--bg-card);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.03);
-        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-top: 1px solid rgba(189, 165, 129, 0.15);
         border-radius: 16px;
-        padding: 25px;
+        padding: 26px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         position: relative;
         overflow: hidden;
     }
 
     .junior-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 30px var(--primary-glow);
-        border-color: rgba(189, 165, 129, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-glow);
+        border-color: rgba(189, 165, 129, 0.4);
     }
 
     .card-accent-top {
@@ -215,14 +220,14 @@
         width: 100%;
         height: 3px;
         background: linear-gradient(to right, transparent, var(--primary), transparent);
-        opacity: 0.5;
+        opacity: 0.6;
     }
 
     .card-header-agent {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 15px;
+        margin-bottom: 16px;
     }
 
     .matricule {
@@ -238,26 +243,26 @@
         height: 10px;
         background-color: #10b981;
         border-radius: 50%;
-        box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
     }
 
     .agent-name {
-        font-size: 18px;
-        color: #e2e8f0;
+        font-size: 19px;
+        color: #f8fafc;
         font-weight: 700;
         margin-bottom: 6px;
     }
 
     .agent-grade {
         color: var(--text-muted);
-        font-size: 13px;
+        font-size: 12px;
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-bottom: 25px;
-        font-weight: 600;
+        margin-bottom: 28px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .agent-grade i {
@@ -268,7 +273,7 @@
         background: rgba(189, 165, 129, 0.1);
         color: var(--primary);
         border: 1px solid rgba(189, 165, 129, 0.3);
-        padding: 12px 15px;
+        padding: 13px 15px;
         border-radius: 8px;
         text-align: center;
         text-decoration: none;
@@ -286,29 +291,27 @@
     .btn-evaluate:hover {
         background: var(--primary);
         color: #05070b;
-        box-shadow: 0 0 15px var(--primary-glow);
-        transform: translateY(-2px);
+        box-shadow: 0 0 20px var(--primary-glow-strong);
     }
 
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
-        padding: 80px 20px;
+        padding: 100px 20px;
         background: var(--bg-card);
         backdrop-filter: blur(10px);
         border: 1px dashed rgba(189, 165, 129, 0.2);
         border-radius: 16px;
         color: var(--text-muted);
-        animation: fadeUp 0.6s ease-out forwards;
     }
 </style>
 
-<div class="main-content">
-    <div id="evaluation-container">
+<div id="evaluation-container">
+    
+    <!-- 🚀 CONDITION D'AFFICHAGE : SI L'ACCÈS EST REFUSÉ -->
+    <% if (typeof accessDenied !== 'undefined' && accessDenied === true) { %>
         
-        <!-- 🚀 CONDITION D'AFFICHAGE : SI L'ACCÈS EST REFUSÉ (GRADE INSUFFISANT OU NON ENREGISTRÉ) -->
-        <% if (typeof accessDenied !== 'undefined' && accessDenied === true) { %>
-            
+        <div class="refus-wrapper">
             <div class="access-denied-box">
                 <div class="access-denied-icon">
                     <i class="fas fa-shield-halved"></i>
@@ -333,51 +336,51 @@
                     </a>
                 </div>
             </div>
+        </div>
 
-        <!-- 🚀 SINON : AFFICHAGE NORMAL DE LA GRILLE DES JUNIORS -->
-        <% } else { %>
+    <!-- 🚀 SINON : AFFICHAGE NORMAL DE LA GRILLE DES JUNIORS -->
+    <% } else { %>
 
-            <div class="eval-header">
-                <div>
-                    <h1>Évaluation des <span>Juniors</span></h1>
-                    <p class="eval-subtitle">Sélectionnez un Deputy Junior dans les effectifs pour initier une évaluation de terrain.</p>
-                </div>
-                <div class="total-badge">
-                    <i class="fas fa-user-shield"></i> <%= juniors ? juniors.length : 0 %> JUNIORS ÉVALUABLES
-                </div>
+        <div class="eval-header">
+            <div>
+                <h1>Évaluation des <span>Juniors</span></h1>
+                <p class="eval-subtitle">Sélectionnez un Deputy Junior dans les effectifs pour initier une évaluation de terrain.</p>
             </div>
+            <div class="total-badge">
+                <i class="fas fa-users"></i> <%= juniors ? juniors.length : 0 %> JUNIORS ÉVALUABLES
+            </div>
+        </div>
 
-            <div class="juniors-grid">
-                <% if (juniors && juniors.length > 0) { %>
-                    <% juniors.forEach(junior => { %>
-                        <div class="junior-card">
-                            <div class="card-accent-top"></div>
-                            
-                            <div>
-                                <div class="card-header-agent">
-                                    <span class="matricule">[<%= junior.matricule %>]</span>
-                                    <div class="status-dot"></div>
-                                </div>
-                                <div class="agent-name"><%= junior.prenom %> <%= junior.nom %></div>
-                                <div class="agent-grade">
-                                    <i class="fas fa-id-badge"></i> <%= junior.grade %>
-                                </div>
+        <div class="juniors-grid">
+            <% if (juniors && juniors.length > 0) { %>
+                <% juniors.forEach(junior => { %>
+                    <div class="junior-card">
+                        <div class="card-accent-top"></div>
+                        
+                        <div>
+                            <div class="card-header-agent">
+                                <span class="matricule">[<%= junior.matricule %>]</span>
+                                <div class="status-dot"></div>
                             </div>
-
-                            <a href="/documents/evaluer-junior/formulaire/<%= junior._id %>" class="btn-evaluate">
-                                <span>Évaluer l'agent</span> <i class="fas fa-arrow-right"></i>
-                            </a>
+                            <div class="agent-name"><%= junior.prenom %> <%= junior.nom %></div>
+                            <div class="agent-grade">
+                                <i class="fas fa-id-badge"></i> <%= junior.grade %>
+                            </div>
                         </div>
-                    <% }); %>
-                <% } else { %>
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open" style="font-size: 40px; color: var(--primary); margin-bottom: 20px; opacity: 0.3;"></i>
-                        <p style="font-size: 16px; margin: 0;">Aucun Deputy Junior n'est actuellement répertorié dans les effectifs.</p>
+
+                        <a href="/documents/evaluer-junior/formulaire/<%= junior._id %>" class="btn-evaluate">
+                            <span>Évaluer l'agent</span> <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
-                <% } %>
-            </div>
+                <% }); %>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-folder-open" style="font-size: 44px; color: var(--primary); margin-bottom: 20px; opacity: 0.3;"></i>
+                    <p style="font-size: 16px; margin: 0;">Aucun Deputy Junior n'est actuellement répertorié dans les effectifs.</p>
+                </div>
+            <% } %>
+        </div>
 
-        <% } %>
+    <% } %>
 
-    </div>
 </div>
