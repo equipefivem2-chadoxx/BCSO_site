@@ -11,7 +11,6 @@
         --text-muted: #94a3b8;
     }
 
-    /* Application exacte du fond radial et de la typographie de ton site */
     body {
         margin: 0;
         background-color: var(--bg-dark);
@@ -34,7 +33,6 @@
         min-height: 100vh;
     }
 
-    /* Conteneur principal avec animation d'entrée calquée sur effectifs/admin */
     #evaluation-container {
         max-width: 1400px;
         margin: 0 auto;
@@ -43,7 +41,100 @@
         animation: fadeUp 0.6s ease-out forwards;
     }
 
-    /* Header identique au roster-header */
+    /* 🚀 STYLES POUR LA PAGE D'ERREUR ET DE REFUS (100% DA BCSO) */
+    .access-denied-box {
+        max-width: 650px;
+        margin: 80px auto;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-top: 4px solid #ef4444;
+        border-radius: 16px;
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(239, 68, 68, 0.1);
+        animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .access-denied-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px auto;
+        color: #ef4444;
+        font-size: 36px;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+    }
+
+    .access-denied-box h2 {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0 0 10px 0;
+    }
+
+    .access-denied-box .error-subtitle {
+        color: #ef4444;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 25px;
+    }
+
+    .access-denied-box p {
+        color: var(--text-muted);
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 0 0 30px 0;
+    }
+
+    .agent-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        color: #e2e8f0;
+        font-family: monospace;
+        font-size: 14px;
+    }
+
+    .btn-return {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(189, 165, 129, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        padding: 12px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+    }
+
+    .btn-return:hover {
+        background: var(--primary);
+        color: #05070b;
+        box-shadow: 0 0 15px var(--primary-glow);
+        transform: translateY(-2px);
+    }
+
+    /* STYLES INTERFACE NORMALE */
     .eval-header {
         display: flex;
         justify-content: space-between;
@@ -75,7 +166,6 @@
         font-weight: 400;
     }
 
-    /* Badge compteur style "total-badge" */
     .total-badge {
         background: rgba(189, 165, 129, 0.1);
         border: 1px solid rgba(189, 165, 129, 0.3);
@@ -90,7 +180,6 @@
         gap: 8px;
     }
 
-    /* Grille et Cartes calquées sur agent-card / premium-card */
     .juniors-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -120,7 +209,6 @@
         border-color: rgba(189, 165, 129, 0.3);
     }
 
-    /* La bordure supérieure lumineuse typique de vos cartes */
     .card-accent-top {
         position: absolute;
         top: 0; left: 0;
@@ -137,7 +225,6 @@
         margin-bottom: 15px;
     }
 
-    /* Style du Matricule identique à la page effectifs */
     .matricule {
         font-size: 18px;
         font-weight: 900;
@@ -177,7 +264,6 @@
         color: var(--primary);
     }
 
-    /* Bouton d'action calqué sur les boutons premium de votre admin */
     .btn-evaluate {
         background: rgba(189, 165, 129, 0.1);
         color: var(--primary);
@@ -220,45 +306,78 @@
 <div class="main-content">
     <div id="evaluation-container">
         
-        <div class="eval-header">
-            <div>
-                <h1>Évaluation des <span>Juniors</span></h1>
-                <p class="eval-subtitle">Sélectionnez un Deputy Junior dans les effectifs pour initier une évaluation de terrain.</p>
-            </div>
-            <div class="total-badge">
-                <i class="fas fa-user-shield"></i> <%= juniors ? juniors.length : 0 %> JUNIORS ÉVALUABLES
-            </div>
-        </div>
-
-        <div class="juniors-grid">
-            <% if (juniors && juniors.length > 0) { %>
-                <% juniors.forEach(junior => { %>
-                    <div class="junior-card">
-                        <div class="card-accent-top"></div>
-                        
-                        <div>
-                            <div class="card-header-agent">
-                                <span class="matricule">[<%= junior.matricule %>]</span>
-                                <div class="status-dot"></div>
-                            </div>
-                            <div class="agent-name"><%= junior.prenom %> <%= junior.nom %></div>
-                            <div class="agent-grade">
-                                <i class="fas fa-id-badge"></i> <%= junior.grade %>
-                            </div>
-                        </div>
-
-                        <a href="/documents/evaluer-junior/formulaire/<%= junior._id %>" class="btn-evaluate">
-                            <span>Évaluer l'agent</span> <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <div class="empty-state">
-                    <i class="fas fa-folder-open" style="font-size: 40px; color: var(--primary); margin-bottom: 20px; opacity: 0.3;"></i>
-                    <p style="font-size: 16px; margin: 0;">Aucun Deputy Junior n'est actuellement répertorié dans les effectifs.</p>
+        <!-- 🚀 CONDITION D'AFFICHAGE : SI L'ACCÈS EST REFUSÉ (GRADE INSUFFISANT OU NON ENREGISTRÉ) -->
+        <% if (typeof accessDenied !== 'undefined' && accessDenied === true) { %>
+            
+            <div class="access-denied-box">
+                <div class="access-denied-icon">
+                    <i class="fas fa-shield-halved"></i>
                 </div>
-            <% } %>
-        </div>
+                <h2>Habilitation Insuffisante</h2>
+                <div class="error-subtitle">Accès restreint au commandement et aux formateurs</div>
+                
+                <% if (typeof reason !== 'undefined' && reason === 'unregistered') { %>
+                    <p>Votre compte Discord n'est actuellement lié à aucune fiche de service dans les effectifs du BCSO. Veuillez contacter un officier supérieur pour régulariser votre dossier.</p>
+                <% } else { %>
+                    <p>Le protocole d'évaluation des agents en période probatoire est strictement réservé au personnel accrédité. Vous n'avez pas le grade requis pour évaluer un Deputy Junior.</p>
+                <% } %>
+
+                <div class="agent-status-badge">
+                    <i class="fas fa-user-lock" style="color: #ef4444;"></i>
+                    <span>STATUT ACTUEL : <strong style="color: #fff;"><%= typeof currentGrade !== 'undefined' ? currentGrade : 'Non répertorié' %></strong></span>
+                </div>
+
+                <div>
+                    <a href="/documents" class="btn-return">
+                        <i class="fas fa-arrow-left"></i> Retour aux Documents
+                    </a>
+                </div>
+            </div>
+
+        <!-- 🚀 SINON : AFFICHAGE NORMAL DE LA GRILLE DES JUNIORS -->
+        <% } else { %>
+
+            <div class="eval-header">
+                <div>
+                    <h1>Évaluation des <span>Juniors</span></h1>
+                    <p class="eval-subtitle">Sélectionnez un Deputy Junior dans les effectifs pour initier une évaluation de terrain.</p>
+                </div>
+                <div class="total-badge">
+                    <i class="fas fa-user-shield"></i> <%= juniors ? juniors.length : 0 %> JUNIORS ÉVALUABLES
+                </div>
+            </div>
+
+            <div class="juniors-grid">
+                <% if (juniors && juniors.length > 0) { %>
+                    <% juniors.forEach(junior => { %>
+                        <div class="junior-card">
+                            <div class="card-accent-top"></div>
+                            
+                            <div>
+                                <div class="card-header-agent">
+                                    <span class="matricule">[<%= junior.matricule %>]</span>
+                                    <div class="status-dot"></div>
+                                </div>
+                                <div class="agent-name"><%= junior.prenom %> <%= junior.nom %></div>
+                                <div class="agent-grade">
+                                    <i class="fas fa-id-badge"></i> <%= junior.grade %>
+                                </div>
+                            </div>
+
+                            <a href="/documents/evaluer-junior/formulaire/<%= junior._id %>" class="btn-evaluate">
+                                <span>Évaluer l'agent</span> <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open" style="font-size: 40px; color: var(--primary); margin-bottom: 20px; opacity: 0.3;"></i>
+                        <p style="font-size: 16px; margin: 0;">Aucun Deputy Junior n'est actuellement répertorié dans les effectifs.</p>
+                    </div>
+                <% } %>
+            </div>
+
+        <% } %>
 
     </div>
 </div>
