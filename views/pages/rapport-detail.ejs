@@ -137,18 +137,13 @@
             </div>
             <div class="info-box">
                 <div class="info-label">Avis Émis</div>
-                <% 
-                    // 🚀 CORRECTION : On définit la couleur en EJS pur avant la balise HTML pour éviter l'erreur de l'éditeur
-                    let avisColor = '#f59e0b'; // Couleur pour 'Réservé' par défaut (Orange)
-                    if (rapport.avis === 'Favorable') {
-                        avisColor = '#10b981'; // Vert
-                    } else if (rapport.avis === 'Défavorable') {
-                        avisColor = '#ef4444'; // Rouge
-                    }
-                %>
-                <div class="info-val" style="color: <%= avisColor %>;">
-                    <%= rapport.avis %>
-                </div>
+                <% if (rapport.avis === 'Favorable') { %>
+                    <div class="info-val" style="color: #10b981;"><%= rapport.avis %></div>
+                <% } else if (rapport.avis === 'Défavorable') { %>
+                    <div class="info-val" style="color: #ef4444;"><%= rapport.avis %></div>
+                <% } else { %>
+                    <div class="info-val" style="color: #f59e0b;"><%= rapport.avis || 'Réservé' %></div>
+                <% } %>
             </div>
         </div>
 
