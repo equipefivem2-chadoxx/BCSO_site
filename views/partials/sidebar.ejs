@@ -10,7 +10,6 @@
     .bcso-sidebar {
         width: var(--sidebar-width);
         background-color: var(--bg-dark);
-        /* Subtile ligne de séparation reprenant le code couleur du thème */
         border-right: 1px solid rgba(189, 165, 129, 0.15);
         display: flex;
         flex-direction: column;
@@ -25,7 +24,6 @@
         transition: all 0.3s ease;
     }
 
-    /* Halo lumineux derrière le logo calqué sur tes radial-gradients */
     .sidebar-logo-container {
         text-align: center;
         margin-bottom: 40px;
@@ -56,7 +54,6 @@
         transform: scale(1.03);
     }
 
-    /* Menu de Navigation */
     .sidebar-nav {
         display: flex;
         flex-direction: column;
@@ -66,15 +63,12 @@
         overflow-y: auto;
     }
 
-    .sidebar-nav::-webkit-scrollbar { 
-        width: 0px; 
-    }
+    .sidebar-nav::-webkit-scrollbar { width: 0px; }
 
-    /* Liens - Typographie calquée sur les titres du roster (clairs, espacés, pro) */
     .nav-item-premium {
         display: flex;
         align-items: center;
-        gap: 16px;
+        justify-content: space-between;
         padding: 13px 20px;
         color: #94a3b8;
         text-decoration: none;
@@ -85,9 +79,15 @@
         border-radius: 10px;
         border: 1px solid transparent;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
     }
 
-    /* Force l'alignement strict des icônes */
+    .nav-item-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
     .nav-item-premium i {
         width: 20px;
         text-align: center;
@@ -95,7 +95,6 @@
         transition: transform 0.3s ease;
     }
 
-    /* Effet Hover (Survol) - Glissement sobre + coloration de l'icône */
     .nav-item-premium:hover {
         color: #ffffff;
         background: rgba(189, 165, 129, 0.03);
@@ -108,7 +107,6 @@
         transform: scale(1.1);
     }
 
-    /* Effet Active (Page en cours) - Reprend le style de la "total-badge" et des "agent-card" */
     .nav-item-premium.active {
         background: rgba(189, 165, 129, 0.08);
         color: #ffffff;
@@ -122,7 +120,61 @@
         text-shadow: 0 0 10px var(--primary-glow-strong);
     }
 
-    /* Séparateur Administration style "grade-title::after" */
+    /* Menu déroulant pour Documents */
+    .nav-sub-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-left: 15px;
+        margin-top: -4px;
+    }
+
+    .nav-sub-menu.open {
+        max-height: 300px;
+        margin-bottom: 8px;
+    }
+
+    .sub-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        border-left: 1px solid rgba(189, 165, 129, 0.1);
+    }
+
+    .sub-nav-item:hover {
+        color: #e2e8f0;
+        background: rgba(255, 255, 255, 0.02);
+        border-left-color: var(--primary);
+        transform: translateX(3px);
+    }
+
+    .sub-nav-item.active {
+        color: var(--primary);
+        background: rgba(189, 165, 129, 0.05);
+        border-left: 2px solid var(--primary);
+        font-weight: 600;
+    }
+
+    .chevron-icon {
+        transition: transform 0.3s ease;
+        font-size: 12px !important;
+    }
+
+    .nav-item-premium.open .chevron-icon {
+        transform: rotate(180deg);
+    }
+
     .admin-divider {
         height: 1px;
         background: linear-gradient(to right, transparent, rgba(189, 165, 129, 0.3), transparent);
@@ -130,7 +182,6 @@
         opacity: 0.5;
     }
 
-    /* Style Premium Spécifique Admin */
     .admin-link {
         border-bottom: 1px solid rgba(220, 38, 38, 0.05);
     }
@@ -144,41 +195,155 @@
     .admin-link:hover i {
         color: #ef4444 !important;
     }
+
+    /* Modal Alerte Junior */
+    .custom-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    }
+    .custom-modal {
+        background: #0d111a;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 400px;
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+    }
+    .custom-modal h3 {
+        color: #ef4444;
+        margin-bottom: 15px;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .custom-modal p {
+        color: #94a3b8;
+        font-size: 14px;
+        margin-bottom: 25px;
+        line-height: 1.5;
+    }
+    .custom-modal-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        padding: 10px 25px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    .custom-modal-btn:hover {
+        background: #ef4444;
+        color: #fff;
+    }
 </style>
 
-<aside class="bcso-sidebar">
+<!-- Injection propre des permissions dans des attributs HTML data-* pour éviter les erreurs JS -->
+<aside class="bcso-sidebar" id="bcsoSidebar" 
+       data-user-grade="<%= (typeof user !== 'undefined' && user && user.grade) ? user.grade : '' %>" 
+       data-is-admin="<%= (typeof user !== 'undefined' && user && (user.isAdmin === true || user.role === 'admin' || user.id === '1247264549489610897')) ? 'true' : 'false' %>">
+    
     <div class="sidebar-logo-container">
         <img src="/images/bcso.png" alt="BCSO Logo" class="sidebar-logo">
     </div>
     
     <div class="sidebar-nav">
-        <a href="/dashboard" class="nav-item-premium"><i class="fas fa-home"></i> Vue d'ensemble</a>
-        <a href="/archives" class="nav-item-premium"><i class="fas fa-folder-open"></i> Base de Données</a>
-        <a href="/reglement" class="nav-item-premium"><i class="fas fa-gavel"></i> Règlement</a>
-        <a href="/lois" class="nav-item-premium"><i class="fas fa-scale-balanced"></i> Livre des Lois</a>
-        <a href="/effectifs" class="nav-item-premium"><i class="fas fa-users"></i> Effectifs</a>
-        <a href="/formations" class="nav-item-premium"><i class="fas fa-graduation-cap"></i> Formations</a>
-        <a href="/documents" class="nav-item-premium"><i class="fas fa-file-signature"></i> Documents</a>
+        <a href="/dashboard" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-home"></i> Vue d'ensemble</div></a>
+        <a href="/archives" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-folder-open"></i> Base de Données</div></a>
+        <a href="/reglement" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-gavel"></i> Règlement</div></a>
+        <a href="/lois" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-scale-balanced"></i> Livre des Lois</div></a>
+        <a href="/effectifs" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-users"></i> Effectifs</div></a>
+        <a href="/formations" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div></a>
+        
+        <!-- Menu Déroulant Documents -->
+        <div class="nav-item-premium" id="docs-menu-btn" onclick="toggleDocsMenu()">
+            <div class="nav-item-content">
+                <i class="fas fa-file-signature"></i> Documents
+            </div>
+            <i class="fas fa-chevron-down chevron-icon"></i>
+        </div>
+        <div class="nav-sub-menu" id="docs-sub-menu">
+            <a href="/documents" class="sub-nav-item"><i class="fas fa-book"></i> Base Documentaire</a>
+            <a href="/documents/livret" class="sub-nav-item"><i class="fas fa-info-circle"></i> Livret d'accueil</a>
+            <a href="/documents/doc-arrestations" class="sub-nav-item"><i class="fas fa-sitemap"></i> Arbre d'Arrestations</a>
+            <a href="/documents/armes" class="sub-nav-item"><i class="fas fa-crosshairs"></i> Armurerie</a>
+            <a href="/documents/evaluer-junior" class="sub-nav-item" onclick="checkEvaluationAccess(event)">
+                <i class="fas fa-clipboard-check"></i> Évaluer Junior
+            </a>
+        </div>
         
         <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.id === '1247264549489610897' || user.isAdmin === true)) { %>
             <div class="admin-divider"></div>
             <a href="/admin" class="nav-item-premium admin-link">
-                <i class="fas fa-cogs"></i> Administration
+                <div class="nav-item-content"><i class="fas fa-cogs"></i> Administration</div>
             </a>
         <% } %>
     </div>
 </aside>
 
+<!-- Popup Erreur Grade -->
+<div class="custom-modal-overlay" id="juniorAlertModal">
+    <div class="custom-modal">
+        <i class="fas fa-exclamation-triangle" style="font-size: 30px; color: #ef4444; margin-bottom: 15px;"></i>
+        <h3>Accès Refusé</h3>
+        <p>Vous n'êtes pas habilité à accéder à cette section.<br><strong>Requis :</strong> Deputy I minimum.</p>
+        <button class="custom-modal-btn" onclick="closeModal()">Compris</button>
+    </div>
+</div>
+
 <script>
+    function checkEvaluationAccess(e) {
+        const sidebar = document.getElementById('bcsoSidebar');
+        const userGrade = sidebar ? sidebar.getAttribute('data-user-grade') : '';
+        const isAdmin = sidebar ? sidebar.getAttribute('data-is-admin') === 'true' : false;
+
+        // Si l'utilisateur est Deputy Junior (et pas admin), on bloque le clic et on affiche la modal
+        if (userGrade === 'Deputy Junior' && !isAdmin) {
+            e.preventDefault();
+            document.getElementById('juniorAlertModal').style.display = 'flex';
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('juniorAlertModal').style.display = 'none';
+    }
+
+    function toggleDocsMenu() {
+        const btn = document.getElementById('docs-menu-btn');
+        const menu = document.getElementById('docs-sub-menu');
+        btn.classList.toggle('open');
+        menu.classList.toggle('open');
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const currentUrl = window.location.pathname;
-        const navLinks = document.querySelectorAll('.nav-item-premium');
         
-        navLinks.forEach(link => {
+        document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === currentUrl) {
                 link.classList.add('active');
             }
         });
+
+        document.querySelectorAll('.sub-nav-item').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === currentUrl) {
+                link.classList.add('active');
+                document.getElementById('docs-menu-btn').classList.add('open', 'active');
+                document.getElementById('docs-sub-menu').classList.add('open');
+            }
+        });
+        
+        if(currentUrl.startsWith('/documents')) {
+            document.getElementById('docs-menu-btn').classList.add('open', 'active');
+            document.getElementById('docs-sub-menu').classList.add('open');
+        }
     });
 </script>

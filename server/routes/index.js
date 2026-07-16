@@ -109,6 +109,56 @@ router.get('/documents/armes', (req, res) => {
     });
 });
 
+// 🚀 ROUTE 4 DU HUB : SÉLECTION DU JUNIOR À ÉVALUER
+router.get('/documents/evaluer-junior', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    
+    // Sécurité Backend : Rejeter les Juniors qui tentent d'accéder via l'URL
+    const isUserAdmin = req.session.user.isAdmin || req.session.user.role === 'admin' || req.session.user.id === '1247264549489610897';
+    if (req.session.user.grade === 'Deputy Junior' && !isUserAdmin) {
+        return res.status(403).send("Accès Refusé : Vous devez être Deputy I minimum pour évaluer un agent.");
+    }
+
+    try {
+        const Agent = require('../models/Agent');
+        const juniors = await Agent.find({ grade: 'Deputy Junior' }).sort({ nom: 1 });
+
+        res.render('pages/rapport-junior', { 
+            title: 'BCSO - Évaluation Junior',
+            user: req.session.user,
+            juniors: juniors
+        });
+    } catch (err) {
+        console.error("Erreur récupération des Juniors:", err);
+        res.redirect('/documents');
+    }
+});
+
+// 🚀 ROUTE 5 DU HUB : PAGE DE FORMULAIRE (DE BASE EN ATTENTE DU FUTUR DÉVELOPPEMENT)
+router.get('/documents/evaluer-junior/formulaire/:id', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    
+    const isUserAdmin = req.session.user.isAdmin || req.session.user.role === 'admin' || req.session.user.id === '1247264549489610897';
+    if (req.session.user.grade === 'Deputy Junior' && !isUserAdmin) {
+        return res.status(403).send("Accès Refusé : Vous devez être Deputy I minimum pour évaluer un agent.");
+    }
+
+    try {
+        const Agent = require('../models/Agent');
+        const junior = await Agent.findById(req.params.id);
+        
+        if (!junior) return res.redirect('/documents/evaluer-junior');
+
+        res.render('pages/formulaire-junior', {
+            title: 'BCSO - Fiche d\'évaluation',
+            user: req.session.user,
+            junior: junior
+        });
+    } catch (err) {
+        res.redirect('/documents/evaluer-junior');
+    }
+});
+
 // ========================================================
 // 🔵 ANCIENNES ROUTES (INTACTES POUR LE MENU DU LIVRET)
 // ========================================================
