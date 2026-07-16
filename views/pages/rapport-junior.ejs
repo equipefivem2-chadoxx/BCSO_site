@@ -5,122 +5,189 @@
     :root {
         --primary: #bda581;
         --primary-glow: rgba(189, 165, 129, 0.15);
-        --bg-darker: #05070a;
-        --card-bg: #0d111a;
+        --bg-card: rgba(15, 23, 42, 0.4);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+        --text-muted: #94a3b8;
+    }
+
+    /* Application exacte du fond radial et de la typographie de ton site */
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .main-content {
         margin-left: 280px;
         padding: 40px;
         min-height: 100vh;
-        background-color: var(--bg-darker);
-        color: #fff;
-        font-family: 'Montserrat', sans-serif;
     }
 
-    .page-header {
-        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
-        padding-bottom: 20px;
-        margin-bottom: 30px;
+    /* Conteneur principal avec animation d'entrée calquée sur effectifs/admin */
+    #evaluation-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-top: 20px;
+        padding-bottom: 70px;
+        animation: fadeUp 0.6s ease-out forwards;
+    }
+
+    /* Header identique au roster-header */
+    .eval-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
+        padding-bottom: 20px;
+        margin-bottom: 40px;
     }
 
-    .page-title h1 {
-        font-size: 28px;
-        color: var(--primary);
-        text-transform: uppercase;
-        letter-spacing: 2px;
+    .eval-header h1 {
         margin: 0;
+        color: #fff;
+        font-size: 28px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .eval-header h1 span {
+        background: linear-gradient(135deg, #ffffff 0%, var(--primary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .eval-subtitle {
+        color: var(--text-muted);
+        margin: 6px 0 0 0;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    /* Badge compteur style "total-badge" */
+    .total-badge {
+        background: rgba(189, 165, 129, 0.1);
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        padding: 8px 20px;
+        border-radius: 30px;
+        color: var(--primary);
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 13px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
     }
 
-    .page-title p {
-        color: #94a3b8;
-        margin: 5px 0 0 0;
-        font-size: 14px;
-    }
-
+    /* Grille et Cartes calquées sur agent-card / premium-card */
     .juniors-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        animation: fadeUp 0.6s ease-out backwards;
+        animation-delay: 0.2s;
     }
 
     .junior-card {
-        background: var(--card-bg);
-        border: 1px solid rgba(189, 165, 129, 0.15);
-        border-radius: 12px;
-        padding: 20px;
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-top: 1px solid rgba(189, 165, 129, 0.1);
+        border-radius: 16px;
+        padding: 25px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
     }
 
-    .junior-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 4px;
-        height: 100%;
-        background: var(--primary);
-        opacity: 0.7;
-    }
-
     .junior-card:hover {
         transform: translateY(-5px);
-        border-color: var(--primary);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px var(--primary-glow);
+        box-shadow: 0 15px 30px var(--primary-glow);
+        border-color: rgba(189, 165, 129, 0.3);
     }
 
-    .junior-info {
-        margin-bottom: 20px;
+    /* La bordure supérieure lumineuse typique de vos cartes */
+    .card-accent-top {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(to right, transparent, var(--primary), transparent);
+        opacity: 0.5;
     }
 
-    .junior-matricule {
-        background: rgba(189, 165, 129, 0.1);
-        color: var(--primary);
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: bold;
-        display: inline-block;
-        margin-bottom: 10px;
-        border: 1px solid rgba(189, 165, 129, 0.2);
+    .card-header-agent {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
     }
 
-    .junior-name {
+    /* Style du Matricule identique à la page effectifs */
+    .matricule {
         font-size: 18px;
-        font-weight: bold;
-        color: #fff;
-        margin: 0 0 5px 0;
+        font-weight: 900;
+        color: var(--primary);
+        font-family: monospace;
+        letter-spacing: 1px;
     }
 
-    .junior-grade {
-        color: #64748b;
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+
+    .agent-name {
+        font-size: 18px;
+        color: #e2e8f0;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .agent-grade {
+        color: var(--text-muted);
         font-size: 13px;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        margin-bottom: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
+    .agent-grade i {
+        color: var(--primary);
+    }
+
+    /* Bouton d'action calqué sur les boutons premium de votre admin */
     .btn-evaluate {
         background: rgba(189, 165, 129, 0.1);
         color: var(--primary);
         border: 1px solid rgba(189, 165, 129, 0.3);
-        padding: 10px 15px;
+        padding: 12px 15px;
         border-radius: 8px;
         text-align: center;
         text-decoration: none;
-        font-weight: 600;
-        font-size: 13px;
+        font-weight: 800;
+        font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 1px;
         transition: all 0.3s;
@@ -132,48 +199,66 @@
 
     .btn-evaluate:hover {
         background: var(--primary);
-        color: #000;
+        color: #05070b;
         box-shadow: 0 0 15px var(--primary-glow);
+        transform: translateY(-2px);
     }
 
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
-        padding: 60px 20px;
-        background: var(--card-bg);
+        padding: 80px 20px;
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
         border: 1px dashed rgba(189, 165, 129, 0.2);
-        border-radius: 12px;
-        color: #64748b;
+        border-radius: 16px;
+        color: var(--text-muted);
+        animation: fadeUp 0.6s ease-out forwards;
     }
 </style>
 
 <div class="main-content">
-    <div class="page-header">
-        <div class="page-title">
-            <h1><i class="fas fa-clipboard-list"></i> Évaluation des Juniors</h1>
-            <p>Sélectionnez un Deputy Junior dans les effectifs pour initier une évaluation de terrain.</p>
-        </div>
-    </div>
-
-    <div class="juniors-grid">
-        <% if (juniors && juniors.length > 0) { %>
-            <% juniors.forEach(junior => { %>
-                <div class="junior-card">
-                    <div class="junior-info">
-                        <span class="junior-matricule">[ <%= junior.matricule %> ]</span>
-                        <h3 class="junior-name"><%= junior.prenom %> <%= junior.nom %></h3>
-                        <div class="junior-grade"><i class="fas fa-user-shield"></i> <%= junior.grade %></div>
-                    </div>
-                    <a href="/documents/evaluer-junior/formulaire/<%= junior._id %>" class="btn-evaluate">
-                        <span>Évaluer l'agent</span> <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            <% }); %>
-        <% } else { %>
-            <div class="empty-state">
-                <i class="fas fa-user-slash" style="font-size: 40px; color: var(--primary); margin-bottom: 15px; opacity: 0.5;"></i>
-                <p>Aucun Deputy Junior n'est actuellement répertorié dans les effectifs.</p>
+    <div id="evaluation-container">
+        
+        <div class="eval-header">
+            <div>
+                <h1>Évaluation des <span>Juniors</span></h1>
+                <p class="eval-subtitle">Sélectionnez un Deputy Junior dans les effectifs pour initier une évaluation de terrain.</p>
             </div>
-        <% } %>
+            <div class="total-badge">
+                <i class="fas fa-user-shield"></i> <%= juniors ? juniors.length : 0 %> JUNIORS ÉVALUABLES
+            </div>
+        </div>
+
+        <div class="juniors-grid">
+            <% if (juniors && juniors.length > 0) { %>
+                <% juniors.forEach(junior => { %>
+                    <div class="junior-card">
+                        <div class="card-accent-top"></div>
+                        
+                        <div>
+                            <div class="card-header-agent">
+                                <span class="matricule">[<%= junior.matricule %>]</span>
+                                <div class="status-dot"></div>
+                            </div>
+                            <div class="agent-name"><%= junior.prenom %> <%= junior.nom %></div>
+                            <div class="agent-grade">
+                                <i class="fas fa-id-badge"></i> <%= junior.grade %>
+                            </div>
+                        </div>
+
+                        <a href="/documents/evaluer-junior/formulaire/<%= junior._id %>" class="btn-evaluate">
+                            <span>Évaluer l'agent</span> <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-folder-open" style="font-size: 40px; color: var(--primary); margin-bottom: 20px; opacity: 0.3;"></i>
+                    <p style="font-size: 16px; margin: 0;">Aucun Deputy Junior n'est actuellement répertorié dans les effectifs.</p>
+                </div>
+            <% } %>
+        </div>
+
     </div>
 </div>
