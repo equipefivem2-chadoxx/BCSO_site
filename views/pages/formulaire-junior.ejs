@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --bg-darker: #05070a;
+        --card-bg: #0d111a;
+    }
+
+    .main-content {
+        margin-left: 280px;
+        padding: 40px;
+        min-height: 100vh;
+        background-color: var(--bg-darker);
+        color: #fff;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .container-box {
+        background: var(--card-bg);
+        border: 1px solid rgba(189, 165, 129, 0.2);
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .agent-header {
+        border-bottom: 1px solid rgba(189, 165, 129, 0.15);
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .agent-header h2 {
+        color: var(--primary);
+        margin: 0 0 5px 0;
+        font-size: 24px;
+        text-transform: uppercase;
+    }
+
+    .agent-header p {
+        color: #94a3b8;
+        margin: 0;
+    }
+
+    .placeholder-content {
+        text-align: center;
+        padding: 40px;
+        color: #64748b;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+    }
+</style>
+
+<div class="main-content">
+    <div class="container-box">
+        <div class="agent-header">
+            <h2>Évaluation : <%= junior.prenom %> <%= junior.nom %></h2>
+            <p>Matricule : [ <%= junior.matricule %> ] | Grade : <%= junior.grade %></p>
+        </div>
+
+        <div class="placeholder-content">
+            <i class="fas fa-tools" style="font-size: 30px; color: var(--primary); margin-bottom: 15px;"></i>
+            <h3>Formulaire en cours de préparation</h3>
+            <p>Le système d'évaluation pour cet agent sera intégré ici plus tard.</p>
+            <br>
+            <a href="/documents/evaluer-junior" style="color: var(--primary); text-decoration: none; font-weight: bold;">
+                <i class="fas fa-arrow-left"></i> Retour à la liste des Juniors
+            </a>
+        </div>
+    </div>
+</div>
