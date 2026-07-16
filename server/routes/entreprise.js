@@ -36,7 +36,21 @@ router.get('/portail', async (req, res) => {
 
     try {
         const Agent = require('../models/Agent');
-        const agents = await Agent.find().sort({ matricule: 1 });
+        const agents = await Agent.find();
+
+        // 🚀 Tri des agents par ordre de grade
+        const ordreGrades = [
+            'Sheriff', 'Lieutenant', 'Sergeant Chef', 'Sergeant II', 'Sergeant I', 
+            'SLO', 'Deputy III', 'Deputy II', 'Deputy I', 'Deputy Junior'
+        ];
+
+        agents.sort((a, b) => {
+            const indexA = ordreGrades.indexOf(a.grade);
+            const indexB = ordreGrades.indexOf(b.grade);
+            if (indexA !== indexB) return indexA - indexB;
+            // Si même grade, tri par matricule
+            return a.matricule.localeCompare(b.matricule, undefined, { numeric: true, sensitivity: 'base' });
+        });
 
         res.render('pages/portal-entreprise', {
             title: `Annuaire BCSO - ${req.session.entreprise.nom}`,

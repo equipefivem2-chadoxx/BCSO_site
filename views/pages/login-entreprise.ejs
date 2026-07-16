@@ -8,7 +8,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #bda581; --bg-dark: #07090e; --bg-card: rgba(15, 23, 42, 0.75); }
-        body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #fff; }
+        body { 
+            margin: 0; 
+            background-color: var(--bg-dark); 
+            background-image: 
+                radial-gradient(circle at 50% 40%, rgba(189, 165, 129, 0.12), transparent 60%),
+                linear-gradient(rgba(189, 165, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 165, 129, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            font-family: 'Montserrat', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            color: #fff; 
+        }
         .login-card { background: var(--bg-card); border: 1px solid rgba(189, 165, 129, 0.3); border-top: 4px solid var(--primary); border-radius: 12px; padding: 40px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .login-logo { width: 110px; margin-bottom: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8)); }
         h2 { margin: 0 0 5px 0; font-size: 22px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #fff; }

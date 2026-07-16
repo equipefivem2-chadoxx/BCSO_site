@@ -283,7 +283,7 @@
         </div>
 
         <div>
-            <!-- 🚀 NOUVEAU: Encadré Entreprise -->
+            <!-- 🚀 Encadré Entreprise mis à jour -->
             <div class="panel-box" style="margin-bottom: 25px; border-top-color: #38bdf8;">
                 <h2 style="font-size: 1.1rem; color: #38bdf8;"><i class="fas fa-handshake" style="margin-right: 8px;"></i> Accès Partenaires (Entreprises)</h2>
                 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
@@ -313,9 +313,24 @@
                                     <td style="font-weight: bold; color: #fff;"><%= ent.nom %></td>
                                     <td style="color: #38bdf8; font-family: monospace;"><%= ent.identifiant %></td>
                                     <td style="color: #cbd5e1; font-family: monospace;"><%= ent.motDePasse %></td>
-                                    <td>
+                                    <td class="actions-cell">
+                                        <button class="btn-action edit" onclick="toggleEditRow('ent-<%= ent._id %>')"><i class="fas fa-edit"></i></button>
                                         <form action="/admin/entreprise/supprimer/<%= ent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Révoquer cet accès entreprise ?');">
                                             <button type="submit" class="btn-action delete"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <!-- 🚀 Ligne d'édition cachée pour l'entreprise -->
+                                <tr id="edit-ent-<%= ent._id %>" class="edit-row">
+                                    <td colspan="4" style="padding: 20px;">
+                                        <form action="/admin/entreprise/modifier/<%= ent._id %>" method="POST" style="display: flex; gap: 15px; align-items: center;">
+                                            <input type="text" name="nom" value="<%= ent.nom %>" class="form-control" required placeholder="Nom">
+                                            <input type="text" name="identifiant" value="<%= ent.identifiant %>" class="form-control" required placeholder="Identifiant">
+                                            <input type="text" name="motDePasse" value="<%= ent.motDePasse %>" class="form-control" required placeholder="Mot de passe">
+                                            <div style="display: flex; gap: 5px;">
+                                                <button type="submit" class="btn" style="width: auto; background: #38bdf8; color: #000;"><i class="fas fa-save"></i></button>
+                                                <button type="button" class="btn" style="width: auto; background: rgba(255,255,255,0.1); color: #fff;" onclick="toggleEditRow('ent-<%= ent._id %>')"><i class="fas fa-times"></i></button>
+                                            </div>
                                         </form>
                                     </td>
                                 </tr>

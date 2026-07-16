@@ -124,6 +124,18 @@ router.post('/entreprise/supprimer/:id', async (req, res) => {
     }
 });
 
+// NOUVEAU: Modification des entreprises
+router.post('/entreprise/modifier/:id', async (req, res) => {
+    try {
+        const { nom, identifiant, motDePasse } = req.body;
+        await Entreprise.findByIdAndUpdate(req.params.id, { nom, identifiant, motDePasse });
+        res.redirect('/admin');
+    } catch (err) {
+        console.error("Erreur modification entreprise:", err);
+        res.redirect('/admin');
+    }
+});
+
 // 4. Zone de danger
 router.post('/purge-rapports', async (req, res) => {
     try {

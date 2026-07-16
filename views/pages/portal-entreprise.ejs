@@ -8,7 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #bda581; --bg-dark: #07090e; --bg-card: rgba(15, 23, 42, 0.6); }
-        body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: #e2e8f0; padding: 40px 20px; }
+        body { 
+            margin: 0; 
+            background-color: var(--bg-dark); 
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            font-family: 'Montserrat', sans-serif; 
+            color: #e2e8f0; 
+            padding: 40px 20px; 
+            min-height: 100vh;
+        }
         .container { max-width: 1100px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.3); padding-bottom: 20px; margin-bottom: 40px; }
         .header-left { display: flex; align-items: center; gap: 20px; }
