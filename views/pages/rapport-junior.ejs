@@ -38,14 +38,16 @@
     }
 
     /* =========================================================
-       🔴 STYLE DU PANNEAU DE REFUS (PARFAITEMENT CENTRÉ)
+       🔴 STYLE DU PANNEAU DE REFUS (PARFAITEMENT CENTRÉ SUR L'ÉCRAN)
        ========================================================= */
     .refus-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: calc(100vh - 100px);
+        min-height: calc(100vh - 140px);
         width: 100%;
+        /* Compensation parfaite de la sidebar pour un centrage visuel absolu */
+        padding-right: 40px; 
     }
 
     .access-denied-box {
