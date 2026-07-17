@@ -32,24 +32,8 @@ router.use(async (req, res, next) => {
 // =========================================================
 // 👑 ROUTES DASHBOARD CHADOXX (GOD MODE)
 // =========================================================
-router.get('/chadoxx', (req, res) => {
-    if (!req.session.user || req.session.user.id !== '1247264549489610897') {
-        return res.status(403).send("<h1>Accès Interdit : Zone Réservée</h1>");
-    }
-    res.render('pages/chadoxx', { 
-        title: 'BCSO - Dashboard ChadoxX',
-        user: req.session.user,
-        maintenanceActive: global.MAINTENANCE_MODE 
-    });
-});
-
-router.post('/chadoxx/toggle-maintenance', (req, res) => {
-    if (!req.session.user || req.session.user.id !== '1247264549489610897') {
-        return res.status(403).send("Accès Interdit");
-    }
-    global.MAINTENANCE_MODE = !global.MAINTENANCE_MODE;
-    res.redirect('/chadoxx');
-});
+const chadoxxRoutes = require('./chadoxx');
+router.use('/chadoxx', chadoxxRoutes);
 // =========================================================
 
 router.get('/', (req, res) => {

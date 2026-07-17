@@ -27,3 +27,14 @@
     <div><i class="fas fa-shield-alt"></i> <span class="brand-text">BCSO SYSTEM</span> - Réseau Sécurisé</div>
     <div>Statut : <span style="color: #10b981;">Connecté</span> | Session chiffrée</div>
 </div>
+
+<!-- SCRIPT TEMPS RÉEL MAINTENANCE CHADOXX -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const globalSocket = io();
+    globalSocket.on('maintenance-toggled', (isMaintenance) => {
+        if (isMaintenance) {
+            window.location.reload(); 
+        }
+    });
+</script>

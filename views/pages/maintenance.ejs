@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCSO - Maintenance</title>
+    <title>BCSO - Mise à jour système</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #07090e;
+            background-color: #05070b;
             color: white;
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
@@ -18,51 +18,82 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            background-image: radial-gradient(circle at center, #1a1510 0%, #07090e 100%);
+            background-image: 
+                radial-gradient(circle at center, rgba(189, 165, 129, 0.05) 0%, transparent 70%),
+                linear-gradient(rgba(189, 165, 129, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 165, 129, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
         }
         .maintenance-box {
-            max-width: 600px;
-            padding: 40px;
+            max-width: 650px;
+            padding: 50px;
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid rgba(189, 165, 129, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            backdrop-filter: blur(20px);
         }
         .logo {
-            width: 180px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0px 0px 20px rgba(189, 165, 129, 0.4));
-            animation: pulse 2s infinite;
+            width: 150px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0px 0px 20px rgba(189, 165, 129, 0.3));
         }
         h1 {
             color: #bda581;
-            font-size: 28px;
+            font-size: 26px;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            font-weight: 900;
+            letter-spacing: 2px;
             margin-bottom: 15px;
         }
         p {
-            color: #94a3b8;
+            color: #cbd5e1;
             font-size: 16px;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-weight: 600;
         }
-        .loader {
-            margin-top: 40px;
-            font-size: 30px;
+        .loader-container {
+            margin-top: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .loader-icon {
+            font-size: 28px;
             color: #bda581;
         }
-        @keyframes pulse {
-            0% { filter: drop-shadow(0px 0px 10px rgba(189, 165, 129, 0.2)); }
-            50% { filter: drop-shadow(0px 0px 30px rgba(189, 165, 129, 0.6)); }
-            100% { filter: drop-shadow(0px 0px 10px rgba(189, 165, 129, 0.2)); }
+        .auto-refresh-text {
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
     <div class="maintenance-box">
         <img src="/images/bcso.png" alt="BCSO Logo" class="logo">
-        <h1>Réseau Sécurisé Inaccessible</h1>
-        <p>Le système informatique du Blaine County Sheriff's Office est actuellement en cours de maintenance. Nos techniciens procèdent à une mise à niveau des serveurs.</p>
-        <p>Veuillez réessayer plus tard.</p>
-        <div class="loader">
-            <i class="fas fa-cog fa-spin"></i>
+        <h1>Mise à jour en cours</h1>
+        <p>Le système informatique du Blaine County Sheriff's Office est temporairement inaccessible. Une mise à jour importante de la base de données est en cours de déploiement.</p>
+        
+        <div class="loader-container">
+            <i class="fas fa-circle-notch fa-spin loader-icon"></i>
+            <span class="auto-refresh-text">Cette page s'actualisera automatiquement dès la remise en ligne du réseau.</span>
         </div>
     </div>
+
+    <!-- SCRIPT TEMPS RÉEL SOCKET.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        
+        // Si le super-admin coupe la maintenance, la page se recharge instantanément
+        socket.on('maintenance-toggled', (isMaintenance) => {
+            if (!isMaintenance) {
+                window.location.reload(); 
+            }
+        });
+    </script>
 </body>
 </html>

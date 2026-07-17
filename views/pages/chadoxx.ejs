@@ -1,71 +1,155 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
 <style>
-    .chadoxx-container {
-        padding: 40px;
-        color: white;
+    .chadoxx-wrapper {
+        margin-left: 280px; /* Aligné avec la sidebar */
+        padding: 50px;
+        color: #e2e8f0;
+        font-family: 'Montserrat', sans-serif;
+        min-height: 100vh;
+        background: radial-gradient(circle at top left, rgba(189, 165, 129, 0.05) 0%, transparent 50%);
     }
+
     .chadoxx-header {
-        border-bottom: 2px solid var(--primary);
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
         padding-bottom: 20px;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
-    .maintenance-card {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(189, 165, 129, 0.3);
-        border-radius: 15px;
-        padding: 30px;
-        max-width: 500px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 8px 20px;
-        border-radius: 50px;
-        font-weight: bold;
-        margin-bottom: 20px;
+
+    .chadoxx-header h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 2px;
+        color: #fff;
+        text-shadow: 0 0 20px rgba(189, 165, 129, 0.3);
     }
-    .status-on { background: rgba(220, 38, 38, 0.2); color: #ef4444; border: 1px solid #ef4444; }
-    .status-off { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; }
+
+    .chadoxx-header p {
+        margin: 0;
+        color: #bda581; /* Primary color */
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .panel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 30px;
+    }
+
+    .admin-card {
+        background: rgba(11, 15, 25, 0.75);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-top: 4px solid #bda581;
+        border-radius: 12px;
+        padding: 35px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        transition: transform 0.3s ease;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(189, 165, 129, 0.3);
+    }
+
+    .admin-card h2 {
+        margin: 0 0 15px 0;
+        font-size: 1.3rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 800;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 0.9rem;
+    }
+
+    .status-on { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .status-off { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
     
-    .btn-toggle {
-        padding: 15px 30px;
-        font-size: 16px;
-        font-weight: bold;
+    .btn-action {
+        width: 100%;
+        padding: 16px;
+        font-size: 0.95rem;
+        font-weight: 800;
+        font-family: inherit;
         border: none;
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
         text-transform: uppercase;
-        width: 100%;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
-    .btn-activate { background: #ef4444; color: white; }
-    .btn-activate:hover { background: #dc2626; box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
-    .btn-deactivate { background: #22c55e; color: white; }
-    .btn-deactivate:hover { background: #16a34a; box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); }
+
+    .btn-activate { 
+        background: #ef4444; 
+        color: white; 
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+    }
+    .btn-activate:hover { background: #dc2626; box-shadow: 0 0 25px rgba(239, 68, 68, 0.5); }
+    
+    .btn-deactivate { 
+        background: #10b981; 
+        color: white; 
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+    .btn-deactivate:hover { background: #059669; box-shadow: 0 0 25px rgba(16, 185, 129, 0.5); }
 </style>
 
-<div class="chadoxx-container">
+<div class="chadoxx-wrapper">
     <div class="chadoxx-header">
-        <h1><i class="fas fa-crown" style="color: var(--primary);"></i> Pannel Super-Admin : ChadoxX</h1>
-        <p>Interface exclusive. Ces actions affectent l'intégralité du site en temps réel.</p>
+        <h1><i class="fas fa-crown" style="color: #bda581;"></i> Terminal God Mode</h1>
+        <p>CONTRÔLE GLOBAL DU SYSTÈME INTRANET BCSO</p>
     </div>
 
-    <div class="maintenance-card">
-        <h2><i class="fas fa-tools"></i> Mode Maintenance</h2>
-        <p style="color: #94a3b8; margin-bottom: 20px;">Permet de bloquer l'accès au site à tous les agents. Vous seul y aurez accès.</p>
-        
-        <% if (maintenanceActive) { %>
-            <div class="status-badge status-on">Maintenance Activée (Site Fermé)</div>
-            <form action="/chadoxx/toggle-maintenance" method="POST">
-                <button type="submit" class="btn-toggle btn-deactivate"><i class="fas fa-play"></i> Réouvrir le site</button>
-            </form>
-        <% } else { %>
-            <div class="status-badge status-off">Système En Ligne (Site Ouvert)</div>
-            <form action="/chadoxx/toggle-maintenance" method="POST">
-                <button type="submit" class="btn-toggle btn-activate"><i class="fas fa-power-off"></i> Fermer le site (Maintenance)</button>
-            </form>
-        <% } %>
+    <div class="panel-grid">
+        <div class="admin-card">
+            <h2><i class="fas fa-server"></i> État du Serveur (Maintenance)</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 25px;">
+                Ferme instantanément l'accès au site pour l'ensemble des effectifs. L'actualisation de la page chez les agents connectés se fera automatiquement en temps réel.
+            </p>
+            
+            <% if (maintenanceActive) { %>
+                <div class="status-indicator status-on">
+                    <i class="fas fa-lock"></i> Réseau Verrouillé (Mise à jour en cours)
+                </div>
+                <form action="/chadoxx/toggle-maintenance" method="POST">
+                    <button type="submit" class="btn-action btn-deactivate">
+                        <i class="fas fa-globe"></i> Rétablir la connexion publique
+                    </button>
+                </form>
+            <% } else { %>
+                <div class="status-indicator status-off">
+                    <i class="fas fa-globe"></i> Réseau Public Opérationnel
+                </div>
+                <form action="/chadoxx/toggle-maintenance" method="POST">
+                    <button type="submit" class="btn-action btn-activate">
+                        <i class="fas fa-power-off"></i> Couper le réseau (Activer Maintenance)
+                    </button>
+                </form>
+            <% } %>
+        </div>
     </div>
 </div>
