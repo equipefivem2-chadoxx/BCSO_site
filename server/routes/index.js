@@ -7,7 +7,7 @@ const effectifsRoutes = require('./effectifs');
 const archivesRoutes = require('./archives');
 const apiTicketsRoutes = require('./api/tickets');
 const superviseurRoutes = require('./superviseur');
-const entrepriseRoutes = require('./entreprise'); // 🚀 NOUVEAU : Import des routes entreprise
+const entrepriseRoutes = require('./entreprise'); // 🚀 Import des routes entreprise
 
 // 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
 // Actualise le grade et les permissions de la session à chaque chargement de page
@@ -85,6 +85,9 @@ router.get('/lois', (req, res) => {
     });
 });
 
+/* =========================================================
+   🎓 MODULE FORMATIONS
+========================================================= */
 router.get('/formations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formations', { 
@@ -93,6 +96,27 @@ router.get('/formations', (req, res) => {
     });
 });
 
+// 🚀 NOUVELLE ROUTE : Formation Convoi
+router.get('/formations/convoi', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/formation-convoi', { 
+        title: 'BCSO - Formation Convoi',
+        user: req.session.user
+    });
+});
+
+// 🚀 NOUVELLE ROUTE : Formation Négociation
+router.get('/formations/negociation', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/formation-negociation', { 
+        title: 'BCSO - Formation Négociation',
+        user: req.session.user
+    });
+});
+
+/* =========================================================
+   📄 BASE DOCUMENTAIRE
+========================================================= */
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 
@@ -276,7 +300,7 @@ router.use('/superviseur', superviseurRoutes);
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
-router.use('/entreprise', entrepriseRoutes); // 🚀 NOUVEAU : Montage de la route entreprise
+router.use('/entreprise', entrepriseRoutes); // 🚀 Montage de la route entreprise
 
 router.use((req, res) => {
     res.status(404).render('pages/404', { message: 'Page introuvable', title: '404' });

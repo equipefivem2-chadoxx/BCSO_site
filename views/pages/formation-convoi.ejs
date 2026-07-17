@@ -1,0 +1,203 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-dark: #07090e;
+        --bg-panel: rgba(15, 23, 42, 0.6);
+        --text-main: #e2e8f0;
+    }
+
+    body {
+        margin: 0; 
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(30px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    .proc-wrapper { 
+        max-width: 1200px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 20px; 
+        animation: fadeUp 0.6s ease-out forwards;
+        margin-left: 300px; /* Espace pour la sidebar */
+    }
+
+    .proc-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 40px; 
+        background: var(--bg-panel); 
+        padding: 30px; 
+        border-radius: 20px; 
+        border: 1px solid rgba(189, 165, 129, 0.2); 
+        backdrop-filter: blur(15px); 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+    }
+
+    .btn-back { 
+        background: rgba(189, 165, 129, 0.1); 
+        border: 1px solid var(--primary); 
+        color: var(--primary); 
+        padding: 12px 20px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        text-decoration: none; 
+        transition: 0.3s; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        letter-spacing: 1px;
+    }
+
+    .btn-back:hover { 
+        background: var(--primary); 
+        color: #000; 
+        box-shadow: 0 0 15px var(--primary-glow); 
+    }
+
+    .proc-title { text-align: right; }
+    .proc-title h1 { 
+        font-size: 28px; 
+        font-weight: 900; 
+        margin: 0; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+    }
+    .proc-title p { 
+        color: var(--primary); 
+        margin: 5px 0 0 0; 
+        font-weight: 700; 
+        font-size: 14px; 
+        letter-spacing: 1px; 
+        text-transform: uppercase; 
+    }
+
+    .info-panel {
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-left: 4px solid var(--primary);
+        border-radius: 16px;
+        padding: 35px;
+        margin-bottom: 40px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .info-panel h2 {
+        margin: 0 0 15px 0;
+        color: #fff;
+        font-size: 22px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: 1px;
+    }
+
+    .info-panel h2 i { color: var(--primary); font-size: 26px; }
+    .info-panel p { color: #94a3b8; line-height: 1.7; font-size: 15px; margin: 0; }
+    
+    .alert-box {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 10px;
+        padding: 18px 25px;
+        margin-top: 25px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .alert-box i { color: #f59e0b; font-size: 22px; margin-top: 2px; }
+    .alert-box p { color: #fcd34d; font-size: 14px; font-weight: 600; margin: 0; line-height: 1.5; }
+
+    .image-container {
+        background: rgba(11, 15, 25, 0.8);
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        border-radius: 20px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        backdrop-filter: blur(15px);
+    }
+
+    .image-container img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: transform 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .image-container img:hover {
+        transform: scale(1.02);
+        border-color: rgba(189, 165, 129, 0.5);
+    }
+
+    .btn-fullscreen {
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        gap: 10px;
+        background: var(--primary); 
+        color: #07090e; 
+        padding: 15px 35px; 
+        border-radius: 10px;
+        font-weight: 800; 
+        text-transform: uppercase; 
+        letter-spacing: 1px; 
+        cursor: pointer;
+        transition: 0.3s; 
+        text-decoration: none; 
+        margin-top: 30px;
+    }
+    
+    .btn-fullscreen:hover {
+        box-shadow: 0 0 25px var(--primary-glow);
+        transform: translateY(-3px);
+    }
+</style>
+
+<div class="proc-wrapper">
+    <div class="proc-header">
+        <a href="/formations" class="btn-back"><i class="fas fa-arrow-left"></i> Retour aux Formations</a>
+        <div class="proc-title">
+            <h1>Formation Convoi</h1>
+            <p>Déplacement & Sécurisation tactique</p>
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <h2><i class="fas fa-truck-moving"></i> Procédure de Convoi</h2>
+        <p>
+            Ce schéma présente la méthode officielle de formation et de déplacement en convoi. Il définit l'espacement entre les véhicules, l'ordre de marche (véhicule de tête, VIP, fermeture) et le comportement attendu en cas de contact ou d'embuscade.
+        </p>
+        <div class="alert-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p><strong>ATTENTION :</strong> Un convoi en mouvement ne s'arrête sous aucun prétexte, sauf ordre explicite de l'unité de commandement (Lead). Maintenez toujours votre distance de sécurité pour éviter les collisions.</p>
+        </div>
+    </div>
+
+    <div class="image-container">
+        <!-- Remplacer 'convoi.png' par le nom de ton image -->
+        <img src="/images/convoi.png" alt="Schéma de Formation Convoi">
+        
+        <a href="/images/convoi.png" target="_blank" class="btn-fullscreen">
+            <i class="fas fa-expand"></i> Agrandir le document
+        </a>
+    </div>
+</div>
