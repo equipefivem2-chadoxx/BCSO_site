@@ -56,5 +56,18 @@
     <!-- 3. TA BARRE DU BAS -->
     <%- include('../partials/header') %>
 
+    <!-- 🚀 SCRIPT TEMPS RÉEL POUR DÉTECTER LA MAINTENANCE -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        
+        // Si le super-admin active la maintenance, on redirige tout le monde instantanément
+        socket.on('maintenance-toggled', (isMaintenance) => {
+            if (isMaintenance) {
+                // Recharge pour que le middleware côté serveur bloque l'accès
+                window.location.reload(); 
+            }
+        });
+    </script>
 </body>
 </html>
