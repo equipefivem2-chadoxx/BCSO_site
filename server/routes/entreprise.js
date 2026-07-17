@@ -44,7 +44,8 @@ router.use(checkEntreprise);
 router.get('/dashboard', (req, res) => {
     res.render('pages/entreprise/dashboard', {
         title: `Dashboard - ${req.session.entreprise.nom}`,
-        layout: 'layout-entreprise'
+        pageTitle: 'Tableau de bord',
+        layout: 'layouts/layout-entreprise'
     });
 });
 
@@ -52,7 +53,8 @@ router.get('/dashboard', (req, res) => {
 router.get('/contrat', (req, res) => {
     res.render('pages/entreprise/contrat', {
         title: `Contrat - ${req.session.entreprise.nom}`,
-        layout: 'layout-entreprise'
+        pageTitle: 'Votre Contrat',
+        layout: 'layouts/layout-entreprise'
     });
 });
 
@@ -77,10 +79,11 @@ router.get('/annuaire', async (req, res) => {
 
         res.render('pages/entreprise/annuaire', {
             title: `Annuaire BCSO - ${req.session.entreprise.nom}`,
+            pageTitle: 'Annuaire Fédéral',
             agents: agents,
             isGarage: isGarage,
             entrepriseId: req.session.entreprise._id,
-            layout: 'layout-entreprise'
+            layout: 'layouts/layout-entreprise'
         });
     } catch (err) {
         res.redirect('/entreprise/dashboard');
