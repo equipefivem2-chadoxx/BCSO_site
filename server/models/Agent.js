@@ -8,11 +8,11 @@ const agentSchema = new mongoose.Schema({
     prenom: { type: String, required: true },
     nom: { type: String, required: true },
     matricule: { type: String, required: true, unique: true },
-    // 🚀 NOUVEAU : Numéro de téléphone (In-Game)
     telephone: { type: String, required: false, default: "Non renseigné" },
-    // 🚀 NOUVEAU : Gestion des permissions (Séparée du grade RP)
     isAdmin: { type: Boolean, default: false },
     canDeleteArchives: { type: Boolean, default: false },
+    // 🚀 NOUVEAU : Compteur total de passages effectués par cet agent
+    passagesTotal: { type: Number, default: 0 },
     grade: { 
         type: String, 
         required: true,
@@ -27,7 +27,7 @@ const agentSchema = new mongoose.Schema({
             'Deputy II', 
             'Deputy I', 
             'Deputy Junior'
-        ] // 'Admin' a été retiré de la liste des grades RP
+        ]
     },
     dateCreation: { type: Date, default: Date.now }
 });

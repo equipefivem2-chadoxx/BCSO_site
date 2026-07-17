@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
-        // 🚀 CORRECTION : On fusionne la BDD et la session pour la Sidebar
         const viewUser = {
             ...req.session.user,
             grade: currentGrade,
@@ -42,10 +41,17 @@ router.get('/', async (req, res) => {
             console.log("Modèle RapportJunior en attente d'initialisation...");
         }
 
+        // 🚀 NOUVEAU : Récupération des stats des passages pour le Dashboard
+        const Entreprise = require('../models/Entreprise');
+        const entreprisesStats = await Entreprise.find().sort({ totalPassages: -1 });
+        const topAgents = await Agent.find({ passagesTotal: { $gt: 0 } }).sort({ passagesTotal: -1 }).limit(10);
+
         res.render('pages/superviseur/index', { 
             title: 'BCSO - Hub Supervision',
             user: viewUser, 
-            rapports: rapports
+            rapports: rapports,
+            entreprisesStats: entreprisesStats, // 🚀 Injecté ici
+            topAgents: topAgents // 🚀 Injecté ici
         });
 
     } catch (error) {
@@ -71,7 +77,6 @@ router.get('/evaluations', async (req, res) => {
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
-        // 🚀 CORRECTION : Objet utilisateur pour la Sidebar
         const viewUser = {
             ...req.session.user,
             grade: currentGrade,
@@ -121,7 +126,6 @@ router.get('/rapport/:id', async (req, res) => {
         const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
         const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
 
-        // 🚀 CORRECTION : Objet utilisateur pour la Sidebar
         const viewUser = {
             ...req.session.user,
             grade: currentGrade,
@@ -171,7 +175,7 @@ router.post('/rapport/:id/supprimer', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE : SUPPRIMER TOUS LES RAPPORTS (Réservé aux Admins)
+// 🚀 Route de purge complète (Admins)
 router.post('/evaluations/supprimer-tout', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -180,23 +184,17 @@ router.post('/evaluations/supprimer-tout', async (req, res) => {
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
 
-        // Vérification de sécurité stricte : Seuls les admins peuvent TOUT détruire
         const isUserAdmin = req.session.user.isAdmin === true || 
                             req.session.user.role === 'admin' || 
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
         if (!isUserAdmin) {
-            console.log("Tentative de suppression globale refusée (non-admin).");
             return res.redirect('/superviseur/evaluations');
         }
 
         const RapportJunior = require('../models/RapportJunior');
-        
-        // deleteMany({}) avec un objet vide supprime TOUS les documents de la collection
         await RapportJunior.deleteMany({});
-        
-        console.log(`L'administrateur ${discordId} a purgé toutes les évaluations.`);
         res.redirect('/superviseur/evaluations?success=purged');
 
     } catch (err) {

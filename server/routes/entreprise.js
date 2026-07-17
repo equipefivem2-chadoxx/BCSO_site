@@ -75,6 +75,7 @@ router.get('/annuaire', async (req, res) => {
         res.render('pages/entreprise/annuaire', {
             title: `Annuaire BCSO - ${req.session.entreprise.nom}`,
             agents: agents,
+            isEntreprise: true, // 🚀 NOUVEAU: Indique à l'EJS d'afficher la colonne des passages
             layout: 'layout-entreprise'
         });
     } catch (err) {
@@ -82,7 +83,41 @@ router.get('/annuaire', async (req, res) => {
     }
 });
 
-// 5. Déconnexion
+// 🚀 5. NOUVEAU : Route pour incrémenter/décrémenter les passages
+router.post('/passage/:agentId', async (req, res) => {
+    try {
+        const action = req.body.action; // 'plus' ou 'minus'
+        
+        // Récupérer l'agent concerné
+        let agent = await Agent.findById(req.params.agentId);
+        if (!agent) return res.json({ success: false, message: "Agent introuvable" });
+
+        // Récupérer l'entreprise connectée
+        let entreprise = await Entreprise.findById(req.session.entreprise._id);
+
+        // 🚀 On met à jour les deux compteurs
+        if (action === 'plus') {
+            agent.passagesTotal = (agent.passagesTotal || 0) + 1;
+            if (entreprise) entreprise.totalPassages = (entreprise.totalPassages || 0) + 1;
+        } else if (action === 'minus' && agent.passagesTotal > 0) {
+            agent.passagesTotal -= 1;
+            if (entreprise && entreprise.totalPassages > 0) entreprise.totalPassages -= 1;
+        }
+        
+        // On sauvegarde les modifications en base de données
+        await agent.save();
+        if (entreprise) await entreprise.save();
+
+        // On renvoie la nouvelle valeur à l'interface (pour le compteur en direct)
+        res.json({ success: true, nouvelAgentTotal: agent.passagesTotal });
+
+    } catch (err) {
+        console.error("Erreur mise à jour passage:", err);
+        res.json({ success: false, message: "Erreur serveur" });
+    }
+});
+
+// 6. Déconnexion
 router.get('/logout', (req, res) => {
     delete req.session.entreprise;
     res.redirect('/entreprise/login');

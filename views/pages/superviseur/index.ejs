@@ -16,7 +16,7 @@
     .page-header { border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 35px; }
     .page-header h1 { color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 28px; }
 
-    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px;}
     
     .tool-card {
         background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-top: 3px solid var(--primary);
@@ -27,6 +27,15 @@
     .tool-icon { font-size: 35px; color: var(--primary); }
     .tool-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
     .tool-desc { color: #94a3b8; font-size: 13px; line-height: 1.5; }
+
+    /* 🚀 NOUVEAU: CSS pour les tableaux de statistiques */
+    .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+    .stat-box { background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 25px; }
+    .stat-title { font-size: 16px; color: var(--primary); text-transform: uppercase; font-weight: bold; margin-bottom: 20px; border-bottom: 1px dashed rgba(189,165,129,0.3); padding-bottom: 10px; }
+    
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 14px; }
+    .stat-row:last-child { border-bottom: none; }
+    .badge-count { background: rgba(189, 165, 129, 0.15); color: #bda581; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-family: monospace; font-size: 14px; }
 </style>
 
 <div id="supervision-hub">
@@ -44,5 +53,41 @@
                 <%= typeof rapports !== 'undefined' && rapports ? rapports.filter(r => r.statut === 'en_attente').length : 0 %> en attente
             </div>
         </a>
+    </div>
+
+    <!-- 🚀 NOUVEAU: Section Statistiques -->
+    <div class="stats-container">
+        <!-- Colonne 1 : Totaux par Entreprise -->
+        <div class="stat-box">
+            <div class="stat-title"><i class="fas fa-building"></i> Totaux par Entreprise</div>
+            <% if (typeof entreprisesStats !== 'undefined' && entreprisesStats.length > 0) { %>
+                <% entreprisesStats.forEach(ent => { %>
+                    <div class="stat-row">
+                        <span style="font-weight: bold; color: #fff;"><%= ent.nom %></span>
+                        <span class="badge-count"><%= ent.totalPassages %> passages</span>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p style="color: #64748b; font-size: 13px; font-style: italic;">Aucune donnée d'entreprise.</p>
+            <% } %>
+        </div>
+
+        <!-- Colonne 2 : Classement Top 10 Agents -->
+        <div class="stat-box">
+            <div class="stat-title"><i class="fas fa-trophy"></i> Top 10 Agents - Passages Actifs</div>
+            <% if (typeof topAgents !== 'undefined' && topAgents.length > 0) { %>
+                <% topAgents.forEach((agent, index) => { %>
+                    <div class="stat-row">
+                        <span>
+                            <span style="color: #64748b; margin-right: 10px;">#<%= index + 1 %></span>
+                            <span style="color: #cbd5e1;"><%= agent.prenom %> <%= agent.nom %></span>
+                        </span>
+                        <span class="badge-count"><%= agent.passagesTotal %></span>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p style="color: #64748b; font-size: 13px; font-style: italic;">Aucun passage répertorié pour le moment.</p>
+            <% } %>
+        </div>
     </div>
 </div>
