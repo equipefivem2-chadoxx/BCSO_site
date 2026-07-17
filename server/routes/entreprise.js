@@ -72,10 +72,15 @@ router.get('/annuaire', async (req, res) => {
             return a.matricule.localeCompare(b.matricule, undefined, { numeric: true, sensitivity: 'base' });
         });
 
+        // 🚀 NOUVEAU : On vérifie si l'entreprise connectée est un garage (Manono, etc.)
+        const identifiant = req.session.entreprise.identifiant.toLowerCase();
+        const isGarage = identifiant.includes('manono') || identifiant.includes('garage');
+
         res.render('pages/entreprise/annuaire', {
             title: `Annuaire BCSO - ${req.session.entreprise.nom}`,
             agents: agents,
-            isEntreprise: true, // 🚀 NOUVEAU: Indique à l'EJS d'afficher la colonne des passages
+            isGarage: isGarage, // Indique à l'EJS d'afficher ou non la colonne des passages
+            entrepriseId: req.session.entreprise._id, // Nécessaire pour trouver le bon compteur dans l'EJS
             layout: 'layout-entreprise'
         });
     } catch (err) {
@@ -83,7 +88,7 @@ router.get('/annuaire', async (req, res) => {
     }
 });
 
-// 🚀 5. NOUVEAU : Route pour incrémenter/décrémenter les passages
+// 🚀 5. CORRIGÉ : Route pour incrémenter/décrémenter les passages SPÉCIFIQUES à l'entreprise
 router.post('/passage/:agentId', async (req, res) => {
     try {
         const action = req.body.action; // 'plus' ou 'minus'
@@ -94,22 +99,44 @@ router.post('/passage/:agentId', async (req, res) => {
 
         // Récupérer l'entreprise connectée
         let entreprise = await Entreprise.findById(req.session.entreprise._id);
+        const entId = req.session.entreprise._id;
 
-        // 🚀 On met à jour les deux compteurs
+        // 🚀 On cherche si l'agent a déjà un compteur pour CETTE entreprise dans son nouveau tableau
+        let passageIndex = agent.passagesParEntreprise.findIndex(p => p.entrepriseId.toString() === entId.toString());
+
+        // 🚀 Mise à jour des compteurs
         if (action === 'plus') {
+            if (passageIndex > -1) {
+                // S'il a déjà un compteur pour ce garage, on fait +1
+                agent.passagesParEntreprise[passageIndex].total += 1;
+            } else {
+                // Sinon, on crée l'entrée pour ce garage avec total = 1
+                agent.passagesParEntreprise.push({ entrepriseId: entId, total: 1 });
+                passageIndex = agent.passagesParEntreprise.length - 1; // On met à jour l'index
+            }
+            
+            // On met aussi à jour le total global de l'agent et de l'entreprise (pour les stats globales du BCSO)
             agent.passagesTotal = (agent.passagesTotal || 0) + 1;
             if (entreprise) entreprise.totalPassages = (entreprise.totalPassages || 0) + 1;
-        } else if (action === 'minus' && agent.passagesTotal > 0) {
-            agent.passagesTotal -= 1;
-            if (entreprise && entreprise.totalPassages > 0) entreprise.totalPassages -= 1;
+            
+        } else if (action === 'minus') {
+            // On décrémente uniquement s'il a déjà un compteur pour cette entreprise et qu'il est > 0
+            if (passageIndex > -1 && agent.passagesParEntreprise[passageIndex].total > 0) {
+                agent.passagesParEntreprise[passageIndex].total -= 1;
+                
+                // On retire aussi 1 au total global
+                if (agent.passagesTotal > 0) agent.passagesTotal -= 1;
+                if (entreprise && entreprise.totalPassages > 0) entreprise.totalPassages -= 1;
+            }
         }
         
         // On sauvegarde les modifications en base de données
         await agent.save();
         if (entreprise) await entreprise.save();
 
-        // On renvoie la nouvelle valeur à l'interface (pour le compteur en direct)
-        res.json({ success: true, nouvelAgentTotal: agent.passagesTotal });
+        // On renvoie la NOUVELLE valeur spécifique à l'entreprise à l'interface (pour mettre à jour le chiffre direct sans recharger la page)
+        const nouvelleValeur = passageIndex > -1 ? agent.passagesParEntreprise[passageIndex].total : 0;
+        res.json({ success: true, nouvelAgentTotal: nouvelleValeur });
 
     } catch (err) {
         console.error("Erreur mise à jour passage:", err);

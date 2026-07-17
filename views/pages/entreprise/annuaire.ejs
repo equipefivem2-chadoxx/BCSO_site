@@ -28,7 +28,8 @@
                 <th>Identité de l'Agent</th>
                 <th>Grade</th>
                 <th>Numéro De Téléphone</th>
-                <% if (typeof isEntreprise !== 'undefined' && isEntreprise) { %>
+                <!-- 🚀 NOUVEAU : On n'affiche la colonne que si isGarage est VRAI -->
+                <% if (typeof isGarage !== 'undefined' && isGarage) { %>
                     <th style="text-align: center;">Passages</th>
                 <% } %>
             </tr>
@@ -49,11 +50,20 @@
                                 <span style="color: #64748b; font-size: 13px; font-style: italic;">Non attribué</span>
                             <% } %>
                         </td>
-                        <% if (typeof isEntreprise !== 'undefined' && isEntreprise) { %>
+                        <!-- 🚀 NOUVEAU : Boutons + et - uniquement pour les garages -->
+                        <% if (typeof isGarage !== 'undefined' && isGarage) { %>
                             <td>
+                                <% 
+                                    // Logique pour récupérer le bon compteur pour l'entreprise connectée
+                                    let nbPassages = 0;
+                                    if (agent.passagesParEntreprise && agent.passagesParEntreprise.length > 0) {
+                                        const passageEnt = agent.passagesParEntreprise.find(p => p.entrepriseId.toString() === entrepriseId.toString());
+                                        if (passageEnt) nbPassages = passageEnt.total;
+                                    }
+                                %>
                                 <div style="display: flex; gap: 10px; align-items: center; justify-content: center;">
                                     <button class="btn-pass" onclick="updatePassage('<%= agent._id %>', 'minus')">-</button>
-                                    <span class="pass-count" id="pass-<%= agent._id %>"><%= agent.passagesTotal || 0 %></span>
+                                    <span class="pass-count" id="pass-<%= agent._id %>"><%= nbPassages %></span>
                                     <button class="btn-pass" onclick="updatePassage('<%= agent._id %>', 'plus')">+</button>
                                 </div>
                             </td>
@@ -65,11 +75,11 @@
     </table>
 </div>
 
-<% if (typeof isEntreprise !== 'undefined' && isEntreprise) { %>
+<!-- Le script js ne s'affiche que si c'est un garage -->
+<% if (typeof isGarage !== 'undefined' && isGarage) { %>
 <script>
 async function updatePassage(agentId, action) {
     try {
-        // 🚀 CORRECTION ICI : Remplacement de "/api/entreprise/..." par "/entreprise/..."
         const res = await fetch(`/entreprise/passage/${agentId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

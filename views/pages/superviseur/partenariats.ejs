@@ -11,12 +11,39 @@
     .btn-back { background: rgba(255,255,255,0.05); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
     .btn-back:hover { background: rgba(255,255,255,0.1); }
 
-    .grid-ent { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-    .ent-card { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid #bda581; padding: 25px; border-radius: 10px; text-decoration: none; color: #fff; transition: 0.3s; display: flex; flex-direction: column; gap: 10px; }
-    .ent-card:hover { background: rgba(15, 23, 42, 0.8); transform: translateX(5px); border-color: rgba(189, 165, 129, 0.3); }
+    .grid-ent { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
     
-    .ent-nom { font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #bda581; }
-    .ent-passages { font-family: monospace; color: #94a3b8; font-size: 14px; }
+    /* Design amélioré pour les cartes */
+    .ent-card { 
+        background: linear-gradient(145deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.2) 100%);
+        border: 1px solid rgba(255,255,255,0.05); 
+        border-top: 4px solid #bda581; 
+        padding: 30px 25px; 
+        border-radius: 12px; 
+        text-decoration: none; 
+        color: #fff; 
+        transition: all 0.3s ease; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 15px; 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .ent-card:hover { 
+        background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 100%);
+        transform: translateY(-5px); 
+        border-color: rgba(189, 165, 129, 0.5); 
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .ent-header { display: flex; align-items: center; gap: 15px; }
+    .ent-icon { background: rgba(189, 165, 129, 0.1); color: #bda581; padding: 15px; border-radius: 10px; font-size: 20px; }
+    .ent-nom { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #fff; margin: 0; }
+    
+    .ent-passages { background: rgba(0, 0, 0, 0.3); padding: 10px 15px; border-radius: 8px; font-family: monospace; color: #94a3b8; font-size: 14px; border: 1px solid rgba(255,255,255,0.02); }
+    .ent-passages strong { color: #bda581; font-size: 16px; }
+    
+    .ent-footer { margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #bda581; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+    .ent-card:hover .ent-footer i { transform: translateX(5px); transition: 0.3s; }
 </style>
 
 <div class="page-container">
@@ -30,13 +57,29 @@
 
     <div class="grid-ent">
         <% if (entreprises.length === 0) { %>
-            <p style="color: #64748b; font-style: italic;">Aucun partenariat enregistré pour le moment.</p>
+            <p style="color: #64748b; font-style: italic; grid-column: 1 / -1; text-align: center; padding: 40px; background: rgba(15,23,42,0.4); border-radius: 10px;">Aucun partenariat enregistré pour le moment.</p>
         <% } else { %>
             <% entreprises.forEach(ent => { %>
+                <!-- Création d'une variable pour savoir si c'est un garage -->
+                <% const isGarage = ent.identifiant.toLowerCase().includes('manono') || ent.identifiant.toLowerCase().includes('garage'); %>
+                
                 <a href="/superviseur/partenariats/<%= ent._id %>" class="ent-card">
-                    <div class="ent-nom"><i class="fas fa-building"></i> <%= ent.nom %></div>
-                    <div class="ent-passages">Passages comptabilisés : <strong><%= ent.totalPassages || 0 %></strong></div>
-                    <div style="margin-top: 10px; font-size: 12px; color: #34d399;"><i class="fas fa-eye"></i> Voir le dossier complet</div>
+                    <div class="ent-header">
+                        <!-- Icône dynamique selon si c'est un garage ou autre -->
+                        <div class="ent-icon">
+                            <i class="fas <%= isGarage ? 'fa-wrench' : 'fa-building' %>"></i>
+                        </div>
+                        <h2 class="ent-nom"><%= ent.nom %></h2>
+                    </div>
+                    
+                    <!-- Affichage du compteur UNIQUEMENT pour les garages -->
+                    <% if (isGarage) { %>
+                        <div class="ent-passages">Passages comptabilisés : <strong><%= ent.totalPassages || 0 %></strong></div>
+                    <% } %>
+
+                    <div class="ent-footer">
+                        Ouvrir le dossier <i class="fas fa-arrow-right"></i>
+                    </div>
                 </a>
             <% }) %>
         <% } %>

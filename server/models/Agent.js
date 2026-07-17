@@ -11,8 +11,16 @@ const agentSchema = new mongoose.Schema({
     telephone: { type: String, required: false, default: "Non renseigné" },
     isAdmin: { type: Boolean, default: false },
     canDeleteArchives: { type: Boolean, default: false },
-    // 🚀 NOUVEAU : Compteur total de passages effectués par cet agent
+    
+    // 🚀 ANCIEN : Compteur total global (pratique pour un classement général du BCSO)
     passagesTotal: { type: Number, default: 0 },
+    
+    // 🚀 NOUVEAU : Un tableau qui enregistre le nombre de passages pour CHAQUE entreprise séparément
+    passagesParEntreprise: [{
+        entrepriseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Entreprise' },
+        total: { type: Number, default: 0 }
+    }],
+
     grade: { 
         type: String, 
         required: true,

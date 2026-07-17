@@ -1,6 +1,8 @@
 <%- include('../../partials/header') %>
 <%- include('../../partials/sidebar') %>
 
+<% const isGarage = entreprise.identifiant.toLowerCase().includes('manono') || entreprise.identifiant.toLowerCase().includes('garage'); %>
+
 <style>
     body { background-color: #07090e; font-family: 'Montserrat', sans-serif; color: #e2e8f0; margin: 0; }
     .page-container { margin-left: 280px; padding: 50px 60px; max-width: 1400px; animation: fadeUp 0.4s ease-out; }
@@ -11,15 +13,16 @@
     .btn-back { background: rgba(255,255,255,0.05); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
     .btn-back:hover { background: rgba(255,255,255,0.1); }
 
-    .split-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
+    /* 🚀 NOUVEAU : On gère la grille via des classes pour éviter l'erreur EJS dans le CSS */
+    .split-layout { display: grid; gap: 30px; }
+    .split-layout.is-garage { grid-template-columns: 1fr 1.5fr; }
+    .split-layout.not-garage { grid-template-columns: 1fr; }
 
-    /* Panneau de gauche : Contrat */
     .contrat-panel { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; height: fit-content; }
     .panel-title { font-size: 18px; color: #bda581; font-weight: bold; border-bottom: 1px dashed rgba(189,165,129,0.3); padding-bottom: 15px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
     
     .dev-badge { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px dashed #ef4444; padding: 15px; border-radius: 8px; font-size: 14px; text-align: center; }
 
-    /* Panneau de droite : Tableau */
     .table-panel { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
     th { background: rgba(0,0,0,0.4); padding: 12px 15px; color: #bda581; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -32,13 +35,16 @@
     <div class="header-section">
         <div>
             <h1>Dossier : <%= entreprise.nom %></h1>
-            <p style="color: #94a3b8; margin-top: 5px;">Total des passages confirmés : <strong style="color: #fff;"><%= entreprise.totalPassages %></strong></p>
+            <% if (isGarage) { %>
+                <p style="color: #94a3b8; margin-top: 5px;">Total des passages confirmés : <strong style="color: #fff;"><%= entreprise.totalPassages %></strong></p>
+            <% } %>
         </div>
         <a href="/superviseur/partenariats" class="btn-back"><i class="fas fa-arrow-left"></i> Retour aux Partenariats</a>
     </div>
 
-    <div class="split-layout">
-        <!-- Section Contrat -->
+    <!-- 🚀 NOUVEAU : On applique la classe dynamiquement ici -->
+    <div class="split-layout <%= isGarage ? 'is-garage' : 'not-garage' %>">
+        
         <div class="contrat-panel">
             <div class="panel-title"><i class="fas fa-file-signature"></i> Modalités du Contrat</div>
             <div class="dev-badge">
@@ -51,33 +57,42 @@
             </div>
         </div>
 
-        <!-- Section Tableau des Agents -->
-        <div class="table-panel">
-            <div class="panel-title"><i class="fas fa-list-ol"></i> Classement des passages BCSO</div>
-            <% if (agents.length === 0) { %>
-                <p style="text-align: center; color: #64748b; padding: 20px;">Aucun passage n'a encore été enregistré par les effectifs.</p>
-            <% } else { %>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Matricule</th>
-                            <th>Identité</th>
-                            <th>Grade</th>
-                            <th style="text-align: right;">Passages</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% agents.forEach(agent => { %>
+        <% if (isGarage) { %>
+            <div class="table-panel">
+                <div class="panel-title"><i class="fas fa-list-ol"></i> Classement des passages BCSO</div>
+                <% if (agents.length === 0) { %>
+                    <p style="text-align: center; color: #64748b; padding: 20px;">Aucun passage n'a encore été enregistré par les effectifs.</p>
+                <% } else { %>
+                    <table>
+                        <thead>
                             <tr>
-                                <td class="matricule">#<%= agent.matricule %></td>
-                                <td style="font-weight: bold; color: #fff;"><%= agent.prenom %> <%= agent.nom %></td>
-                                <td style="color: #cbd5e1; font-size: 13px;"><%= agent.grade %></td>
-                                <td style="text-align: right;"><span class="pass-count"><%= agent.passagesTotal %></span></td>
+                                <th>Matricule</th>
+                                <th>Identité</th>
+                                <th>Grade</th>
+                                <th style="text-align: right;">Passages</th>
                             </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            <% } %>
-        </div>
+                        </thead>
+                        <tbody>
+                            <% agents.forEach(agent => { %>
+                                <!-- 🚀 IMPORTANT : On affichera plus tard le bon compteur ici -->
+                                <tr>
+                                    <td class="matricule">#<%= agent.matricule %></td>
+                                    <td style="font-weight: bold; color: #fff;"><%= agent.prenom %> <%= agent.nom %></td>
+                                    <td style="color: #cbd5e1; font-size: 13px;"><%= agent.grade %></td>
+                                    <td style="text-align: right;"><span class="pass-count">
+                                        <% 
+                                            // Petite logique pour trouver le compteur spécifique à cette entreprise
+                                            const passageEnt = agent.passagesParEntreprise.find(p => p.entrepriseId.toString() === entreprise._id.toString());
+                                            const nbPassages = passageEnt ? passageEnt.total : 0;
+                                        %>
+                                        <%= nbPassages %>
+                                    </span></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        <% } %>
     </div>
 </div>
