@@ -244,5 +244,15 @@
         <div class="card-decoration-bottom"></div>
     </div>
 
+    <!-- 🚀 SCRIPT TEMPS RÉEL MAINTENANCE -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('maintenance-toggled', (isMaintenance) => {
+            if (isMaintenance) {
+                window.location.reload(); 
+            }
+        });
+    </script>
 </body>
 </html>
