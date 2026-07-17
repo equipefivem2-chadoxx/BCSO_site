@@ -1,0 +1,83 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    body { background-color: #07090e; font-family: 'Montserrat', sans-serif; color: #e2e8f0; margin: 0; }
+    .page-container { margin-left: 280px; padding: 50px 60px; max-width: 1400px; animation: fadeUp 0.4s ease-out; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-section { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189, 165, 129, 0.2); padding-bottom: 20px; margin-bottom: 35px; }
+    h1 { color: #bda581; margin: 0; text-transform: uppercase; font-weight: 900; font-size: 28px; }
+    .btn-back { background: rgba(255,255,255,0.05); color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
+    .btn-back:hover { background: rgba(255,255,255,0.1); }
+
+    .split-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
+
+    /* Panneau de gauche : Contrat */
+    .contrat-panel { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; height: fit-content; }
+    .panel-title { font-size: 18px; color: #bda581; font-weight: bold; border-bottom: 1px dashed rgba(189,165,129,0.3); padding-bottom: 15px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .dev-badge { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px dashed #ef4444; padding: 15px; border-radius: 8px; font-size: 14px; text-align: center; }
+
+    /* Panneau de droite : Tableau */
+    .table-panel { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: rgba(0,0,0,0.4); padding: 12px 15px; color: #bda581; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 14px; }
+    .matricule { font-family: monospace; font-weight: bold; color: #bda581; }
+    .pass-count { background: rgba(189, 165, 129, 0.15); color: #bda581; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-family: monospace; }
+</style>
+
+<div class="page-container">
+    <div class="header-section">
+        <div>
+            <h1>Dossier : <%= entreprise.nom %></h1>
+            <p style="color: #94a3b8; margin-top: 5px;">Total des passages confirmés : <strong style="color: #fff;"><%= entreprise.totalPassages %></strong></p>
+        </div>
+        <a href="/superviseur/partenariats" class="btn-back"><i class="fas fa-arrow-left"></i> Retour aux Partenariats</a>
+    </div>
+
+    <div class="split-layout">
+        <!-- Section Contrat -->
+        <div class="contrat-panel">
+            <div class="panel-title"><i class="fas fa-file-signature"></i> Modalités du Contrat</div>
+            <div class="dev-badge">
+                <i class="fas fa-tools" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                Section en développement.<br>Le contenu administratif sera inséré ici prochainement.
+            </div>
+            <div style="margin-top: 20px; font-size: 13px; color: #94a3b8; line-height: 1.6;">
+                <strong>Identifiant lié :</strong> <%= entreprise.identifiant %><br>
+                <strong>Date de création :</strong> <%= entreprise.dateCreation.toLocaleDateString('fr-FR') %>
+            </div>
+        </div>
+
+        <!-- Section Tableau des Agents -->
+        <div class="table-panel">
+            <div class="panel-title"><i class="fas fa-list-ol"></i> Classement des passages BCSO</div>
+            <% if (agents.length === 0) { %>
+                <p style="text-align: center; color: #64748b; padding: 20px;">Aucun passage n'a encore été enregistré par les effectifs.</p>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Matricule</th>
+                            <th>Identité</th>
+                            <th>Grade</th>
+                            <th style="text-align: right;">Passages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% agents.forEach(agent => { %>
+                            <tr>
+                                <td class="matricule">#<%= agent.matricule %></td>
+                                <td style="font-weight: bold; color: #fff;"><%= agent.prenom %> <%= agent.nom %></td>
+                                <td style="color: #cbd5e1; font-size: 13px;"><%= agent.grade %></td>
+                                <td style="text-align: right;"><span class="pass-count"><%= agent.passagesTotal %></span></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -10,7 +10,6 @@
     .matricule { font-weight: 900; color: #bda581; font-family: monospace; font-size: 15px; }
     .tel-badge { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 12px; border-radius: 6px; font-family: monospace; font-weight: bold; font-size: 13px; }
     
-    /* 🚀 CSS pour les boutons de passages */
     .btn-pass { background: rgba(189, 165, 129, 0.1); border: 1px solid #bda581; color: #bda581; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
     .btn-pass:hover { background: #bda581; color: #000; }
     .pass-count { font-weight: bold; font-size: 16px; min-width: 25px; text-align: center; color: #fff; }
@@ -29,7 +28,6 @@
                 <th>Identité de l'Agent</th>
                 <th>Grade</th>
                 <th>Numéro De Téléphone</th>
-                <!-- 🚀 Condition pour afficher la colonne uniquement aux entreprises -->
                 <% if (typeof isEntreprise !== 'undefined' && isEntreprise) { %>
                     <th style="text-align: center;">Passages</th>
                 <% } %>
@@ -51,7 +49,6 @@
                                 <span style="color: #64748b; font-size: 13px; font-style: italic;">Non attribué</span>
                             <% } %>
                         </td>
-                        <!-- 🚀 Affichage des boutons pour les entreprises -->
                         <% if (typeof isEntreprise !== 'undefined' && isEntreprise) { %>
                             <td>
                                 <div style="display: flex; gap: 10px; align-items: center; justify-content: center;">
@@ -68,12 +65,12 @@
     </table>
 </div>
 
-<!-- 🚀 Script pour gérer les + et - en direct (sans recharger la page) -->
 <% if (typeof isEntreprise !== 'undefined' && isEntreprise) { %>
 <script>
 async function updatePassage(agentId, action) {
     try {
-        const res = await fetch(`/api/entreprise/passage/${agentId}`, {
+        // 🚀 CORRECTION ICI : Remplacement de "/api/entreprise/..." par "/entreprise/..."
+        const res = await fetch(`/entreprise/passage/${agentId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: action })

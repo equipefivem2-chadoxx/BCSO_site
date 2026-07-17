@@ -50,8 +50,8 @@ router.get('/', async (req, res) => {
             title: 'BCSO - Hub Supervision',
             user: viewUser, 
             rapports: rapports,
-            entreprisesStats: entreprisesStats, // 🚀 Injecté ici
-            topAgents: topAgents // 🚀 Injecté ici
+            entreprisesStats: entreprisesStats,
+            topAgents: topAgents
         });
 
     } catch (error) {
@@ -200,6 +200,103 @@ router.post('/evaluations/supprimer-tout', async (req, res) => {
     } catch (err) {
         console.error("Erreur lors de la purge globale:", err);
         res.redirect('/superviseur/evaluations');
+    }
+});
+
+// ==============================================================
+// 🚀 NOUVELLES ROUTES : GESTION DES PARTENARIATS ENTREPRISES
+// ==============================================================
+
+// 🚀 NOUVELLE ROUTE 1 : Liste des partenariats
+router.get('/partenariats', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const Entreprise = require('../models/Entreprise');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+        
+        const entreprises = await Entreprise.find().sort({ nom: 1 });
+
+        res.render('pages/superviseur/partenariats', { 
+            title: 'BCSO - Partenariats',
+            user: viewUser, 
+            entreprises: entreprises
+        });
+
+    } catch (error) {
+        console.error('Erreur liste partenariats:', error);
+        res.redirect('/superviseur');
+    }
+});
+
+// 🚀 NOUVELLE ROUTE 2 : Détail d'un partenariat (Contrat + Tableau des Passages)
+router.get('/partenariats/:id', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const Entreprise = require('../models/Entreprise');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+                            
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
+        const entreprise = await Entreprise.findById(req.params.id);
+        if (!entreprise) return res.redirect('/superviseur/partenariats');
+
+        // On récupère tous les agents qui ont au moins 1 passage globalement (pour le classement)
+        const agents = await Agent.find({ passagesTotal: { $gt: 0 } }).sort({ passagesTotal: -1 });
+
+        res.render('pages/superviseur/partenariat-detail', { 
+            title: `Partenariat - ${entreprise.nom}`,
+            user: viewUser, 
+            entreprise: entreprise,
+            agents: agents
+        });
+
+    } catch (error) {
+        console.error('Erreur détail partenariat:', error);
+        res.redirect('/superviseur/partenariats');
     }
 });
 
