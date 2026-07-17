@@ -18,7 +18,7 @@ router.get('/', checkChadoxx, (req, res) => {
     });
 });
 
-// Route pour activer/désactiver la maintenance
+// Route pour activer/désactiver la maintenance (AJAX)
 router.post('/toggle-maintenance', checkChadoxx, (req, res) => {
     global.MAINTENANCE_MODE = !global.MAINTENANCE_MODE;
     
@@ -28,7 +28,8 @@ router.post('/toggle-maintenance', checkChadoxx, (req, res) => {
         io.emit('maintenance-toggled', global.MAINTENANCE_MODE);
     }
     
-    res.redirect('/chadoxx');
+    // On répond un succès proprement au lieu de forcer une redirection
+    res.json({ success: true, state: global.MAINTENANCE_MODE });
 });
 
 module.exports = router;
