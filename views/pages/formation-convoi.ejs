@@ -5,73 +5,86 @@
     :root {
         --primary: #bda581;
         --primary-glow: rgba(189, 165, 129, 0.2);
-        --bg-dark: #07090e;
-        --bg-panel: rgba(15, 23, 42, 0.6);
+        --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75);
         --text-main: #e2e8f0;
+        --border-glow: rgba(189, 165, 129, 0.25);
+        --success: #10b981;
+        --info: #38bdf8;
+        --warning: #f59e0b;
+        --danger: #ef4444;
     }
 
     body {
-        margin: 0; 
+        margin: 0;
         background-color: var(--bg-dark);
         background-image: 
-            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
-            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+            linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px;
         font-family: 'Montserrat', sans-serif; 
         color: var(--text-main); 
         min-height: 100vh;
     }
 
     @keyframes fadeUp { 
-        from { opacity: 0; transform: translateY(30px); } 
+        from { opacity: 0; transform: translateY(20px); } 
         to { opacity: 1; transform: translateY(0); } 
     }
-
-    .proc-wrapper { 
-        max-width: 1200px; 
-        margin: 40px auto 80px auto; 
-        padding: 0 20px; 
-        animation: fadeUp 0.6s ease-out forwards;
-        margin-left: 300px; /* Espace pour la sidebar */
+    @keyframes slideInRight { 
+        from { opacity: 0; transform: translateX(20px); } 
+        to { opacity: 1; transform: translateX(0); } 
     }
 
+    /* STRUCTURE DU CONTENEUR ALIGNÉ SUR LA SIDEBAR DU SITE */
+    .proc-wrapper { 
+        max-width: 1400px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 30px; 
+        animation: fadeUp 0.5s ease-out forwards;
+        margin-left: 300px; /* Aligné sur ta sidebar principale */
+    }
+
+    /* HEADER STYLE TACTIQUE */
     .proc-header { 
         display: flex; 
         justify-content: space-between; 
         align-items: center; 
-        margin-bottom: 40px; 
+        margin-bottom: 35px; 
         background: var(--bg-panel); 
-        padding: 30px; 
-        border-radius: 20px; 
-        border: 1px solid rgba(189, 165, 129, 0.2); 
-        backdrop-filter: blur(15px); 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--border-glow); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
     }
 
     .btn-back { 
-        background: rgba(189, 165, 129, 0.1); 
-        border: 1px solid var(--primary); 
+        background: rgba(189, 165, 129, 0.08); 
+        border: 1px solid rgba(189, 165, 129, 0.3); 
         color: var(--primary); 
-        padding: 12px 20px; 
+        padding: 12px 22px; 
         border-radius: 8px; 
         font-weight: 800; 
         text-transform: uppercase; 
         text-decoration: none; 
-        transition: 0.3s; 
-        display: flex; 
+        transition: 0.3s ease; 
+        display: inline-flex; 
         align-items: center; 
         gap: 10px; 
         letter-spacing: 1px;
+        font-size: 0.8rem;
     }
-
     .btn-back:hover { 
         background: var(--primary); 
-        color: #000; 
+        color: #05070b; 
         box-shadow: 0 0 15px var(--primary-glow); 
+        transform: translateX(-3px);
     }
 
     .proc-title { text-align: right; }
     .proc-title h1 { 
-        font-size: 28px; 
+        font-size: 26px; 
         font-weight: 900; 
         margin: 0; 
         color: #fff; 
@@ -82,122 +95,435 @@
         color: var(--primary); 
         margin: 5px 0 0 0; 
         font-weight: 700; 
-        font-size: 14px; 
-        letter-spacing: 1px; 
+        font-size: 13px; 
+        letter-spacing: 3px; 
         text-transform: uppercase; 
+    }
+
+    /* SOUB-NAVIGATION DES FORMATIONS (ONGLETS INTERACTIFS) */
+    .formation-nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    .form-nav-btn {
+        background: rgba(6, 9, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        color: #94a3b8;
+        padding: 16px;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .form-nav-btn:hover {
+        background: rgba(255,255,255,0.02);
+        color: #fff;
+    }
+    .form-nav-btn.active {
+        background: linear-gradient(180deg, rgba(189, 165, 129, 0.15) 0%, rgba(189,165,129,0.02) 100%);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        box-shadow: 0 5px 15px rgba(189, 165, 129, 0.05);
+    }
+
+    /* PANELS DES CONTENUS PANES */
+    .formation-pane { 
+        display: none; 
+        animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+    }
+    .formation-pane.active { display: block; }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 30px;
+    }
+
+    /* COLONNE INFOS TACTIQUES */
+    .tactical-details {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
     .info-panel {
-        background: rgba(0,0,0,0.4);
-        border: 1px solid rgba(255,255,255,0.05);
+        background: var(--bg-panel);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.02);
         border-left: 4px solid var(--primary);
-        border-radius: 16px;
-        padding: 35px;
-        margin-bottom: 40px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-
     .info-panel h2 {
         margin: 0 0 15px 0;
         color: #fff;
-        font-size: 22px;
+        font-size: 1.25rem;
         text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        letter-spacing: 1px;
+        gap: 10px;
+    }
+    .info-panel h2 span { color: var(--primary); }
+    .info-panel p {
+        color: #cbd5e1;
+        line-height: 1.7;
+        font-size: 0.92rem;
+        margin: 0;
+        font-weight: 500;
     }
 
-    .info-panel h2 i { color: var(--primary); font-size: 26px; }
-    .info-panel p { color: #94a3b8; line-height: 1.7; font-size: 15px; margin: 0; }
-    
+    /* BADGES DE CONTEXTE D'UTILISATION */
+    .use-case-box {
+        background: rgba(10, 15, 30, 0.4);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 25px;
+    }
+    .use-case-box h3 {
+        margin: 0 0 12px 0;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--primary);
+    }
+    .use-case-text {
+        color: #94a3b8;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* ALERTES DE SÉCURITÉ CONVOI */
     .alert-box {
-        background: rgba(245, 158, 11, 0.1);
-        border: 1px solid rgba(245, 158, 11, 0.3);
+        background: rgba(239, 68, 68, 0.05);
+        border: 1px solid rgba(239, 68, 68, 0.15);
         border-radius: 10px;
-        padding: 18px 25px;
-        margin-top: 25px;
+        padding: 20px;
         display: flex;
-        align-items: flex-start;
         gap: 15px;
     }
-    .alert-box i { color: #f59e0b; font-size: 22px; margin-top: 2px; }
-    .alert-box p { color: #fcd34d; font-size: 14px; font-weight: 600; margin: 0; line-height: 1.5; }
+    .alert-box i { color: var(--danger); font-size: 1.3rem; margin-top: 2px; }
+    .alert-box p { color: #fca5a5; font-size: 0.85rem; margin: 0; line-height: 1.5; font-weight: 600; }
 
-    .image-container {
-        background: rgba(11, 15, 25, 0.8);
-        border: 1px solid rgba(189, 165, 129, 0.3);
-        border-radius: 20px;
-        padding: 25px;
-        text-align: center;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        backdrop-filter: blur(15px);
-    }
-
-    .image-container img {
-        width: 100%;
-        height: auto;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.05);
-        transition: transform 0.4s ease;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    .image-container img:hover {
-        transform: scale(1.02);
-        border-color: rgba(189, 165, 129, 0.5);
-    }
-
-    .btn-fullscreen {
-        display: inline-flex; 
-        align-items: center; 
-        justify-content: center; 
-        gap: 10px;
-        background: var(--primary); 
-        color: #07090e; 
-        padding: 15px 35px; 
-        border-radius: 10px;
-        font-weight: 800; 
-        text-transform: uppercase; 
-        letter-spacing: 1px; 
-        cursor: pointer;
-        transition: 0.3s; 
-        text-decoration: none; 
-        margin-top: 30px;
+    /* COLONNE VISUELS / DUO D'IMAGES SCANNÉES */
+    .visuals-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
     
-    .btn-fullscreen:hover {
-        box-shadow: 0 0 25px var(--primary-glow);
-        transform: translateY(-3px);
+    .media-tactical-card {
+        background: rgba(4, 6, 10, 0.5);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 15px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+    .media-tactical-card:hover {
+        border-color: var(--primary);
+        background: rgba(189, 165, 129, 0.02);
+        transform: translateY(-2px);
+    }
+
+    .media-image-wrapper {
+        width: 100%;
+        height: 240px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #000;
+        border: 1px solid rgba(255,255,255,0.05);
+        position: relative;
+    }
+    .media-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.75;
+        transition: 0.5s ease;
+    }
+    .media-tactical-card:hover .media-image-wrapper img {
+        opacity: 0.95;
+        transform: scale(1.02);
+    }
+
+    .media-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        padding: 0 5px;
+    }
+    .media-label span {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #64748b;
+        letter-spacing: 0.5px;
+    }
+    .media-tactical-card:hover .media-label span { color: var(--primary); }
+    .media-label i { font-size: 0.85rem; color: #475569; transition: 0.3s; }
+    .media-tactical-card:hover .media-label i { color: var(--primary); transform: scale(1.1); }
+
+    /* MODAL INTERACTIF DE ZOOM PLEIN ÉCRAN */
+    .zoom-modal {
+        display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.96); backdrop-filter: blur(12px);
+        justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .zoom-modal.active { display: flex; opacity: 1; }
+    .modal-container { position: relative; width: 85%; height: 85%; display: flex; justify-content: center; align-items: center; }
+    .modal-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 25px 60px rgba(0,0,0,0.7); }
+    .modal-close { position: absolute; top: -50px; right: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+    .modal-close:hover { background: var(--danger); border-color: transparent; transform: scale(1.05); }
+
+    /* BASEFOOTER ACADEMY */
+    .academy-footer {
+        margin-top: 40px;
+        text-align: center;
+        padding: 15px;
+        border-top: 1px dashed rgba(255,255,255,0.05);
+        color: #475569;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 1200px) {
+        .proc-wrapper { margin-left: 0; padding: 20px; }
+        .main-grid { grid-template-columns: 1fr; }
+        .formation-nav { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
 
 <div class="proc-wrapper">
+    
+    <!-- HEADER -->
     <div class="proc-header">
-        <a href="/formations" class="btn-back"><i class="fas fa-arrow-left"></i> Retour aux Formations</a>
+        <a href="/formations" class="btn-back"><i class="fas fa-chevron-left"></i> Formations</a>
         <div class="proc-title">
             <h1>Formation Convoi</h1>
-            <p>Déplacement & Sécurisation tactique</p>
+            <p>Sheriff Academy - Acte I</p>
         </div>
     </div>
 
-    <div class="info-panel">
-        <h2><i class="fas fa-truck-moving"></i> Procédure de Convoi</h2>
-        <p>
-            Ce schéma présente la méthode officielle de formation et de déplacement en convoi. Il définit l'espacement entre les véhicules, l'ordre de marche (véhicule de tête, VIP, fermeture) et le comportement attendu en cas de contact ou d'embuscade.
-        </p>
-        <div class="alert-box">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p><strong>ATTENTION :</strong> Un convoi en mouvement ne s'arrête sous aucun prétexte, sauf ordre explicite de l'unité de commandement (Lead). Maintenez toujours votre distance de sécurité pour éviter les collisions.</p>
+    <!-- SUB-NAVIGATION DES FORMATIONS -->
+    <div class="formation-nav">
+        <button class="form-nav-btn active" onclick="switchFormation('ligne', this)"><i class="fas fa-grip-lines"></i> A) Formation en Ligne</button>
+        <button class="form-nav-btn" onclick="switchFormation('diamant', this)"><i class="fas fa-gem"></i> B) Formation Diamant</button>
+        <button class="form-nav-btn" onclick="switchFormation('triangle', this)"><i class="fas fa-caret-up"></i> C) Formation Triangle</button>
+        <button class="form-nav-btn" onclick="switchFormation('losange', this)"><i class="fas fa-square-full" style="transform: rotate(45deg); font-size: 0.7rem;"></i> D) Formation Losange</button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- ONGLET : FORMATION EN LIGNE -->
+    <!-- ============================================== -->
+    <div id="ligne" class="formation-pane active">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>A)</span> Formation en ligne</h2>
+                    <p>
+                        La formation en ligne est une formation de déplacement dit en convoi safe (convoi sans grand risque potentiel) , elle permet une progression rapide du groupe en suivant l'ouvreur qui est dirigé par le lead convoi. Sa composition diffère en fonction de la situation.
+                    </p>
+                </div>
+                <div class="use-case-box">
+                    <h3><i class="fas fa-circle-info"></i> Contexte opérationnel</h3>
+                    <p class="use-case-text" style="color: #cbd5e1;">
+                        Cette formation est la plus utilisée pour des déplacements sans grand risque d'accrochage exemple : convoi d'arme en départ rapide, convoi en direction bolingbroke...
+                    </p>
+                    <p class="use-case-text" style="margin-top: 15px; color: var(--warning);">
+                        🚨 <strong>Changement en opération :</strong> Si des individus essayent de le braquer, les véhicules à l'avant et à l'arrière du blindé viendront se placer sur les côtés de celui-ci pour faire écran de protection.
+                    </p>
+                </div>
+                <div class="alert-box">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <p>Régulation de vitesse stricte : Conservez un espacement constant pour permettre l'ajustement dynamique de la ligne en cas de basculement en mode défense latérale.</p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/ligne1.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/ligne1.png" alt="Schéma de convoi en ligne" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Schéma Standard - Progression Directe</span><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="media-tactical-card" onclick="triggerZoom('/images/ligne2.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/ligne2.png" alt="Déploiement écran latéral" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Déploiement Opérationnel - En cas d'Attaque</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="image-container">
-        <!-- Remplacer 'convoi.png' par le nom de ton image -->
-        <img src="/images/convoi.png" alt="Schéma de Formation Convoi">
-        
-        <a href="/images/convoi.png" target="_blank" class="btn-fullscreen">
-            <i class="fas fa-expand"></i> Agrandir le document
-        </a>
+    <!-- ============================================== -->
+    <!-- ONGLET : FORMATION DIAMANT -->
+    <!-- ============================================== -->
+    <div id="diamant" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>B)</span> La formation Diamant</h2>
+                    <p>
+                        La formation diamant est une formation de déplacement , elle permet une progression rapide du groupe en ayant la capacité de pouvoir rapidement réagir à une menace en suivant l'ouvreur qui est dirigé par le lead convoi. Sa composition diffère en fonction du leader.
+                    </p>
+                </div>
+                <div class="use-case-box">
+                    <h3><i class="fas fa-shield-halved"></i> Cas d'usage recommandé</h3>
+                    <p class="use-case-text" style="color: var(--success); font-weight: 700;">
+                        Utilisée le plus souvent lors de convoi à risque, ou de détenu extrêmement dangereux.
+                    </p>
+                    <p class="use-case-text" style="margin-top: 12px;">
+                        Cette couverture à 360° réduit l'exposition du véhicule central (fourgon/blindé) et offre des angles de riposte immédiats vers tous les flancs de l'axe routier.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/diamant1.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/diamant1.png" alt="Vue d'ensemble diamant" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Vue perspective - Alignement angulaire</span><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="media-tactical-card" onclick="triggerZoom('/images/diamant2.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/diamant2.png" alt="Vue aérienne diamant" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Vue tactique haute - Répartition des blindages</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- ONGLET : FORMATION TRIANGLE -->
+    <!-- ============================================== -->
+    <div id="triangle" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>C)</span> La formation triangle</h2>
+                    <p>
+                        La formation triangle est une formation de prévention, qui permet d'avoir tout le Groupe en position en cas d'attaque sur le convoi. Elle est utilisée pour avancer vers des lieux hostiles, ou pour traverser des zones de découverte en protégeant chaque coin de la formation.
+                    </p>
+                </div>
+                <div class="use-case-box">
+                    <h3><i class="fas fa-crosshairs"></i> Zone hostile & Découverte</h3>
+                    <p class="use-case-text" style="color: #cbd5e1;">
+                        Utilisée le plus souvent quand le groupe veut progresser vers une zone dangereuse.
+                    </p>
+                    <p class="use-case-text" style="margin-top: 12px; font-size: 0.82rem; color: #94a3b8;">
+                        Le triangle offre une ouverture de feu maximale vers l'avant tout en fermant hermétiquement les arrières de la structure de convoi.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/triangle1.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/triangle1.png" alt="Vue aérienne triangle" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Schéma tactique - Couverture des angles morts</span><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="media-tactical-card" onclick="triggerZoom('/images/triangle2.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/triangle2.png" alt="Vue de sol triangle" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Vue au sol - Disposition des patrouilles</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- ONGLET : FORMATION LOSANGE -->
+    <!-- ============================================== -->
+    <div id="losange" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>D)</span> Le formation losange</h2>
+                    <p>
+                        La formation losange est une formation basique utilisée la plupart du temps lorsque la formation en ligne n'est pas utilisée, qui permet d'avoir tout le Groupe autour du blindé, afin de le protéger d'éventuelle attaque. Elle est utilisée pour avancer vers les hostiles quand ils bloquent une route, un passage, un pont...
+                    </p>
+                </div>
+                <div class="use-case-box">
+                    <h3><i class="fas fa-road-barrier"></i> Forçage de barrages & Goulots d'étranglement</h3>
+                    <p class="use-case-text" style="color: var(--info);">
+                        Même utilité que la ligne mise à part que c'est utilisé quand le groupe doit progresser dans un lieu bloqué ou découvert.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/losange1.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/losange1.png" alt="Perspective losange" onerror="this.src='https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Vue en situation - Protection intégrale du blindé</span><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="media-tactical-card" onclick="triggerZoom('/images/losange2.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/losange2.png" alt="Plan aérien losange" onerror="this.src='https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Plan de coupe technique - Espacements requis</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIGNATURE BAS DE PAGE -->
+    <div class="academy-footer">
+        Blaine County Sheriff's Office — Official Training Manual
     </div>
 </div>
+
+<!-- MODAL LIGHTBOX POUR EXPANSION IMAGE AU CLIC -->
+<div id="tacticalLightbox" class="zoom-modal" onclick="closeZoom()">
+    <div class="modal-container">
+        <button class="modal-close" onclick="closeZoom()"><i class="fas fa-times"></i></button>
+        <img id="modalTargetImg" src="" alt="Tactical Zoom View" onclick="event.stopPropagation()">
+    </div>
+</div>
+
+<script>
+    // Script de basculement d'onglets pour les 4 formations
+    function switchFormation(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+
+    // Gestion de l'affichage grand écran (lightbox zoom)
+    const lightbox = document.getElementById('tacticalLightbox');
+    const modalImg = document.getElementById('modalTargetImg');
+
+    function triggerZoom(imgSrc) {
+        modalImg.src = imgSrc;
+        lightbox.classList.add('active');
+    }
+
+    function closeZoom() {
+        lightbox.classList.remove('active');
+    }
+</script>
