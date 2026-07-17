@@ -65,11 +65,35 @@ app.use(async (req, res, next) => {
     next();
 });
 
+// =========================================================
+// 🔒 SYSTÈME DE MAINTENANCE GLOBAL (CHADOXX GOD MODE)
+// =========================================================
+global.MAINTENANCE_MODE = false; // Par défaut, le site est allumé
+
+app.use((req, res, next) => {
+    // 1. Si la maintenance est désactivée, on laisse passer tout le monde
+    if (!global.MAINTENANCE_MODE) return next();
+
+    // 2. On laisse toujours charger les images, le CSS et le JS (pour le design)
+    if (req.path.startsWith('/images') || req.path.startsWith('/css') || req.path.startsWith('/js') || req.path.startsWith('/assets')) {
+        return next();
+    }
+
+    // 3. LA PORTE DÉROBÉE (Ton ID Discord)
+    if (req.session && req.session.user && req.session.user.id === '1247264549489610897') {
+        return next();
+    }
+
+    // 4. Pour tous les autres : On affiche la page de maintenance sans la sidebar
+    res.status(503).render('pages/maintenance', { layout: false });
+});
+// =========================================================
+
 // 5. Chargement du Routeur Global
 const indexRouter = require('./server/routes/index');
 app.use('/', indexRouter);
 
-// 6. Lancement du serveur (Attention : On utilise "server.listen" et pas "app.listen")
+// 6. Lancement du serveur
 server.listen(PORT, () => {
     console.log(`[BCSO MDT] 🟢 Système en ligne sur le port ${PORT}`);
 });

@@ -10,7 +10,6 @@ const superviseurRoutes = require('./superviseur');
 const entrepriseRoutes = require('./entreprise'); // 🚀 Import des routes entreprise
 
 // 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
-// Actualise le grade et les permissions de la session à chaque chargement de page
 router.use(async (req, res, next) => {
     if (req.session.user) {
         try {
@@ -29,6 +28,29 @@ router.use(async (req, res, next) => {
     }
     next();
 });
+
+// =========================================================
+// 👑 ROUTES DASHBOARD CHADOXX (GOD MODE)
+// =========================================================
+router.get('/chadoxx', (req, res) => {
+    if (!req.session.user || req.session.user.id !== '1247264549489610897') {
+        return res.status(403).send("<h1>Accès Interdit : Zone Réservée</h1>");
+    }
+    res.render('pages/chadoxx', { 
+        title: 'BCSO - Dashboard ChadoxX',
+        user: req.session.user,
+        maintenanceActive: global.MAINTENANCE_MODE 
+    });
+});
+
+router.post('/chadoxx/toggle-maintenance', (req, res) => {
+    if (!req.session.user || req.session.user.id !== '1247264549489610897') {
+        return res.status(403).send("Accès Interdit");
+    }
+    global.MAINTENANCE_MODE = !global.MAINTENANCE_MODE;
+    res.redirect('/chadoxx');
+});
+// =========================================================
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -85,9 +107,6 @@ router.get('/lois', (req, res) => {
     });
 });
 
-/* =========================================================
-   🎓 MODULE FORMATIONS
-========================================================= */
 router.get('/formations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formations', { 
@@ -96,7 +115,6 @@ router.get('/formations', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : Formation Convoi
 router.get('/formations/convoi', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formation-convoi', { 
@@ -105,7 +123,6 @@ router.get('/formations/convoi', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : Formation Négociation
 router.get('/formations/negociation', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formation-negociation', { 
@@ -114,9 +131,6 @@ router.get('/formations/negociation', (req, res) => {
     });
 });
 
-/* =========================================================
-   📄 BASE DOCUMENTAIRE
-========================================================= */
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 
@@ -234,7 +248,6 @@ router.get('/documents/evaluer-junior/formulaire/:id', async (req, res) => {
     }
 });
 
-// 🚀 ROUTE POUR SAUVEGARDER L'ÉVALUATION
 router.post('/documents/evaluer-junior/sauvegarder', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -264,8 +277,6 @@ router.post('/documents/evaluer-junior/sauvegarder', async (req, res) => {
 
         await nouveauRapport.save();
 
-        // 🔌 NOUVEAU : Déclencheur Temps Réel Socket.io
-        // Si Socket.io est bien initialisé, on envoie le signal à tous les clients connectés
         if (req.app.get('io')) {
             req.app.get('io').emit('nouvelle-evaluation', nouveauRapport);
         }
@@ -300,7 +311,7 @@ router.use('/superviseur', superviseurRoutes);
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
-router.use('/entreprise', entrepriseRoutes); // 🚀 Montage de la route entreprise
+router.use('/entreprise', entrepriseRoutes);
 
 router.use((req, res) => {
     res.status(404).render('pages/404', { message: 'Page introuvable', title: '404' });

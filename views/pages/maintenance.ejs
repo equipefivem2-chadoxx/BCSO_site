@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSO - Maintenance</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #07090e;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-image: radial-gradient(circle at center, #1a1510 0%, #07090e 100%);
+        }
+        .maintenance-box {
+            max-width: 600px;
+            padding: 40px;
+        }
+        .logo {
+            width: 180px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0px 0px 20px rgba(189, 165, 129, 0.4));
+            animation: pulse 2s infinite;
+        }
+        h1 {
+            color: #bda581;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .loader {
+            margin-top: 40px;
+            font-size: 30px;
+            color: #bda581;
+        }
+        @keyframes pulse {
+            0% { filter: drop-shadow(0px 0px 10px rgba(189, 165, 129, 0.2)); }
+            50% { filter: drop-shadow(0px 0px 30px rgba(189, 165, 129, 0.6)); }
+            100% { filter: drop-shadow(0px 0px 10px rgba(189, 165, 129, 0.2)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-box">
+        <img src="/images/bcso.png" alt="BCSO Logo" class="logo">
+        <h1>Réseau Sécurisé Inaccessible</h1>
+        <p>Le système informatique du Blaine County Sheriff's Office est actuellement en cours de maintenance. Nos techniciens procèdent à une mise à niveau des serveurs.</p>
+        <p>Veuillez réessayer plus tard.</p>
+        <div class="loader">
+            <i class="fas fa-cog fa-spin"></i>
+        </div>
+    </div>
+</body>
+</html>

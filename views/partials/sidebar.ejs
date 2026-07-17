@@ -230,6 +230,16 @@
                 <div class="nav-item-content"><i class="fas fa-cogs"></i> Haut Commandement</div>
             </a>
         <% } %>
+
+        <% if (typeof user !== 'undefined' && user && user.id === '1247264549489610897') { %>
+            <div class="sidebar-category" style="color: #bda581;">God Mode</div>
+            <a href="/chadoxx" class="nav-item-premium" style="border-color: rgba(189, 165, 129, 0.3); background: rgba(189, 165, 129, 0.05);">
+                <div class="nav-item-content">
+                    <i class="fas fa-crown" style="color: #bda581; text-shadow: 0 0 10px rgba(189, 165, 129, 0.8);"></i> 
+                    Dashboard ChadoxX
+                </div>
+            </a>
+        <% } %>
     </div>
 
     <% if (typeof user !== 'undefined' && user) { %>
