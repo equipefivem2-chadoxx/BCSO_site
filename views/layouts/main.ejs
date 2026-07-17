@@ -33,10 +33,10 @@
 
         /* LE CONTENEUR MAGIQUE QUI RÈGLE TON PROBLÈME DE DÉCALAGE */
         .main-content-wrapper {
-            margin-left: 280px; /* ⚠️ CORRECTION : J'ai mis 280px ici pour correspondre à ton --sidebar-width: 280px de ta sidebar */
+            margin-left: 280px; 
             padding-bottom: 50px; 
             min-height: 100vh;
-            width: calc(100% - 280px); /* ⚠️ CORRECTION : Idem, 280px au lieu de 260px */
+            width: calc(100% - 280px); 
             padding-top: 40px; 
             padding-left: 40px; 
             padding-right: 40px; 
@@ -48,7 +48,7 @@
     <!-- 1. TA SIDEBAR GAUCHE -->
     <%- include('../partials/sidebar') %>
     
-    <!-- 2. TON CONTENU CENTRAL (qui va charger dashboard, admin, etc.) -->
+    <!-- 2. TON CONTENU CENTRAL -->
     <main class="main-content-wrapper">
         <%- body %>
     </main>
@@ -61,10 +61,10 @@
     <script>
         const socket = io();
         
-        // Si le super-admin active la maintenance, on redirige tout le monde instantanément
+        // Si la maintenance est activée, on redirige tout le monde SAUF la page chadoxx
+        // Cela permet au formulaire d'avoir le temps de s'actualiser proprement.
         socket.on('maintenance-toggled', (isMaintenance) => {
-            if (isMaintenance) {
-                // Recharge pour que le middleware côté serveur bloque l'accès
+            if (isMaintenance && window.location.pathname !== '/chadoxx') {
                 window.location.reload(); 
             }
         });
