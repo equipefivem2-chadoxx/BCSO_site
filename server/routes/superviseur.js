@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
             console.log("Modèle RapportJunior en attente d'initialisation...");
         }
 
-        // 🚀 NOUVEAU : Récupération des stats des passages pour le Dashboard
+        // Récupération des stats des passages pour le Dashboard
         const Entreprise = require('../models/Entreprise');
         const entreprisesStats = await Entreprise.find().sort({ totalPassages: -1 });
         const topAgents = await Agent.find({ passagesTotal: { $gt: 0 } }).sort({ passagesTotal: -1 }).limit(10);
@@ -204,10 +204,10 @@ router.post('/evaluations/supprimer-tout', async (req, res) => {
 });
 
 // ==============================================================
-// 🚀 NOUVELLES ROUTES : GESTION DES PARTENARIATS ENTREPRISES
+// 🚀 GESTION DES PARTENARIATS ENTREPRISES
 // ==============================================================
 
-// 🚀 NOUVELLE ROUTE 1 : Liste des partenariats
+// 🚀 Route 4 : Liste des partenariats
 router.get('/partenariats', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -251,7 +251,7 @@ router.get('/partenariats', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE 2 : Détail d'un partenariat (Contrat + Tableau des Passages)
+// 🚀 Route 5 : Détail d'un partenariat (CORRIGÉE)
 router.get('/partenariats/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -284,8 +284,24 @@ router.get('/partenariats/:id', async (req, res) => {
         const entreprise = await Entreprise.findById(req.params.id);
         if (!entreprise) return res.redirect('/superviseur/partenariats');
 
-        // On récupère tous les agents qui ont au moins 1 passage globalement (pour le classement)
-        const agents = await Agent.find({ passagesTotal: { $gt: 0 } }).sort({ passagesTotal: -1 });
+        // On cherche UNIQUEMENT les agents qui ont un total > 0 pour CETTE entreprise spécifique
+        let agents = await Agent.find({
+            passagesParEntreprise: {
+                $elemMatch: {
+                    entrepriseId: entreprise._id,
+                    total: { $gt: 0 }
+                }
+            }
+        });
+
+        // On trie les résultats de manière décroissante pour avoir un beau classement
+        agents.sort((a, b) => {
+            const passageA = a.passagesParEntreprise.find(p => p.entrepriseId.toString() === entreprise._id.toString());
+            const passageB = b.passagesParEntreprise.find(p => p.entrepriseId.toString() === entreprise._id.toString());
+            const totalA = passageA ? passageA.total : 0;
+            const totalB = passageB ? passageB.total : 0;
+            return totalB - totalA; 
+        });
 
         res.render('pages/superviseur/partenariat-detail', { 
             title: `Partenariat - ${entreprise.nom}`,
