@@ -1,0 +1,312 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #f59e0b; /* Or spécifique à la Highway Patrol */
+        --primary-glow: rgba(245, 158, 11, 0.2);
+        --bg-dark: #030712; /* Bleu nuit ultra sombre */
+        --bg-panel: rgba(10, 17, 35, 0.85);
+        --text-main: #f3f4f6;
+        --border-glow: rgba(245, 158, 11, 0.25);
+        --success: #10b981;
+        --info: #38bdf8;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.05), transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(30, 58, 138, 0.15), transparent 40%);
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    * { box-sizing: border-box; }
+
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    .manual-layout {
+        display: flex;
+        max-width: 1650px;
+        margin: 25px auto 80px auto;
+        height: calc(100vh - 100px);
+        gap: 25px;
+        padding: 0 20px;
+        justify-content: center;
+        margin-left: 280px;
+    }
+
+    .manual-sidebar {
+        width: 340px;
+        background: rgba(6, 11, 25, 0.9);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-right: 1px solid var(--border-glow);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        flex-shrink: 0;
+    }
+
+    .sidebar-header {
+        padding: 25px;
+        background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, transparent 100%);
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        position: relative;
+    }
+    .sidebar-header::before {
+        content: '';
+        position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+        background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .btn-back-hub {
+        display: inline-flex; align-items: center; gap: 8px;
+        color: #64748b; font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+        text-decoration: none; margin-bottom: 15px; transition: 0.3s; letter-spacing: 1px;
+    }
+    .btn-back-hub:hover { color: var(--primary); transform: translateX(-3px); }
+
+    .manual-title { font-size: 24px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+    .manual-title span { color: var(--primary); display: block; font-size: 13px; letter-spacing: 3px; margin-top: 4px; font-weight: 700; }
+
+    .nav-list { padding: 20px 15px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex-grow: 1; }
+    .nav-item {
+        background: transparent; border: 1px solid transparent; color: #94a3b8;
+        padding: 14px 18px; border-radius: 10px; text-align: left; font-family: 'Montserrat', sans-serif;
+        font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+        cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px;
+    }
+    .nav-item i { font-size: 1rem; color: #475569; transition: 0.3s; width: 20px; text-align: center; }
+    .nav-item:hover { background: rgba(255,255,255,0.03); color: #fff; transform: translateX(4px); }
+    .nav-item.active {
+        background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.01) 100%);
+        color: var(--primary); border-left: 4px solid var(--primary); border-radius: 4px 10px 10px 4px; padding-left: 14px;
+    }
+    .nav-item.active i { color: var(--primary); filter: drop-shadow(0 0 6px var(--primary)); }
+
+    .manual-content {
+        flex-grow: 1; background: var(--bg-panel); backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.03); border-top: 1px solid var(--border-glow);
+        border-radius: 16px; padding: 45px; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    .manual-content::-webkit-scrollbar { width: 6px; }
+    .manual-content::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 10px; }
+
+    .pane { display: none; animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .pane.active { display: block; }
+
+    .pane-header { margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(245, 158, 11, 0.15); }
+    .pane-title { font-size: 28px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1.5px; margin: 0; display: flex; align-items: center; gap: 15px; }
+    .pane-title i { color: var(--primary); filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3)); }
+    .pane-desc { color: #94a3b8; font-size: 0.95rem; margin-top: 8px; font-weight: 500; }
+
+    /* GRILLES ET CARTES SPÉCIFIQUES */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    .info-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 25px; transition: 0.3s; position: relative; overflow: hidden; }
+    .info-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+    
+    .tactical-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+    .tactical-list li { color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 10px; }
+    .tactical-list li strong { color: #fff; font-weight: 700; display: block; margin-bottom: 3px; }
+    
+    .rank-card { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; padding: 20px; margin-bottom: 15px; border-left: 3px solid var(--primary); }
+    .rank-title { font-size: 1.1rem; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .rank-sub { color: var(--primary); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+    .code-badge { background: rgba(245, 158, 11, 0.1); color: var(--primary); font-weight: 800; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; text-transform: uppercase; border: 1px solid rgba(245, 158, 11, 0.3); display: inline-block; min-width: 80px; text-align: center; margin-right: 10px; }
+
+    @media (max-width: 1200px) {
+        .manual-layout { margin-left: 0; flex-direction: column; height: auto; }
+        .manual-sidebar { width: 100%; }
+        .grid-2 { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="manual-layout">
+    
+    <!-- SIDEBAR HIGHWAY PATROL -->
+    <aside class="manual-sidebar">
+        <div class="sidebar-header">
+            <a href="/documents" class="btn-back-hub"><i class="fas fa-chevron-left"></i> Hub Documentaire</a>
+            <h1 class="manual-title">Livret<span>Highway Patrol</span></h1>
+        </div>
+        <nav class="nav-list">
+            <button class="nav-item active" onclick="openTab('service', this)"><i class="fas fa-shield-halved"></i> Service & Missions</button>
+            <button class="nav-item" onclick="openTab('hierarchie', this)"><i class="fas fa-sitemap"></i> Hiérarchie SAHP</button>
+            <button class="nav-item" onclick="openTab('recrutement', this)"><i class="fas fa-user-check"></i> Recrutement</button>
+            <button class="nav-item" onclick="openTab('formations', this)"><i class="fas fa-graduation-cap"></i> Formations Internes</button>
+            <button class="nav-item" onclick="openTab('codes1020', this)"><i class="fas fa-walkie-talkie"></i> 10-20 & Positions</button>
+        </nav>
+    </aside>
+
+    <!-- CONTENU DU MANUEL -->
+    <main class="manual-content">
+        
+        <!-- ONGLET 1 : SERVICE & MISSIONS -->
+        <div id="service" class="pane active">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-shield-halved"></i> Service & Missions</h2>
+                <p class="pane-desc">Présentation générale de la division autoroutière de San Andreas et de ses prérogatives.</p>
+            </div>
+            
+            <div class="grid-2">
+                <div class="info-card">
+                    <h3 style="color:#fff; margin-top:0; font-weight:800; text-transform:uppercase;"><i class="fas fa-building-shield" style="color:var(--primary); margin-right:8px;"></i> Présentation & Équipement</h3>
+                    <ul class="tactical-list" style="margin-top:15px;">
+                        <li><strong>Localisation :</strong> Poste principal au Centre de Contrôle Autoroutier de Los Santos, avec des patrouilles réparties sur les principales routes et autoroutes de la région.</li>
+                        <li><strong>Objectifs :</strong> Assurer la sécurité routière sur les axes à grande circulation, prévenir et gérer les accidents, ainsi que surveiller les infractions au Code de la Route.</li>
+                        <li><strong>Véhicules de patrouille :</strong> Flotte de véhicules d'interception équipés de systèmes de communication avancés et de radars embarqués.</li>
+                        <li><strong>Radars & Sécurité :</strong> Appareils de détection mobiles et matériel de balisage pour sécuriser les scènes d'accidents (cônes, barrières).</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3 style="color:#fff; margin-top:0; font-weight:800; text-transform:uppercase;"><i class="fas fa-list-check" style="color:var(--primary); margin-right:8px;"></i> Missions Principales</h3>
+                    <ul class="tactical-list" style="margin-top:15px;">
+                        <li><strong>Patrouilles Routières :</strong> Surveillance active des autoroutes et des routes à grande circulation pour détecter et sanctionner les infractions au code de la route.</li>
+                        <li><strong>Interventions lors d'accidents :</strong> Premiers intervenants sur les lieux d'accidents, responsables de sécuriser la zone, gérer la circulation et apporter une aide initiale.</li>
+                        <li><strong>Gestion du Trafic :</strong> Surveillance du trafic en temps réel pour prévenir les embouteillages et intervenir en cas de congestion ou d'obstacle.</li>
+                        <li><strong>Lutte contre la vitesse excessive :</strong> Opérations de contrôle de vitesse à l'aide de radars pour réduire les risques d'accidents.</li>
+                        <li><strong>Campagnes de Sensibilisation :</strong> Organisation d'actions préventives, contrôles d'alcoolémie/stupéfiants et sensibilisation à la sécurité routière.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 2 : HIÉRARCHIE SAHP -->
+        <div id="hierarchie" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-sitemap"></i> Hiérarchie Highway Patrol</h2>
+                <p class="pane-desc">Chaîne de commandement de la division autoroutière et structure des rangs.</p>
+            </div>
+            
+            <div class="rank-card" style="border-left-color: #ef4444;">
+                <div class="rank-title"><span>Chef & Co-Chef de la Highway Patrol</span> <span class="rank-sub" style="color:#ef4444;">Commandement Supérieur</span></div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0 0 0;">Direction absolue de la division, gestion des effectifs, attribution des budgets et validation des protocoles d'intervention sur les axes autoroutiers.</p>
+            </div>
+
+            <div class="rank-card" style="border-left-color: #38bdf8;">
+                <div class="rank-title"><span>Officier Senior de la Highway Patrol</span> <span class="rank-sub" style="color:#38bdf8;">Commandement Intermédiaire</span></div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0 0 0;">Supervision directe des patrouilles sur le terrain, encadrement des officiers routiers et gestion des opérations de contrôle à grande échelle.</p>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-title"><span>Officier Routier / Motard (Mary)</span> <span class="rank-sub">Niveaux Opérationnels</span></div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0 0 0;">Cœur actif de la division. Agents confirmés patrouillant en intercepteur ou à moto pour assurer la fluidité et la sécurité du trafic.</p>
+            </div>
+
+            <div class="rank-card" style="border-left-color: #10b981;">
+                <div class="rank-title"><span>Recrue Routière</span> <span class="rank-sub" style="color:#10b981;">Niveau d'Entrée</span></div>
+                <p style="color:#94a3b8; font-size:0.9rem; margin:10px 0 0 0;">Agent en phase d'apprentissage et d'évaluation au sein de la division, évoluant obligatoirement en binôme sous la supervision d'un officier confirmé.</p>
+            </div>
+        </div>
+
+        <!-- ONGLET 3 : RECRUTEMENT -->
+        <div id="recrutement" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-user-check"></i> Intégration & Recrutement</h2>
+                <p class="pane-desc">Exigences et critères de sélection pour rejoindre l'unité autoroutière.</p>
+            </div>
+            
+            <div class="info-card" style="border-left: 4px solid var(--warning); background: rgba(245, 158, 11, 0.05);">
+                <h3 style="color:#fff; margin-top:0; font-size:1.2rem;"><i class="fas fa-exclamation-triangle" style="color:var(--warning); margin-right:10px;"></i> L'Élite du Département</h3>
+                <p style="color:#e2e8f0; font-size:1.05rem; line-height:1.6; font-weight:600;">
+                    Dans la Highway Patrol, nous recrutons l'élite du département. Nous serons donc intransigeants lors des tests de sélection.
+                </p>
+                <ul class="tactical-list" style="margin-top:20px;">
+                    <li style="font-size:1rem; color:#fff;"><i class="fas fa-check-circle" style="color:var(--success); margin-right:10px;"></i> <strong>Test sur les 10-20 :</strong> 85 % de taux de réussite minimum exigé.</li>
+                    <li style="font-size:1rem; color:#fff;"><i class="fas fa-check-circle" style="color:var(--success); margin-right:10px;"></i> <strong>Évaluation Pratique :</strong> Plusieurs tests de conduite haute vitesse en conditions réelles.</li>
+                </ul>
+                <div style="margin-top:25px; padding:15px; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:8px; color:#fca5a5; font-size:0.85rem; font-weight:800; text-transform:uppercase; text-align:center;">
+                    ⚠️ Aucun rattrapage ne sera possible immédiatement en cas d'échec, sauf au bout d'un certain délai de probation !
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET 4 : FORMATIONS INTERNES -->
+        <div id="formations" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-graduation-cap"></i> Formations Internes SAHP</h2>
+                <p class="pane-desc">Modules de perfectionnement dispensés par les instructeurs de la Highway Patrol.</p>
+            </div>
+            
+            <p style="color:#cbd5e1; font-weight:600; margin-bottom:25px;">Nous réalisons des formations spécialisées pour tous les agents du poste qui le souhaitent afin d'accroître leur maîtrise opérationnelle :</p>
+
+            <div class="grid-2">
+                <div class="info-card">
+                    <h3 style="color:#fff; margin-top:0; text-transform:uppercase;"><i class="fas fa-car" style="color:var(--primary); margin-right:8px;"></i> Maîtrise de la Con驾驶 (Conduite)</h3>
+                    <ul class="tactical-list" style="margin-top:15px;">
+                        <li><strong>Bases de conduite :</strong> Prise en main des véhicules d'interception et gestion du gabarit.</li>
+                        <li><strong>Trajectoires :</strong> Optimisation des courbes, freinage dégressif et maintien de la vitesse en virage à haut risque.</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3 style="color:#fff; margin-top:0; text-transform:uppercase;"><i class="fas fa-siren" style="color:var(--primary); margin-right:8px;"></i> Course Poursuite</h3>
+                    <ul class="tactical-list" style="margin-top:15px;">
+                        <li><strong>Organisation à plusieurs unités :</strong> Positionnement tactique, communication radio fluide et relais entre véhicules.</li>
+                        <li><strong>Anticipations :</strong> Lecture du trafic, prévision des échappatoires du suspect et sécurisation des intersections.</li>
+                        <li><strong>Interceptions :</strong> Plans Mules, manœuvres de récupération et déploiement de herses (creve-pneus).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-card" style="margin-top:20px; border-left-color:#38bdf8;">
+                <h3 style="color:#fff; margin-top:0; text-transform:uppercase;"><i class="fas fa-motorcycle" style="color:#38bdf8; margin-right:8px;"></i> Spécialisation Mary (Moto Patrol)</h3>
+                <p style="color:#94a3b8; font-size:0.95rem; margin-top:10px; line-height:1.6;">
+                    Formation spécifique dédiée aux patrouilles sur deux roues. Apprentissage du pilotage d'urgence, des escortes rapides, de l'infiltration dans le trafic dense et des procédures d'arrêt à moto en toute sécurité.
+                </p>
+            </div>
+        </div>
+
+        <!-- ONGLET 5 : CODES 10-20 & POSITIONS -->
+        <div id="codes1020" class="pane">
+            <div class="pane-header">
+                <h2 class="pane-title"><i class="fas fa-walkie-talkie"></i> 10-20 & Positions Stratégiques</h2>
+                <p class="pane-desc">Localisations et appellations officielles utilisées sur le réseau routier et autoroutier.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="info-card">
+                    <h3 style="color:#fff; margin-top:0; text-transform:uppercase;"><i class="fas fa-road" style="color:var(--primary); margin-right:8px;"></i> Axes Autoroutiers Principaux</h3>
+                    <ul class="tactical-list" style="margin-top:15px;">
+                        <li><span class="code-badge">Route 1</span> Great Ocean Highway (Longe la côte Ouest)</li>
+                        <li><span class="code-badge">Route 13</span> Senora Freeway (Traverse le désert de Grand Senora)</li>
+                        <li><span class="code-badge">Route 68</span> Route principale traversant d'Est en Ouest le comté de Blaine</li>
+                        <li><span class="code-badge">Route 15</span> Paleto Freeway (Autoroute du Nord vers Paleto Bay)</li>
+                        <li><span class="code-badge">Route 4</span> Olympic Freeway (Autoroute Sud de Los Santos)</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3 style="color:#fff; margin-top:0; text-transform:uppercase;"><i class="fas fa-location-dot" style="color:var(--primary); margin-right:8px;"></i> Positions Stratégiques SAHP</h3>
+                    <ul class="tactical-list" style="margin-top:15px;">
+                        <li><strong>Poste de Péage Nord :</strong> Point de contrôle stratégique entre Los Santos et Blaine County.</li>
+                        <li><strong>Station de Pesage (Weigh Station) :</strong> Contrôle des poids lourds et du fret routier sur la Senora Freeway.</li>
+                        <li><strong>Aire de Repos Sandy Shores :</strong> Point de rassemblement tactique pour les patrouilles du désert.</li>
+                        <li><strong>Échangeur de La Mesa :</strong> Nœud autoroutier critique nécessitant une surveillance accrue aux heures de pointe.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    function openTab(tabId, buttonElement) {
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.pane').forEach(pane => pane.classList.remove('active'));
+        buttonElement.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+    }
+</script>

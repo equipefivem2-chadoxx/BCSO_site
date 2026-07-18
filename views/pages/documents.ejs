@@ -1,3 +1,6 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
 <style>
     :root {
         --primary: #bda581;
@@ -47,7 +50,6 @@
         color: #94a3b8; font-size: 1rem; margin-top: 10px; font-weight: 500;
     }
 
-    /* 🚀 Grille ajustée pour 3 cartes */
     .doc-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -140,7 +142,7 @@
     }
 </style>
 
-<div id="hub-container" class="hub-container">
+<div id="hub-container" class="hub-container" style="margin-left: 280px; padding: 40px 60px;">
     <div class="hub-header">
         <h2>Base <span>Documentaire</span></h2>
         <p>Portail centralisé des manuels, livrets et procédures officielles du BCSO.</p>
@@ -156,7 +158,16 @@
             <a href="/documents/livret" class="btn-open">Ouvrir le document <i class="fas fa-arrow-right"></i></a>
         </div>
 
-        <!-- CARTE 2 : ARBRE DE DÉCISION: ARRESTATIONS -->
+        <!-- CARTE 2 : LIVRET HIGHWAY PATROL -->
+        <div class="doc-card" style="border-top-color: #f59e0b;">
+            <div class="doc-meta" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">Spécialisation SAHP</div>
+            <i class="fas fa-shield-halved doc-icon" style="color: #f59e0b; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));"></i>
+            <div class="doc-title">Highway Patrol</div>
+            <div class="doc-desc">Manuel de l'unité autoroutière : missions, hiérarchie interne, exigences de recrutement, formations et axes de patrouille.</div>
+            <a href="/documents/livret-hp" class="btn-open" style="border-color: #f59e0b; color: #f59e0b;">Consulter le livret <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <!-- CARTE 3 : ARBRE DE DÉCISION: ARRESTATIONS -->
         <div class="doc-card">
             <div class="doc-meta">Procédure Active</div>
             <i class="fas fa-handcuffs doc-icon"></i>
@@ -167,15 +178,15 @@
             <a href="/documents/doc-arrestations" class="btn-open">Ouvrir le diagramme <i class="fas fa-sitemap"></i></a>
         </div>
 
-        <!-- CARTE 3 : CATÉGORIES DES ARMES -->
+        <!-- CARTE 4 : CATÉGORIES DES ARMES -->
         <div class="doc-card">
-            <div class="doc-meta" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);">Base de Données</div>
-            <i class="fas fa-crosshairs doc-icon" style="color: #f59e0b; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.3));"></i>
+            <div class="doc-meta" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);">Base de Données</div>
+            <i class="fas fa-crosshairs doc-icon" style="color: #ef4444; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.3));"></i>
             <div class="doc-title">Catégories d'Armes</div>
             <div class="doc-desc">
                 Classification officielle de l'armement : armes artisanales, légères, lourdes, de guerre, blanches, contondantes et incendiaires.
             </div>
-            <a href="/documents/armes" class="btn-open" style="border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.05);">Consulter l'Armurerie <i class="fas fa-arrow-right"></i></a>
+            <a href="/documents/armes" class="btn-open" style="border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.05);">Consulter l'Armurerie <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </div>

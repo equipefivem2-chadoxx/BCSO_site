@@ -140,6 +140,15 @@ router.get('/documents/livret', (req, res) => {
     });
 });
 
+// 🚀 NOUVELLE ROUTE : LIVRET HIGHWAY PATROL
+router.get('/documents/livret-hp', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/livret-hp', { 
+        title: 'BCSO - Livret Highway Patrol',
+        user: req.session.user
+    });
+});
+
 router.get('/documents/doc-arrestations', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-arrestations', { 
