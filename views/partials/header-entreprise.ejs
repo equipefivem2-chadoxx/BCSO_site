@@ -2,10 +2,10 @@
     .bcso-bottom-bar-ent {
         position: fixed;
         bottom: 0;
-        left: 280px; /* Corrigé à 280px pour correspondre à la sidebar */
+        left: 280px; 
         right: 0;
         height: 50px;
-        background-color: #0a0e17;
+        background-color: #07090e;
         border-top: 1px solid rgba(189, 165, 129, 0.2); 
         display: flex;
         justify-content: space-between;
@@ -22,5 +22,5 @@
 
 <div class="bcso-bottom-bar-ent">
     <div><i class="fas fa-handshake"></i> <span class="brand-text-ent">PORTAIL PARTENAIRE</span> - BCSO</div>
-    <div>Accès : <span style="color: #10b981;">Autorisé</span> | Entreprise : <%= locals.entreprise.nom %></div>
+    <div>Accès : <span style="color: #10b981;">Autorisé</span> | Entreprise : <%= locals.entreprise ? locals.entreprise.nom : 'Non défini' %></div>
 </div>

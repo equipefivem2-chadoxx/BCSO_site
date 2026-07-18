@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title || 'BCSO MDT System' %></title>
     
-    <!-- 🚀 AJOUT DU LOGO DANS L'ONGLET -->
     <link rel="icon" type="image/png" href="/images/bcso.png">
     
-    <!-- 🚀 AJOUT : Importation globale de la police Montserrat pour tout le site -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* BASE RESET */
         * { 
             margin: 0; 
             padding: 0; 
@@ -24,17 +20,15 @@
         }
         
         body {
-            background-color: #0a0e17; /* Fond raccord avec ta barre du bas */
+            background-color: #0a0e17;
             color: #f3f4f6;
-            /* 🚀 AJOUT : On force la police premium partout par défaut */
             font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden; /* Empêche tout défilement horizontal */
+            overflow-x: hidden;
         }
 
-        /* LE CONTENEUR MAGIQUE QUI RÈGLE TON PROBLÈME DE DÉCALAGE */
         .main-content-wrapper {
             margin-left: 280px; 
-            padding-bottom: 50px; 
+            padding-bottom: 70px; 
             min-height: 100vh;
             width: calc(100% - 280px); 
             padding-top: 40px; 
@@ -45,23 +39,21 @@
 </head>
 <body>
 
-    <!-- 1. TA SIDEBAR GAUCHE -->
+    <!-- SIDEBAR PRINCIPALE -->
     <%- include('../partials/sidebar') %>
     
-    <!-- 2. TON CONTENU CENTRAL -->
+    <!-- CONTENU PRINCIPAL -->
     <main class="main-content-wrapper">
         <%- body %>
     </main>
 
-    <!-- 3. TA BARRE DU BAS -->
+    <!-- BARRE DU BAS -->
     <%- include('../partials/header') %>
 
-    <!-- 🚀 SCRIPT TEMPS RÉEL POUR DÉTECTER LA MAINTENANCE -->
+    <!-- SCRIPT MAINTENANCE -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        
-        // 🚀 Le socket actualise tous les clients SAUF toi sur la page de contrôle
         socket.on('maintenance-toggled', (isMaintenance) => {
             if (window.location.pathname !== '/chadoxx') {
                 window.location.reload(); 

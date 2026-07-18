@@ -1,5 +1,4 @@
 <style>
-    /* Les variables sont héritées mais on les remet par sécurité */
     :root {
         --primary: #bda581;
         --primary-glow: rgba(189, 165, 129, 0.15);
@@ -25,29 +24,33 @@
         transition: all 0.3s ease;
     }
 
-    /* Le reste du CSS identique à ta sidebar d'origine */
     .sidebar-logo-container { text-align: center; margin-bottom: 30px; position: relative; }
     .sidebar-logo-container::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; background: var(--primary); filter: blur(50px); opacity: 0.06; z-index: -1; }
     .sidebar-logo { width: 120px; filter: drop-shadow(0px 6px 10px rgba(0,0,0,0.7)); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
     .sidebar-logo:hover { transform: scale(1.03); }
+    
     .sidebar-nav { display: flex; flex-direction: column; gap: 6px; padding: 0 20px 30px 20px; flex-grow: 1; overflow-y: auto; }
     .sidebar-nav::-webkit-scrollbar { width: 0px; }
+    
     .sidebar-category { color: #475569; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; padding: 18px 15px 6px 15px; margin-top: 5px; display: flex; align-items: center; gap: 10px; }
     .sidebar-category::after { content: ''; height: 1px; flex-grow: 1; background: rgba(189, 165, 129, 0.15); }
+    
     .nav-item-premium { display: flex; align-items: center; gap: 16px; padding: 12px 18px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 10px; border: 1px solid transparent; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
     .nav-item-content { display: flex; align-items: center; gap: 16px; }
     .nav-item-premium i { width: 20px; text-align: center; font-size: 14px; transition: transform 0.3s ease; }
+    
     .nav-item-premium:hover { color: #ffffff; background: rgba(189, 165, 129, 0.03); border-color: rgba(189, 165, 129, 0.08); transform: translateX(4px); }
     .nav-item-premium:hover i { color: var(--primary); transform: scale(1.1); }
+    
     .nav-item-premium.active { background: rgba(189, 165, 129, 0.08); color: #ffffff; border: 1px solid rgba(189, 165, 129, 0.25); border-left: 3px solid var(--primary); box-shadow: inset 0 0 15px rgba(189, 165, 129, 0.03); }
     .nav-item-premium.active i { color: var(--primary); text-shadow: 0 0 10px var(--primary-glow-strong); }
     
     .sidebar-user-profile { margin-top: auto; padding: 20px; background: rgba(0, 0, 0, 0.25); border-top: 1px solid rgba(189, 165, 129, 0.1); display: flex; align-items: center; gap: 15px; }
-    .profile-icon { width: 40px; height: 40px; background: rgba(189, 165, 129, 0.15); border: 1px solid var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 16px; }
+    .profile-icon { width: 40px; height: 40px; background: rgba(189, 165, 129, 0.15); border: 1px solid var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 16px; flex-shrink: 0; }
     .profile-details { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
     .profile-name { color: #fff; font-size: 13px; font-weight: 700; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .profile-grade { color: var(--primary); font-size: 11px; font-weight: 600; text-transform: uppercase; }
-    .btn-logout { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.3s; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+    .btn-logout { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.3s; text-decoration: none; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .btn-logout:hover { background: #ef4444; color: #fff; }
 </style>
 

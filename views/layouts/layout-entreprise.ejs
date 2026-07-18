@@ -3,167 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%- typeof title !== 'undefined' ? title : 'BCSO - Portail Partenaire' %></title>
+    <title><%= locals.title || 'BCSO - Portail Partenaire' %></title>
     
     <link rel="icon" type="image/png" href="/images/bcso.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Police Montserrat et Icônes FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary: #bda581;
-            --bg-dark: #07090e;
-            --bg-card: rgba(15, 23, 42, 0.75);
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
         
         body {
-            margin: 0;
-            background-color: var(--bg-dark);
+            background-color: #07090e;
             background-image: radial-gradient(circle at 50% 40%, rgba(189, 165, 129, 0.05), transparent 60%);
+            color: #f3f4f6;
             font-family: 'Montserrat', sans-serif;
-            color: #fff;
-            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Gestion de l'espace central alignée sur les 280px de la sidebar */
+        .main-content-wrapper {
+            margin-left: 280px; 
+            padding-bottom: 70px; /* Espace de sécurité pour ne pas cacher le bas sous le footer */
             min-height: 100vh;
-        }
-
-        /* BARRE LATÉRALE (SIDEBAR) */
-        .sidebar {
-            width: 260px;
-            background: var(--bg-card);
-            border-right: 1px solid rgba(189, 165, 129, 0.2);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-        }
-        .sidebar-logo {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .sidebar-logo img {
-            width: 90px;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
-        }
-        .sidebar-logo h3 {
-            margin: 10px 0 0 0;
-            color: var(--primary);
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .nav-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex: 1;
-        }
-        .nav-links li {
-            margin-bottom: 10px;
-        }
-        .nav-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            background: rgba(189, 165, 129, 0.1);
-            color: var(--primary);
-            border-left: 3px solid var(--primary);
-        }
-
-        /* CONTENU PRINCIPAL */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow-y: auto;
-        }
-        .topbar {
-            padding: 20px 30px;
-            border-bottom: 1px solid rgba(189, 165, 129, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(7, 9, 14, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        .topbar h2 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .btn-logout {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .btn-logout:hover {
-            background: #ef4444;
-            color: #fff;
-        }
-        .page-container {
-            padding: 30px;
-            flex: 1;
+            width: calc(100% - 280px); 
+            padding-top: 40px; 
+            padding-left: 40px; 
+            padding-right: 40px; 
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
-    <nav class="sidebar">
-        <div class="sidebar-logo">
-            <img src="/images/bcso.png" alt="Logo BCSO">
-            <h3>Espace Partenaire</h3>
-        </div>
-        <ul class="nav-links">
-            <li><a href="/entreprise/dashboard"><i class="fas fa-home"></i> Accueil</a></li>
-            <li><a href="/entreprise/effectifs"><i class="fas fa-users"></i> Gérer les effectifs</a></li>
-            <!-- Tu peux ajouter d'autres liens ici -->
-        </ul>
-    </nav>
-
-    <!-- ZONE CENTRALE -->
-    <main class="main-content">
-        <!-- BARRE DU HAUT -->
-        <header class="topbar">
-            <h2><%- typeof pageTitle !== 'undefined' ? pageTitle : 'Tableau de bord' %></h2>
-            <div class="user-info">
-                <span style="color: var(--primary);"><i class="fas fa-building"></i> <strong><%= entreprise.nom %></strong></span>
-                <a href="/entreprise/logout" class="btn-logout" title="Déconnexion"><i class="fas fa-sign-out-alt"></i></a>
-            </div>
-        </header>
-
-        <!-- 🚀 C'EST ICI QUE TES PAGES SERONT INJECTÉES AUTOMATIQUEMENT -->
-        <div class="page-container">
-            <%- body %>
-        </div>
+    <!-- SIDEBAR PARTENAIRE -->
+    <%- include('../partials/sidebar-entreprise') %>
+    
+    <!-- ZONE DU CONTENU (DASHBOARD, ANNUAIRE...) -->
+    <main class="main-content-wrapper">
+        <%- body %>
     </main>
 
-    <!-- 🚀 SCRIPT TEMPS RÉEL MAINTENANCE (Actif sur toutes les pages de l'entreprise) -->
+    <!-- BARRE DU BAS PARTENAIRE -->
+    <%- include('../partials/header-entreprise') %>
+
+    <!-- SCRIPT MAINTENANCE TEMPS RÉEL -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
         socket.on('maintenance-toggled', (isMaintenance) => {
-            if (isMaintenance) {
+            if (window.location.pathname !== '/chadoxx') {
                 window.location.reload(); 
             }
         });
