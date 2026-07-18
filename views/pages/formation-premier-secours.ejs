@@ -1,0 +1,662 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75);
+        --text-main: #e2e8f0;
+        --border-glow: rgba(189, 165, 129, 0.25);
+        --success: #10b981;
+        --info: #38bdf8;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px;
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes slideInRight { 
+        from { opacity: 0; transform: translateX(20px); } 
+        to { opacity: 1; transform: translateX(0); } 
+    }
+
+    .proc-wrapper { 
+        max-width: 1400px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 30px; 
+        animation: fadeUp 0.5s ease-out forwards;
+        margin-left: 300px; 
+    }
+
+    /* HEADER TACTIQUE */
+    .proc-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 35px; 
+        background: var(--bg-panel); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--border-glow); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    }
+
+    .btn-back { 
+        background: rgba(189, 165, 129, 0.08); 
+        border: 1px solid rgba(189, 165, 129, 0.3); 
+        color: var(--primary); 
+        padding: 12px 22px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        text-decoration: none; 
+        transition: 0.3s ease; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 10px; 
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+    }
+    .btn-back:hover { 
+        background: var(--primary); 
+        color: #05070b; 
+        box-shadow: 0 0 15px var(--primary-glow); 
+        transform: translateX(-3px);
+    }
+
+    .proc-title { text-align: right; }
+    .proc-title h1 { 
+        font-size: 26px; 
+        font-weight: 900; 
+        margin: 0; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+    }
+    .proc-title p { 
+        color: var(--primary); 
+        margin: 5px 0 0 0; 
+        font-weight: 700; 
+        font-size: 13px; 
+        letter-spacing: 3px; 
+        text-transform: uppercase; 
+    }
+
+    /* BARRE D'ONGLETS MODULARISÉE */
+    .formation-nav {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .form-nav-btn {
+        background: rgba(6, 9, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        color: #94a3b8;
+        padding: 16px 10px;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .form-nav-btn:hover {
+        background: rgba(255,255,255,0.02);
+        color: #fff;
+    }
+    .form-nav-btn.active {
+        background: linear-gradient(180deg, rgba(189, 165, 129, 0.15) 0%, rgba(189,165,129,0.02) 100%);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        box-shadow: 0 5px 15px rgba(189, 165, 129, 0.05);
+    }
+
+    .formation-pane { 
+        display: none; 
+        animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+    }
+    .formation-pane.active { display: block; }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 30px;
+    }
+
+    /* CONTENUS TEXTUELS */
+    .tactical-details {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .info-panel {
+        background: var(--bg-panel);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-left: 4px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .info-panel h2 {
+        margin: 0 0 20px 0;
+        color: #fff;
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .info-panel h2 span { color: var(--primary); }
+    
+    .tactical-list {
+        margin: 0;
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tactical-list li {
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+    .tactical-list li strong {
+        color: #fff;
+    }
+
+    /* BLOCS DE DOCTRINE SÉCURISÉ */
+    .use-case-box {
+        background: rgba(10, 15, 30, 0.4);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 25px;
+    }
+    .use-case-box h3 {
+        margin: 0 0 12px 0;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--primary);
+    }
+    .use-case-text {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .doctrine-rule {
+        border-left: 4px solid var(--danger);
+        background: rgba(239, 68, 68, 0.03);
+    }
+
+    /* COMM' DO & DON'T TABLES */
+    .comm-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .comm-card {
+        border-radius: 10px;
+        padding: 20px;
+    }
+    .comm-card.card-do {
+        background: rgba(16, 185, 129, 0.03);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+    }
+    .comm-card.card-dont {
+        background: rgba(239, 68, 68, 0.03);
+        border: 1px solid rgba(239, 68, 68, 0.15);
+    }
+    .comm-card h4 {
+        margin: 0 0 15px 0;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .comm-card.card-do h4 { color: var(--success); }
+    .comm-card.card-dont h4 { color: var(--danger); }
+
+    /* VISUELS ET CAPTURES LIÉES */
+    .visuals-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .media-tactical-card {
+        background: rgba(4, 6, 10, 0.5);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 12px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+    .media-tactical-card:hover {
+        border-color: var(--primary);
+        background: rgba(189, 165, 129, 0.02);
+        transform: translateY(-2px);
+    }
+
+    .media-image-wrapper {
+        width: 100%;
+        height: 250px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #000;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .media-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        transition: 0.5s ease;
+    }
+    .media-tactical-card:hover .media-image-wrapper img {
+        opacity: 0.95;
+    }
+
+    .media-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding: 0 5px;
+    }
+    .media-label span {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+    .media-tactical-card:hover .media-label span { color: var(--primary); }
+
+    /* LIGHTBOX ZOOM */
+    .zoom-modal {
+        display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.97); backdrop-filter: blur(12px);
+        justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .zoom-modal.active { display: flex; opacity: 1; }
+    .modal-container { position: relative; width: 85%; height: 85%; display: flex; justify-content: center; align-items: center; }
+    .modal-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+    .modal-close { position: absolute; top: -50px; right: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .modal-close:hover { background: var(--danger); }
+
+    .academy-footer {
+        margin-top: 40px; text-align: center; padding: 15px; border-top: 1px dashed rgba(255,255,255,0.05); color: #475569; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    @media (max-width: 1200px) {
+        .proc-wrapper { margin-left: 0; padding: 20px; }
+        .main-grid { grid-template-columns: 1fr; }
+        .formation-nav { grid-template-columns: repeat(2, 1fr); }
+        .comm-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="proc-wrapper">
+    
+    <!-- HEADER -->
+    <div class="proc-header">
+        <a href="/formations" class="btn-back"><i class="fas fa-chevron-left"></i> Formations</a>
+        <div class="proc-title">
+            <h1>Formation Premier Secours</h1>
+            <p>Sheriff Academy - Manuel Officiel</p>
+        </div>
+    </div>
+
+    <!-- ONGLETS DE NAVIGATION -->
+    <div class="formation-nav">
+        <button class="form-nav-btn active" onclick="switchFormation('role', this)"><i class="fas fa-shield-alt"></i> 1. Rôle & Sécurité</button>
+        <button class="form-nav-btn" onclick="switchFormation('contact', this)"><i class="fas fa-hand-holding-medical"></i> 2. Premier Contact</button>
+        <button class="form-nav-btn" onclick="switchFormation('gestes', this)"><i class="fas fa-heartbeat"></i> 3. Premiers Gestes</button>
+        <button class="form-nav-btn" onclick="switchFormation('radio', this)"><i class="fas fa-broadcast-tower"></i> 4. Comm' Radio</button>
+        <button class="form-nav-btn" onclick="switchFormation('ems', this)"><i class="fas fa-ambulance"></i> 5. Attente EMS</button>
+        <button class="form-nav-btn" onclick="switchFormation('reflexes', this)"><i class="fas fa-check-double"></i> 6. Réflexes & Bilan</button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M1 : RÔLE D'UN AGENT & SÉCURISATION -->
+    <!-- ============================================== -->
+    <div id="role" class="formation-pane active">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>01 /</span> Le Rôle d'un Agent</h2>
+                    <p style="color: #f1f5f9; font-size: 1.05rem; font-weight: 700; margin-bottom: 20px; line-height: 1.5;">
+                        En tant qu'agent du BCSO, vous êtes souvent le premier à arriver sur les lieux d'un accident ou d'une fusillade.
+                    </p>
+                    <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--primary); margin-bottom: 10px;">Votre rôle est de :</h3>
+                    <ul class="tactical-list">
+                        <li><strong>PROTÉGER LA VICTIME.</strong></li>
+                        <li><strong>SÉCURISER LA ZONE.</strong></li>
+                        <li><strong>EFFECTUER LES PREMIERS GESTES DE SECOURS.</strong></li>
+                        <li><strong>TRANSMETTRE LES BONNES INFORMATIONS AUX EMS.</strong></li>
+                        <li><strong>MAINTENIR LA VICTIME DANS LE MEILLEUR ÉTAT POSSIBLE JUSQU'À LEUR ARRIVÉE.</strong></li>
+                    </ul>
+                </div>
+
+                <div class="info-panel" style="border-left-color: var(--warning);">
+                    <h2><span>02 /</span> Sécurisation de la Zone</h2>
+                    <p style="color: #cbd5e1; margin-bottom: 15px; font-weight: 600;">Avant toute intervention :</p>
+                    <ul class="tactical-list">
+                        <li>Neutraliser une éventuelle menace.</li>
+                        <li>Vérifier que la zone est sécurisée.</li>
+                        <li>Couper la circulation si nécessaire.</li>
+                        <li>Éloigner les civils.</li>
+                        <li>Demander des renforts si besoin.</li>
+                    </ul>
+                </div>
+
+                <div class="use-case-box doctrine-rule">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Règle fondamentale de survie</h3>
+                    <p class="use-case-text" style="color: #fca5a5;">
+                        Ne jamais mettre une deuxième vie en danger pour en sauver une première.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_role.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_role.png" alt="Rôle de l'agent" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Agent sur intervention</span><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="use-case-box" style="border-left: 4px solid var(--info); background: rgba(56, 189, 248, 0.03);">
+                    <h3>Rappel Opérationnel</h3>
+                    <p class="use-case-text" style="color: #7dd3fc;">Un bon agent ne remplace pas un médecin, il permet simplement à la victime de tenir jusqu'à sa prise en charge.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M2 : PREMIER CONTACT -->
+    <!-- ============================================== -->
+    <div id="contact" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel" style="border-left-color: var(--info);">
+                    <h2><span>03 /</span> Premier Contact</h2>
+                    <p style="color: #cbd5e1; margin-bottom: 20px; font-weight: 600;">
+                        Une fois la zone sécurisée, approchez-vous calmement et posez les premières questions :
+                    </p>
+                    <ul class="tactical-list" style="gap: 16px;">
+                        <li style="font-size: 1.1rem;">« VOUS M'ENTENDEZ ? »</li>
+                        <li style="font-size: 1.1rem;">« QUEL EST VOTRE NOM ? »</li>
+                        <li style="font-size: 1.1rem;">« SAVEZ-VOUS OÙ VOUS ÊTES ? »</li>
+                        <li style="font-size: 1.1rem;">« AVEZ-VOUS MAL QUELQUE PART ? »</li>
+                    </ul>
+                </div>
+
+                <div class="use-case-box" style="border-left: 4px solid var(--success); background: rgba(16, 185, 129, 0.03);">
+                    <h3><i class="fas fa-notes-medical"></i> Transmission des données</h3>
+                    <p class="use-case-text" style="color: #6ee7b7; font-size: 1rem;">
+                        Toutes ces informations devront être communiquées avec précision aux EMS dès leur arrivée ou par radio.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_contact.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_contact.png" alt="Premier Contact" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Approche et évaluation de la victime</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M3 : LES PREMIERS GESTES -->
+    <!-- ============================================== -->
+    <div id="gestes" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>04 /</span> Les Premiers Gestes</h2>
+                    <p style="color: var(--primary); font-weight: 800; text-transform: uppercase; margin-bottom: 15px;">Selon la situation :</p>
+                    <ul class="tactical-list">
+                        <li><strong>Rassurer la victime.</strong></li>
+                        <li><strong>Limiter les mouvements inutiles.</strong></li>
+                        <li><strong>Exercer une compression sur une hémorragie.</strong></li>
+                        <li><strong>Placer la victime dans une position adaptée si cela est possible.</strong></li>
+                        <li><strong>Surveiller constamment son état.</strong></li>
+                    </ul>
+                </div>
+
+                <div class="use-case-box doctrine-rule">
+                    <h3><i class="fas fa-ban"></i> Danger de manipulation</h3>
+                    <p class="use-case-text" style="color: #fca5a5; font-size: 1rem; font-weight: 700;">
+                        Ne jamais déplacer une victime gravement blessée sans nécessité (risque de lésions à la colonne ou d'aggravation des blessures).
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_gestes.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_gestes.png" alt="Premiers Gestes" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1542884748-2b87b36c6b90?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Mise en sécurité et compression</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M4 : COMMUNICATION RADIO -->
+    <!-- ============================================== -->
+    <div id="radio" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel" style="border-left-color: var(--warning);">
+                    <h2><span>05 /</span> Communication Radio</h2>
+                    <p style="color: var(--warning); font-weight: 800; text-transform: uppercase; margin-bottom: 10px;">Pendant l'intervention :</p>
+                    <p style="color: #fff; font-weight: 700; margin-bottom: 20px;">Le premier intervenant transmet clairement :</p>
+                    <ul class="tactical-list">
+                        <li><strong>LOCALISATION EXACTE.</strong></li>
+                        <li><strong>NOMBRE DE VICTIMES.</strong></li>
+                        <li><strong>ÉTAT APPARENT.</strong></li>
+                        <li><strong>TYPE DE BLESSURES.</strong></li>
+                        <li><strong>BESOIN D'EMS.</strong></li>
+                        <li><strong>BESOIN DE RENFORT.</strong></li>
+                    </ul>
+                </div>
+
+                <div class="use-case-box" style="border-left: 4px solid var(--info); background: rgba(56, 189, 248, 0.03);">
+                    <h3><i class="fas fa-broadcast-tower"></i> Règle d'efficacité</h3>
+                    <p class="use-case-text" style="color: #38bdf8; font-weight: 700;">
+                        Une radio claire et concise permet une intervention médicale beaucoup plus rapide.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_radio.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_radio.png" alt="Communication Radio" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1521791055366-0d553872125f?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Appel radio tactique en situation d'urgence</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M5 : EN ATTENDANT LES EMS -->
+    <!-- ============================================== -->
+    <div id="ems" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>06 /</span> En Attendant les EMS</h2>
+                    <p style="color: var(--primary); font-weight: 800; text-transform: uppercase; margin-bottom: 15px;">Jusqu'à leur arrivée :</p>
+                    <ul class="tactical-list">
+                        <li><strong>Continuer à parler à la victime.</strong></li>
+                        <li><strong>Vérifier régulièrement qu'elle respire.</strong></li>
+                        <li><strong>Surveiller son état.</strong></li>
+                        <li><strong>Maintenir la zone sécurisée.</strong></li>
+                    </ul>
+                </div>
+
+                <div class="use-case-box doctrine-rule">
+                    <h3><i class="fas fa-heart-broken"></i> Évolution de l'état</h3>
+                    <p class="use-case-text" style="color: #fca5a5; font-weight: 700;">
+                        Informer immédiatement les EMS à la radio si l'état de la victime évolue (perte de conscience, arrêt respiratoire...).
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_ems.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_ems.png" alt="Attente EMS" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1504813184591-01572f98c85f?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Surveillance continue de la victime</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M6 : LES BONS RÉFLEXES & CONCLUSION -->
+    <!-- ============================================== -->
+    <div id="reflexes" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <!-- TABLEAU À FAIRE / À ÉVITER -->
+                <div class="comm-grid">
+                    <div class="comm-card card-do">
+                        <h4><i class="fas fa-check-circle"></i> À Faire :</h4>
+                        <ul class="tactical-list" style="padding-left: 15px; gap: 10px; font-size: 0.85rem;">
+                            <li>Sécuriser la zone avant toute intervention.</li>
+                            <li>Rassurer la victime et rester calme.</li>
+                            <li>Réaliser un premier bilan (conscience, respiration, blessures).</li>
+                            <li>Alerter les EMS et transmettre un bilan précis.</li>
+                            <li>Surveiller la victime jusqu'à l'arrivée des secours.</li>
+                            <li>Travailler en coordination avec les autres unités.</li>
+                        </ul>
+                    </div>
+                    <div class="comm-card card-dont">
+                        <h4><i class="fas fa-times-circle"></i> À Éviter :</h4>
+                        <ul class="tactical-list" style="padding-left: 15px; gap: 10px; font-size: 0.85rem;">
+                            <li>Intervenir si la zone est encore dangereuse.</li>
+                            <li>Paniquer ou transmettre son stress à la victime.</li>
+                            <li>Déplacer une victime sans nécessité.</li>
+                            <li>Donner des informations incomplètes ou erronées.</li>
+                            <li>Laisser la victime seule ou sans surveillance.</li>
+                            <li>Agir seul sans communiquer avec son équipe.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CONCLUSION -->
+                <div class="info-panel" style="border-left-color: #fff; margin-top: 10px;">
+                    <h2><span>07 /</span> Conclusion</h2>
+                    <p style="color: #f1f5f9; font-weight: 700; margin-bottom: 15px;">
+                        Les premiers secours ne sont pas réservés aux services médicaux.
+                    </p>
+                    <p style="color: #cbd5e1; font-weight: 500; line-height: 1.6; margin-bottom: 15px;">
+                        En tant qu'agent du BCSO, vous êtes souvent le premier à intervenir sur les lieux d'un accident, d'une fusillade ou de toute autre situation d'urgence. Votre réaction durant les premières minutes peut être déterminante.
+                    </p>
+                    <p style="color: #cbd5e1; font-weight: 500; line-height: 1.6; margin-bottom: 15px;">
+                        Être capable de sécuriser une zone, d'évaluer rapidement l'état d'une victime, d'effectuer les gestes essentiels et de transmettre un bilan clair aux EMS fait partie des compétences fondamentales attendues de chaque agent.
+                    </p>
+                    <p style="color: #fff; font-weight: 600; line-height: 1.6;">
+                        N'oubliez jamais qu'un bon premier intervenant n'est pas celui qui agit dans la précipitation, mais celui qui garde son sang-froid, applique les bonnes procédures et travaille en coordination avec les autres services.
+                    </p>
+                </div>
+
+                <div class="use-case-box" style="border-left: 4px solid var(--primary); background: rgba(189, 165, 129, 0.05); text-align: center;">
+                    <p class="use-case-text" style="color: #fff; font-weight: 800; font-size: 0.95rem;">
+                        VOTRE PROFESSIONNALISME, VOTRE RÉACTIVITÉ ET VOTRE MAÎTRISE DES PREMIERS SECOURS PEUVENT FAIRE LA DIFFÉRENCE ENTRE UNE INTERVENTION RÉUSSIE ET UNE VIE PERDUE.
+                    </p>
+                </div>
+            </div>
+
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_reflexes.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_reflexes.png" alt="Bons Réflexes" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Équipe BCSO opérationnelle et coordonnée</span><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="media-tactical-card" onclick="triggerZoom('/images/secours_fin.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/secours_fin.png" alt="Conclusion" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Maîtrise et sang-froid sur le terrain</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="academy-footer">
+        Blaine County Sheriff's Office — Official Training Manual
+    </div>
+</div>
+
+<!-- MODAL LIGHTBOX ZOOM -->
+<div id="tacticalLightbox" class="zoom-modal" onclick="closeZoom()">
+    <div class="modal-container">
+        <button class="modal-close" onclick="closeZoom()"><i class="fas fa-times"></i></button>
+        <img id="modalTargetImg" src="" alt="Tactical Zoom View" onclick="event.stopPropagation()">
+    </div>
+</div>
+
+<script>
+    function switchFormation(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+
+    const lightbox = document.getElementById('tacticalLightbox');
+    const modalImg = document.getElementById('modalTargetImg');
+
+    function triggerZoom(imgSrc) {
+        modalImg.src = imgSrc;
+        lightbox.classList.add('active');
+    }
+
+    function closeZoom() {
+        lightbox.classList.remove('active');
+    }
+</script>

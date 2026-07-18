@@ -7,7 +7,7 @@ const effectifsRoutes = require('./effectifs');
 const archivesRoutes = require('./archives');
 const apiTicketsRoutes = require('./api/tickets');
 const superviseurRoutes = require('./superviseur');
-const entrepriseRoutes = require('./entreprise'); // 🚀 Import des routes entreprise
+const entrepriseRoutes = require('./entreprise'); 
 
 // 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
 router.use(async (req, res, next) => {
@@ -111,6 +111,15 @@ router.get('/formations/negociation', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formation-negociation', { 
         title: 'BCSO - Formation Négociation',
+        user: req.session.user
+    });
+});
+
+// 🚀 NOUVELLE ROUTE : FORMATION PREMIER SECOURS
+router.get('/formations/premier-secours', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/formation-premier-secours', { 
+        title: 'BCSO - Formation Premier Secours',
         user: req.session.user
     });
 });
