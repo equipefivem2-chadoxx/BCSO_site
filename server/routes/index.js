@@ -123,7 +123,7 @@ router.get('/formations/premier-secours', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : FORMATION POLICE SCIENTIFIQUE
+// 🚀 ROUTE : FORMATION POLICE SCIENTIFIQUE
 router.get('/formations/police-scientifique', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formation-police-scientifique', { 
@@ -154,6 +154,24 @@ router.get('/documents/livret-hp', (req, res) => {
         title: 'BCSO - Livret Highway Patrol',
         user: req.session.user
     });
+});
+
+// 🚀 NOUVELLE ROUTE : LISTE PUBLIQUE DES BANNIS
+router.get('/documents/bannis', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    try {
+        const Banni = require('../models/Banni');
+        const listeBannis = await Banni.find().sort({ dateBannissement: -1 });
+        
+        res.render('pages/bannis', { 
+            title: 'BCSO - Bannis du Nord',
+            user: req.session.user,
+            bannis: listeBannis
+        });
+    } catch (err) {
+        console.error("Erreur chargement bannis :", err);
+        res.redirect('/documents');
+    }
 });
 
 router.get('/documents/doc-arrestations', (req, res) => {

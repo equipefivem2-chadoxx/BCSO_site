@@ -1,0 +1,63 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --danger: #ef4444;
+        --danger-glow: rgba(239, 68, 68, 0.15);
+        --bg-dark: #07090e;
+        --bg-panel: rgba(15, 23, 42, 0.6);
+    }
+
+    body { background-color: var(--bg-dark); color: #e2e8f0; font-family: 'Montserrat', sans-serif; }
+    
+    .bannis-wrapper { max-width: 1200px; margin: 40px auto; margin-left: 300px; padding: 0 30px; animation: fadeUp 0.5s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-bannis { text-align: center; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 30px; margin-bottom: 40px; }
+    .header-bannis h1 { color: #fff; font-size: 32px; text-transform: uppercase; margin: 0; }
+    .header-bannis h1 span { color: var(--danger); }
+    .header-bannis p { color: #94a3b8; font-weight: 500; }
+
+    .bannis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    
+    .banni-card {
+        background: var(--bg-panel); border: 1px solid rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger);
+        border-radius: 12px; padding: 25px; transition: 0.3s;
+    }
+    .banni-card:hover { box-shadow: 0 10px 25px var(--danger-glow); transform: translateY(-3px); }
+    
+    .banni-name { color: #fff; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; margin: 0 0 10px 0; display: flex; align-items: center; gap: 10px; }
+    .banni-name i { color: var(--danger); }
+    .banni-motif { color: #cbd5e1; font-size: 0.9rem; margin-bottom: 15px; line-height: 1.5; font-weight: 500; }
+    .banni-meta { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; display: flex; justify-content: space-between; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 10px; }
+
+    .empty-state { text-align: center; padding: 50px; background: rgba(255,255,255,0.02); border-radius: 12px; color: #94a3b8; grid-column: 1 / -1; }
+</style>
+
+<div class="bannis-wrapper">
+    <div class="header-bannis">
+        <h1>Registre des <span>Bannis du Nord</span></h1>
+        <p>Individus faisant l'objet d'une interdiction stricte de pénétrer sur le territoire de Blaine County.</p>
+    </div>
+
+    <div class="bannis-grid">
+        <% if (locals.bannis && bannis.length > 0) { %>
+            <% bannis.forEach(function(b) { %>
+                <div class="banni-card">
+                    <h3 class="banni-name"><i class="fas fa-ban"></i> <%= b.nomPrenom %></h3>
+                    <div class="banni-motif"><strong>Motif :</strong> <%= b.motif %></div>
+                    <div class="banni-meta">
+                        <span>Par : <%= b.agentId %></span>
+                        <span><%= new Date(b.dateBannissement).toLocaleDateString('fr-FR') %></span>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="empty-state">
+                <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>Aucun individu n'est actuellement inscrit dans le registre des bannis.</p>
+            </div>
+        <% } %>
+    </div>
+</div>

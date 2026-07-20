@@ -1,0 +1,87 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --danger: #ef4444;
+        --bg-dark: #07090e;
+        --bg-panel: rgba(15, 23, 42, 0.6);
+    }
+    body { background-color: var(--bg-dark); color: #e2e8f0; font-family: 'Montserrat', sans-serif; }
+    .manage-wrapper { max-width: 1000px; margin: 40px auto; margin-left: 300px; padding: 0 30px; }
+    
+    .header-bannis { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 20px; margin-bottom: 30px; }
+    .header-bannis h1 { color: #fff; font-size: 26px; text-transform: uppercase; margin: 0; }
+    .header-bannis h1 span { color: var(--danger); }
+    .btn-back { color: #64748b; text-decoration: none; font-weight: 800; text-transform: uppercase; font-size: 0.8rem; }
+    .btn-back:hover { color: #fff; }
+
+    .add-form-container { background: var(--bg-panel); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+    .form-group input, .form-group textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; border-radius: 8px; font-family: inherit; }
+    .btn-submit { background: var(--danger); color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+    .btn-submit:hover { background: #dc2626; box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); }
+
+    .bannis-table { width: 100%; border-collapse: collapse; background: var(--bg-panel); border-radius: 12px; overflow: hidden; }
+    .bannis-table th { background: rgba(239, 68, 68, 0.1); color: var(--danger); text-align: left; padding: 15px; font-size: 0.8rem; text-transform: uppercase; }
+    .bannis-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+    .btn-delete { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+    .btn-delete:hover { background: var(--danger); color: #fff; }
+</style>
+
+<div class="manage-wrapper">
+    <div class="header-bannis">
+        <h1>Gestion des <span>Bannis</span></h1>
+        <a href="/superviseur" class="btn-back"><i class="fas fa-chevron-left"></i> Retour Dashboard</a>
+    </div>
+
+    <!-- FORMULAIRE D'AJOUT -->
+    <div class="add-form-container">
+        <h3 style="margin-top: 0; color: #fff; font-size: 1.1rem; text-transform: uppercase;"><i class="fas fa-plus-circle" style="color: var(--danger);"></i> Ajouter un individu</h3>
+        <form action="/superviseur/bannis/ajouter" method="POST">
+            <div class="form-group">
+                <label>Nom & Prénom de l'individu</label>
+                <input type="text" name="nomPrenom" required placeholder="Ex: John Doe">
+            </div>
+            <div class="form-group">
+                <label>Motif de l'interdiction</label>
+                <textarea name="motif" required rows="3" placeholder="Raison détaillée du bannissement..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Bannir du Territoire</button>
+        </form>
+    </div>
+
+    <!-- LISTE DES BANNIS ACTUELS -->
+    <table class="bannis-table">
+        <thead>
+            <tr>
+                <th>Individu</th>
+                <th>Motif</th>
+                <th>Date & Auteur</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (locals.bannis && bannis.length > 0) { %>
+                <% bannis.forEach(function(b) { %>
+                    <tr>
+                        <td style="font-weight: bold; color: #fff;"><%= b.nomPrenom %></td>
+                        <td style="color: #cbd5e1;"><%= b.motif %></td>
+                        <td style="color: #64748b; font-size: 0.8rem;">
+                            <%= new Date(b.dateBannissement).toLocaleDateString('fr-FR') %><br>
+                            Par : <%= b.agentId %>
+                        </td>
+                        <td>
+                            <form action="/superviseur/bannis/supprimer/<%= b._id %>" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir lever le bannissement de <%= b.nomPrenom %> ?');">
+                                <button type="submit" class="btn-delete" title="Lever l'interdiction"><i class="fas fa-times"></i> Révoquer</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr><td colspan="4" style="text-align: center; color: #64748b;">Aucun individu banni.</td></tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

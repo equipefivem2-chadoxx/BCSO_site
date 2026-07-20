@@ -251,7 +251,7 @@ router.get('/partenariats', async (req, res) => {
     }
 });
 
-// 🚀 Route 5 : Détail d'un partenariat (CORRIGÉE)
+// 🚀 Route 5 : Détail d'un partenariat
 router.get('/partenariats/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -284,7 +284,6 @@ router.get('/partenariats/:id', async (req, res) => {
         const entreprise = await Entreprise.findById(req.params.id);
         if (!entreprise) return res.redirect('/superviseur/partenariats');
 
-        // On cherche UNIQUEMENT les agents qui ont un total > 0 pour CETTE entreprise spécifique
         let agents = await Agent.find({
             passagesParEntreprise: {
                 $elemMatch: {
@@ -294,7 +293,6 @@ router.get('/partenariats/:id', async (req, res) => {
             }
         });
 
-        // On trie les résultats de manière décroissante pour avoir un beau classement
         agents.sort((a, b) => {
             const passageA = a.passagesParEntreprise.find(p => p.entrepriseId.toString() === entreprise._id.toString());
             const passageB = b.passagesParEntreprise.find(p => p.entrepriseId.toString() === entreprise._id.toString());
@@ -313,6 +311,92 @@ router.get('/partenariats/:id', async (req, res) => {
     } catch (error) {
         console.error('Erreur détail partenariat:', error);
         res.redirect('/superviseur/partenariats');
+    }
+});
+
+// ==============================================================
+// 🚀 GESTION DES BANNIS DU NORD
+// ==============================================================
+
+// Route pour afficher le panel de gestion
+router.get('/bannis', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const Banni = require('../models/Banni');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
+        const listeBannis = await Banni.find().sort({ dateBannissement: -1 });
+
+        res.render('pages/superviseur/bannis', { 
+            title: 'BCSO - Gestion Bannis',
+            user: viewUser, 
+            bannis: listeBannis
+        });
+
+    } catch (error) {
+        console.error('Erreur liste bannis superviseur:', error);
+        res.redirect('/superviseur');
+    }
+});
+
+// Route pour AJOUTER un banni
+router.post('/bannis/ajouter', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    try {
+        const Banni = require('../models/Banni');
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+        
+        const nomAgent = agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
+
+        const nouveauBanni = new Banni({
+            nomPrenom: req.body.nomPrenom,
+            motif: req.body.motif,
+            agentId: nomAgent
+        });
+
+        await nouveauBanni.save();
+        res.redirect('/superviseur/bannis?success=add');
+    } catch (err) {
+        console.error('Erreur ajout banni:', err);
+        res.redirect('/superviseur/bannis?error=1');
+    }
+});
+
+// Route pour SUPPRIMER (Révoquer) un banni
+router.post('/bannis/supprimer/:id', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    try {
+        const Banni = require('../models/Banni');
+        await Banni.findByIdAndDelete(req.params.id);
+        res.redirect('/superviseur/bannis?success=delete');
+    } catch (err) {
+        console.error('Erreur suppression banni:', err);
+        res.redirect('/superviseur/bannis?error=1');
     }
 });
 
