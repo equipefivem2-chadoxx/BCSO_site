@@ -115,11 +115,19 @@ router.get('/formations/negociation', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : FORMATION PREMIER SECOURS
 router.get('/formations/premier-secours', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formation-premier-secours', { 
         title: 'BCSO - Formation Premier Secours',
+        user: req.session.user
+    });
+});
+
+// 🚀 NOUVELLE ROUTE : FORMATION POLICE SCIENTIFIQUE
+router.get('/formations/police-scientifique', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/formation-police-scientifique', { 
+        title: 'BCSO - Forensic Services Unit',
         user: req.session.user
     });
 });
@@ -140,7 +148,6 @@ router.get('/documents/livret', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : LIVRET HIGHWAY PATROL
 router.get('/documents/livret-hp', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/livret-hp', { 

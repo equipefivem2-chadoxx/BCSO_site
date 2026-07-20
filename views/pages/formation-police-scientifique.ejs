@@ -1,0 +1,419 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75);
+        --text-main: #e2e8f0;
+        --border-glow: rgba(189, 165, 129, 0.25);
+        --success: #10b981;
+        --info: #38bdf8;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px;
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes slideInRight { 
+        from { opacity: 0; transform: translateX(20px); } 
+        to { opacity: 1; transform: translateX(0); } 
+    }
+
+    .proc-wrapper { 
+        max-width: 1400px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 30px; 
+        animation: fadeUp 0.5s ease-out forwards;
+        margin-left: 300px; 
+    }
+
+    /* HEADER TACTIQUE */
+    .proc-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 35px; 
+        background: var(--bg-panel); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--border-glow); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    }
+
+    .btn-back { 
+        background: rgba(189, 165, 129, 0.08); 
+        border: 1px solid rgba(189, 165, 129, 0.3); 
+        color: var(--primary); 
+        padding: 12px 22px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        text-decoration: none; 
+        transition: 0.3s ease; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 10px; 
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+    }
+    .btn-back:hover { 
+        background: var(--primary); 
+        color: #05070b; 
+        box-shadow: 0 0 15px var(--primary-glow); 
+        transform: translateX(-3px);
+    }
+
+    .proc-title { text-align: right; }
+    .proc-title h1 { 
+        font-size: 26px; 
+        font-weight: 900; 
+        margin: 0; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+    }
+    .proc-title p { 
+        color: var(--primary); 
+        margin: 5px 0 0 0; 
+        font-weight: 700; 
+        font-size: 13px; 
+        letter-spacing: 3px; 
+        text-transform: uppercase; 
+    }
+
+    /* BARRE D'ONGLETS MODULARISÉE */
+    .formation-nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Ajusté pour moins d'onglets pour le moment */
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .form-nav-btn {
+        background: rgba(6, 9, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        color: #94a3b8;
+        padding: 16px 10px;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .form-nav-btn:hover {
+        background: rgba(255,255,255,0.02);
+        color: #fff;
+    }
+    .form-nav-btn.active {
+        background: linear-gradient(180deg, rgba(189, 165, 129, 0.15) 0%, rgba(189,165,129,0.02) 100%);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        box-shadow: 0 5px 15px rgba(189, 165, 129, 0.05);
+    }
+
+    .formation-pane { 
+        display: none; 
+        animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+    }
+    .formation-pane.active { display: block; }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 30px;
+    }
+
+    /* CONTENUS TEXTUELS */
+    .tactical-details {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .info-panel {
+        background: var(--bg-panel);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-left: 4px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .info-panel h2 {
+        margin: 0 0 20px 0;
+        color: #fff;
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .info-panel h2 span { color: var(--primary); }
+    
+    .tactical-list {
+        margin: 0;
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tactical-list li {
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+    .tactical-list li strong {
+        color: #fff;
+    }
+
+    /* BLOCS DE DOCTRINE SÉCURISÉ */
+    .use-case-box {
+        background: rgba(10, 15, 30, 0.4);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 25px;
+    }
+    .use-case-box h3 {
+        margin: 0 0 12px 0;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--primary);
+    }
+    .use-case-text {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    /* VISUELS ET CAPTURES LIÉES */
+    .visuals-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .media-tactical-card {
+        background: rgba(4, 6, 10, 0.5);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 12px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+    .media-tactical-card:hover {
+        border-color: var(--primary);
+        background: rgba(189, 165, 129, 0.02);
+        transform: translateY(-2px);
+    }
+
+    .media-image-wrapper {
+        width: 100%;
+        height: 250px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #000;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .media-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        transition: 0.5s ease;
+    }
+    .media-tactical-card:hover .media-image-wrapper img {
+        opacity: 0.95;
+    }
+
+    .media-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding: 0 5px;
+    }
+    .media-label span {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+    .media-tactical-card:hover .media-label span { color: var(--primary); }
+
+    /* LIGHTBOX ZOOM */
+    .zoom-modal {
+        display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.97); backdrop-filter: blur(12px);
+        justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .zoom-modal.active { display: flex; opacity: 1; }
+    .modal-container { position: relative; width: 85%; height: 85%; display: flex; justify-content: center; align-items: center; }
+    .modal-container img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+    .modal-close { position: absolute; top: -50px; right: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .modal-close:hover { background: var(--danger); }
+
+    .academy-footer {
+        margin-top: 40px; text-align: center; padding: 15px; border-top: 1px dashed rgba(255,255,255,0.05); color: #475569; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    @media (max-width: 1200px) {
+        .proc-wrapper { margin-left: 0; padding: 20px; }
+        .main-grid { grid-template-columns: 1fr; }
+        .formation-nav { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="proc-wrapper">
+    
+    <!-- HEADER -->
+    <div class="proc-header">
+        <a href="/formations" class="btn-back"><i class="fas fa-chevron-left"></i> Formations</a>
+        <div class="proc-title">
+            <h1>Formation Forensic Services Unit</h1>
+            <p>Sheriff Academy - Manuel Officiel</p>
+        </div>
+    </div>
+
+    <!-- ONGLETS DE NAVIGATION -->
+    <div class="formation-nav">
+        <button class="form-nav-btn active" onclick="switchFormation('enregistrement', this)"><i class="fas fa-clipboard-list"></i> 1. Enregistrement des Armes</button>
+        <button class="form-nav-btn" onclick="switchFormation('douilles', this)"><i class="fas fa-microscope"></i> 2. Analyse Terrain</button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M1 : ENREGISTREMENT DES ARMES -->
+    <!-- ============================================== -->
+    <div id="enregistrement" class="formation-pane active">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2><span>01 /</span> Protocole de Saisie</h2>
+                    <p style="color: #f1f5f9; font-size: 1.05rem; font-weight: 700; margin-bottom: 20px; line-height: 1.5;">
+                        Tout agent est tenu de recenser rigoureusement les armes confisquées suite à une arrestation.
+                    </p>
+                    <p style="color: #cbd5e1; margin-bottom: 15px; font-weight: 600;">
+                        Le recensement s'effectue dans le canal dédié <span style="background: rgba(189, 165, 129, 0.15); padding: 2px 6px; border-radius: 4px; color: var(--primary);"># 🔫・Police-Scientifique...</span> selon le format strict suivant :
+                    </p>
+                    <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border-left: 3px solid var(--info); font-family: monospace; color: #a5b4fc; margin-bottom: 20px;">
+                        • Nom & Prénom :<br>
+                        • Arme + ID :<br>
+                        • Délit :
+                    </div>
+                </div>
+
+                <div class="use-case-box" style="border-left: 4px solid var(--warning); background: rgba(245, 158, 11, 0.05);">
+                    <h3><i class="fas fa-tag"></i> Étiquetage Obligatoire</h3>
+                    <p class="use-case-text" style="color: #fde047;">
+                        En plus du recensement, l'arme doit impérativement être étiquetée avec le Nom & Prénom de l'individu arrêté.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/forensic_format.png')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/forensic_format.png" alt="Format Recensement" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Format de Saisie Discord</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M2 : ANALYSE TERRAIN -->
+    <!-- ============================================== -->
+    <div id="douilles" class="formation-pane">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel" style="border-left-color: var(--success);">
+                    <h2><span>02 /</span> Liaison Saisie - Terrain</h2>
+                    <p style="color: #cbd5e1; margin-bottom: 20px; font-weight: 600;">
+                        L'objectif du recensement précis (Arme + ID/N° de série) est de permettre la corrélation avec les preuves retrouvées sur le terrain.
+                    </p>
+                    <p style="color: #f1f5f9; font-weight: 700;">
+                        L'enregistrement permet aux agents de la FSU de remonter des douilles prélevées sur une scène de crime directement à l'arme en question, et donc à son propriétaire.
+                    </p>
+                </div>
+                
+                <div class="use-case-box" style="background: rgba(189, 165, 129, 0.05); border: 1px solid rgba(189, 165, 129, 0.2);">
+                    <p class="use-case-text" style="color: var(--primary); text-align: center; font-weight: 800; font-size: 1.1rem;">
+                        La rigueur lors de la saisie est la base de toute enquête balistique future.
+                    </p>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card" onclick="triggerZoom('/images/forensic_douilles.jpg')">
+                    <div class="media-image-wrapper">
+                        <img src="/images/forensic_douilles.jpg" alt="Analyse Douilles" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1628126235206-5260b9ea6441?q=80&w=1000'">
+                    </div>
+                    <div class="media-label"><span>Analyse Balistique & Concordance</span><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="academy-footer">
+        Blaine County Sheriff's Office — Official Training Manual
+    </div>
+</div>
+
+<!-- MODAL LIGHTBOX ZOOM -->
+<div id="tacticalLightbox" class="zoom-modal" onclick="closeZoom()">
+    <div class="modal-container">
+        <button class="modal-close" onclick="closeZoom()"><i class="fas fa-times"></i></button>
+        <img id="modalTargetImg" src="" alt="Tactical Zoom View" onclick="event.stopPropagation()">
+    </div>
+</div>
+
+<script>
+    function switchFormation(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+
+    const lightbox = document.getElementById('tacticalLightbox');
+    const modalImg = document.getElementById('modalTargetImg');
+
+    function triggerZoom(imgSrc) {
+        modalImg.src = imgSrc;
+        lightbox.classList.add('active');
+    }
+
+    function closeZoom() {
+        lightbox.classList.remove('active');
+    }
+</script>
