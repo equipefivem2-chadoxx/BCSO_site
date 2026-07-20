@@ -99,12 +99,19 @@
         border-radius: 10px;
         border: 1px solid transparent;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
+        background: none;
+        width: 100%;
+        text-align: left;
+        outline: none;
+        font-family: inherit;
     }
 
     .nav-item-content {
         display: flex;
         align-items: center;
         gap: 16px;
+        flex-grow: 1;
     }
 
     .nav-item-premium i {
@@ -138,6 +145,94 @@
         color: var(--primary);
         text-shadow: 0 0 10px var(--primary-glow-strong);
     }
+
+    /* === NOUVEAU CSS POUR LE MENU DÉROULANT === */
+    .nav-dropdown {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .dropdown-icon {
+        font-size: 10px !important;
+        transition: transform 0.3s ease !important;
+        color: #64748b;
+    }
+
+    .nav-dropdown.open .dropdown-icon {
+        transform: rotate(180deg) !important;
+        color: var(--primary);
+    }
+
+    /* Style du parent quand le menu est ouvert */
+    .nav-dropdown.open .nav-item-premium {
+        background: rgba(189, 165, 129, 0.05);
+        color: #ffffff;
+        border-color: rgba(189, 165, 129, 0.1);
+    }
+
+    .nav-dropdown.open .nav-item-premium i:not(.dropdown-icon) {
+        color: var(--primary);
+    }
+
+    .dropdown-menu {
+        display: none; /* Caché par défaut */
+        flex-direction: column;
+        gap: 4px;
+        padding-left: 45px; /* Indentation sous l'icône parente */
+        margin-top: 2px;
+        margin-bottom: 6px;
+    }
+
+    .nav-dropdown.open .dropdown-menu {
+        display: flex; /* Affiché si parent a la classe .open */
+    }
+
+    .dropdown-item {
+        color: #64748b;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        display: block;
+        position: relative;
+    }
+
+    .dropdown-item::before {
+        content: '';
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #475569;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+        color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .dropdown-item:hover::before {
+        background: var(--primary);
+    }
+
+    .dropdown-item.active {
+        color: var(--primary);
+        background: rgba(189, 165, 129, 0.08);
+        font-weight: 600;
+    }
+
+    .dropdown-item.active::before {
+        background: var(--primary);
+        box-shadow: 0 0 8px var(--primary-glow-strong);
+    }
+    /* ======================================= */
 
     .admin-link:hover {
         background: rgba(220, 38, 38, 0.03);
@@ -202,8 +297,34 @@
         <a href="/reglement" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-gavel"></i> Règlement</div></a>
         <a href="/lois" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-scale-balanced"></i> Livre des Lois</div></a>
         <a href="/effectifs" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-users"></i> Effectifs</div></a>
-        <a href="/formations" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div></a>
-        <a href="/documents" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-file-signature"></i> Documents</div></a>
+        
+        <!-- === MENU DÉROULANT : FORMATIONS === -->
+        <div class="nav-dropdown">
+            <button class="nav-item-premium dropdown-toggle">
+                <div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div>
+                <i class="fas fa-chevron-down dropdown-icon"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/formations" class="dropdown-item">Toutes les formations</a>
+                <a href="/formation-convoi" class="dropdown-item">Convoi</a>
+                <a href="/formation-negociation" class="dropdown-item">Négociation</a>
+                <a href="/formation-police-scientifique" class="dropdown-item">Police Scientifique</a>
+                <a href="/formation-premier-secours" class="dropdown-item">Premiers Secours</a>
+            </div>
+        </div>
+
+        <!-- === MENU DÉROULANT : DOCUMENTS === -->
+        <div class="nav-dropdown">
+            <button class="nav-item-premium dropdown-toggle">
+                <div class="nav-item-content"><i class="fas fa-file-signature"></i> Documents</div>
+                <i class="fas fa-chevron-down dropdown-icon"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/documents" class="dropdown-item">Tous les documents</a>
+                <a href="/doc-armes" class="dropdown-item">Permis de Port d'Arme</a>
+                <a href="/doc-arrestations" class="dropdown-item">Rapports d'Arrestation</a>
+            </div>
+        </div>
         
         <a href="/documents/evaluer-junior" class="nav-item-premium">
             <div class="nav-item-content"><i class="fas fa-clipboard-check"></i> Évaluer Junior</div>
@@ -259,12 +380,36 @@
     document.addEventListener("DOMContentLoaded", () => {
         const currentUrl = window.location.pathname;
         
-        document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
+        // 1. Gérer les menus déroulants (ouverture/fermeture au clic)
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const parent = toggle.closest('.nav-dropdown');
+                
+                // Optionnel : Fermer les autres menus quand on en ouvre un nouveau
+                document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+                    if (dropdown !== parent) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+
+                parent.classList.toggle('open');
+            });
+        });
+
+        // 2. Gérer l'état actif en fonction de l'URL
+        document.querySelectorAll('.nav-item-premium[href], .dropdown-item').forEach(link => {
             const href = link.getAttribute('href');
-            link.classList.remove('active');
             
-            if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
+            // Si l'URL actuelle correspond au lien
+            if (currentUrl === href) {
                 link.classList.add('active');
+                
+                // Si ce lien se trouve dans un menu déroulant, on force l'ouverture du parent
+                const parentDropdown = link.closest('.nav-dropdown');
+                if (parentDropdown) {
+                    parentDropdown.classList.add('open');
+                }
             }
         });
     });
