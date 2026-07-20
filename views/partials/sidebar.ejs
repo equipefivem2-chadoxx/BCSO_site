@@ -139,6 +139,26 @@
         text-shadow: 0 0 10px var(--primary-glow-strong);
     }
 
+    /* Style du sous-indicateur */
+    .sub-nav-indicator {
+        padding: 2px 0 10px 54px;
+        color: var(--primary);
+        font-size: 11px;
+        font-style: italic;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        animation: slideDownFade 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    
+    @keyframes slideDownFade {
+        to {
+            opacity: 0.85;
+            transform: translateY(0);
+        }
+    }
+
     .admin-link:hover {
         background: rgba(220, 38, 38, 0.03);
         border-color: rgba(220, 38, 38, 0.15);
@@ -191,7 +211,7 @@
     }
 </style>
 
-<aside class="bcso-sidebar" id="bcsoSidebar">
+<aside class="bcso-sidebar" id="bcsoSidebar" data-title="<%= typeof title !== 'undefined' ? title : '' %>">
     <div class="sidebar-logo-container">
         <img src="/images/bcso.png" alt="BCSO Logo" class="sidebar-logo">
     </div>
@@ -258,14 +278,36 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const currentUrl = window.location.pathname;
+        const sidebar = document.getElementById('bcsoSidebar');
+        const rawTitle = sidebar ? (sidebar.dataset.title || '') : '';
+        
+        let bestMatch = null;
+        let longestLength = 0;
         
         document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
             const href = link.getAttribute('href');
-            link.classList.remove('active');
+            link.classList.remove('active'); 
             
-            if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
-                link.classList.add('active');
+            if (currentUrl.startsWith(href) && href.length > longestLength) {
+                if (href === '/' && currentUrl !== '/') return; 
+                bestMatch = link;
+                longestLength = href.length;
             }
         });
+
+        if (bestMatch) {
+            bestMatch.classList.add('active');
+            
+            const exactMatch = (currentUrl === bestMatch.getAttribute('href'));
+            const pageTitle = rawTitle.replace(/^BCSO\s*-\s*/, '').trim(); 
+            
+            if (!exactMatch && pageTitle) {
+                const subIndicator = document.createElement('div');
+                subIndicator.className = 'sub-nav-indicator';
+                subIndicator.innerHTML = `↳ ${pageTitle}`;
+                
+                bestMatch.parentNode.insertBefore(subIndicator, bestMatch.nextSibling);
+            }
+        }
     });
 </script>
