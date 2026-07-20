@@ -123,7 +123,6 @@ router.get('/formations/premier-secours', (req, res) => {
     });
 });
 
-// 🚀 ROUTE : FORMATION POLICE SCIENTIFIQUE
 router.get('/formations/police-scientifique', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/formation-police-scientifique', { 
@@ -156,7 +155,6 @@ router.get('/documents/livret-hp', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : LISTE PUBLIQUE DES BANNIS
 router.get('/documents/bannis', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
@@ -189,6 +187,24 @@ router.get('/documents/armes', (req, res) => {
         user: req.session.user
     });
 });
+
+// 🚀 NOUVELLES ROUTES POUR VÉHICULES
+router.get('/documents/custom-vehicules', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/doc-custom-vehicules', { 
+        title: 'BCSO - Customisation Véhicules',
+        user: req.session.user
+    });
+});
+
+router.get('/documents/reconnaissance-vehicules', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/doc-reconnaissance-vehicules', { 
+        title: 'BCSO - Reconnaissance Véhicules',
+        user: req.session.user
+    });
+});
+// ====================================
 
 router.get('/documents/evaluer-junior', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');

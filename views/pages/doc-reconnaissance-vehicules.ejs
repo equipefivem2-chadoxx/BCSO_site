@@ -1,0 +1,102 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    /* Même bloc CSS que précédent */
+    :root {
+        --primary: #bda581; --primary-glow: rgba(189, 165, 129, 0.2); --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75); --text-main: #e2e8f0; --border-glow: rgba(189, 165, 129, 0.25);
+    }
+    body {
+        margin: 0; background-color: var(--bg-dark);
+        background-image: linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px; font-family: 'Montserrat', sans-serif; color: var(--text-main); min-height: 100vh;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    .proc-wrapper { max-width: 1400px; margin: 40px auto 80px auto; padding: 0 30px; animation: fadeUp 0.5s ease-out forwards; margin-left: 300px; }
+    .proc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; background: var(--bg-panel); padding: 25px 35px; border-radius: 16px; border-top: 1px solid var(--border-glow); backdrop-filter: blur(20px); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+    .btn-back { background: rgba(189, 165, 129, 0.08); border: 1px solid rgba(189, 165, 129, 0.3); color: var(--primary); padding: 12px 22px; border-radius: 8px; font-weight: 800; text-transform: uppercase; text-decoration: none; transition: 0.3s ease; display: inline-flex; align-items: center; gap: 10px; font-size: 0.8rem; }
+    .btn-back:hover { background: var(--primary); color: #05070b; box-shadow: 0 0 15px var(--primary-glow); transform: translateX(-3px); }
+    .proc-title { text-align: right; }
+    .proc-title h1 { font-size: 26px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+    .proc-title p { color: var(--primary); margin: 5px 0 0 0; font-weight: 700; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; }
+
+    .formation-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
+    .form-nav-btn { background: rgba(6, 9, 15, 0.6); border: 1px solid rgba(255, 255, 255, 0.03); color: #94a3b8; padding: 16px 10px; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.78rem; text-transform: uppercase; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .form-nav-btn:hover { background: rgba(255,255,255,0.02); color: #fff; }
+    .form-nav-btn.active { background: linear-gradient(180deg, rgba(189, 165, 129, 0.15) 0%, rgba(189,165,129,0.02) 100%); color: var(--primary); border: 1px solid var(--primary); box-shadow: 0 5px 15px rgba(189, 165, 129, 0.05); }
+
+    .formation-pane { display: none; animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .formation-pane.active { display: block; }
+    .main-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
+    .tactical-details { display: flex; flex-direction: column; gap: 20px; }
+
+    .info-panel { background: var(--bg-panel); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.02); border-left: 4px solid var(--primary); border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .info-panel h2 { margin: 0 0 20px 0; color: #fff; font-size: 1.25rem; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    
+    .tactical-list { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .tactical-list li { color: #cbd5e1; font-size: 0.95rem; font-weight: 600; line-height: 1.5; }
+    
+    .visuals-column { display: flex; flex-direction: column; gap: 20px; }
+    .media-tactical-card { background: rgba(4, 6, 10, 0.5); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; padding: 12px; }
+    .media-image-wrapper { width: 100%; height: 350px; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.05); }
+    .media-image-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+
+    .academy-footer { margin-top: 40px; text-align: center; padding: 15px; border-top: 1px dashed rgba(255,255,255,0.05); color: #475569; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+</style>
+
+<div class="proc-wrapper">
+    <div class="proc-header">
+        <a href="/documents" class="btn-back"><i class="fas fa-chevron-left"></i> Retour aux Documents</a>
+        <div class="proc-title">
+            <h1>Reconnaissance Véhicules</h1>
+            <p>Intelligence - Base de Données</p>
+        </div>
+    </div>
+
+    <!-- On pourra rajouter des boutons ici quand tu auras d'autres véhicules -->
+    <div class="formation-nav">
+        <button class="form-nav-btn active" onclick="switchFormation('argento', this)"><i class="fas fa-car-side"></i> ARGENTO</button>
+        <!-- Exemple : <button class="form-nav-btn" onclick="switchFormation('sultan', this)"><i class="fas fa-car-side"></i> SULTAN RS</button> -->
+    </div>
+
+    <!-- VÉHICULE : ARGENTO -->
+    <div id="argento" class="formation-pane active">
+        <div class="main-grid">
+            <div class="tactical-details">
+                <div class="info-panel">
+                    <h2>ARGENTO</h2>
+                    <p style="color: #f1f5f9; font-size: 1.05rem; font-weight: 700; margin-bottom: 20px;">
+                        Fiche d'identification visuelle.
+                    </p>
+                    <ul class="tactical-list">
+                        <li><strong>Type :</strong> Break Sportif</li>
+                        <li><strong>Signes Distinctifs :</strong> Calandre agressive, double sortie d'échappement, souvent rabaissé.</li>
+                        <li><strong>Indicateurs :</strong> Véhicule performant souvent utilisé lors de délits de fuite sur routes sinueuses.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="visuals-column">
+                <div class="media-tactical-card">
+                    <div class="media-image-wrapper">
+                        <!-- Tu pourras lier ton image ici -->
+                        <img src="/images/reco_argento.png" alt="Modèle Argento" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academy-footer">Blaine County Sheriff's Office — Official Intelligence</div>
+</div>
+
+<script>
+    function switchFormation(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+</script>
