@@ -1,0 +1,293 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+        --accent-eow: #8b5cf6;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.04), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
+    }
+
+    #eow-container {
+        margin-left: 280px;
+        padding: 40px 60px 80px 60px;
+        max-width: 1400px;
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
+        padding-bottom: 20px;
+        margin-bottom: 35px;
+    }
+
+    .header-title h1 { color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 26px; }
+    .header-title h1 span { color: var(--accent-eow); }
+    .header-title p { color: #94a3b8; margin-top: 5px; font-size: 14px; }
+
+    .btn-back {
+        background: rgba(189, 165, 129, 0.05);
+        color: var(--primary);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+        font-size: 13px;
+    }
+    .btn-back:hover { background: var(--primary); color: #000; }
+
+    .generator-grid {
+        display: grid;
+        grid-template-columns: 450px 1fr;
+        gap: 30px;
+        align-items: start;
+    }
+
+    .form-panel {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 2px solid var(--accent-eow);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .panel-title {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 12px;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-label {
+        color: #cbd5e1;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .input-text {
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 12px;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+    .input-text:focus { border-color: var(--accent-eow); outline: none; box-shadow: 0 0 10px rgba(139, 92, 246, 0.2); }
+
+    .preview-panel {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .script-box {
+        background: rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-left: 4px solid var(--accent-eow);
+        padding: 30px;
+        border-radius: 8px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 15px;
+        line-height: 1.8;
+        color: #f8fafc;
+        white-space: pre-wrap;
+        margin-bottom: 25px;
+        min-height: 380px;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .script-box span.highlight {
+        color: #facc15;
+        font-weight: bold;
+        background: rgba(250, 204, 21, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .btn-copy {
+        background: var(--primary);
+        color: #000;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        align-self: flex-end;
+        width: 100%;
+    }
+
+    .btn-copy:hover {
+        background: #fff;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-copy.copied {
+        background: #10b981;
+        color: #fff;
+    }
+</style>
+
+<div id="eow-container">
+    <div class="header-section">
+        <div class="header-title">
+            <h1>Protocole <span>End Of Watch</span></h1>
+            <p>Générateur officiel de discours radio pour les cérémonies de fin de service (10-10 EOW).</p>
+        </div>
+        <a href="/documents" class="btn-back"><i class="fas fa-arrow-left"></i> RETOUR AUX DOCUMENTS</a>
+    </div>
+
+    <div class="generator-grid">
+        <!-- PANNEAU DE SAISIE -->
+        <div class="form-panel">
+            <div class="panel-title"><i class="fas fa-sliders-h" style="color: var(--accent-eow);"></i> Paramètres du Call</div>
+            
+            <div class="input-group">
+                <label class="input-label">Matricule de l'agent :</label>
+                <input type="text" id="input-matricule" class="input-text" placeholder="Ex: 117" value="117">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Nom et Prénom de l'agent :</label>
+                <input type="text" id="input-nom" class="input-text" placeholder="Ex: Shawn Sterling" value="Shawn Sterling">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">3 Matricules choisis (Badges) :</label>
+                <input type="text" id="input-badges" class="input-text" placeholder="Ex: 101, 102, 103" value="101, 102, 103">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Date de la cérémonie :</label>
+                <input type="text" id="input-date" class="input-text" placeholder="Ex: 22/07/2026">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Heure du Clear (Fin de service) :</label>
+                <input type="text" id="input-heure" class="input-text" placeholder="Ex: 23h30" value="23h30">
+            </div>
+        </div>
+
+        <!-- PANNEAU DE VISUALISATION ET COPIE -->
+        <div class="preview-panel">
+            <div class="panel-title" style="border-color: rgba(189, 165, 129, 0.2);"><i class="fas fa-broadcast-tower" style="color: var(--primary);"></i> Rendu du discours radio (Prêt pour le Dispatch)</div>
+            
+            <div class="script-box" id="script-render"></div>
+
+            <button class="btn-copy" id="btn-copy" onclick="copyScript()"><i class="fas fa-copy"></i> COPIER LE CALL DANS LE PRESSE-PAPIER</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialiser la date du jour par défaut
+    document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('input-date').value = today;
+        updateScript();
+    });
+
+    // Écouteurs d'événements pour la mise à jour en direct
+    const inputs = ['input-matricule', 'input-nom', 'input-badges', 'input-date', 'input-heure'];
+    inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', updateScript);
+    });
+
+    function updateScript() {
+        const matricule = document.getElementById('input-matricule').value || "[Matricule]";
+        const nom = document.getElementById('input-nom').value || "[Nom Prénom]";
+        const badges = document.getElementById('input-badges').value || "[3 matricules choisis]";
+        const date = document.getElementById('input-date').value || "[Date]";
+        const heure = document.getElementById('input-heure').value || "[Heure]";
+
+        const renderBox = document.getElementById('script-render');
+        
+        // Structure exacte demandée avec mise en évidence des variables
+        renderBox.innerHTML = `Clear radio pour tous\n\n` +
+            `Lincoln <span class="highlight">${matricule}</span>, Lincoln <span class="highlight">${matricule}</span>, Lincoln <span class="highlight">${matricule}</span>\n\n` +
+            `Negatif Response\n\n` +
+            `10-10 End Of Watch du deputy one <span class="highlight">${nom}</span>\n\n` +
+            `Badge <span class="highlight">${badges}</span> sous le matricule <span class="highlight">${matricule}</span>\n\n` +
+            `Le <span class="highlight">${date}</span> vous avez représenté tout votre engagement, votre dévouement, votre honneur au cours de votre service.\n` +
+            `Merci au travail fourni à l'état de Blaine County, sa communauté, ses agences et à tous les États-Unis d'Amérique. \n` +
+            `Vous avez rendu les gens fiers, votre famille, vos shérifs, nous sommes fiers de vous. \n` +
+            `Vos services ne seront jamais oubliés\n\n` +
+            `Tous les shérifs du dispatch du <span class="highlight">${date}</span> Badge <span class="highlight">${badges}</span> sous le matricule <span class="highlight">${matricule}</span> \n` +
+            `10-10 pour toujours\n\n` +
+            `Deputy one <span class="highlight">${nom}</span> du Blaine County Sheriff Office End Of Watch\n` +
+            `Badge du <span class="highlight">${nom}</span> clear à <span class="highlight">${heure}</span>`;
+    }
+
+    function copyScript() {
+        // Récupérer le texte sans les balises HTML de surbrillance
+        const scriptText = document.getElementById('script-render').innerText;
+        
+        navigator.clipboard.writeText(scriptText).then(() => {
+            const btn = document.getElementById('btn-copy');
+            btn.innerHTML = `<i class="fas fa-check"></i> COPIÉ AVEC SUCCÈS !`;
+            btn.classList.add('copied');
+            
+            setTimeout(() => {
+                btn.innerHTML = `<i class="fas fa-copy"></i> COPIER LE CALL DANS LE PRESSE-PAPIER`;
+                btn.classList.remove('copied');
+            }, 3000);
+        });
+    }
+</script>

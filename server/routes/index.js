@@ -205,6 +205,15 @@ router.get('/documents/reconnaissance-vehicules', (req, res) => {
         user: req.session.user
     });
 });
+
+// 🚀 NOUVELLE ROUTE : CALL END OF WATCH
+router.get('/documents/end-of-watch', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/doc-end-of-watch', { 
+        title: 'BCSO - Protocole End Of Watch',
+        user: req.session.user
+    });
+});
 // ====================================
 
 router.get('/documents/evaluer-junior', async (req, res) => {
