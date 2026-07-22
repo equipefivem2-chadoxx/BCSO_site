@@ -217,6 +217,12 @@
 </div>
 
 <script>
+    // 🔧 On force marked.js à respecter les simples retours à la ligne (comme sur Discord)
+    marked.use({
+        breaks: true,
+        gfm: true
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
         // Dictionnaire pour remplacer le format Discord en émojis réels
         const emojis = {
