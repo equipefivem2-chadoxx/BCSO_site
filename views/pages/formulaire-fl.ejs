@@ -1,0 +1,166 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
+    }
+
+    #form-container {
+        margin-left: 280px;
+        padding: 40px 60px 80px 60px;
+        max-width: 1200px;
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+    }
+
+    .btn-back {
+        background: rgba(189, 165, 129, 0.05);
+        color: var(--primary);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+    .btn-back:hover { background: var(--primary); color: #000; }
+
+    .eval-box {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .eval-title {
+        text-align: center;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+    }
+
+    .eval-title span { color: var(--primary); }
+
+    .input-group {
+        margin-bottom: 25px;
+    }
+
+    .global-label {
+        display: block;
+        color: var(--primary);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .input-text {
+        width: 100%;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    .textarea-global {
+        width: 100%;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        min-height: 200px;
+        font-family: inherit;
+        font-size: 14px;
+        resize: vertical;
+        margin-bottom: 25px;
+    }
+
+    .input-text:focus, .textarea-global:focus { border-color: var(--primary); outline: none; }
+
+    .btn-submit {
+        width: 100%;
+        background: var(--primary);
+        color: #000;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover { box-shadow: 0 0 20px var(--primary-glow-strong); transform: translateY(-2px); }
+</style>
+
+<div id="form-container">
+    <div class="header-section">
+        <a href="/dashboard" class="btn-back"><i class="fas fa-arrow-left"></i> RETOUR</a>
+    </div>
+
+    <div class="eval-box">
+        <div class="eval-title">Rédiger une <span>Fiche de Liaison</span></div>
+        
+        <form action="/fl/sauvegarder" method="POST">
+            <div class="input-group">
+                <label class="global-label"><i class="fas fa-tag"></i> Sujet de la Fiche</label>
+                <input type="text" name="sujet" class="input-text" placeholder="Ex: Rapport d'incident, Demande d'information..." required>
+            </div>
+
+            <div class="input-group">
+                <label class="global-label"><i class="fas fa-building"></i> Département ou Personne Concernée</label>
+                <input type="text" name="departementConcerne" class="input-text" placeholder="Ex: LSPD, DOJ, Unité Spéciale, Citoyen..." required>
+            </div>
+
+            <div class="input-group">
+                <label class="global-label"><i class="fas fa-align-left"></i> Détail de la Fiche de Liaison</label>
+                <textarea name="description" class="textarea-global" placeholder="Rédigez ici le contenu détaillé de votre fiche de liaison de manière précise et factuelle..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane" style="margin-right: 8px;"></i> TRANSMETTRE LA FICHE</button>
+        </form>
+    </div>
+</div>

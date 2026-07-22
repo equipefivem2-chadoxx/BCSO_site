@@ -34,11 +34,15 @@ router.get('/', async (req, res) => {
         }
 
         let rapports = [];
+        let fichesLiaison = [];
         try {
             const RapportJunior = require('../models/RapportJunior');
             rapports = await RapportJunior.find().sort({ dateCreation: -1 });
+            
+            const FicheLiaison = require('../models/FicheLiaison');
+            fichesLiaison = await FicheLiaison.find({ statut: 'en_attente' }).sort({ dateCreation: -1 });
         } catch (err) {
-            console.log("Modèle RapportJunior en attente d'initialisation...");
+            console.log("Modèles en attente d'initialisation...");
         }
 
         // Récupération des stats des passages pour le Dashboard
@@ -50,6 +54,7 @@ router.get('/', async (req, res) => {
             title: 'BCSO - Hub Supervision',
             user: viewUser, 
             rapports: rapports,
+            fichesLiaison: fichesLiaison,
             entreprisesStats: entreprisesStats,
             topAgents: topAgents
         });
@@ -397,6 +402,78 @@ router.post('/bannis/supprimer/:id', async (req, res) => {
     } catch (err) {
         console.error('Erreur suppression banni:', err);
         res.redirect('/superviseur/bannis?error=1');
+    }
+});
+
+// ==============================================================
+// 🚀 GESTION DES FICHES DE LIAISON (SUPERVISION)
+// ==============================================================
+
+// Lire une fiche de liaison détaillée
+router.get('/fl/:id', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const FicheLiaison = require('../models/FicheLiaison');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const fiche = await FicheLiaison.findById(req.params.id);
+        if (!fiche) return res.redirect('/superviseur');
+
+        res.render('pages/superviseur/fl-detail', {
+            title: `Fiche de Liaison - ${fiche.sujet}`,
+            user: viewUser, 
+            fiche: fiche,
+            isUserAdmin: isUserAdmin
+        });
+
+    } catch (err) {
+        console.error("Erreur lecture FL:", err);
+        res.redirect('/superviseur');
+    }
+});
+
+// Valider une fiche de liaison
+router.post('/fl/:id/valider', async (req, res) => {
+    try {
+        const FicheLiaison = require('../models/FicheLiaison');
+        await FicheLiaison.findByIdAndUpdate(req.params.id, { statut: 'traitee' });
+        res.redirect(`/superviseur/fl/${req.params.id}`);
+    } catch (err) {
+        res.redirect('/superviseur');
+    }
+});
+
+// Supprimer une fiche de liaison
+router.post('/fl/:id/supprimer', async (req, res) => {
+    try {
+        const FicheLiaison = require('../models/FicheLiaison');
+        await FicheLiaison.findByIdAndDelete(req.params.id);
+        res.redirect('/superviseur');
+    } catch (err) {
+        res.redirect('/superviseur');
     }
 });
 

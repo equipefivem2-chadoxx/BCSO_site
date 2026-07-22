@@ -1,0 +1,175 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
+    }
+
+    #detail-container {
+        margin-left: 280px;
+        padding: 40px 60px 80px 60px;
+        max-width: 1200px;
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
+        padding-bottom: 20px;
+        margin-bottom: 40px;
+    }
+
+    .btn-back {
+        background: rgba(189, 165, 129, 0.05);
+        color: var(--primary);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+    .btn-back:hover { background: var(--primary); color: #000; }
+
+    .content-box {
+        background: var(--bg-card);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-top: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        margin-bottom: 30px;
+    }
+
+    .fl-title {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 25px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 15px;
+    }
+
+    .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+        background: rgba(0,0,0,0.3);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .meta-item { display: flex; flex-direction: column; gap: 5px; }
+    .meta-label { color: var(--primary); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .meta-value { color: #fff; font-size: 15px; font-weight: 600; }
+
+    .desc-box {
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 25px;
+        border-radius: 8px;
+        color: #e2e8f0;
+        font-size: 15px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+
+    .actions-bar {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+    }
+
+    .btn-action {
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border: none;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-validate { background: #10b981; color: #000; }
+    .btn-validate:hover { background: #059669; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+
+    .btn-delete { background: #ef4444; color: #fff; }
+    .btn-delete:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+</style>
+
+<div id="detail-container">
+    <div class="header-section">
+        <a href="/superviseur" class="btn-back"><i class="fas fa-arrow-left"></i> RETOUR AU DASHBOARD</a>
+    </div>
+
+    <div class="content-box">
+        <div class="fl-title"><%= fiche.sujet %></div>
+
+        <div class="meta-grid">
+            <div class="meta-item">
+                <span class="meta-label">Auteur</span>
+                <span class="meta-value"><%= fiche.nomAuteur %> (<%= fiche.gradeAuteur %>)</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Département Concerné</span>
+                <span class="meta-value"><%= fiche.departementConcerne %></span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Date de soumission</span>
+                <span class="meta-value"><%= new Date(fiche.dateCreation).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Statut</span>
+                <% if (fiche.statut === 'en_attente') { %>
+                    <span class="meta-value" style="color: #f59e0b;">EN ATTENTE</span>
+                <% } else { %>
+                    <span class="meta-value" style="color: #10b981;">TRAITÉE</span>
+                <% } %>
+            </div>
+        </div>
+
+        <span class="meta-label" style="display: block; margin-bottom: 10px;">Contenu de la fiche :</span>
+        <div class="desc-box"><%= fiche.description %></div>
+    </div>
+
+    <div class="actions-bar">
+        <% if (fiche.statut === 'en_attente') { %>
+            <form action="/superviseur/fl/<%= fiche._id %>/valider" method="POST">
+                <button type="submit" class="btn-action btn-validate"><i class="fas fa-check"></i> MARQUER COMME TRAITÉE</button>
+            </form>
+        <% } %>
+
+        <form action="/superviseur/fl/<%= fiche._id %>/supprimer" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cette fiche de liaison ?');">
+            <button type="submit" class="btn-action btn-delete"><i class="fas fa-trash-alt"></i> SUPPRIMER</button>
+        </form>
+    </div>
+</div>
