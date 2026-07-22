@@ -9,6 +9,7 @@ const apiTicketsRoutes = require('./api/tickets');
 const superviseurRoutes = require('./superviseur');
 const entrepriseRoutes = require('./entreprise'); 
 const flRoutes = require('./fl');
+const patchnoteRoutes = require('./patchnote');
 
 // 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
 router.use(async (req, res, next) => {
@@ -366,6 +367,7 @@ router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
 router.use('/entreprise', entrepriseRoutes);
 router.use('/fl', flRoutes);
+router.use('/patchnotes', patchnoteRoutes);
 
 router.use((req, res) => {
     res.status(404).render('pages/404', { message: 'Page introuvable', title: '404' });

@@ -195,23 +195,28 @@
     </div>
 
     <div class="generator-grid">
-        <!-- PANNEAU DE SAISIE -->
+        <!-- PANNEAU DE SAISIE VIERGE -->
         <div class="form-panel">
             <div class="panel-title"><i class="fas fa-sliders-h" style="color: var(--accent-eow);"></i> Paramètres du Call</div>
             
             <div class="input-group">
+                <label class="input-label">Grade de l'agent :</label>
+                <input type="text" id="input-grade" class="input-text" placeholder="Ex: Deputy One, Sergeant I...">
+            </div>
+
+            <div class="input-group">
                 <label class="input-label">Matricule de l'agent :</label>
-                <input type="text" id="input-matricule" class="input-text" placeholder="Ex: 117" value="117">
+                <input type="text" id="input-matricule" class="input-text" placeholder="Ex: 117">
             </div>
 
             <div class="input-group">
                 <label class="input-label">Nom et Prénom de l'agent :</label>
-                <input type="text" id="input-nom" class="input-text" placeholder="Ex: Shawn Sterling" value="Shawn Sterling">
+                <input type="text" id="input-nom" class="input-text" placeholder="Ex: Shawn Sterling">
             </div>
 
             <div class="input-group">
                 <label class="input-label">3 Matricules choisis (Badges) :</label>
-                <input type="text" id="input-badges" class="input-text" placeholder="Ex: 101, 102, 103" value="101, 102, 103">
+                <input type="text" id="input-badges" class="input-text" placeholder="Ex: 101, 102, 103">
             </div>
 
             <div class="input-group">
@@ -221,7 +226,7 @@
 
             <div class="input-group">
                 <label class="input-label">Heure du Clear (Fin de service) :</label>
-                <input type="text" id="input-heure" class="input-text" placeholder="Ex: 23h30" value="23h30">
+                <input type="text" id="input-heure" class="input-text" placeholder="Ex: 23h30">
             </div>
         </div>
 
@@ -237,20 +242,19 @@
 </div>
 
 <script>
-    // Initialiser la date du jour par défaut
+    // Initialiser au chargement de la page sans rien préremplir
     document.addEventListener("DOMContentLoaded", () => {
-        const today = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        document.getElementById('input-date').value = today;
         updateScript();
     });
 
     // Écouteurs d'événements pour la mise à jour en direct
-    const inputs = ['input-matricule', 'input-nom', 'input-badges', 'input-date', 'input-heure'];
+    const inputs = ['input-grade', 'input-matricule', 'input-nom', 'input-badges', 'input-date', 'input-heure'];
     inputs.forEach(id => {
         document.getElementById(id).addEventListener('input', updateScript);
     });
 
     function updateScript() {
+        const grade = document.getElementById('input-grade').value || "[Grade]";
         const matricule = document.getElementById('input-matricule').value || "[Matricule]";
         const nom = document.getElementById('input-nom').value || "[Nom Prénom]";
         const badges = document.getElementById('input-badges').value || "[3 matricules choisis]";
@@ -259,11 +263,11 @@
 
         const renderBox = document.getElementById('script-render');
         
-        // Structure exacte demandée avec mise en évidence des variables
+        // Structure exacte avec intégration du grade dynamique
         renderBox.innerHTML = `Clear radio pour tous\n\n` +
             `Lincoln <span class="highlight">${matricule}</span>, Lincoln <span class="highlight">${matricule}</span>, Lincoln <span class="highlight">${matricule}</span>\n\n` +
             `Negatif Response\n\n` +
-            `10-10 End Of Watch du deputy one <span class="highlight">${nom}</span>\n\n` +
+            `10-10 End Of Watch du <span class="highlight">${grade}</span> <span class="highlight">${nom}</span>\n\n` +
             `Badge <span class="highlight">${badges}</span> sous le matricule <span class="highlight">${matricule}</span>\n\n` +
             `Le <span class="highlight">${date}</span> vous avez représenté tout votre engagement, votre dévouement, votre honneur au cours de votre service.\n` +
             `Merci au travail fourni à l'état de Blaine County, sa communauté, ses agences et à tous les États-Unis d'Amérique. \n` +
@@ -271,12 +275,11 @@
             `Vos services ne seront jamais oubliés\n\n` +
             `Tous les shérifs du dispatch du <span class="highlight">${date}</span> Badge <span class="highlight">${badges}</span> sous le matricule <span class="highlight">${matricule}</span> \n` +
             `10-10 pour toujours\n\n` +
-            `Deputy one <span class="highlight">${nom}</span> du Blaine County Sheriff Office End Of Watch\n` +
+            `<span class="highlight">${grade}</span> <span class="highlight">${nom}</span> du Blaine County Sheriff Office End Of Watch\n` +
             `Badge du <span class="highlight">${nom}</span> clear à <span class="highlight">${heure}</span>`;
     }
 
     function copyScript() {
-        // Récupérer le texte sans les balises HTML de surbrillance
         const scriptText = document.getElementById('script-render').innerText;
         
         navigator.clipboard.writeText(scriptText).then(() => {

@@ -34,12 +34,69 @@
             padding-top: 40px; 
             padding-left: 40px; 
             padding-right: 40px; 
+            animation: initialFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes initialFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 🚀 SUPPRESSION DU DOUBLE AFFICHAGE (Bloque les sidebars et headers injectés dans le contenu) */
+        main .bcso-sidebar,
+        main #bcsoSidebar,
+        main .bcso-header {
+            display: none !important;
+        }
+
+        /* API VIEW TRANSITIONS (Animations fluides entre les pages) */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-old(root) {
+            animation: 0.22s cubic-bezier(0.4, 0, 1, 1) both fade-out, 0.22s cubic-bezier(0.4, 0, 0.2, 1) both slide-out;
+        }
+
+        ::view-transition-new(root) {
+            animation: 0.32s cubic-bezier(0, 0, 0.2, 1) 0.05s both fade-in, 0.32s cubic-bezier(0, 0, 0.2, 1) both slide-in;
+        }
+
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes slide-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
+        @keyframes slide-out { from { transform: translateY(0); } to { transform: translateY(-14px); } }
+
+        /* Barre de chargement fluide au clic */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            width: calc(100% - 280px);
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #bda581, #ffffff);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .page-loader.active {
+            opacity: 1;
+            animation: loaderProgress 1s infinite linear;
+        }
+
+        @keyframes loaderProgress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR PRINCIPALE -->
+    <div class="page-loader" id="pageLoader"></div>
+
+    <!-- SIDEBAR PRINCIPALE (Unique) -->
     <%- include('../partials/sidebar') %>
     
     <!-- CONTENU PRINCIPAL -->
@@ -50,13 +107,57 @@
     <!-- BARRE DU BAS -->
     <%- include('../partials/header') %>
 
-    <!-- SCRIPT MAINTENANCE -->
+    <!-- SCRIPTS DU SYSTÈMEs -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        // 1. WebSocket Maintenance
         const socket = io();
         socket.on('maintenance-toggled', (isMaintenance) => {
             if (window.location.pathname !== '/chadoxx') {
                 window.location.reload(); 
+            }
+        });
+
+        // 2. 🚀 NETTOYAGE DOM : Suppression physique des sidebars et headers en double
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebars = document.querySelectorAll('#bcsoSidebar, .bcso-sidebar');
+            if (sidebars.length > 1) {
+                for (let i = 1; i < sidebars.length; i++) {
+                    sidebars[i].remove();
+                }
+            }
+        });
+
+        // 3. 🚀 PRÉCHARGEMENT INSTANTANÉ AU SURVOL (Instant Prefetching)
+        let prefetchTimeout;
+        const prefetchedUrls = new Set();
+
+        document.addEventListener('mouseover', (e) => {
+            const link = e.target.closest('a');
+            if (!link || !link.href || link.href.startsWith('#') || link.origin !== window.location.origin) return;
+            
+            if (prefetchedUrls.has(link.href)) return;
+
+            prefetchTimeout = setTimeout(() => {
+                const prefetchLink = document.createElement('link');
+                prefetchLink.rel = 'prefetch';
+                prefetchLink.href = link.href;
+                document.head.appendChild(prefetchLink);
+                prefetchedUrls.add(link.href);
+            }, 65);
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a')) {
+                clearTimeout(prefetchTimeout);
+            }
+        });
+
+        // 4. Activation de la barre de chargement lors d'un clic
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href && !link.href.startsWith('#') && link.origin === window.location.origin && link.target !== '_blank') {
+                document.getElementById('pageLoader').classList.add('active');
             }
         });
     </script>

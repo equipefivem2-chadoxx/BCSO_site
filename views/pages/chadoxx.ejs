@@ -56,6 +56,7 @@
         margin-bottom: 40px;
         border-bottom: 1px solid rgba(255,255,255,0.05);
         padding-bottom: 15px;
+        flex-wrap: wrap;
     }
     .nav-tab {
         background: transparent;
@@ -183,7 +184,7 @@
     }
     .btn-restore:hover { background: #059669; color: #fff; transform: translateY(-2px); }
 
-    /* PLACEHOLDER MODULES */
+    /* PLACEHOLDER MODULES & FORM STYLES */
     .coming-soon-box {
         border: 1px dashed rgba(255,255,255,0.1);
         border-radius: 12px;
@@ -192,6 +193,36 @@
         color: #475569;
     }
     .coming-soon-box i { font-size: 2rem; margin-bottom: 15px; color: #334155; }
+
+    .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .form-label { color: var(--chad-primary); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .form-input, .form-select, .form-textarea {
+        background: rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 12px;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 14px;
+        width: 100%;
+    }
+    .form-textarea { min-height: 250px; resize: vertical; line-height: 1.6; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--chad-primary); outline: none; }
+
+    .btn-publish {
+        background: var(--chad-primary);
+        color: #000;
+        font-weight: 900;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        width: 100%;
+        transition: 0.3s;
+    }
+    .btn-publish:hover { background: #fff; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
 </style>
 
 <div class="chadoxx-wrapper">
@@ -206,6 +237,7 @@
     <!-- ONGLETS DE NAVIGATION -->
     <div class="chadoxx-nav">
         <button class="nav-tab active" onclick="switchPane('pane-system', this)"><i class="fas fa-network-wired"></i> Système & Réseau</button>
+        <button class="nav-tab" onclick="switchPane('pane-patchnotes', this)"><i class="fas fa-bullhorn"></i> Patchnotes</button>
         <button class="nav-tab" onclick="switchPane('pane-bdd', this)"><i class="fas fa-database"></i> Base de Données</button>
         <button class="nav-tab" onclick="switchPane('pane-api', this)"><i class="fas fa-cogs"></i> Configuration API</button>
     </div>
@@ -225,7 +257,6 @@
                     <div class="status-alert alert-danger">
                         <i class="fas fa-lock"></i> Réseau verrouillé — Accès public bloqué
                     </div>
-                    <!-- 🚀 MODIF: Bouton au lieu de Formulaire -->
                     <button onclick="toggleMaintenance()" class="btn-killswitch btn-restore">
                         <i class="fas fa-globe"></i> Rétablir le trafic
                     </button>
@@ -233,7 +264,6 @@
                     <div class="status-alert alert-success">
                         <i class="fas fa-check-circle"></i> Réseau en ligne — Trafic fluide
                     </div>
-                    <!-- 🚀 MODIF: Bouton au lieu de Formulaire -->
                     <button onclick="toggleMaintenance()" class="btn-killswitch btn-lock">
                         <i class="fas fa-power-off"></i> Verrouiller le réseau
                     </button>
@@ -253,7 +283,28 @@
         </div>
     </div>
 
-    <!-- MODULE 2 : BDD -->
+    <!-- 🚀 MODULE 2 : PATCHNOTES (Nouveau) -->
+    <div id="pane-patchnotes" class="chadoxx-pane">
+        <div class="admin-card card-system" style="max-width: 800px;">
+            <h2><i class="fas fa-edit"></i> Publier un nouveau Patchnote</h2>
+            <p class="desc">Colle directement ton message Discord ici. Les titres, listes et emojis seront automatiquement mis en page pour le site public.</p>
+            
+            <form action="/patchnotes/ajouter" method="POST">
+                <div class="form-group">
+                    <label class="form-label">Contenu Brut (Copie-colle ton Markdown / Discord) :</label>
+                    <textarea name="contenu" class="form-textarea" placeholder="# :arrows_counterclockwise: Mise à jour — Site BCSO&#10;&#10;:date: **22/07/2026**&#10;&#10;## :sparkles: Nouveautés&#10;> • Ajout d'une fonctionnalité de ouf&#10;&#10;## :wrench: Améliorations&#10;> • Refonte du design" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-publish"><i class="fas fa-paper-plane" style="margin-right: 8px;"></i> PUBLIER DANS L'HISTORIQUE</button>
+            </form>
+
+            <div style="margin-top: 30px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                <a href="/patchnotes" style="color: var(--chad-primary); font-weight: 800; text-decoration: none; font-size: 13px;"><i class="fas fa-external-link-alt" style="margin-right: 5px;"></i> CONSULTER LA FRISES DES PATCHNOTES PUBLIÉS</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODULE 3 : BDD -->
     <div id="pane-bdd" class="chadoxx-pane">
         <div class="coming-soon-box" style="margin-top: 20px;">
             <i class="fas fa-database"></i>
@@ -262,7 +313,7 @@
         </div>
     </div>
 
-    <!-- MODULE 3 : API -->
+    <!-- MODULE 4 : API -->
     <div id="pane-api" class="chadoxx-pane">
         <div class="coming-soon-box" style="margin-top: 20px;">
             <i class="fas fa-code-branch"></i>
@@ -283,7 +334,7 @@
         document.getElementById(paneId).classList.add('active');
     }
 
-    // 🚀 NOUVEAU : Requête d'actualisation invisible
+    // Requête d'actualisation invisible
     function toggleMaintenance() {
         fetch('/chadoxx/toggle-maintenance', {
             method: 'POST',
