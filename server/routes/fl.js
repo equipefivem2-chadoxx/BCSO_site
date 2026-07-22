@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { requireAuth, requireDeputyMinimum } = require('../middleware/checkAuth');
 
-// 🚀 Route 1 : Affichage du formulaire (Bloqué aux Deputy Junior via le middleware)
+// Afficher le formulaire avec la liste des agents
 router.get('/remplir', requireAuth, requireDeputyMinimum, async (req, res) => {
     try {
+        const Agent = require('../models/Agent');
+        const agents = await Agent.find().sort({ matricule: 1, nom: 1 });
+
         res.render('pages/formulaire-fl', {
             title: 'BCSO - Remplir une FL',
-            user: req.session.user
+            user: req.session.user,
+            agents: agents
         });
     } catch (error) {
         console.error('Erreur affichage formulaire FL:', error);
@@ -15,7 +19,7 @@ router.get('/remplir', requireAuth, requireDeputyMinimum, async (req, res) => {
     }
 });
 
-// 🚀 Route 2 : Traitement et sauvegarde de la Fiche de Liaison
+// Traitement et sauvegarde de la grille FL
 router.post('/sauvegarder', requireAuth, requireDeputyMinimum, async (req, res) => {
     try {
         const Agent = require('../models/Agent');
@@ -24,16 +28,26 @@ router.post('/sauvegarder', requireAuth, requireDeputyMinimum, async (req, res) 
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
         
-        const nomComplet = agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
-        const grade = agentDB ? agentDB.grade : req.session.user.grade;
+        const nomEval = agentDB ? `${agentDB.matricule} - ${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
+        const gradeEval = agentDB ? agentDB.grade : req.session.user.grade;
+
+        const agentEvalue = await Agent.findById(req.body.agentEvalueId);
+        const nomEvalue = agentEvalue ? `${agentEvalue.prenom} ${agentEvalue.nom}` : "Agent Inconnu";
+        const matriculeEvalue = agentEvalue ? agentEvalue.matricule : "000";
 
         const nouvelleFL = new FicheLiaison({
-            auteurId: discordId,
-            nomAuteur: nomComplet,
-            gradeAuteur: grade,
-            sujet: req.body.sujet,
-            departementConcerne: req.body.departementConcerne,
-            description: req.body.description
+            evaluateurId: discordId,
+            nomEvaluateur: nomEval,
+            gradeEvaluateur: gradeEval,
+            
+            agentEvalueId: req.body.agentEvalueId,
+            nomAgentEvalue: nomEvalue,
+            matriculeAgentEvalue: matriculeEvalue,
+            
+            datePassage: req.body.datePassage,
+            criteres: req.body.criteres,
+            commentaireEvaluateur: req.body.commentaireEvaluateur,
+            decision: req.body.decision
         });
 
         await nouvelleFL.save();

@@ -100,6 +100,15 @@
             </div>
         </a>
 
+        <a href="#section-recu-fl" class="tool-card" style="border-top-color: #3b82f6;">
+            <i class="fas fa-file-signature tool-icon" style="color: #3b82f6;"></i>
+            <div class="tool-title" style="color: #3b82f6;">Reçu FL</div>
+            <div class="tool-desc">Consultez et validez les grilles d'évaluation de simulation (Simulation de Lincoln).</div>
+            <div style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-top: 10px;">
+                <%= typeof fichesLiaison !== 'undefined' ? fichesLiaison.length : 0 %> grilles reçues
+            </div>
+        </a>
+
         <a href="/superviseur/partenariats" class="tool-card">
             <i class="fas fa-handshake tool-icon"></i>
             <div class="tool-title">Partenariats Entreprises</div>
@@ -113,17 +122,17 @@
         </a>
     </div>
 
-    <div class="fl-list-container">
-        <div class="fl-list-title"><i class="fas fa-file-alt" style="color: var(--primary); margin-right: 10px;"></i> Fiches de Liaison en attente (<%= typeof fichesLiaison !== 'undefined' ? fichesLiaison.length : 0 %>)</div>
+    <div class="fl-list-container" id="section-recu-fl">
+        <div class="fl-list-title"><i class="fas fa-file-alt" style="color: var(--primary); margin-right: 10px;"></i> Reçu FL - Grilles en attente (<%= typeof fichesLiaison !== 'undefined' ? fichesLiaison.length : 0 %>)</div>
         
         <% if (typeof fichesLiaison !== 'undefined' && fichesLiaison.length > 0) { %>
             <table class="table-fl">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Auteur</th>
-                        <th>Sujet</th>
-                        <th>Département Concerné</th>
+                        <th>Date de soumission</th>
+                        <th>Agent Évalué</th>
+                        <th>Évaluateur</th>
+                        <th>Décision</th>
                         <th style="text-align: right;">Action</th>
                     </tr>
                 </thead>
@@ -131,9 +140,15 @@
                     <% fichesLiaison.forEach(fl => { %>
                         <tr>
                             <td><%= new Date(fl.dateCreation).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
-                            <td style="font-weight: bold;"><%= fl.nomAuteur %> (<%= fl.gradeAuteur %>)</td>
-                            <td><%= fl.sujet %></td>
-                            <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 12px;"><%= fl.departementConcerne %></span></td>
+                            <td style="font-weight: bold; color: var(--primary);"><%= fl.matriculeAgentEvalue %> - <%= fl.nomAgentEvalue %></td>
+                            <td><%= fl.nomEvaluateur %></td>
+                            <td>
+                                <% if (fl.decision === 'Apte') { %>
+                                    <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">APTE</span>
+                                <% } else { %>
+                                    <span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">INAPTE</span>
+                                <% } %>
+                            </td>
                             <td style="text-align: right;">
                                 <a href="/superviseur/fl/<%= fl._id %>" class="btn-read"><i class="fas fa-eye"></i> CONSULTER</a>
                             </td>
@@ -142,7 +157,7 @@
                 </tbody>
             </table>
         <% } else { %>
-            <p style="color: #94a3b8; font-style: italic;">Aucune fiche de liaison en attente de traitement.</p>
+            <p style="color: #94a3b8; font-style: italic;">Aucune grille "Reçu FL" en attente de traitement.</p>
         <% } %>
     </div>
 </div>
