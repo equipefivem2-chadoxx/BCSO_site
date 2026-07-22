@@ -40,12 +40,11 @@ router.get('/', async (req, res) => {
             rapports = await RapportJunior.find().sort({ dateCreation: -1 });
             
             const FicheLiaison = require('../models/FicheLiaison');
-            fichesLiaison = await FicheLiaison.find({ statut: 'en_attente' }).sort({ dateCreation: -1 });
+            fichesLiaison = await FicheLiaison.find().sort({ dateCreation: -1 });
         } catch (err) {
             console.log("Modèles en attente d'initialisation...");
         }
 
-        // Récupération des stats des passages pour le Dashboard
         const Entreprise = require('../models/Entreprise');
         const entreprisesStats = await Entreprise.find().sort({ totalPassages: -1 });
         const topAgents = await Agent.find({ passagesTotal: { $gt: 0 } }).sort({ passagesTotal: -1 }).limit(10);
@@ -158,7 +157,6 @@ router.get('/rapport/:id', async (req, res) => {
     }
 });
 
-// 🚀 Route pour changer le statut (Valider)
 router.post('/rapport/:id/valider', async (req, res) => {
     try {
         const RapportJunior = require('../models/RapportJunior');
@@ -169,7 +167,6 @@ router.post('/rapport/:id/valider', async (req, res) => {
     }
 });
 
-// 🚀 Route pour supprimer UN rapport
 router.post('/rapport/:id/supprimer', async (req, res) => {
     try {
         const RapportJunior = require('../models/RapportJunior');
@@ -180,7 +177,6 @@ router.post('/rapport/:id/supprimer', async (req, res) => {
     }
 });
 
-// 🚀 Route de purge complète (Admins)
 router.post('/evaluations/supprimer-tout', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -212,7 +208,6 @@ router.post('/evaluations/supprimer-tout', async (req, res) => {
 // 🚀 GESTION DES PARTENARIATS ENTREPRISES
 // ==============================================================
 
-// 🚀 Route 4 : Liste des partenariats
 router.get('/partenariats', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -256,7 +251,6 @@ router.get('/partenariats', async (req, res) => {
     }
 });
 
-// 🚀 Route 5 : Détail d'un partenariat
 router.get('/partenariats/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -323,7 +317,6 @@ router.get('/partenariats/:id', async (req, res) => {
 // 🚀 GESTION DES BANNIS DU NORD
 // ==============================================================
 
-// Route pour afficher le panel de gestion
 router.get('/bannis', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -367,7 +360,6 @@ router.get('/bannis', async (req, res) => {
     }
 });
 
-// Route pour AJOUTER un banni
 router.post('/bannis/ajouter', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
@@ -392,7 +384,6 @@ router.post('/bannis/ajouter', async (req, res) => {
     }
 });
 
-// Route pour SUPPRIMER (Révoquer) un banni
 router.post('/bannis/supprimer/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
@@ -406,10 +397,82 @@ router.post('/bannis/supprimer/:id', async (req, res) => {
 });
 
 // ==============================================================
-// 🚀 GESTION DES FICHES DE LIAISON (SUPERVISION)
+// 🚀 GESTION DES GRILLES REÇU FL (SUPERVISION)
 // ==============================================================
 
-// Lire une fiche de liaison détaillée
+// Page dédiée listant toutes les grilles Reçu FL
+router.get('/recu-fl', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const FicheLiaison = require('../models/FicheLiaison');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const fichesLiaison = await FicheLiaison.find().sort({ dateCreation: -1 });
+
+        res.render('pages/superviseur/recu-fl', {
+            title: 'BCSO - Reçu FL',
+            user: viewUser, 
+            fichesLiaison: fichesLiaison
+        });
+
+    } catch (err) {
+        console.error("Erreur lecture Reçu FL:", err);
+        res.redirect('/superviseur');
+    }
+});
+
+// Purger TOUTES les grilles Reçu FL
+router.post('/recu-fl/supprimer-tout', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        if (!isUserAdmin) {
+            return res.redirect('/superviseur/recu-fl');
+        }
+
+        const FicheLiaison = require('../models/FicheLiaison');
+        await FicheLiaison.deleteMany({});
+        res.redirect('/superviseur/recu-fl?success=purged');
+
+    } catch (err) {
+        console.error("Erreur lors de la purge globale Reçu FL:", err);
+        res.redirect('/superviseur/recu-fl');
+    }
+});
+
+// Lire une grille Reçu FL détaillée
 router.get('/fl/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -440,10 +503,10 @@ router.get('/fl/:id', async (req, res) => {
         }
 
         const fiche = await FicheLiaison.findById(req.params.id);
-        if (!fiche) return res.redirect('/superviseur');
+        if (!fiche) return res.redirect('/superviseur/recu-fl');
 
         res.render('pages/superviseur/fl-detail', {
-            title: `Fiche de Liaison - ${fiche.sujet}`,
+            title: `Reçu FL - ${fiche.matriculeAgentEvalue}`,
             user: viewUser, 
             fiche: fiche,
             isUserAdmin: isUserAdmin
@@ -451,29 +514,29 @@ router.get('/fl/:id', async (req, res) => {
 
     } catch (err) {
         console.error("Erreur lecture FL:", err);
-        res.redirect('/superviseur');
+        res.redirect('/superviseur/recu-fl');
     }
 });
 
-// Valider une fiche de liaison
+// Valider une grille Reçu FL
 router.post('/fl/:id/valider', async (req, res) => {
     try {
         const FicheLiaison = require('../models/FicheLiaison');
         await FicheLiaison.findByIdAndUpdate(req.params.id, { statut: 'traitee' });
         res.redirect(`/superviseur/fl/${req.params.id}`);
     } catch (err) {
-        res.redirect('/superviseur');
+        res.redirect('/superviseur/recu-fl');
     }
 });
 
-// Supprimer une fiche de liaison
+// Supprimer UNE grille Reçu FL
 router.post('/fl/:id/supprimer', async (req, res) => {
     try {
         const FicheLiaison = require('../models/FicheLiaison');
         await FicheLiaison.findByIdAndDelete(req.params.id);
-        res.redirect('/superviseur');
+        res.redirect('/superviseur/recu-fl');
     } catch (err) {
-        res.redirect('/superviseur');
+        res.redirect('/superviseur/recu-fl');
     }
 });
 

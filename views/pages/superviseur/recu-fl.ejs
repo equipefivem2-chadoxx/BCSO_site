@@ -1,0 +1,174 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-main);
+    }
+
+    #recu-fl-container {
+        margin-left: 280px;
+        padding: 40px 60px 80px 60px;
+        max-width: 1400px;
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2);
+        padding-bottom: 20px;
+        margin-bottom: 35px;
+    }
+
+    .header-title h1 { color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 26px; }
+    .header-title p { color: #94a3b8; margin-top: 5px; font-size: 14px; }
+
+    .header-actions { display: flex; gap: 15px; align-items: center; }
+
+    .btn-back {
+        background: rgba(189, 165, 129, 0.05);
+        color: var(--primary);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+        font-size: 13px;
+    }
+    .btn-back:hover { background: var(--primary); color: #000; }
+
+    .btn-purge {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 13px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-purge:hover { background: #ef4444; color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+
+    .fl-list-container {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-top: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .table-fl {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-fl th {
+        background: rgba(0,0,0,0.3);
+        color: #94a3b8;
+        padding: 15px;
+        text-align: left;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .table-fl td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .btn-read {
+        background: rgba(189, 165, 129, 0.1);
+        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 12px;
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        transition: 0.3s;
+    }
+    .btn-read:hover { background: var(--primary); color: #000; }
+</style>
+
+<div id="recu-fl-container">
+    <div class="header-section">
+        <div class="header-title">
+            <h1>Reçu FL</h1>
+            <p>Liste des grilles d'évaluation de simulation (Simulation de Lincoln)</p>
+        </div>
+        <div class="header-actions">
+            <% if (typeof fichesLiaison !== 'undefined' && fichesLiaison.length > 0) { %>
+                <form action="/superviseur/recu-fl/supprimer-tout" method="POST" onsubmit="return confirm('ATTENTION : Êtes-vous sûr de vouloir SUPPRIMER TOUTES LES GRILLES ? Cette action est irréversible.');">
+                    <button type="submit" class="btn-purge"><i class="fas fa-trash-alt"></i> TOUT SUPPRIMER</button>
+                </form>
+            <% } %>
+            <a href="/superviseur" class="btn-back"><i class="fas fa-arrow-left"></i> RETOUR AU DASHBOARD</a>
+        </div>
+    </div>
+
+    <div class="fl-list-container">
+        <% if (typeof fichesLiaison !== 'undefined' && fichesLiaison.length > 0) { %>
+            <table class="table-fl">
+                <thead>
+                    <tr>
+                        <th>Date de soumission</th>
+                        <th>Agent Évalué</th>
+                        <th>Évaluateur</th>
+                        <th>Décision</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% fichesLiaison.forEach(fl => { %>
+                        <tr>
+                            <td><%= new Date(fl.dateCreation).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td>
+                            <td style="font-weight: bold; color: var(--primary);"><%= fl.matriculeAgentEvalue %> - <%= fl.nomAgentEvalue %></td>
+                            <td><%= fl.nomEvaluateur %></td>
+                            <td>
+                                <% if (fl.decision === 'Apte') { %>
+                                    <span style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">APTE</span>
+                                <% } else { %>
+                                    <span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">INAPTE</span>
+                                <% } %>
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="/superviseur/fl/<%= fl._id %>" class="btn-read"><i class="fas fa-eye"></i> CONSULTER</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p style="color: #94a3b8; font-style: italic; text-align: center; padding: 20px 0;">Aucune grille "Reçu FL" en attente de traitement.</p>
+        <% } %>
+    </div>
+</div>
