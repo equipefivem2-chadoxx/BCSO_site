@@ -610,4 +610,73 @@ router.get('/rollcall', async (req, res) => {
     }
 });
 
+// 🚀 ROUTE STATISTIQUES GLOBALES ROLL CALL
+router.get('/rollcall/stats', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const RollCall = require('../models/RollCall');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+        const isUserAdmin = req.session.user.isAdmin === true || req.session.user.role === 'admin' || discordId === '1247264549489610897' || (agentDB && agentDB.isAdmin === true);
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) return res.redirect('/superviseur');
+
+        const viewUser = { ...req.session.user, grade: currentGrade, nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username, isAdmin: isUserAdmin };
+
+        // Récupération de tous les agents et tous les roll calls enregistrés
+        const agents = await Agent.find().sort({ grade: 1, nom: 1 });
+        const tousLesRollCalls = await RollCall.find();
+        const nbTotalRollCalls = tousLesRollCalls.length;
+
+        // Calcul des statistiques pour chaque agent
+        const statsGlobales = agents.map(agent => {
+            let present = 0;
+            let retard = 0;
+            let absent = 0;
+
+            if (agent.discordId) {
+                tousLesRollCalls.forEach(rc => {
+                    const reponseAgent = rc.reponses.find(r => r.discordId === agent.discordId);
+                    if (reponseAgent) {
+                        if (reponseAgent.status === 'present') present++;
+                        if (reponseAgent.status === 'retard') retard++;
+                        if (reponseAgent.status === 'absent') absent++;
+                    }
+                });
+            }
+
+            const nonRepondu = nbTotalRollCalls - (present + retard + absent);
+
+            return {
+                nom: `${agent.prenom} ${agent.nom}`,
+                matricule: agent.matricule,
+                grade: agent.grade,
+                present,
+                retard,
+                absent,
+                nonRepondu
+            };
+        });
+
+        // On trie par défaut ceux qui ont le plus de non-réponses ("mur de la honte")
+        statsGlobales.sort((a, b) => b.nonRepondu - a.nonRepondu);
+
+        res.render('pages/superviseur/rollcall-stats', {
+            title: 'BCSO - Statistiques Globales Roll Call',
+            user: viewUser,
+            statsGlobales: statsGlobales,
+            nbTotalRollCalls: nbTotalRollCalls
+        });
+
+    } catch (error) {
+        console.error('Erreur stats rollcall:', error);
+        res.redirect('/superviseur/rollcall');
+    }
+});
+
 module.exports = router;

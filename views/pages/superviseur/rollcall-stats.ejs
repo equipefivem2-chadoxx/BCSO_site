@@ -1,0 +1,79 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --bg-dark: #07090e;
+        --bg-card: rgba(15, 23, 42, 0.4);
+        --primary: #bda581;
+    }
+    body { background-color: var(--bg-dark); color: #e2e8f0; font-family: 'Montserrat', sans-serif; margin: 0; }
+    #stats-container { margin-left: 280px; padding: 40px 60px; max-width: 1200px; animation: fadeUp 0.4s; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+
+    .header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(189,165,129,0.2); padding-bottom: 20px; margin-bottom: 30px; }
+    .header-flex h1 { color: var(--primary); margin: 0; text-transform: uppercase; font-weight: 900; }
+    
+    .info-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px; border-radius: 6px; margin-bottom: 30px; color: #cbd5e1; }
+
+    table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 8px; overflow: hidden; }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    th { background: rgba(0,0,0,0.3); color: var(--primary); text-transform: uppercase; font-size: 13px; }
+    tr:hover { background: rgba(255,255,255,0.02); }
+
+    .danger-text { color: #ef4444; font-weight: bold; }
+    .warning-text { color: #f59e0b; font-weight: bold; }
+    .success-text { color: #10b981; font-weight: bold; }
+    .muted-text { color: #94a3b8; }
+    
+    /* Nouvelles classes pour le Mur de la honte sans faire d'erreur VS Code */
+    .shame-text { color: #ef4444; font-weight: 900; } 
+    .normal-text { color: #94a3b8; font-weight: 900; }
+</style>
+
+<div id="stats-container">
+    <div class="header-flex">
+        <div>
+            <h1>Statistiques Globales Roll Call</h1>
+            <p style="color:#94a3b8; margin-top:5px;">Cumul sur <%= nbTotalRollCalls %> annonces enregistrées</p>
+        </div>
+        <a href="/superviseur/rollcall" style="padding: 10px 20px; background: rgba(255,255,255,0.1); color: #fff; border-radius: 6px; text-decoration: none; font-weight: bold; transition: 0.3s;"><i class="fas fa-arrow-left"></i> Retour au quotidien</a>
+    </div>
+
+    <div class="info-box">
+        <i class="fas fa-info-circle" style="color: #3b82f6; margin-right: 10px;"></i>
+        Le tableau est trié par défaut pour afficher en premier les agents ayant le plus grand nombre de non-réponses ("Mur de la honte").
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Agent</th>
+                <th>Grade</th>
+                <th>Présences</th>
+                <th>Retards</th>
+                <th>Absences</th>
+                <th>Sans Réponse</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% statsGlobales.forEach(function(agent) { %>
+                <tr>
+                    <td style="font-weight: bold;"><%= agent.nom %> <span style="color: #94a3b8; font-size: 12px; margin-left: 5px;">[<%= agent.matricule %>]</span></td>
+                    <td><%= agent.grade %></td>
+                    
+                    <td class="<%= agent.present > 0 ? 'success-text' : 'muted-text' %>"><%= agent.present %></td>
+                    
+                    <td class="<%= agent.retard > 0 ? 'warning-text' : 'muted-text' %>"><%= agent.retard %></td>
+                    
+                    <td class="<%= agent.absent > 0 ? 'danger-text' : 'muted-text' %>"><%= agent.absent %></td>
+                    
+                    <!-- Utilisation des classes au lieu du style inline pour éviter l'erreur de l'éditeur -->
+                    <td class="<%= agent.nonRepondu > (nbTotalRollCalls / 2) && nbTotalRollCalls > 0 ? 'shame-text' : 'normal-text' %>">
+                        <%= agent.nonRepondu %>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
