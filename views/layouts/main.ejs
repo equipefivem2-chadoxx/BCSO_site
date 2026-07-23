@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SCRIPTS SWUP -->
+    <!-- SCRIPTS SWUP OFFICIELS -->
     <script src="https://unpkg.com/swup@4"></script>
     <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
     <script src="https://unpkg.com/@swup/progress-plugin@3"></script>
@@ -34,47 +34,43 @@
             overflow-x: hidden; 
         }
 
-        /* SÉCURITÉ ANTI-DUPLICATION */
-        main .bcso-sidebar, 
-        main #bcsoSidebar, 
-        main .bcso-header,
-        main .bcso-bottom-bar { 
+        /* SÉCURITÉ : Cache les éléments en double si le serveur les renvoie */
+        main .bcso-sidebar, main #bcsoSidebar, main .bcso-header, main .bcso-bottom-bar { 
             display: none !important; 
         }
 
         /* ========================================================
-           ✨ ANIMATIONS SWUP "ULTRA PREMIUM"
+           ✨ ANIMATIONS SWUP "APPLE-LIKE" (Profondeur & Fluidité)
            ======================================================== */
         
-        /* 1. État normal (Page affichée au centre) */
+        /* 1. Page stable au centre */
         .transition-fade {
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-                        filter 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                        filter 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: scale(1) translateY(0);
             filter: blur(0px);
         }
 
-        /* 2. État quand on clique (L'ancienne page part vers le haut avec un flou profond) */
+        /* 2. Au clic, la page recule et se floute légèrement */
         html.is-animating .transition-fade {
             opacity: 0;
-            transform: translateY(-25px) scale(0.96);
-            filter: blur(4px);
+            transform: scale(0.97) translateY(-15px);
+            filter: blur(3px);
         }
 
-        /* 3. État d'arrivée (La nouvelle page arrive par le bas en s'éclaircissant) */
+        /* 3. La nouvelle page arrive par le bas */
         html.is-rendering .transition-fade {
-            transform: translateY(25px) scale(0.96);
+            transform: scale(0.97) translateY(15px);
         }
 
-        /* 🔥 Barre de progression dorée premium */
+        /* 🔥 Barre de chargement en haut */
         .swup-progress-bar {
             height: 4px;
             background: linear-gradient(90deg, transparent, #bda581, #d4af37, #ffffff);
             box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
             z-index: 9999;
-            border-radius: 0 2px 2px 0;
         }
     </style>
 </head>
@@ -83,9 +79,7 @@
     <!-- SIDEBAR FIXE -->
     <%- include('../partials/sidebar') %>
     
-    <!-- CONTENU DYNAMIQUE -->
     <main class="main-content-wrapper">
-        <!-- 🚀 CORRECTION : Ajout de la classe "transition-fade" indispensable pour l'animation -->
         <div id="swup" class="transition-fade">
             <%- body %>
         </div>
@@ -94,43 +88,53 @@
     <!-- BARRE DU BAS FIXE -->
     <%- include('../partials/header') %>
 
-    <!-- SCRIPTS -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const swup = new Swup({
-            containers: ['#swup'],
-            animationSelector: '[class*="transition-"]',
-            plugins: [
-                new SwupPreloadPlugin(),
-                new SwupProgressPlugin({ 
-                    color: '#d4af37', 
-                    delay: 0, // 🚀 CORRECTION : Forcé à 0 pour toujours afficher la barre au clic
-                    transition: 200
-                }),
-                new SwupScriptsPlugin({
-                    head: false,
-                    body: true 
-                })
-            ]
-        });
+        // On attend que la page soit prête pour lancer l'animation en toute sécurité
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                // Initialisation robuste de Swup
+                const swup = new Swup({
+                    containers: ['#swup'],
+                    animationSelector: '[class*="transition-"]',
+                    plugins: [
+                        new SwupPreloadPlugin(),
+                        new SwupProgressPlugin({ color: '#d4af37', delay: 0, transition: 300 }),
+                        new SwupScriptsPlugin({ head: false, body: true })
+                    ]
+                });
 
-        const socket = io();
-        socket.on('maintenance-toggled', (isMaintenance) => {
-            if (window.location.pathname !== '/chadoxx') {
-                window.location.reload(); 
+                // Écoute des changements de page
+                swup.hooks.on('page:view', () => {
+                    
+                    // 1. Mise à jour de la Sidebar (le script qu'on a retiré de sidebar.ejs est maintenant ici)
+                    const currentUrl = window.location.pathname;
+                    document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
+                        const href = link.getAttribute('href');
+                        link.classList.remove('active');
+                        if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                    // 2. Nettoyage anti-doublon pour le Patchnote
+                    document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar').forEach(el => el.remove());
+
+                    // 3. Réveil des boutons (véhicules, onglets, etc.)
+                    setTimeout(() => { document.dispatchEvent(new Event('DOMContentLoaded')); }, 50);
+                });
+
+                // WebSocket (Sécurisé s'il y a un souci réseau)
+                try {
+                    const socket = io();
+                    socket.on('maintenance-toggled', (isMaintenance) => {
+                        if (window.location.pathname !== '/chadoxx') window.location.reload(); 
+                    });
+                } catch (e) { console.warn("Socket.io non initialisé", e); }
+
+            } catch (error) {
+                console.error("❌ ERREUR CRITIQUE SWUP : L'animation a planté.", error);
             }
-        });
-
-        swup.hooks.on('page:view', () => {
-            const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar');
-            sidebars.forEach(el => el.remove());
-
-            setTimeout(() => {
-                document.dispatchEvent(new Event('DOMContentLoaded', {
-                    bubbles: true,
-                    cancelable: true
-                }));
-            }, 50);
         });
     </script>
 </body>

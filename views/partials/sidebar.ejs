@@ -127,7 +127,6 @@
         transform: scale(1.15);
     }
 
-    /* 🚀 RETOUR TACTILE AU CLIC */
     .nav-item-premium:active {
         transform: scale(0.97) translateX(2px);
         background: rgba(189, 165, 129, 0.08);
@@ -211,8 +210,6 @@
         <a href="/effectifs" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-users"></i> Effectifs</div></a>
         <a href="/formations" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-graduation-cap"></i> Formations</div></a>
         <a href="/documents" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-file-signature"></i> Documents</div></a>
-        
-        <!-- 🚀 NOUVEAU LIEN PATCHNOTES -->
         <a href="/patchnotes" class="nav-item-premium"><div class="nav-item-content"><i class="fas fa-bullhorn"></i> Patchnotes</div></a>
         
         <a href="/documents/evaluer-junior" class="nav-item-premium">
@@ -270,18 +267,3 @@
         </div>
     <% } %>
 </aside>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const currentUrl = window.location.pathname;
-        
-        document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
-            const href = link.getAttribute('href');
-            link.classList.remove('active');
-            
-            if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
-                link.classList.add('active');
-            }
-        });
-    });
-</script>
