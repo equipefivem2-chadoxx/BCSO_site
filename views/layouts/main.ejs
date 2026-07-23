@@ -12,153 +12,153 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SCRIPTS SWUP OFFICIELS (Stables et légers) -->
-    <script src="https://unpkg.com/swup@4"></script>
-    <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
-    <script src="https://unpkg.com/@swup/progress-plugin@3"></script>
-    <!-- Ajout du plugin pour gérer les scripts de tes pages sans doublons -->
-    <script src="https://unpkg.com/@swup/scripts-plugin@3"></script>
-
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: #07090e; 
-            color: #f3f4f6; 
-            font-family: 'Montserrat', sans-serif; 
-            overflow-x: hidden; 
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
-
-        .main-content-wrapper {
-            margin-left: 280px;
-            padding-bottom: 75px;
-            min-height: 100vh;
-            width: calc(100% - 280px);
-            padding: 50px; 
+        
+        body {
+            background-color: #0a0e17;
+            color: #f3f4f6;
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
         }
 
-        /* ANTI-DOUBLONS EXTRÊME : Cache instantanément les menus inclus dans les pages EJS */
-        #swup .bcso-sidebar, 
-        #swup #bcsoSidebar, 
-        #swup .bcso-bottom-bar,
-        #swup aside { 
-            display: none !important; 
+        .main-content-wrapper {
+            margin-left: 280px; 
+            padding-bottom: 70px; 
+            min-height: 100vh;
+            width: calc(100% - 280px); 
+            padding-top: 40px; 
+            padding-left: 40px; 
+            padding-right: 40px; 
+            animation: initialFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* ========================================================
-           ⚡ ANIMATIONS SWUP (2D Ultra-Rapide & Lisse)
-           ======================================================== */
-        
-        /* 1. État stable (Page visible) */
-        .transition-fade {
-            transition: opacity 0.25s ease-out, transform 0.25s ease-out;
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes initialFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 2. Au clic (La page disparaît rapidement vers le haut) */
-        html.is-animating .transition-fade {
-            opacity: 0;
-            transform: translateY(-10px);
+        /* 🚀 SUPPRESSION DU DOUBLE AFFICHAGE (Bloque les sidebars et headers injectés dans le contenu) */
+        main .bcso-sidebar,
+        main #bcsoSidebar,
+        main .bcso-header {
+            display: none !important;
         }
 
-        /* 3. Préparation nouvelle page (Apparaît du bas vers le haut) */
-        html.is-rendering .transition-fade {
-            opacity: 0;
-            transform: translateY(10px);
+        /* API VIEW TRANSITIONS (Animations fluides entre les pages) */
+        @view-transition {
+            navigation: auto;
         }
 
-        /* Barre de chargement fine et élégante */
-        .swup-progress-bar {
+        ::view-transition-old(root) {
+            animation: 0.22s cubic-bezier(0.4, 0, 1, 1) both fade-out, 0.22s cubic-bezier(0.4, 0, 0.2, 1) both slide-out;
+        }
+
+        ::view-transition-new(root) {
+            animation: 0.32s cubic-bezier(0, 0, 0.2, 1) 0.05s both fade-in, 0.32s cubic-bezier(0, 0, 0.2, 1) both slide-in;
+        }
+
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes slide-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
+        @keyframes slide-out { from { transform: translateY(0); } to { transform: translateY(-14px); } }
+
+        /* Barre de chargement fluide au clic */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            width: calc(100% - 280px);
             height: 3px;
-            background: linear-gradient(90deg, transparent, #bda581, #d4af37);
+            background: linear-gradient(90deg, transparent, #bda581, #ffffff);
             z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .page-loader.active {
+            opacity: 1;
+            animation: loaderProgress 1s infinite linear;
+        }
+
+        @keyframes loaderProgress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR FIXE -->
+    <div class="page-loader" id="pageLoader"></div>
+
+    <!-- SIDEBAR PRINCIPALE (Unique) -->
     <%- include('../partials/sidebar') %>
     
+    <!-- CONTENU PRINCIPAL -->
     <main class="main-content-wrapper">
-        <div id="swup" class="transition-fade">
-            <%- body %>
-        </div>
+        <%- body %>
     </main>
 
-    <!-- BARRE DU BAS FIXE -->
+    <!-- BARRE DU BAS -->
     <%- include('../partials/header') %>
 
+    <!-- SCRIPTS DU SYSTÈMEs -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // 1. WebSocket Maintenance
+        const socket = io();
+        socket.on('maintenance-toggled', (isMaintenance) => {
+            if (window.location.pathname !== '/chadoxx') {
+                window.location.reload(); 
+            }
+        });
+
+        // 2. 🚀 NETTOYAGE DOM : Suppression physique des sidebars et headers en double
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebars = document.querySelectorAll('#bcsoSidebar, .bcso-sidebar');
+            if (sidebars.length > 1) {
+                for (let i = 1; i < sidebars.length; i++) {
+                    sidebars[i].remove();
+                }
+            }
+        });
+
+        // 3. 🚀 PRÉCHARGEMENT INSTANTANÉ AU SURVOL (Instant Prefetching)
+        let prefetchTimeout;
+        const prefetchedUrls = new Set();
+
+        document.addEventListener('mouseover', (e) => {
+            const link = e.target.closest('a');
+            if (!link || !link.href || link.href.startsWith('#') || link.origin !== window.location.origin) return;
             
-            /* ========================================================
-               🛠️ NETTOYEUR GLOBAL : Intercepte et mémorise les boucles (ex: dashboard)
-               ======================================================== */
-            const originalSetInterval = window.setInterval;
-            window.activePageIntervals = new Set();
+            if (prefetchedUrls.has(link.href)) return;
 
-            window.setInterval = function(callback, delay) {
-                const intervalId = originalSetInterval(callback, delay);
-                window.activePageIntervals.add(intervalId); 
-                return intervalId;
-            };
+            prefetchTimeout = setTimeout(() => {
+                const prefetchLink = document.createElement('link');
+                prefetchLink.rel = 'prefetch';
+                prefetchLink.href = link.href;
+                document.head.appendChild(prefetchLink);
+                prefetchedUrls.add(link.href);
+            }, 65);
+        });
 
-            /* ========================================================
-               🚀 INITIALISATION SWUP
-               ======================================================== */
-            const swup = new Swup({
-                containers: ['#swup'],
-                animationSelector: '[class*="transition-"]',
-                plugins: [
-                    new SwupPreloadPlugin(),
-                    new SwupProgressPlugin({ color: '#d4af37', delay: 0, transition: 200 }),
-                    new SwupScriptsPlugin({ optin: false }) // Gère les scripts de tes pages proprement
-                ]
-            });
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a')) {
+                clearTimeout(prefetchTimeout);
+            }
+        });
 
-            /* ========================================================
-               🧹 QUAND ON QUITTE LA PAGE (Nettoyage anti-spam)
-               ======================================================== */
-            swup.hooks.on('visit:start', () => {
-                // Tue toutes les boucles de la page avant de charger la nouvelle
-                window.activePageIntervals.forEach(clearInterval);
-                window.activePageIntervals.clear();
-            });
-
-            /* ========================================================
-               ✨ QUAND ON ARRIVE SUR LA NOUVELLE PAGE
-               ======================================================== */
-            swup.hooks.on('page:view', () => {
-                
-                // --- A. Mise à jour de la Sidebar ---
-                const currentUrl = window.location.pathname;
-                document.querySelectorAll('.nav-item-premium').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === currentUrl || (link.getAttribute('href') !== '/' && currentUrl.startsWith(link.getAttribute('href')))) {
-                        link.classList.add('active');
-                    }
-                });
-
-                // --- B. Suppression définitive des doublons HTML ---
-                document.querySelectorAll('#swup aside, #swup .bcso-bottom-bar, #swup .bcso-sidebar').forEach(el => el.remove());
-
-                // --- C. Relance l'event DOM pour réveiller les scripts internes des pages EJS ---
-                window.document.dispatchEvent(new Event('DOMContentLoaded'));
-            });
-
-            /* ========================================================
-               🔌 WEB-SOCKET MAINTENANCE
-               ======================================================== */
-            try {
-                const socket = io();
-                socket.on('maintenance-toggled', (isMaintenance) => {
-                    if (window.location.pathname !== '/chadoxx') window.location.reload(); 
-                });
-            } catch (e) { console.warn("Socket.io non initialisé", e); }
+        // 4. Activation de la barre de chargement lors d'un clic
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href && !link.href.startsWith('#') && link.origin === window.location.origin && link.target !== '_blank') {
+                document.getElementById('pageLoader').classList.add('active');
+            }
         });
     </script>
 </body>
