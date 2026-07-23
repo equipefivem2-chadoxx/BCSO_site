@@ -12,19 +12,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- 🚀 SCRIPT SWUP POUR LA NAVIGATION 100% INSTANTANÉE -->
+    <script src="https://unpkg.com/swup@4"></script>
+    <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
+
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        body {
-            background-color: #0a0e17;
-            color: #f3f4f6;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-        }
+        body { background-color: #0a0e17; color: #f3f4f6; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
         .main-content-wrapper {
             margin-left: 280px; 
@@ -34,83 +29,60 @@
             padding-top: 40px; 
             padding-left: 40px; 
             padding-right: 40px; 
-            animation: initialFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes initialFadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* SUPPRESSION DU DOUBLE AFFICHAGE */
+        main .bcso-sidebar, main #bcsoSidebar, main .bcso-header { display: none !important; }
 
-        /* 🚀 SUPPRESSION DU DOUBLE AFFICHAGE (Bloque les sidebars et headers injectés dans le contenu) */
-        main .bcso-sidebar,
-        main #bcsoSidebar,
-        main .bcso-header {
-            display: none !important;
-        }
-
-        /* API VIEW TRANSITIONS (Animations fluides entre les pages) */
-        @view-transition {
-            navigation: auto;
-        }
-
-        ::view-transition-old(root) {
-            animation: 0.22s cubic-bezier(0.4, 0, 1, 1) both fade-out, 0.22s cubic-bezier(0.4, 0, 0.2, 1) both slide-out;
-        }
-
-        ::view-transition-new(root) {
-            animation: 0.32s cubic-bezier(0, 0, 0.2, 1) 0.05s both fade-in, 0.32s cubic-bezier(0, 0, 0.2, 1) both slide-in;
-        }
-
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slide-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
-        @keyframes slide-out { from { transform: translateY(0); } to { transform: translateY(-14px); } }
-
-        /* Barre de chargement fluide au clic */
-        .page-loader {
-            position: fixed;
-            top: 0;
-            left: 280px;
-            width: calc(100% - 280px);
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #bda581, #ffffff);
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            pointer-events: none;
-        }
-
-        .page-loader.active {
+        /* ========================================================
+           ✨ ANIMATIONS SWUP (Changements de page ultra fluides)
+           ======================================================== */
+        
+        /* État normal de la page (centre de l'écran) */
+        #swup {
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out;
             opacity: 1;
-            animation: loaderProgress 1s infinite linear;
+            transform: translateY(0);
         }
 
-        @keyframes loaderProgress {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        /* État pendant que la page charge (disparaît légèrement vers le haut) */
+        html.is-animating #swup {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* État quand la nouvelle page arrive (apparaît par le bas) */
+        html.is-leaving #swup {
+            opacity: 0;
+            transform: translateY(10px);
         }
     </style>
 </head>
 <body>
 
-    <div class="page-loader" id="pageLoader"></div>
-
-    <!-- SIDEBAR PRINCIPALE (Unique) -->
+    <!-- SIDEBAR PRINCIPALE (Fixe, ne recharge jamais) -->
     <%- include('../partials/sidebar') %>
     
-    <!-- CONTENU PRINCIPAL -->
+    <!-- CONTENU PRINCIPAL (Dynamique avec Swup) -->
     <main class="main-content-wrapper">
-        <%- body %>
+        <div id="swup" class="transition-fade">
+            <%- body %>
+        </div>
     </main>
 
-    <!-- BARRE DU BAS -->
+    <!-- BARRE DU BAS (Fixe, ne recharge jamais) -->
     <%- include('../partials/header') %>
 
-    <!-- SCRIPTS DU SYSTÈMEs -->
+    <!-- SCRIPTS DU SYSTÈME GLOBAL -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // 1. WebSocket Maintenance
+        // 1. Initialisation de Swup (Navigation sans rechargement)
+        const swup = new Swup({
+            containers: ['#swup'], // On ne remplace QUE la div centrale, la sidebar reste intacte !
+            plugins: [new SwupPreloadPlugin()] // Précharge la page dès que la souris survole un lien
+        });
+
+        // 2. WebSocket Maintenance (Géré hors de Swup pour toujours fonctionner)
         const socket = io();
         socket.on('maintenance-toggled', (isMaintenance) => {
             if (window.location.pathname !== '/chadoxx') {
@@ -118,47 +90,10 @@
             }
         });
 
-        // 2. 🚀 NETTOYAGE DOM : Suppression physique des sidebars et headers en double
-        document.addEventListener("DOMContentLoaded", () => {
-            const sidebars = document.querySelectorAll('#bcsoSidebar, .bcso-sidebar');
-            if (sidebars.length > 1) {
-                for (let i = 1; i < sidebars.length; i++) {
-                    sidebars[i].remove();
-                }
-            }
-        });
-
-        // 3. 🚀 PRÉCHARGEMENT INSTANTANÉ AU SURVOL (Instant Prefetching)
-        let prefetchTimeout;
-        const prefetchedUrls = new Set();
-
-        document.addEventListener('mouseover', (e) => {
-            const link = e.target.closest('a');
-            if (!link || !link.href || link.href.startsWith('#') || link.origin !== window.location.origin) return;
-            
-            if (prefetchedUrls.has(link.href)) return;
-
-            prefetchTimeout = setTimeout(() => {
-                const prefetchLink = document.createElement('link');
-                prefetchLink.rel = 'prefetch';
-                prefetchLink.href = link.href;
-                document.head.appendChild(prefetchLink);
-                prefetchedUrls.add(link.href);
-            }, 65);
-        });
-
-        document.addEventListener('mouseout', (e) => {
-            if (e.target.closest('a')) {
-                clearTimeout(prefetchTimeout);
-            }
-        });
-
-        // 4. Activation de la barre de chargement lors d'un clic
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('a');
-            if (link && link.href && !link.href.startsWith('#') && link.origin === window.location.origin && link.target !== '_blank') {
-                document.getElementById('pageLoader').classList.add('active');
-            }
+        // 3. Nettoyage de sécurité après chaque changement de page
+        swup.hooks.on('page:view', () => {
+            const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar');
+            sidebars.forEach(sb => sb.remove());
         });
     </script>
 </body>
