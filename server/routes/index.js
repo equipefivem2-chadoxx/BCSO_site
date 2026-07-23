@@ -10,6 +10,7 @@ const superviseurRoutes = require('./superviseur');
 const entrepriseRoutes = require('./entreprise'); 
 const flRoutes = require('./fl');
 const patchnoteRoutes = require('./patchnote');
+const rollcallRoutes = require('./api/rollcall'); // 🚀 NOUVELLE ROUTE ROLL CALL
 
 // 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
 router.use(async (req, res, next) => {
@@ -365,6 +366,7 @@ router.use('/superviseur', superviseurRoutes);
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
+router.use('/api/rollcall', rollcallRoutes); // 🚀 NOUVELLE ROUTE DÉCLARÉE ICI
 router.use('/entreprise', entrepriseRoutes);
 router.use('/fl', flRoutes);
 router.use('/patchnotes', patchnoteRoutes);
