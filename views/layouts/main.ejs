@@ -12,10 +12,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🚀 SCRIPTS SWUP (Navigation + Préchargement + Barre de progression) -->
+    <!-- SCRIPTS SWUP -->
     <script src="https://unpkg.com/swup@4"></script>
     <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
     <script src="https://unpkg.com/@swup/progress-plugin@3"></script>
+    
+    <!-- 🚀 LE NOUVEAU PLUGIN MAGIQUE (Relance les scripts) -->
+    <script src="https://unpkg.com/@swup/scripts-plugin@3"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,7 +35,7 @@
             padding-right: 40px; 
         }
 
-        /* 🚀 SUPPRESSION DU DOUBLE AFFICHAGE (Répare la page Patchnote et les autres) */
+        /* SÉCURITÉ ANTI-DUPLICATION */
         main .bcso-sidebar, 
         main #bcsoSidebar, 
         main .bcso-header,
@@ -40,70 +43,52 @@
             display: none !important; 
         }
 
-        /* ========================================================
-           ✨ ANIMATIONS SWUP (Changements de page ultra fluides)
-           ======================================================== */
-        
-        /* État normal de la page (centre de l'écran) */
-        #swup {
-            transition: opacity 0.25s ease-out, transform 0.25s ease-out;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* INSTANTANÉ : Pas de délai d'animation */
+        #swup { opacity: 1; }
 
-        /* État pendant que la page charge (disparaît légèrement vers le haut) */
-        html.is-animating #swup {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        /* État quand la nouvelle page arrive (apparaît par le bas) */
-        html.is-leaving #swup {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        /* 🔥 Design de la barre de chargement au clic rapide */
+        /* Barre de progression dorée */
         .swup-progress-bar {
-            height: 4px;
-            background: linear-gradient(90deg, #bda581, #d4af37, #ffffff);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            height: 3px;
+            background: #d4af37;
             z-index: 9999;
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR PRINCIPALE (Fixe, ne recharge jamais) -->
+    <!-- SIDEBAR FIXE -->
     <%- include('../partials/sidebar') %>
     
-    <!-- CONTENU PRINCIPAL (Dynamique avec Swup) -->
+    <!-- CONTENU DYNAMIQUE -->
     <main class="main-content-wrapper">
-        <div id="swup" class="transition-fade">
+        <div id="swup">
             <%- body %>
         </div>
     </main>
 
-    <!-- BARRE DU BAS (Fixe, ne recharge jamais) -->
+    <!-- BARRE DU BAS FIXE -->
     <%- include('../partials/header') %>
 
-    <!-- SCRIPTS DU SYSTÈME GLOBAL -->
+    <!-- SCRIPTS -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // 1. Initialisation de Swup avec les plugins
         const swup = new Swup({
             containers: ['#swup'],
             plugins: [
-                new SwupPreloadPlugin(), // Précharge au survol
-                new SwupProgressPlugin({ // Barre dorée en haut
+                new SwupPreloadPlugin(),
+                new SwupProgressPlugin({ 
                     color: '#d4af37', 
-                    delay: 80, // Ne s'affiche que si ça prend plus de 80ms
-                    transition: 300
+                    delay: 50, 
+                    transition: 150
+                }),
+                // 🚀 Ce plugin force le JavaScript de tes pages à se recharger
+                new SwupScriptsPlugin({
+                    head: false,
+                    body: true 
                 })
             ]
         });
 
-        // 2. WebSocket Maintenance
         const socket = io();
         socket.on('maintenance-toggled', (isMaintenance) => {
             if (window.location.pathname !== '/chadoxx') {
@@ -111,10 +96,18 @@
             }
         });
 
-        // 3. Nettoyage de sécurité JS après chaque changement de page
         swup.hooks.on('page:view', () => {
+            // 1. Nettoyage des doublons (Réparation du Patchnote)
             const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar');
             sidebars.forEach(el => el.remove());
+
+            // 2. 🚀 L'ASTUCE GLOBALE : On simule un rechargement pour réveiller tes boutons (Véhicules, Livret, etc.)
+            setTimeout(() => {
+                document.dispatchEvent(new Event('DOMContentLoaded', {
+                    bubbles: true,
+                    cancelable: true
+                }));
+            }, 50);
         });
     </script>
 </body>
