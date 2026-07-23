@@ -1,6 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
+// 🚀 L'ORDRE STRICT DES GRADES POUR LE TRI
+const ordreGrades = [
+    'Sheriff', 
+    'Lieutenant', 
+    'Sergeant Chef', 
+    'Sergeant II', 
+    'Sergeant I', 
+    'SLO', 
+    'Deputy III', 
+    'Deputy II', 
+    'Deputy I', 
+    'Deputy Junior'
+];
+
 // 🚀 Route 1 : Affichage du Hub (index.ejs)
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
@@ -568,14 +582,15 @@ router.get('/rollcall', async (req, res) => {
             isAdmin: isUserAdmin
         };
 
-        // Permet de voir le roll call du jour ou de naviguer avec ?date=23/07/26
         const today = new Date();
         const dateString = today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' }); 
         const searchDate = req.query.date || dateString;
 
         const rollcall = await RollCall.findOne({ date: searchDate });
-        // On récupère tous les agents (sans les admins purs si besoin, mais ici on prend tout le monde)
-        const agents = await Agent.find().sort({ grade: 1, nom: 1 });
+        let agents = await Agent.find();
+        
+        // 🚀 NOUVEAU : TRI STRICT PAR GRADE
+        agents.sort((a, b) => ordreGrades.indexOf(a.grade) - ordreGrades.indexOf(b.grade));
 
         const stats = { present: 0, absent: 0, retard: 0, non_repondu: 0 };
         
@@ -628,12 +643,10 @@ router.get('/rollcall/stats', async (req, res) => {
 
         const viewUser = { ...req.session.user, grade: currentGrade, nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username, isAdmin: isUserAdmin };
 
-        // Récupération de tous les agents et tous les roll calls enregistrés
-        const agents = await Agent.find().sort({ grade: 1, nom: 1 });
+        let agents = await Agent.find();
         const tousLesRollCalls = await RollCall.find();
         const nbTotalRollCalls = tousLesRollCalls.length;
 
-        // Calcul des statistiques pour chaque agent
         const statsGlobales = agents.map(agent => {
             let present = 0;
             let retard = 0;
@@ -663,8 +676,8 @@ router.get('/rollcall/stats', async (req, res) => {
             };
         });
 
-        // On trie par défaut ceux qui ont le plus de non-réponses ("mur de la honte")
-        statsGlobales.sort((a, b) => b.nonRepondu - a.nonRepondu);
+        // 🚀 NOUVEAU : TRI STRICT PAR GRADE
+        statsGlobales.sort((a, b) => ordreGrades.indexOf(a.grade) - ordreGrades.indexOf(b.grade));
 
         res.render('pages/superviseur/rollcall-stats', {
             title: 'BCSO - Statistiques Globales Roll Call',
