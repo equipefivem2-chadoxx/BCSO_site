@@ -16,8 +16,6 @@
     <script src="https://unpkg.com/swup@4"></script>
     <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
     <script src="https://unpkg.com/@swup/progress-plugin@3"></script>
-    
-    <!-- 🚀 LE NOUVEAU PLUGIN MAGIQUE (Relance les scripts) -->
     <script src="https://unpkg.com/@swup/scripts-plugin@3"></script>
 
     <style>
@@ -33,6 +31,8 @@
             padding-top: 40px; 
             padding-left: 40px; 
             padding-right: 40px; 
+            /* On évite les débordements pendant l'animation */
+            overflow-x: hidden; 
         }
 
         /* SÉCURITÉ ANTI-DUPLICATION */
@@ -43,13 +43,40 @@
             display: none !important; 
         }
 
-        /* INSTANTANÉ : Pas de délai d'animation */
-        #swup { opacity: 1; }
+        /* ========================================================
+           ✨ ANIMATIONS SWUP "ULTRA PREMIUM" (Rapide & Fluide)
+           ======================================================== */
+        
+        /* État 0 : La page est affichée normalement au centre */
+        #swup {
+            /* Utilisation d'une courbe "Expo" : Démarre très vite, freine à la fin. Donne un effet hyper réactif ! */
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.2s ease-out;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px);
+        }
 
-        /* Barre de progression dorée */
+        /* État 1 : Quand on clique, l'ancienne page part vers le haut, rétrécit et se floute légèrement */
+        html.is-animating #swup {
+            opacity: 0;
+            transform: translateY(-15px) scale(0.98);
+            filter: blur(2px);
+        }
+
+        /* État 2 : La nouvelle page se prépare à arriver par le bas */
+        html.is-rendering #swup {
+            opacity: 0;
+            transform: translateY(15px) scale(0.98);
+            filter: blur(2px);
+        }
+
+        /* Barre de progression dorée ultra fine en haut */
         .swup-progress-bar {
             height: 3px;
-            background: #d4af37;
+            background: linear-gradient(90deg, #bda581, #d4af37, #ffffff);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
             z-index: 9999;
         }
     </style>
@@ -72,16 +99,17 @@
     <!-- SCRIPTS -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        // Configuration optimale pour une réactivité maximale
         const swup = new Swup({
             containers: ['#swup'],
+            animationSelector: '[class*="transition-"]',
             plugins: [
                 new SwupPreloadPlugin(),
                 new SwupProgressPlugin({ 
                     color: '#d4af37', 
-                    delay: 50, 
+                    delay: 40, // S'affiche presque immédiatement si ça lag
                     transition: 150
                 }),
-                // 🚀 Ce plugin force le JavaScript de tes pages à se recharger
                 new SwupScriptsPlugin({
                     head: false,
                     body: true 
@@ -97,17 +125,17 @@
         });
 
         swup.hooks.on('page:view', () => {
-            // 1. Nettoyage des doublons (Réparation du Patchnote)
+            // Nettoyage visuel instantané
             const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar');
             sidebars.forEach(el => el.remove());
 
-            // 2. 🚀 L'ASTUCE GLOBALE : On simule un rechargement pour réveiller tes boutons (Véhicules, Livret, etc.)
+            // Réveil des scripts interactifs (boutons, onglets, etc.)
             setTimeout(() => {
                 document.dispatchEvent(new Event('DOMContentLoaded', {
                     bubbles: true,
                     cancelable: true
                 }));
-            }, 50);
+            }, 30); // Délai très court pour matcher la nouvelle animation
         });
     </script>
 </body>
