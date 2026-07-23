@@ -31,7 +31,6 @@
             padding-top: 40px; 
             padding-left: 40px; 
             padding-right: 40px; 
-            /* On évite les débordements pendant l'animation */
             overflow-x: hidden; 
         }
 
@@ -44,40 +43,38 @@
         }
 
         /* ========================================================
-           ✨ ANIMATIONS SWUP "ULTRA PREMIUM" (Rapide & Fluide)
+           ✨ ANIMATIONS SWUP "ULTRA PREMIUM"
            ======================================================== */
         
-        /* État 0 : La page est affichée normalement au centre */
-        #swup {
-            /* Utilisation d'une courbe "Expo" : Démarre très vite, freine à la fin. Donne un effet hyper réactif ! */
-            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                        filter 0.2s ease-out;
+        /* 1. État normal (Page affichée au centre) */
+        .transition-fade {
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                        filter 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 1;
             transform: translateY(0) scale(1);
             filter: blur(0px);
         }
 
-        /* État 1 : Quand on clique, l'ancienne page part vers le haut, rétrécit et se floute légèrement */
-        html.is-animating #swup {
+        /* 2. État quand on clique (L'ancienne page part vers le haut avec un flou profond) */
+        html.is-animating .transition-fade {
             opacity: 0;
-            transform: translateY(-15px) scale(0.98);
-            filter: blur(2px);
+            transform: translateY(-25px) scale(0.96);
+            filter: blur(4px);
         }
 
-        /* État 2 : La nouvelle page se prépare à arriver par le bas */
-        html.is-rendering #swup {
-            opacity: 0;
-            transform: translateY(15px) scale(0.98);
-            filter: blur(2px);
+        /* 3. État d'arrivée (La nouvelle page arrive par le bas en s'éclaircissant) */
+        html.is-rendering .transition-fade {
+            transform: translateY(25px) scale(0.96);
         }
 
-        /* Barre de progression dorée ultra fine en haut */
+        /* 🔥 Barre de progression dorée premium */
         .swup-progress-bar {
-            height: 3px;
-            background: linear-gradient(90deg, #bda581, #d4af37, #ffffff);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #bda581, #d4af37, #ffffff);
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
             z-index: 9999;
+            border-radius: 0 2px 2px 0;
         }
     </style>
 </head>
@@ -88,7 +85,8 @@
     
     <!-- CONTENU DYNAMIQUE -->
     <main class="main-content-wrapper">
-        <div id="swup">
+        <!-- 🚀 CORRECTION : Ajout de la classe "transition-fade" indispensable pour l'animation -->
+        <div id="swup" class="transition-fade">
             <%- body %>
         </div>
     </main>
@@ -99,7 +97,6 @@
     <!-- SCRIPTS -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Configuration optimale pour une réactivité maximale
         const swup = new Swup({
             containers: ['#swup'],
             animationSelector: '[class*="transition-"]',
@@ -107,8 +104,8 @@
                 new SwupPreloadPlugin(),
                 new SwupProgressPlugin({ 
                     color: '#d4af37', 
-                    delay: 40, // S'affiche presque immédiatement si ça lag
-                    transition: 150
+                    delay: 0, // 🚀 CORRECTION : Forcé à 0 pour toujours afficher la barre au clic
+                    transition: 200
                 }),
                 new SwupScriptsPlugin({
                     head: false,
@@ -125,17 +122,15 @@
         });
 
         swup.hooks.on('page:view', () => {
-            // Nettoyage visuel instantané
             const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar');
             sidebars.forEach(el => el.remove());
 
-            // Réveil des scripts interactifs (boutons, onglets, etc.)
             setTimeout(() => {
                 document.dispatchEvent(new Event('DOMContentLoaded', {
                     bubbles: true,
                     cancelable: true
                 }));
-            }, 30); // Délai très court pour matcher la nouvelle animation
+            }, 50);
         });
     </script>
 </body>
