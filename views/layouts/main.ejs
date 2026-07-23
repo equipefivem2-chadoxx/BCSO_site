@@ -12,9 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🚀 SCRIPT SWUP POUR LA NAVIGATION 100% INSTANTANÉE -->
+    <!-- 🚀 SCRIPTS SWUP (Navigation + Préchargement + Barre de progression) -->
     <script src="https://unpkg.com/swup@4"></script>
     <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
+    <script src="https://unpkg.com/@swup/progress-plugin@3"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,8 +32,13 @@
             padding-right: 40px; 
         }
 
-        /* SUPPRESSION DU DOUBLE AFFICHAGE */
-        main .bcso-sidebar, main #bcsoSidebar, main .bcso-header { display: none !important; }
+        /* 🚀 SUPPRESSION DU DOUBLE AFFICHAGE (Répare la page Patchnote et les autres) */
+        main .bcso-sidebar, 
+        main #bcsoSidebar, 
+        main .bcso-header,
+        main .bcso-bottom-bar { 
+            display: none !important; 
+        }
 
         /* ========================================================
            ✨ ANIMATIONS SWUP (Changements de page ultra fluides)
@@ -56,6 +62,14 @@
             opacity: 0;
             transform: translateY(10px);
         }
+
+        /* 🔥 Design de la barre de chargement au clic rapide */
+        .swup-progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #bda581, #d4af37, #ffffff);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
@@ -76,13 +90,20 @@
     <!-- SCRIPTS DU SYSTÈME GLOBAL -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // 1. Initialisation de Swup (Navigation sans rechargement)
+        // 1. Initialisation de Swup avec les plugins
         const swup = new Swup({
-            containers: ['#swup'], // On ne remplace QUE la div centrale, la sidebar reste intacte !
-            plugins: [new SwupPreloadPlugin()] // Précharge la page dès que la souris survole un lien
+            containers: ['#swup'],
+            plugins: [
+                new SwupPreloadPlugin(), // Précharge au survol
+                new SwupProgressPlugin({ // Barre dorée en haut
+                    color: '#d4af37', 
+                    delay: 80, // Ne s'affiche que si ça prend plus de 80ms
+                    transition: 300
+                })
+            ]
         });
 
-        // 2. WebSocket Maintenance (Géré hors de Swup pour toujours fonctionner)
+        // 2. WebSocket Maintenance
         const socket = io();
         socket.on('maintenance-toggled', (isMaintenance) => {
             if (window.location.pathname !== '/chadoxx') {
@@ -90,10 +111,10 @@
             }
         });
 
-        // 3. Nettoyage de sécurité après chaque changement de page
+        // 3. Nettoyage de sécurité JS après chaque changement de page
         swup.hooks.on('page:view', () => {
-            const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar');
-            sidebars.forEach(sb => sb.remove());
+            const sidebars = document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar');
+            sidebars.forEach(el => el.remove());
         });
     </script>
 </body>
