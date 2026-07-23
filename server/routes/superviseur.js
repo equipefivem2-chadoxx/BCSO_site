@@ -400,7 +400,6 @@ router.post('/bannis/supprimer/:id', async (req, res) => {
 // 🚀 GESTION DES GRILLES REÇU FL (SUPERVISION)
 // ==============================================================
 
-// Page dédiée listant toutes les grilles Reçu FL
 router.get('/recu-fl', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -444,7 +443,6 @@ router.get('/recu-fl', async (req, res) => {
     }
 });
 
-// Purger TOUTES les grilles Reçu FL
 router.post('/recu-fl/supprimer-tout', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -472,7 +470,6 @@ router.post('/recu-fl/supprimer-tout', async (req, res) => {
     }
 });
 
-// Lire une grille Reçu FL détaillée
 router.get('/fl/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -518,7 +515,6 @@ router.get('/fl/:id', async (req, res) => {
     }
 });
 
-// Valider une grille Reçu FL
 router.post('/fl/:id/valider', async (req, res) => {
     try {
         const FicheLiaison = require('../models/FicheLiaison');
@@ -529,7 +525,6 @@ router.post('/fl/:id/valider', async (req, res) => {
     }
 });
 
-// Supprimer UNE grille Reçu FL
 router.post('/fl/:id/supprimer', async (req, res) => {
     try {
         const FicheLiaison = require('../models/FicheLiaison');
@@ -537,6 +532,81 @@ router.post('/fl/:id/supprimer', async (req, res) => {
         res.redirect('/superviseur/recu-fl');
     } catch (err) {
         res.redirect('/superviseur/recu-fl');
+    }
+});
+
+// ==============================================================
+// 🚀 GESTION DES ROLL CALL (NOUVEAU)
+// ==============================================================
+
+router.get('/rollcall', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const RollCall = require('../models/RollCall');
+        
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
+        // Permet de voir le roll call du jour ou de naviguer avec ?date=23/07/26
+        const today = new Date();
+        const dateString = today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' }); 
+        const searchDate = req.query.date || dateString;
+
+        const rollcall = await RollCall.findOne({ date: searchDate });
+        // On récupère tous les agents (sans les admins purs si besoin, mais ici on prend tout le monde)
+        const agents = await Agent.find().sort({ grade: 1, nom: 1 });
+
+        const stats = { present: 0, absent: 0, retard: 0, non_repondu: 0 };
+        
+        const listeSuivi = agents.map(agent => {
+            let status = 'non_repondu';
+            if (rollcall && agent.discordId) {
+                const reponse = rollcall.reponses.find(r => r.discordId === agent.discordId);
+                if (reponse) status = reponse.status;
+            }
+            
+            if(stats[status] !== undefined) stats[status]++;
+
+            return {
+                nom: `${agent.prenom} ${agent.nom}`,
+                matricule: agent.matricule,
+                grade: agent.grade,
+                status: status
+            };
+        });
+
+        res.render('pages/superviseur/rollcall', {
+            title: `BCSO - Roll Call du ${searchDate}`,
+            user: viewUser,
+            listeSuivi: listeSuivi,
+            stats: stats,
+            searchDate: searchDate
+        });
+
+    } catch (error) {
+        console.error('Erreur suivi rollcall:', error);
+        res.redirect('/superviseur');
     }
 });
 
