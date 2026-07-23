@@ -692,4 +692,35 @@ router.get('/rollcall/stats', async (req, res) => {
     }
 });
 
+// 🚀 NOUVELLE ROUTE POUR PURGER TOUTES LES STATISTIQUES ROLL CALL
+router.post('/rollcall/purger', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        // Seuls les admins ou les haut-gradés avec droits peuvent purger
+        if (!isUserAdmin) {
+            return res.redirect('/superviseur/rollcall/stats');
+        }
+
+        const RollCall = require('../models/RollCall');
+        // Vider intégralement la collection RollCall
+        await RollCall.deleteMany({});
+        
+        res.redirect('/superviseur/rollcall/stats?success=purged');
+
+    } catch (err) {
+        console.error("Erreur lors de la purge globale des Roll Calls:", err);
+        res.redirect('/superviseur/rollcall/stats');
+    }
+});
+
 module.exports = router;

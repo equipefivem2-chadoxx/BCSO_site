@@ -26,9 +26,11 @@
     .success-text { color: #10b981; font-weight: bold; }
     .muted-text { color: #94a3b8; }
     
-    /* Nouvelles classes pour le Mur de la honte sans faire d'erreur VS Code */
     .shame-text { color: #ef4444; font-weight: 900; } 
     .normal-text { color: #94a3b8; font-weight: 900; }
+
+    .btn-purge { padding: 10px 20px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    .btn-purge:hover { background: rgba(239, 68, 68, 0.2); }
 </style>
 
 <div id="stats-container">
@@ -37,7 +39,16 @@
             <h1>Statistiques Globales Roll Call</h1>
             <p style="color:#94a3b8; margin-top:5px;">Cumul sur <%= nbTotalRollCalls %> annonces enregistrées</p>
         </div>
-        <a href="/superviseur/rollcall" style="padding: 10px 20px; background: rgba(255,255,255,0.1); color: #fff; border-radius: 6px; text-decoration: none; font-weight: bold; transition: 0.3s;"><i class="fas fa-arrow-left"></i> Retour au quotidien</a>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <!-- 🚀 NOUVEAU BOUTON DE PURGE (SÉCURISÉ) -->
+            <form action="/superviseur/rollcall/purger" method="POST" style="margin: 0;" onsubmit="return confirm('⚠️ ATTENTION ! Voulez-vous vraiment remettre TOUTES les statistiques du Roll Call à zéro ? Cette action est irréversible.');">
+                <button type="submit" class="btn-purge">
+                    <i class="fas fa-trash-alt"></i> Purger les stats
+                </button>
+            </form>
+            
+            <a href="/superviseur/rollcall" style="padding: 10px 20px; background: rgba(255,255,255,0.1); color: #fff; border-radius: 6px; text-decoration: none; font-weight: bold; transition: 0.3s;"><i class="fas fa-arrow-left"></i> Retour au quotidien</a>
+        </div>
     </div>
 
     <div class="info-box">
@@ -68,7 +79,6 @@
                     
                     <td class="<%= agent.absent > 0 ? 'danger-text' : 'muted-text' %>"><%= agent.absent %></td>
                     
-                    <!-- Utilisation des classes au lieu du style inline pour éviter l'erreur de l'éditeur -->
                     <td class="<%= agent.nonRepondu > (nbTotalRollCalls / 2) && nbTotalRollCalls > 0 ? 'shame-text' : 'normal-text' %>">
                         <%= agent.nonRepondu %>
                     </td>
