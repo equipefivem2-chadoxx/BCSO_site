@@ -2,28 +2,55 @@
     .bcso-bottom-bar {
         position: fixed;
         bottom: 0;
-        left: 280px; /* Ligne alignée parfaitement avec ta sidebar */
+        left: 280px; /* Aligné avec la sidebar[cite: 1] */
         right: 0;
-        height: 50px;
-        background-color: #0a0e17;
-        border-top: 1px solid rgba(212, 175, 55, 0.2); /* Ligne dorée */
+        height: 55px;
+        background: rgba(10, 14, 23, 0.85); /* Fond semi-transparent */
+        backdrop-filter: blur(12px); /* Effet Apple Glassmorphism */
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(212, 175, 55, 0.25); /* Ligne dorée[cite: 1] */
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 30px;
-        z-index: 20;
-        color: #6b7280;
-        font-size: 13px;
+        padding: 0 40px;
+        z-index: 900;
+        color: #9ca3af;
+        font-size: 12px;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
+        box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.3);
     }
     .brand-text {
         color: #d4af37;
-        font-weight: bold;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #10b981;
+        animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 </style>
 
 <div class="bcso-bottom-bar">
-    <div><i class="fas fa-shield-alt"></i> <span class="brand-text">BCSO SYSTEM</span> - Réseau Sécurisé</div>
-    <div>Statut : <span style="color: #10b981;">Connecté</span> | Session chiffrée</div>
+    <div><i class="fas fa-shield-alt" style="margin-right: 8px; color: #d4af37;"></i> <span class="brand-text">BCSO SYSTEM</span> <span style="opacity: 0.5; margin: 0 10px;">|</span> Réseau Sécurisé[cite: 1]</div>
+    <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span style="color: #10b981;">Connecté</span> <span style="opacity: 0.5; margin: 0 10px;">|</span> Session chiffrée[cite: 1]
+    </div>
 </div>

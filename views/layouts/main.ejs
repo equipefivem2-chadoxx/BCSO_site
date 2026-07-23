@@ -12,71 +12,80 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SCRIPTS SWUP OFFICIELS -->
+    <!-- SCRIPTS SWUP OFFICIELS (Uniquement les STABLES) -->
     <script src="https://unpkg.com/swup@4"></script>
     <script src="https://unpkg.com/@swup/preload-plugin@3"></script>
     <script src="https://unpkg.com/@swup/progress-plugin@3"></script>
-    <script src="https://unpkg.com/@swup/scripts-plugin@3"></script>
+    <!-- ❌ AUCUN SCRIPTS-PLUGIN ICI : Tout est géré nativement plus bas -->
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        body { background-color: #0a0e17; color: #f3f4f6; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
-
-        .main-content-wrapper {
-            margin-left: 280px; 
-            padding-bottom: 70px; 
-            min-height: 100vh;
-            width: calc(100% - 280px); 
-            padding-top: 40px; 
-            padding-left: 40px; 
-            padding-right: 40px; 
+        body { 
+            background-color: #07090e; 
+            color: #f3f4f6; 
+            font-family: 'Montserrat', sans-serif; 
             overflow-x: hidden; 
         }
 
-        /* SÉCURITÉ : Cache les éléments en double si le serveur les renvoie */
+        .main-content-wrapper {
+            margin-left: 280px; /* Aligné avec la sidebar[cite: 3] */
+            padding-bottom: 75px; /* Laisse l'espace pour la barre du bas[cite: 3] */
+            min-height: 100vh;
+            width: calc(100% - 280px); /* Ajustement précis[cite: 3] */
+            padding-top: 50px; 
+            padding-left: 50px; 
+            padding-right: 50px; 
+            overflow-x: hidden;
+            perspective: 1500px; /* Essentiel pour l'effet de profondeur 3D */
+        }
+
+        /* SÉCURITÉ : Cache les éléments en double si le serveur les renvoie[cite: 3] */
         main .bcso-sidebar, main #bcsoSidebar, main .bcso-header, main .bcso-bottom-bar { 
             display: none !important; 
         }
 
         /* ========================================================
-           ✨ ANIMATIONS SWUP "APPLE-LIKE" (Profondeur & Fluidité)
+           🚀 ANIMATIONS SWUP "ULTRA-PRO APPLE-LIKE" (3D Depth)
            ======================================================== */
         
-        /* 1. Page stable au centre */
+        /* 1. État stable (Page au centre) */
         .transition-fade {
-            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-                        transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-                        filter 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                        transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                        filter 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             opacity: 1;
-            transform: scale(1) translateY(0);
+            transform: translateZ(0) scale(1) translateY(0);
             filter: blur(0px);
+            transform-origin: top center;
         }
 
-        /* 2. Au clic, la page recule et se floute légèrement */
+        /* 2. Au clic (La page actuelle recule, se floute et s'efface) */
         html.is-animating .transition-fade {
             opacity: 0;
-            transform: scale(0.97) translateY(-15px);
-            filter: blur(3px);
+            transform: translateZ(-80px) scale(0.96) translateY(-20px);
+            filter: blur(8px);
         }
 
-        /* 3. La nouvelle page arrive par le bas */
+        /* 3. Préparation de la nouvelle page (Elle arrive par le bas en zoomant) */
         html.is-rendering .transition-fade {
-            transform: scale(0.97) translateY(15px);
+            opacity: 0;
+            transform: translateZ(-40px) scale(0.98) translateY(30px);
+            filter: blur(4px);
         }
 
-        /* 🔥 Barre de chargement en haut */
+        /* 🔥 Barre de chargement ultra-premium */
         .swup-progress-bar {
             height: 4px;
             background: linear-gradient(90deg, transparent, #bda581, #d4af37, #ffffff);
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 1); /* Ombre portée[cite: 3] */
             z-index: 9999;
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR FIXE -->
+    <!-- SIDEBAR FIXE[cite: 3] -->
     <%- include('../partials/sidebar') %>
     
     <main class="main-content-wrapper">
@@ -85,29 +94,27 @@
         </div>
     </main>
 
-    <!-- BARRE DU BAS FIXE -->
+    <!-- BARRE DU BAS FIXE[cite: 3] -->
     <%- include('../partials/header') %>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // On attend que la page soit prête pour lancer l'animation en toute sécurité
         document.addEventListener('DOMContentLoaded', () => {
             try {
-                // Initialisation robuste de Swup
+                // 1. Initialisation de Swup propre (Sans le plugin maudit)[cite: 3]
                 const swup = new Swup({
                     containers: ['#swup'],
                     animationSelector: '[class*="transition-"]',
                     plugins: [
                         new SwupPreloadPlugin(),
-                        new SwupProgressPlugin({ color: '#d4af37', delay: 0, transition: 300 }),
-                        new SwupScriptsPlugin({ head: false, body: true })
+                        new SwupProgressPlugin({ color: '#d4af37', delay: 0, transition: 300 })
                     ]
                 });
 
-                // Écoute des changements de page
+                // 2. Événement à chaque changement de page[cite: 3]
                 swup.hooks.on('page:view', () => {
                     
-                    // 1. Mise à jour de la Sidebar (le script qu'on a retiré de sidebar.ejs est maintenant ici)
+                    // --- A. Mise à jour visuelle de la Sidebar ---
                     const currentUrl = window.location.pathname;
                     document.querySelectorAll('.nav-item-premium[href]').forEach(link => {
                         const href = link.getAttribute('href');
@@ -117,14 +124,26 @@
                         }
                     });
 
-                    // 2. Nettoyage anti-doublon pour le Patchnote
+                    // --- B. Nettoyage anti-doublon (Patchnote / Render loop) ---
                     document.querySelectorAll('#swup #bcsoSidebar, #swup .bcso-sidebar, #swup .bcso-bottom-bar').forEach(el => el.remove());
 
-                    // 3. Réveil des boutons (véhicules, onglets, etc.)
+                    // --- C. RÉEXÉCUTION NATIVE DES SCRIPTS (Remplace le plugin bugué) ---
+                    // Ce script extrait toutes les balises <script> de la nouvelle page et les force à se lancer.
+                    const container = document.querySelector('#swup');
+                    const scripts = container.querySelectorAll('script');
+                    
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
+
+                    // Relance artificielle de l'événement DOM pour les scripts qui l'attendent
                     setTimeout(() => { document.dispatchEvent(new Event('DOMContentLoaded')); }, 50);
                 });
 
-                // WebSocket (Sécurisé s'il y a un souci réseau)
+                // 3. WebSocket (Géré proprement)[cite: 3]
                 try {
                     const socket = io();
                     socket.on('maintenance-toggled', (isMaintenance) => {
@@ -133,7 +152,7 @@
                 } catch (e) { console.warn("Socket.io non initialisé", e); }
 
             } catch (error) {
-                console.error("❌ ERREUR CRITIQUE SWUP : L'animation a planté.", error);
+                console.error("❌ ERREUR SWUP :", error);
             }
         });
     </script>
