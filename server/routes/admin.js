@@ -63,10 +63,12 @@ router.get('/', async (req, res) => {
 // 2. Gestion des Agents
 router.post('/ajouter', async (req, res) => {
     try {
-        const { prenom, nom, matricule, grade, telephone, discordId, isAdmin, canDeleteArchives } = req.body;
+        // 🚀 AJOUT DE LA VARIABLE iban ICI
+        const { prenom, nom, matricule, grade, telephone, iban, discordId, isAdmin, canDeleteArchives } = req.body;
         const nouvelAgent = new Agent({
             prenom, nom, matricule, grade,
             telephone: telephone || "Non renseigné",
+            iban: iban || "Non renseigné", // 🚀 SAUVEGARDE DE L'IBAN
             discordId: discordId || '',
             isAdmin: isAdmin === 'on' ? true : false,
             canDeleteArchives: canDeleteArchives === 'on' ? true : false
@@ -89,10 +91,12 @@ router.post('/supprimer/:id', async (req, res) => {
 
 router.post('/modifier/:id', async (req, res) => {
     try {
-        const { prenom, nom, matricule, grade, telephone, discordId, isAdmin, canDeleteArchives } = req.body;
+        // 🚀 AJOUT DE LA VARIABLE iban ICI
+        const { prenom, nom, matricule, grade, telephone, iban, discordId, isAdmin, canDeleteArchives } = req.body;
         await Agent.findByIdAndUpdate(req.params.id, {
             prenom, nom, matricule, grade,
             telephone: telephone || "Non renseigné",
+            iban: iban || "Non renseigné", // 🚀 SAUVEGARDE DE L'IBAN
             discordId,
             isAdmin: isAdmin === 'on' ? true : false,
             canDeleteArchives: canDeleteArchives === 'on' ? true : false

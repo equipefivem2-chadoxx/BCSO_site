@@ -1,3 +1,6 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
 <style>
     :root {
         --primary: #bda581;
@@ -237,6 +240,10 @@
                     <input type="text" name="telephone" class="form-control" placeholder="555-XXXX">
                 </div>
                 <div class="form-group">
+                    <label>Relevé IBAN</label>
+                    <input type="text" name="iban" class="form-control" placeholder="LS123456789">
+                </div>
+                <div class="form-group">
                     <label>ID Discord <span style="color:#ef4444;">*</span></label>
                     <input type="text" name="discordId" class="form-control" placeholder="1247264549489610897">
                 </div>
@@ -283,7 +290,7 @@
         </div>
 
         <div>
-            <!-- 🚀 Encadré Entreprise mis à jour -->
+            <!-- Encadré Entreprise -->
             <div class="panel-box" style="margin-bottom: 25px; border-top-color: #38bdf8;">
                 <h2 style="font-size: 1.1rem; color: #38bdf8;"><i class="fas fa-handshake" style="margin-right: 8px;"></i> Accès Partenaires (Entreprises)</h2>
                 <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
@@ -320,7 +327,7 @@
                                         </form>
                                     </td>
                                 </tr>
-                                <!-- 🚀 Ligne d'édition cachée pour l'entreprise -->
+                                <!-- Ligne d'édition cachée pour l'entreprise -->
                                 <tr id="edit-ent-<%= ent._id %>" class="edit-row">
                                     <td colspan="4" style="padding: 20px;">
                                         <form action="/admin/entreprise/modifier/<%= ent._id %>" method="POST" style="display: flex; gap: 15px; align-items: center;">
@@ -405,10 +412,14 @@
                                                     <input type="text" name="matricule" value="<%= agent.matricule %>" class="form-control" required>
                                                 </div>
                                             </div>
-                                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
+                                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom:15px;">
                                                 <div>
                                                     <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Téléphone</label>
                                                     <input type="text" name="telephone" value="<%= agent.telephone %>" class="form-control">
+                                                </div>
+                                                <div>
+                                                    <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">IBAN</label>
+                                                    <input type="text" name="iban" value="<%= agent.iban %>" class="form-control">
                                                 </div>
                                                 <div>
                                                     <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">ID Discord</label>
