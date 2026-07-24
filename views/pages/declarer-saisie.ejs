@@ -133,7 +133,8 @@
     </div>
 
     <!-- FORMULAIRE DE SAISIE -->
-    <form action="/saisies/declarer" method="POST" id="formSaisie">
+    <!-- ICI LA CORRECTION DE L'ACTION POUR QUE LA SAUVEGARDE FONCTIONNE -->
+    <form action="/saisie/ajouter" method="POST" id="formSaisie">
         <div class="form-grid">
             
             <!-- PANEL 1 : INFOS GÉNÉRALES -->
@@ -142,7 +143,6 @@
                 
                 <div class="input-group">
                     <label>Nom de l'Agent</label>
-                    <!-- Si tu utilises une session, tu peux mettre value="<%= user.nom %>" et le mettre en readonly -->
                     <input type="text" name="agentNom" class="custom-input" placeholder="Ex: Cpt. John Doe" required>
                 </div>
 
