@@ -16,8 +16,8 @@ router.get('/', async (req, res) => {
         });
     } catch (err) {
         console.error("Erreur lors du chargement de la page saisie:", err);
-        // C'est ici que ça te renvoyait sur le dashboard en cas de problème.
-        res.redirect('/dashboard'); 
+        // ON AFFICHE L'ERREUR A L'ECRAN POUR TROUVER LE PROBLEME DANS TON FICHIER EJS
+        res.status(500).send("ERREUR CRITIQUE DANS SAISIE.EJS : " + err.message); 
     }
 });
 
