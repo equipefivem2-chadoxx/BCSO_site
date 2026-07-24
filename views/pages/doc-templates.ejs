@@ -344,3 +344,115 @@ Date et heure de l'incident :
 Lieu de l'incident :
 Nom du suspect : 
 Heure des droits Miranda :
+
+```
+
+```</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET D : RAPPORT D'INTERVENTION -->
+    <div id="intervention" class="formation-pane">
+        <div class="main-grid">
+            <div class="info-panel">
+                <h2><span>D)</span> Rapport d'Intervention</h2>
+                <p>Pour documenter une intervention spécifique effectuée par les unités du BCSO.</p>
+            </div>
+            <div class="use-case-box">
+                <button class="btn-copy" onclick="copyText('txt-intervention', this)"><i class="fas fa-copy"></i> Copier</button>
+                <div id="txt-intervention" class="template-content">Rapport d’intervention : 
+
+Les unités du Blaine County Sheriff's Office sont intervenues pour [MOTIF DE L'INTERVENTION] au niveau de [LIEU].
+
+[Description des fais et de l’intervention].
+
+Le dossier a été constitué et transmis conformément aux procédures en vigueur.
+
+Infractions :
+- 
+- 
+- 
+-
+
+Amendes total/peine : 
+- </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET E : RAPPORT INCIDENT -->
+    <div id="incident" class="formation-pane">
+        <div class="main-grid">
+            <div class="info-panel">
+                <h2><span>E)</span> Rapport d'Incident</h2>
+                <p>À remplir obligatoirement suite à un événement majeur tel qu'un tir ou un accident.</p>
+            </div>
+            <div class="use-case-box">
+                <button class="btn-copy" onclick="copyText('txt-incident', this)"><i class="fas fa-copy"></i> Copier</button>
+                <div id="txt-incident" class="template-content"># TITRE RAPPORT D’INCIDENT
+
+## Agent déclarant
+
+* **Nom et prénom :**
+* **Matricule :**
+* **Service :BCSO**
+
+----------------------------------------------------------
+
+## INFORMATIONS DE L'INCIDENT
+
+**Date de l'incident :**  
+**Heure approximative :**  
+**Lieu :**  
+
+----------------------------------------------------------
+
+## DÉPOSITION
+
+**Agent [Nom Prénom] :**
+
+> Je soussigné, [Nom Prénom], matricule [Matricule], [Grade] au sein du BCSO, déclare les faits suivants :
+>
+> Le [date de l'incident], aux alentours de [heure], alors que je me trouvais [situation avant les faits], les événements suivants se sont déroulés :
+>
+> [Décrire précisément le déroulement des faits dans l'ordre chronologique.]
+>
+> [Préciser les actions effectuées par l'agent, les personnes impliquées, les moyens utilisés ainsi que les raisons des décisions prises.]
+>
+> [Ajouter les éventuels éléments importants : témoins présents, preuves disponibles, véhicules impliqués, blessures, dégâts, etc.]
+>
+> Je reste à disposition des autorités compétentes pour toute enquête complémentaire, audition supplémentaire ou demande d'information concernant les faits rapportés.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academy-footer">
+        Blaine County Sheriff's Office — Official Templates Database
+    </div>
+</div>
+
+<script>
+    function switchTemplate(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+
+    function copyText(elementId, btnElement) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = btnElement.innerHTML;
+            btnElement.classList.add('copied');
+            btnElement.innerHTML = '<i class="fas fa-check"></i> Copié !';
+            setTimeout(() => {
+                btnElement.classList.remove('copied');
+                btnElement.innerHTML = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.error('Erreur lors de la copie : ', err);
+        });
+    }
+</script>
