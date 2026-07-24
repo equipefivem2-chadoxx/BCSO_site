@@ -1,0 +1,256 @@
+<style>
+    /* Variables issues de ta DA */
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-panel: rgba(11, 15, 25, 0.75);
+        --border-glow: rgba(189, 165, 129, 0.25);
+        --success: #10b981;
+        --danger: #ef4444;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    /* Le container ne gère plus la margin-left, c'est ton layout main.ejs qui le fait ! */
+    .saisie-wrapper { 
+        max-width: 1200px; 
+        margin: 0 auto; 
+        animation: fadeUp 0.5s ease-out forwards;
+    }
+
+    /* HEADER IDENTIQUE A TA DA */
+    .proc-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 35px; 
+        background: var(--bg-panel); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--border-glow); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    }
+
+    .proc-title { text-align: right; }
+    .proc-title h1 { font-size: 26px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+    .proc-title p { color: var(--primary); margin: 5px 0 0 0; font-weight: 700; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; }
+
+    /* LAYOUT DU FORMULAIRE */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    
+    .form-panel {
+        background: var(--bg-panel);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-top: 3px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .form-panel.full-width { grid-column: span 2; }
+    
+    .form-panel h2 {
+        margin: 0 0 25px 0; color: #fff; font-size: 1.15rem; text-transform: uppercase;
+        font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 12px;
+        border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px;
+    }
+    .form-panel h2 i { color: var(--primary); }
+
+    /* STYLES DES CHAMPS DE SAISIE */
+    .input-group { margin-bottom: 20px; position: relative; }
+    .input-group label {
+        display: block; font-size: 0.75rem; color: #94a3b8; font-weight: 700;
+        margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
+    }
+    
+    .custom-input {
+        width: 100%; background: rgba(4, 6, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 8px; padding: 14px 16px; color: #fff; font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem; transition: all 0.3s ease; box-sizing: border-box;
+    }
+    .custom-input:focus {
+        border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); outline: none; background: rgba(0,0,0,0.8);
+    }
+    .custom-select { cursor: pointer; appearance: none; }
+    
+    .select-wrapper { position: relative; }
+    .select-wrapper::after {
+        content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute;
+        right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); pointer-events: none;
+    }
+
+    /* ZONE DE PREUVE PHOTO */
+    .photo-preview-box {
+        margin-top: 15px; width: 100%; height: 250px; border: 1px dashed rgba(255,255,255,0.15);
+        border-radius: 8px; background: rgba(0,0,0,0.3); display: flex; justify-content: center;
+        align-items: center; overflow: hidden; position: relative; transition: 0.3s;
+    }
+    .photo-preview-box.has-image { border: 1px solid var(--primary); border-style: solid; box-shadow: 0 0 20px var(--primary-glow); }
+    .photo-preview-box img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; z-index: 2; }
+    .photo-preview-box .placeholder { color: #475569; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .photo-preview-box .placeholder i { font-size: 2rem; color: rgba(189, 165, 129, 0.3); }
+
+    /* BOUTON DE SOUMISSION */
+    .submit-section { margin-top: 30px; text-align: right; }
+    .btn-submit {
+        background: linear-gradient(135deg, rgba(189, 165, 129, 0.1) 0%, rgba(189, 165, 129, 0.3) 100%);
+        border: 1px solid var(--primary); color: #fff; padding: 18px 40px; border-radius: 8px;
+        font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; text-transform: uppercase;
+        letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; display: inline-flex;
+        align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(189, 165, 129, 0.15);
+    }
+    .btn-submit:hover {
+        background: var(--primary); color: #05070b; box-shadow: 0 0 25px var(--primary-glow);
+        transform: translateY(-3px);
+    }
+
+    /* Champ grisé si non requis */
+    .input-disabled { opacity: 0.4; pointer-events: none; }
+    
+    @media (max-width: 900px) { .form-grid { grid-template-columns: 1fr; } .form-panel.full-width { grid-column: span 1; } }
+</style>
+
+<div class="saisie-wrapper">
+    <!-- HEADER TACTIQUE -->
+    <div class="proc-header">
+        <div>
+            <!-- Remplace par la route vers ton dashboard ou document -->
+            <a href="/saisies" class="btn-back" style="background: rgba(189, 165, 129, 0.08); border: 1px solid rgba(189, 165, 129, 0.3); color: var(--primary); padding: 12px 22px; border-radius: 8px; font-weight: 800; text-transform: uppercase; text-decoration: none; font-size: 0.8rem;"><i class="fas fa-chevron-left"></i> Retour</a>
+        </div>
+        <div class="proc-title">
+            <h1>Déclaration de Saisie</h1>
+            <p>Bureau des Preuves - BCSO</p>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE DE SAISIE -->
+    <form action="/saisies/declarer" method="POST" id="formSaisie">
+        <div class="form-grid">
+            
+            <!-- PANEL 1 : INFOS GÉNÉRALES -->
+            <div class="form-panel">
+                <h2><i class="fas fa-id-card-clip"></i> Acteurs de la procédure</h2>
+                
+                <div class="input-group">
+                    <label>Nom de l'Agent</label>
+                    <!-- Si tu utilises une session, tu peux mettre value="<%= user.nom %>" et le mettre en readonly -->
+                    <input type="text" name="agentNom" class="custom-input" placeholder="Ex: Cpt. John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Nom du Suspect / Propriétaire</label>
+                    <input type="text" name="suspect" class="custom-input" placeholder="Ex: Ricky Bobby (ou Inconnu)" required>
+                </div>
+            </div>
+
+            <!-- PANEL 2 : DÉTAILS DE LA SAISIE -->
+            <div class="form-panel">
+                <h2><i class="fas fa-box-open"></i> Caractéristiques de l'objet</h2>
+                
+                <div class="input-group">
+                    <label>Type de Saisie</label>
+                    <div class="select-wrapper">
+                        <select name="typeSaisie" id="typeSaisieSelect" class="custom-input custom-select" required onchange="checkType()">
+                            <option value="" disabled selected>-- Sélectionner la catégorie --</option>
+                            <option value="Arme">Arme</option>
+                            <option value="Drogue">Drogue</option>
+                            <option value="Argent Sale">Argent Sale</option>
+                            <option value="Objet Illégal">Objet Illégal (Cagoule, Outils...)</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid" style="gap: 15px;">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Intitulé exact</label>
+                        <input type="text" name="intitule" class="custom-input" placeholder="Ex: Pistolet Lourd, Pochons..." required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label>Quantité / Montant</label>
+                        <input type="number" name="quantite" class="custom-input" value="1" min="1" required>
+                    </div>
+                </div>
+
+                <div class="input-group" id="groupNumSerie" style="margin-top: 20px;">
+                    <label><i class="fas fa-barcode"></i> Numéro de série (Arme uniquement)</label>
+                    <input type="text" name="numeroSerie" id="inputNumSerie" class="custom-input input-disabled" value="N/A">
+                </div>
+            </div>
+
+            <!-- PANEL 3 : PREUVE -->
+            <div class="form-panel full-width">
+                <h2><i class="fas fa-camera"></i> Pièce à conviction (Photographie)</h2>
+                
+                <div class="input-group">
+                    <label>URL de la photo (Hébergeur Externe, Discord, etc.)</label>
+                    <input type="url" name="photoUrl" id="photoUrlInput" class="custom-input" placeholder="https://..." oninput="previewImage()">
+                </div>
+
+                <div class="photo-preview-box" id="previewBox">
+                    <div class="placeholder" id="previewPlaceholder">
+                        <i class="fas fa-image"></i>
+                        <span>Aucune image renseignée</span>
+                    </div>
+                    <img id="previewImg" src="" alt="Aperçu saisie">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-lock"></i> Sceller et Enregistrer
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- SCRIPTS D'INTERACTIVITÉ -->
+<script>
+    // 1. Activer/Désactiver le champ "Numéro de série"
+    function checkType() {
+        const select = document.getElementById('typeSaisieSelect');
+        const numSerieInput = document.getElementById('inputNumSerie');
+        
+        if (select.value === 'Arme') {
+            numSerieInput.classList.remove('input-disabled');
+            if (numSerieInput.value === 'N/A') numSerieInput.value = '';
+            numSerieInput.placeholder = "Entrez le numéro de l'arme...";
+            numSerieInput.style.borderColor = 'var(--primary)'; // Effet visuel
+        } else {
+            numSerieInput.classList.add('input-disabled');
+            numSerieInput.value = 'N/A';
+            numSerieInput.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+        }
+    }
+
+    // 2. Prévisualisation en direct de l'image
+    function previewImage() {
+        const url = document.getElementById('photoUrlInput').value;
+        const imgElement = document.getElementById('previewImg');
+        const placeholder = document.getElementById('previewPlaceholder');
+        const box = document.getElementById('previewBox');
+
+        // Regex basique pour vérifier si c'est une URL valide
+        if (url.match(/\.(jpeg|jpg|gif|png|webp)/) != null || url.startsWith('http')) {
+            imgElement.src = url;
+            imgElement.style.display = 'block';
+            placeholder.style.display = 'none';
+            box.classList.add('has-image');
+        } else {
+            imgElement.style.display = 'none';
+            placeholder.style.display = 'flex';
+            box.classList.remove('has-image');
+        }
+    }
+</script>
