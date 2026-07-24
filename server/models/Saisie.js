@@ -3,7 +3,7 @@ const router = express.Router();
 const Saisie = require('../models/Saisie');
 const Agent = require('../models/Agent');
 
-// Afficher la page
+// 1. PAGE PRINCIPALE : Affiche la liste des saisies -> URL : /saisie
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -15,27 +15,28 @@ router.get('/', async (req, res) => {
             saisies: saisies
         });
     } catch (err) {
-        console.error(err);
-        res.redirect('/dashboard');
+        console.error("Erreur lors du chargement de la page saisie:", err);
+        // C'est ici que ça te renvoyait sur le dashboard en cas de problème.
+        res.redirect('/dashboard'); 
     }
 });
 
-// Afficher le formulaire de déclaration (C'EST LA ROUTE QUI TE MANQUAIT)
+// 2. PAGE DÉCLARATION : Affiche le formulaire -> URL : /saisie/declarer
 router.get('/declarer', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-
+    
     try {
         res.render('pages/declarer-saisie', { 
-            title: 'Déclarer une Saisie - BCSO',
+            title: 'BCSO - Déclarer une Saisie',
             user: req.session.user
         });
     } catch (err) {
-        console.error(err);
+        console.error("Erreur lors du chargement du formulaire:", err);
         res.redirect('/saisie');
     }
 });
 
-// Ajouter une saisie
+// 3. ACTION : Sauvegarder la saisie quand le formulaire est validé -> URL : /saisie/ajouter
 router.post('/ajouter', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -58,17 +59,18 @@ router.post('/ajouter', async (req, res) => {
         res.redirect('/saisie?success=1');
     } catch (err) {
         console.error("Erreur ajout saisie:", err);
-        res.redirect('/saisie?error=1');
+        res.redirect('/saisie/declarer?error=1');
     }
 });
 
-// Changer le statut (Détruire / Restituer)
+// 4. ACTION : Changer le statut (Détruire / Restituer) -> URL : /saisie/statut/:id
 router.post('/statut/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
         await Saisie.findByIdAndUpdate(req.params.id, { statut: req.body.statut });
         res.redirect('/saisie');
     } catch (err) {
+        console.error("Erreur changement statut:", err);
         res.redirect('/saisie');
     }
 });
