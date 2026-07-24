@@ -3,7 +3,7 @@ const router = express.Router();
 const Saisie = require('../models/Saisie');
 const Agent = require('../models/Agent');
 
-// Afficher la page des saisies
+// Afficher la page principale des saisies
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -20,17 +20,17 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Afficher la page de déclaration
-router.get('/declarer', async (req, res) => {
+// Afficher la page "Déclarer une saisie"
+router.get('/declarer', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-
-    res.render('pages/declarer-saisie', { 
+    
+    res.render('pages/declarer-saisie', {
         title: 'BCSO - Déclarer une saisie',
         user: req.session.user
     });
 });
 
-// Ajouter une saisie
+// Ajouter une saisie (Traitement du formulaire)
 router.post('/ajouter', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
