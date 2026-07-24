@@ -176,6 +176,45 @@
         border-color: #10b981;
         color: #fff;
     }
+
+    /* 🚀 STYLES DU BOUTON ET PANNEAU ARMURERIE */
+    .btn-armes {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: 0.3s;
+    }
+    .btn-armes:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .armes-panel {
+        display: none; /* Masqué par défaut */
+        background: rgba(0, 0, 0, 0.5);
+        border-left: 3px solid var(--primary);
+        padding: 15px 25px;
+    }
+
+    .arme-item {
+        display: flex;
+        justify-content: space-between;
+        background: rgba(255,255,255,0.02);
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+    }
+    .arme-item:last-child { margin-bottom: 0; }
+    
+    .arme-nom { color: #fff; font-weight: 700; }
+    .arme-id { color: #94a3b8; font-family: monospace; }
 </style>
 
 <div class="annuaire-wrapper">
@@ -221,16 +260,41 @@
                                     <span style="color: #ef4444; font-size: 0.85rem; font-style: italic;">Non renseigné</span>
                                 <% } %>
                             </td>
-                            <td>
+                            <td style="display: flex; gap: 10px;">
                                 <% if(agent.iban !== 'Non renseigné' && agent.iban) { %>
                                     <button class="copy-btn" onclick="copyIban('<%= agent.iban %>', this)">
-                                        <i class="fas fa-copy"></i> Copier
+                                        <i class="fas fa-copy"></i> Copier IBAN
                                     </button>
                                 <% } else { %>
-                                    <span style="color: #64748b; font-size: 0.8rem;">-</span>
+                                    <span style="color: #64748b; font-size: 0.8rem; margin-right: 15px;">-</span>
+                                <% } %>
+
+                                <!-- 🚀 BOUTON POUR VOIR L'ARMURERIE -->
+                                <% if(agent.armes && agent.armes.length > 0) { %>
+                                    <button class="btn-armes" onclick="toggleArmes('armes-<%= agent._id %>')">
+                                        <i class="fas fa-crosshairs"></i> Armurerie (<%= agent.armes.length %>)
+                                    </button>
                                 <% } %>
                             </td>
                         </tr>
+                        
+                        <!-- 🚀 PANNEAU CACHÉ AVEC LA LISTE DES ARMES -->
+                        <% if(agent.armes && agent.armes.length > 0) { %>
+                            <tr id="armes-<%= agent._id %>" class="armes-panel">
+                                <td colspan="5">
+                                    <div style="font-weight: 800; color: var(--primary); margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase;">
+                                        Registre d'armement déclaré
+                                    </div>
+                                    <% agent.armes.forEach(function(arme) { %>
+                                        <div class="arme-item">
+                                            <span class="arme-nom"><i class="fas fa-gun" style="color: #64748b; margin-right: 8px;"></i> <%= arme.nomArme %></span>
+                                            <span class="arme-id">N° Série : <%= arme.idSerie %></span>
+                                        </div>
+                                    <% }); %>
+                                </td>
+                            </tr>
+                        <% } %>
+
                     <% }); %>
                 <% } else { %>
                     <tr>
@@ -243,6 +307,7 @@
 </div>
 
 <script>
+    // Copier l'IBAN
     function copyIban(iban, btnElement) {
         navigator.clipboard.writeText(iban).then(() => {
             const originalHTML = btnElement.innerHTML;
@@ -255,5 +320,15 @@
         }).catch(err => {
             console.error('Erreur lors de la copie : ', err);
         });
+    }
+
+    // Afficher / Masquer l'armurerie d'un agent
+    function toggleArmes(id) {
+        const row = document.getElementById(id);
+        if (row.style.display === 'table-row') {
+            row.style.display = 'none';
+        } else {
+            row.style.display = 'table-row';
+        }
     }
 </script>

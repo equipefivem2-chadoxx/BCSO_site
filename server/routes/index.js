@@ -73,7 +73,6 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE PROFIL AGENT
 router.get('/profil', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
@@ -83,7 +82,7 @@ router.get('/profil', async (req, res) => {
         const agentDB = await Agent.findOne({ discordId: discordId });
 
         if (!agentDB) {
-            return res.redirect('/dashboard'); // Si l'agent n'est pas dans la DB, on le renvoie au dashboard
+            return res.redirect('/dashboard'); 
         }
 
         res.render('pages/profil', { 
@@ -97,7 +96,7 @@ router.get('/profil', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE UPDATE PROFIL
+// 🚀 MODIFICATION : Prise en charge du tableau d'armes
 router.post('/profil/update', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     
@@ -105,11 +104,36 @@ router.post('/profil/update', async (req, res) => {
         const Agent = require('../models/Agent');
         const discordId = req.session.user.id || req.session.user.discordId;
         
+        // Reconstruction propre du tableau des armes envoyé par le formulaire
+        let armesFormattees = [];
+        if (req.body.nomArme && req.body.idSerie) {
+            if (Array.isArray(req.body.nomArme)) {
+                // S'il y a plusieurs armes
+                for (let i = 0; i < req.body.nomArme.length; i++) {
+                    if (req.body.nomArme[i].trim() !== '' && req.body.idSerie[i].trim() !== '') {
+                        armesFormattees.push({
+                            nomArme: req.body.nomArme[i].trim(),
+                            idSerie: req.body.idSerie[i].trim()
+                        });
+                    }
+                }
+            } else {
+                // S'il n'y a qu'une seule arme
+                if (req.body.nomArme.trim() !== '' && req.body.idSerie.trim() !== '') {
+                    armesFormattees.push({
+                        nomArme: req.body.nomArme.trim(),
+                        idSerie: req.body.idSerie.trim()
+                    });
+                }
+            }
+        }
+
         await Agent.findOneAndUpdate(
             { discordId: discordId },
             { 
                 telephone: req.body.telephone,
-                iban: req.body.iban 
+                iban: req.body.iban,
+                armes: armesFormattees // On sauvegarde le nouveau tableau
             }
         );
 

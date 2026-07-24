@@ -10,8 +10,13 @@ const agentSchema = new mongoose.Schema({
     matricule: { type: String, required: true, unique: true },
     telephone: { type: String, required: false, default: "Non renseigné" },
     
-    // 🚀 NOUVEAU : Champ IBAN pour les paies
     iban: { type: String, required: false, default: "Non renseigné" },
+    
+    // 🚀 NOUVEAU : Tableau pour stocker l'armurerie personnelle de l'agent
+    armes: [{
+        nomArme: { type: String, required: true },
+        idSerie: { type: String, required: true }
+    }],
     
     isAdmin: { type: Boolean, default: false },
     canDeleteArchives: { type: Boolean, default: false },

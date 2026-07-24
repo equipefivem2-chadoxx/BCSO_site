@@ -32,7 +32,6 @@
 
     .profil-wrapper { 
         max-width: 900px; 
-        /* 🚀 CORRECTION : margin auto pour un centrage parfait */
         margin: 40px auto 80px auto; 
         padding: 0 30px; 
         animation: fadeUp 0.5s ease-out forwards;
@@ -186,6 +185,68 @@
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
+
+    /* 🚀 STYLES POUR LE SYSTÈME D'ARMEMENT */
+    .section-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.05);
+        margin: 35px 0;
+    }
+
+    .section-title {
+        color: var(--primary);
+        font-size: 1.1rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .arme-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 50px;
+        gap: 15px;
+        margin-bottom: 15px;
+        align-items: end;
+    }
+
+    .btn-add-arme {
+        background: rgba(189, 165, 129, 0.1);
+        border: 1px dashed var(--primary);
+        color: var(--primary);
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-bottom: 10px;
+    }
+
+    .btn-add-arme:hover {
+        background: var(--primary);
+        color: #000;
+    }
+
+    .btn-remove-arme {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        height: 50px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-remove-arme:hover {
+        background: var(--danger);
+        color: #fff;
+    }
 </style>
 
 <div class="profil-wrapper">
@@ -195,7 +256,7 @@
         </div>
         <div class="profil-title">
             <h1>Profil Agent</h1>
-            <p>Gestion des informations personnelles</p>
+            <p>Gestion des informations personnelles et matérielles</p>
         </div>
     </div>
 
@@ -210,7 +271,7 @@
             }
         </script>
 
-        <form action="/profil/update" method="POST">
+        <form action="/profil/update" method="POST" id="profilForm">
             <div class="grid-2">
                 <div class="form-group">
                     <label>Prénom & Nom (Non modifiable)</label>
@@ -238,7 +299,59 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Sauvegarder mes informations</button>
+            <div class="section-divider"></div>
+
+            <!-- 🚀 ZONE ARMURERIE -->
+            <div class="section-title"><i class="fas fa-crosshairs"></i> Registre d'Armement</div>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px;">Veuillez déclarer toutes vos armes de service avec leur numéro de série exact.</p>
+
+            <div id="armes-container">
+                <% if(agentDB.armes && agentDB.armes.length > 0) { %>
+                    <% agentDB.armes.forEach(function(arme) { %>
+                        <div class="arme-row">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Modèle de l'arme</label>
+                                <input type="text" name="nomArme[]" class="form-control" value="<%= arme.nomArme %>" placeholder="Ex: Vom Fueur G17">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Numéro de série</label>
+                                <input type="text" name="idSerie[]" class="form-control" value="<%= arme.idSerie %>" placeholder="Ex: 837690GQZ397812">
+                            </div>
+                            <button type="button" class="btn-remove-arme" onclick="removeArme(this)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+
+            <button type="button" class="btn-add-arme" onclick="addArme()"><i class="fas fa-plus"></i> Ajouter une nouvelle arme de service</button>
+
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Sauvegarder mon profil complet</button>
         </form>
     </div>
 </div>
+
+<script>
+    // 🚀 FONCTION POUR AJOUTER UNE LIGNE D'ARME DYNAMIQUEMENT
+    function addArme() {
+        const container = document.getElementById('armes-container');
+        const row = document.createElement('div');
+        row.className = 'arme-row';
+        row.innerHTML = `
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Modèle de l'arme</label>
+                <input type="text" name="nomArme[]" class="form-control" placeholder="Ex: Vom Fueur G17">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Numéro de série</label>
+                <input type="text" name="idSerie[]" class="form-control" placeholder="Ex: 837690GQZ397812">
+            </div>
+            <button type="button" class="btn-remove-arme" onclick="removeArme(this)"><i class="fas fa-trash"></i></button>
+        `;
+        container.appendChild(row);
+    }
+
+    // 🚀 FONCTION POUR SUPPRIMER UNE LIGNE D'ARME
+    function removeArme(button) {
+        button.parentElement.remove();
+    }
+</script>
