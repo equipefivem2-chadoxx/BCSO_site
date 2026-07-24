@@ -1,121 +1,224 @@
 <%- include('../partials/header') %>
 <%- include('../partials/sidebar') %>
 
+<!-- Importation de la police Montserrat (identique à Effectif & Dashboard) -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
     :root {
-        --primary: #3b82f6;
-        --primary-hover: #2563eb;
+        /* Palette de couleurs calquée sur Dashboard & Effectif */
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.15);
+        --primary-hover: #d2bc99;
+        
+        --secondary: #0ea5e9;
+        --secondary-glow: rgba(14, 165, 233, 0.2);
+        
         --danger: #ef4444;
-        --danger-hover: #dc2626;
-        --bg-base: #111827;
-        --bg-panel: #1f2937;
-        --bg-input: #374151;
-        --text-main: #f9fafb;
-        --text-muted: #9ca3af;
-        --border-color: #374151;
-        --radius: 6px;
+        --danger-glow: rgba(239, 68, 68, 0.25);
+        
+        --bg-dark: #07090e;
+        --bg-card: rgba(15, 23, 42, 0.4);
+        --bg-input: rgba(0, 0, 0, 0.4);
+        
+        --text-main: #e2e8f0;
+        --text-muted: #94a3b8;
+        
+        --border-light: rgba(255, 255, 255, 0.03);
+        --border-highlight: rgba(189, 165, 129, 0.2);
+        
+        --radius-lg: 20px;
+        --radius-md: 10px;
+        --radius-sm: 6px;
     }
+    
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: rgba(189, 165, 129, 0.2); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(189, 165, 129, 0.4); }
 
     body {
         margin: 0;
-        background-color: var(--bg-base);
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(189, 165, 129, 0.03), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(189, 165, 129, 0.04), transparent 25%);
+        font-family: 'Montserrat', sans-serif;
         color: var(--text-main);
         min-height: 100vh;
+        line-height: 1.5;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
     }
 
     #admin-container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 40px 20px;
+        padding: 40px 20px 70px 20px;
+        animation: fadeUp 0.6s ease-out forwards;
     }
     
     h1, h2, h3 {
+        color: #fff;
         margin-top: 0;
-        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 800;
     }
 
-    .page-header {
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 15px;
-        margin-bottom: 30px;
+    .master-header {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(7, 9, 14, 0.95) 100%);
+        backdrop-filter: blur(15px);
+        padding: 35px 40px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(189, 165, 129, 0.15);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-    
+
+    .master-header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 5px; height: 100%;
+        background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+        box-shadow: 0 0 20px var(--primary);
+    }
+
+    .header-title h1 {
+        font-size: 28px;
+        font-weight: 900;
+        margin: 0;
+    }
+    .header-title p {
+        margin: 6px 0 0 0;
+        color: var(--primary);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+
+    /* Grille KPI */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-bottom: 40px;
     }
-    
+    @media (max-width: 900px) {
+        .stats-grid { grid-template-columns: 1fr; }
+    }
     .stat-card {
-        background: var(--bg-panel);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius);
-        padding: 20px;
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border-light);
+        border-top: 1px solid rgba(189, 165, 129, 0.2);
+        border-radius: var(--radius-lg);
+        padding: 25px 30px;
         display: flex;
         align-items: center;
         gap: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
     }
-    
-    .stat-card i {
-        font-size: 2rem;
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px var(--primary-glow);
+        border-color: rgba(189, 165, 129, 0.4);
+    }
+    .stat-icon {
+        font-size: 26px;
         color: var(--primary);
+        background: rgba(189, 165, 129, 0.1);
+        border: 1px solid rgba(189, 165, 129, 0.2);
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    
     .stat-info div {
-        font-size: 0.85rem;
+        font-size: 11px;
         color: var(--text-muted);
         text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 800;
+        margin-bottom: 4px;
     }
-    
     .stat-info span {
-        font-size: 1.8rem;
-        font-weight: 700;
+        font-size: 32px;
+        font-weight: 900;
+        color: #fff;
     }
 
     .admin-grid {
         display: grid;
-        grid-template-columns: 350px 1fr;
-        gap: 20px;
+        grid-template-columns: 380px 1fr;
+        gap: 30px;
         align-items: start;
     }
-    
-    @media (max-width: 1100px) {
+    @media (max-width: 1200px) {
         .admin-grid { grid-template-columns: 1fr; }
     }
 
     .panel-box {
-        background: var(--bg-panel);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius);
-        padding: 25px;
+        background: var(--bg-card);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--border-light);
+        border-top: 1px solid rgba(189, 165, 129, 0.15);
+        border-radius: var(--radius-lg);
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        position: relative;
     }
 
     .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 18px;
     }
-    
     .form-group label {
         display: block;
-        margin-bottom: 5px;
-        font-size: 0.85rem;
+        margin-bottom: 8px;
+        font-size: 0.72rem;
         color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
     }
-    
     .form-control {
         width: 100%;
-        padding: 10px 12px;
+        padding: 12px 14px;
         background: var(--bg-input);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-md);
         color: var(--text-main);
+        font-size: 0.9rem;
+        font-family: 'Montserrat', sans-serif;
+        transition: all 0.3s ease;
         box-sizing: border-box;
     }
-    
     .form-control:focus {
         outline: none;
         border-color: var(--primary);
+        box-shadow: 0 0 12px var(--primary-glow);
+        background: rgba(0, 0, 0, 0.6);
+    }
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23bda581' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
     }
 
     /* Switch Design */
@@ -123,97 +226,135 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: var(--bg-base);
-        padding: 12px 15px;
-        border-radius: var(--radius);
-        border: 1px solid var(--border-color);
-        margin-top: 15px;
+        background: var(--bg-input);
+        padding: 12px 16px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-light);
+        margin-top: 12px;
     }
-    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 22px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-input); transition: .3s; border-radius: 20px; border: 1px solid var(--border-color); }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--primary); border-color: var(--primary); }
-    input:checked + .slider:before { transform: translateX(20px); }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #1e293b; transition: .3s; border-radius: 24px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(22px); }
 
+    /* Boutons */
     .btn {
-        background: var(--primary);
-        color: #fff;
-        border: none;
-        padding: 10px 15px;
-        border-radius: var(--radius);
+        background: rgba(189, 165, 129, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(189, 165, 129, 0.3);
+        padding: 13px 20px;
+        font-weight: 800;
+        border-radius: var(--radius-md);
         cursor: pointer;
         width: 100%;
-        font-weight: 600;
-        transition: background 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
     }
-    .btn:hover { background: var(--primary-hover); }
-    
-    .btn-danger { background: var(--danger); width: auto; }
-    .btn-danger:hover { background: var(--danger-hover); }
+    .btn:hover {
+        background: var(--primary);
+        color: #07090e;
+        box-shadow: 0 0 20px var(--primary-glow);
+        transform: translateY(-2px);
+    }
 
     /* Tableaux */
-    .table-responsive { overflow-x: auto; margin-top: 15px; }
-    .agent-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .table-responsive { overflow-x: auto; margin-top: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-light); }
+    .agent-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
     .agent-table th { 
-        background: var(--bg-base); 
-        padding: 12px 15px; 
-        color: var(--text-muted); 
-        font-size: 0.85rem; 
-        border-bottom: 2px solid var(--border-color); 
+        background: rgba(0, 0, 0, 0.5); 
+        padding: 16px 18px; 
+        color: var(--primary); 
+        font-size: 0.72rem; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border-highlight); 
     }
     .agent-table td { 
-        padding: 12px 15px; 
-        border-bottom: 1px solid var(--border-color); 
+        padding: 16px 18px; 
+        border-bottom: 1px solid var(--border-light); 
         font-size: 0.9rem; 
+        vertical-align: middle; 
+    }
+    .agent-table tbody tr:hover:not(.edit-row) { 
+        background: rgba(189, 165, 129, 0.03); 
     }
     
-    .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-    .badge-admin { background: rgba(59, 130, 246, 0.2); color: var(--primary); }
-    .badge-user { background: rgba(156, 163, 175, 0.2); color: var(--text-muted); }
+    /* Badges */
+    .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: inline-block;}
+    .badge-admin { background: rgba(189, 165, 129, 0.1); color: var(--primary); border: 1px solid rgba(189, 165, 129, 0.3); }
+    .badge-user { background: rgba(148, 163, 184, 0.1); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.2); }
     
+    /* Actions */
     .actions-cell { display: flex; gap: 8px; }
     .btn-action { 
         background: var(--bg-input); 
-        border: none; 
-        color: var(--text-main); 
-        padding: 8px; 
-        border-radius: 4px; 
+        border: 1px solid rgba(255, 255, 255, 0.08); 
+        color: var(--text-muted); 
+        padding: 8px 10px; 
+        border-radius: var(--radius-sm); 
         cursor: pointer; 
+        transition: all 0.3s;
+        display: flex; align-items: center; justify-content: center;
     }
-    .btn-action:hover { background: var(--border-color); }
-    .btn-action.delete:hover { background: var(--danger); color: white; }
+    .btn-action.edit:hover { border-color: var(--primary); color: var(--primary); background: rgba(189, 165, 129, 0.1); }
+    .btn-action.delete:hover { border-color: var(--danger); color: var(--danger); background: rgba(239, 68, 68, 0.1); }
 
-    .edit-row { background: var(--bg-base); display: none; }
-    .edit-row td { padding: 20px; border-bottom: 2px solid var(--primary); }
+    /* Edit Rows */
+    .edit-row { background: rgba(0, 0, 0, 0.4); display: none; }
+    .edit-row td { padding: 25px; border-bottom: 2px solid var(--primary); }
 
-    .danger-zone { margin-top: 40px; border-color: var(--danger); background: rgba(239, 68, 68, 0.05); }
-    .danger-zone h2 { color: var(--danger); }
+    /* Zone de danger */
+    .danger-zone { 
+        margin-top: 40px; 
+        border: 1px solid rgba(239, 68, 68, 0.2); 
+        border-top: 1px solid rgba(239, 68, 68, 0.4);
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.03), rgba(7, 9, 14, 0.8)); 
+    }
+    .danger-zone h2 { color: var(--danger); font-size: 1.1rem; display: flex; align-items: center; }
+    .btn-danger { 
+        background: rgba(239, 68, 68, 0.15); 
+        color: var(--danger);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        width: auto; 
+    }
+    .btn-danger:hover { background: var(--danger); color: #fff; box-shadow: 0 0 20px var(--danger-glow); }
+
+    .arme-row {
+        display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.3); padding: 8px; border-radius: var(--radius-md); border: 1px solid var(--border-light);
+    }
 </style>
 
 <div id="admin-container">
-    <div class="page-header">
-        <h1>Haut Commandement</h1>
-        <p style="color: var(--text-muted); margin: 5px 0 0 0;">Gestion globale des accès et des effectifs</p>
+    <div class="master-header">
+        <div class="header-title">
+            <h1>Haut Commandement</h1>
+            <p>Gestion des accès, de l'armement et des effectifs BCSO</p>
+        </div>
     </div>
 
+    <!-- Statistiques KPI -->
     <div class="stats-grid">
         <div class="stat-card">
-            <i class="fas fa-users"></i>
+            <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
             <div class="stat-info">
                 <div>Total Agents</div>
                 <span><%= agents.length %></span>
             </div>
         </div>
         <div class="stat-card">
-            <i class="fas fa-shield-alt"></i>
+            <div class="stat-icon"><i class="fas fa-lock"></i></div>
             <div class="stat-info">
                 <div>Admins Web</div>
                 <span><%= agents.filter(a => a.isAdmin).length %></span>
             </div>
         </div>
         <div class="stat-card">
-            <i class="fas fa-folder-open"></i>
+            <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
             <div class="stat-info">
                 <div>Rapports Stockés</div>
                 <span><%= archivesCount %></span>
@@ -224,32 +365,35 @@
     <div class="admin-grid">
         <!-- Formulaire d'enregistrement -->
         <div class="panel-box">
-            <h2 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-user-plus"></i> Enregistrer un Agent</h2>
+            <h2 style="font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: #fff;">
+                <i class="fas fa-user-plus" style="color: var(--primary);"></i> Enregistrer un Agent
+            </h2>
+            <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 15px 0 20px 0;">
             
             <form action="/admin/ajouter" method="POST">
                 <div class="form-group">
                     <label>Prénom</label>
-                    <input type="text" name="prenom" class="form-control" required placeholder="John">
+                    <input type="text" name="prenom" class="form-control" required placeholder="Ex: John">
                 </div>
                 <div class="form-group">
                     <label>Nom</label>
-                    <input type="text" name="nom" class="form-control" required placeholder="Doe">
+                    <input type="text" name="nom" class="form-control" required placeholder="Ex: Doe">
                 </div>
                 <div class="form-group">
                     <label>Matricule</label>
-                    <input type="text" name="matricule" class="form-control" required placeholder="55">
+                    <input type="text" name="matricule" class="form-control" required placeholder="Ex: 55">
                 </div>
                 <div class="form-group">
-                    <label>Téléphone</label>
-                    <input type="text" name="telephone" class="form-control" placeholder="555-XXXX">
+                    <label>Téléphone (In-Game)</label>
+                    <input type="text" name="telephone" class="form-control" placeholder="Ex: 555-XXXX">
                 </div>
                 <div class="form-group">
-                    <label>IBAN</label>
-                    <input type="text" name="iban" class="form-control" placeholder="LS123...">
+                    <label>Relevé IBAN</label>
+                    <input type="text" name="iban" class="form-control" placeholder="Ex: LS123456789">
                 </div>
                 <div class="form-group">
-                    <label>ID Discord *</label>
-                    <input type="text" name="discordId" class="form-control" placeholder="1247264549489610897" required>
+                    <label>ID Discord <span style="color:var(--danger);">*</span></label>
+                    <input type="text" name="discordId" class="form-control" placeholder="Ex: 1247264549489610897">
                 </div>
                 <div class="form-group">
                     <label>Grade RP</label>
@@ -267,10 +411,22 @@
                     </select>
                 </div>
 
+                <!-- Possibilité d'attribuer des armes à la création -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <label style="margin:0;"><i class="fas fa-crosshairs" style="color: var(--primary); margin-right:5px;"></i> Armement Attribué</label>
+                        <button type="button" class="btn-action edit" onclick="addArmeField('create-armes-container')" style="font-size: 0.7rem; padding: 4px 8px;">
+                            <i class="fas fa-plus" style="margin-right: 4px;"></i> Arme
+                        </button>
+                    </div>
+                    <div id="create-armes-container" style="display: flex; flex-direction: column; gap: 8px;">
+                    </div>
+                </div>
+
                 <div class="switch-container">
                     <div>
-                        <strong style="font-size: 0.9rem;">Accès Admin</strong>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Autoriser le panel MDT</div>
+                        <strong style="font-size: 0.85rem; display:block; color:#fff;">Accès Admin</strong>
+                        <small style="color: var(--text-muted); font-size: 0.7rem;">Autoriser le panel MDT</small>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="isAdmin">
@@ -280,8 +436,8 @@
 
                 <div class="switch-container">
                     <div>
-                        <strong style="font-size: 0.9rem;">Droit de Suppression</strong>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Autoriser la suppression des archives</div>
+                        <strong style="font-size: 0.85rem; display:block; color:#fff;">Droit de Suppression</strong>
+                        <small style="color: var(--text-muted); font-size: 0.7rem;">Autoriser la suppression des archives</small>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="canDeleteArchives">
@@ -289,20 +445,23 @@
                     </label>
                 </div>
                 
-                <button type="submit" class="btn" style="margin-top: 20px;">Créer l'Agent</button>
+                <button type="submit" class="btn" style="margin-top: 25px;"><i class="fas fa-shield-alt" style="margin-right: 6px;"></i> Créer l'Agent</button>
             </form>
         </div>
 
         <div>
             <!-- Encadré Entreprise -->
-            <div class="panel-box" style="margin-bottom: 20px;">
-                <h2 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-handshake"></i> Accès Partenaires</h2>
+            <div class="panel-box" style="margin-bottom: 30px; border-top: 1px solid rgba(14, 165, 233, 0.3);">
+                <h2 style="font-size: 1.1rem; color: var(--secondary); display: flex; align-items: center; gap: 10px;"><i class="fas fa-handshake"></i> Accès Partenaires (Entreprises)</h2>
+                <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 15px 0 20px 0;">
                 
-                <form action="/admin/entreprise/ajouter" method="POST" style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <input type="text" name="nom" class="form-control" placeholder="Nom" required>
-                    <input type="text" name="identifiant" class="form-control" placeholder="Login" required>
-                    <input type="text" name="motDePasse" class="form-control" placeholder="Mot de passe" required>
-                    <button type="submit" class="btn" style="width: auto;">Ajouter</button>
+                <form action="/admin/entreprise/ajouter" method="POST" style="margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                        <input type="text" name="nom" class="form-control" placeholder="Nom (ex: Manono)" required>
+                        <input type="text" name="identifiant" class="form-control" placeholder="Login" required>
+                        <input type="text" name="motDePasse" class="form-control" placeholder="Mot de passe" required>
+                    </div>
+                    <button type="submit" class="btn" style="margin-top: 15px; border-color: rgba(14, 165, 233, 0.4); color: var(--secondary); background: rgba(14, 165, 233, 0.1);"><i class="fas fa-plus" style="margin-right: 6px;"></i> Créer l'accès Partenaire</button>
                 </form>
 
                 <div class="table-responsive">
@@ -319,13 +478,13 @@
                             <% if (typeof entreprises !== 'undefined' && entreprises && entreprises.length > 0) { %>
                                 <% entreprises.forEach(ent => { %>
                                     <tr>
-                                        <td><%= ent.nom %></td>
-                                        <td><%= ent.identifiant %></td>
-                                        <td><%= ent.motDePasse %></td>
+                                        <td style="font-weight: 700; color: #fff;"><%= ent.nom %></td>
+                                        <td style="color: var(--secondary); font-family: monospace;"><%= ent.identifiant %></td>
+                                        <td style="color: var(--text-muted); font-family: monospace;"><%= ent.motDePasse %></td>
                                         <td>
                                             <div class="actions-cell" style="justify-content: flex-end;">
                                                 <button class="btn-action edit" onclick="toggleEditRow('ent-<%= ent._id %>')"><i class="fas fa-edit"></i></button>
-                                                <form action="/admin/entreprise/supprimer/<%= ent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Révoquer cet accès ?');">
+                                                <form action="/admin/entreprise/supprimer/<%= ent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Révoquer cet accès entreprise ?');">
                                                     <button type="submit" class="btn-action delete"><i class="fas fa-trash"></i></button>
                                                 </form>
                                             </div>
@@ -333,27 +492,30 @@
                                     </tr>
                                     <tr id="edit-ent-<%= ent._id %>" class="edit-row">
                                         <td colspan="4">
-                                            <form action="/admin/entreprise/modifier/<%= ent._id %>" method="POST" style="display: flex; gap: 10px;">
-                                                <input type="text" name="nom" value="<%= ent.nom %>" class="form-control" required>
-                                                <input type="text" name="identifiant" value="<%= ent.identifiant %>" class="form-control" required>
-                                                <input type="text" name="motDePasse" value="<%= ent.motDePasse %>" class="form-control" required>
-                                                <button type="button" class="btn" style="width: auto; background: var(--bg-input);" onclick="toggleEditRow('ent-<%= ent._id %>')">Annuler</button>
-                                                <button type="submit" class="btn" style="width: auto;">Sauvegarder</button>
+                                            <form action="/admin/entreprise/modifier/<%= ent._id %>" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                                                <input type="text" name="nom" value="<%= ent.nom %>" class="form-control" required placeholder="Nom">
+                                                <input type="text" name="identifiant" value="<%= ent.identifiant %>" class="form-control" required placeholder="Identifiant">
+                                                <input type="text" name="motDePasse" value="<%= ent.motDePasse %>" class="form-control" required placeholder="Mot de passe">
+                                                <div style="display: flex; gap: 8px; margin-left: auto;">
+                                                    <button type="button" class="btn" style="width: auto; padding: 10px;" onclick="toggleEditRow('ent-<%= ent._id %>')"><i class="fas fa-times"></i></button>
+                                                    <button type="submit" class="btn" style="width: auto; padding: 10px; background: var(--secondary); color: #fff;"><i class="fas fa-save"></i></button>
+                                                </div>
                                             </form>
                                         </td>
                                     </tr>
                                 <% }); %>
                             <% } else { %>
-                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Aucune entreprise partenaire.</td></tr>
+                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px; font-style: italic;">Aucune entreprise partenaire active.</td></tr>
                             <% } %>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Tableau des agents -->
+            <!-- Tableau des agents (Sans la colonne Armement) -->
             <div class="panel-box">
-                <h2 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-list"></i> Liste des Agents</h2>
+                <h2 style="font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: #fff;"><i class="fas fa-users" style="color: var(--primary);"></i> Liste des Agents Enregistrés</h2>
+                <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 15px 0 20px 0;">
 
                 <div class="table-responsive">
                     <table class="agent-table">
@@ -362,7 +524,6 @@
                                 <th>Matricule</th>
                                 <th>Identité</th>
                                 <th>Grade</th>
-                                <th>Armement</th>
                                 <th>Permissions</th>
                                 <th style="text-align: right;">Actions</th>
                             </tr>
@@ -370,42 +531,42 @@
                         <tbody>
                             <% if(agents.length === 0) { %>
                                 <tr>
-                                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">Aucun agent enregistré.</td>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 50px; font-style: italic;">Aucun agent enregistré dans la base de données.</td>
                                 </tr>
                             <% } %>
                             <% agents.forEach(agent => { %>
                                 <tr>
-                                    <td style="font-weight: bold;">#<%= agent.matricule %></td>
-                                    <td><%= agent.prenom %> <%= agent.nom %></td>
-                                    <td><%= agent.grade %></td>
-                                    <td style="color: var(--text-muted); font-size: 0.8rem; font-style: italic;">
-                                        Géré via annuaire
-                                    </td>
+                                    <td style="font-weight: 800; color: var(--primary); font-family: monospace;">#<%= agent.matricule %></td>
+                                    <td style="color: #fff; font-weight: 700;"><%= agent.prenom %> <%= agent.nom %></td>
+                                    <td style="color: var(--text-muted); font-weight: 500;"><%= agent.grade %></td>
                                     <td>
                                         <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
                                             <span class="badge <%= agent.isAdmin ? 'badge-admin' : 'badge-user' %>">
-                                                <%= agent.isAdmin ? 'Admin' : 'Agent' %>
+                                                <i class="fas <%= agent.isAdmin ? 'fa-shield-check' : 'fa-user' %>" style="margin-right: 4px;"></i> <%= agent.isAdmin ? 'Admin Site' : 'Agent' %>
                                             </span>
                                             <% if(agent.canDeleteArchives) { %>
-                                                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: var(--danger);">
-                                                    Suppression
+                                                <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3);">
+                                                    <i class="fas fa-fire" style="margin-right: 4px;"></i> Suppression
                                                 </span>
                                             <% } %>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="actions-cell" style="justify-content: flex-end;">
-                                            <button class="btn-action edit" onclick="toggleEditRow('<%= agent._id %>')"><i class="fas fa-edit"></i></button>
-                                            <form action="/admin/supprimer/<%= agent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Supprimer cet agent ?');">
-                                                <button type="submit" class="btn-action delete"><i class="fas fa-trash"></i></button>
+                                            <button class="btn-action edit" onclick="toggleEditRow('<%= agent._id %>')" title="Modifier"><i class="fas fa-edit"></i></button>
+                                            <form action="/admin/supprimer/<%= agent._id %>" method="POST" style="margin:0;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet agent ?');">
+                                                <button type="submit" class="btn-action delete" title="Supprimer"><i class="fas fa-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>
                                 </tr>
 
+                                <!-- Ligne d'édition (Les armes restent modifiables ici) -->
                                 <tr id="edit-<%= agent._id %>" class="edit-row">
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <form action="/admin/modifier/<%= agent._id %>" method="POST">
+                                            <h3 style="font-size:1rem; margin-bottom:20px; color:var(--primary); display:flex; align-items:center;"><i class="fas fa-user-edit" style="margin-right: 8px;"></i> Modification du profil : <%= agent.prenom %> <%= agent.nom %></h3>
+                                            
                                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
                                                 <div class="form-group" style="margin:0;">
                                                     <label>Prénom</label>
@@ -451,18 +612,50 @@
                                                 </div>
                                             </div>
 
-                                            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-                                                <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem;">
-                                                    <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>> Accès Admin
-                                                </label>
-                                                <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem;">
-                                                    <input type="checkbox" name="canDeleteArchives" <%= agent.canDeleteArchives ? 'checked' : '' %>> Droit de Suppression
-                                                </label>
+                                            <!-- Gestion des Armes dans l'édition -->
+                                            <div style="margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+                                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                                    <label style="font-size:0.75rem; color:var(--text-main); font-weight:800; text-transform:uppercase; margin:0;">
+                                                        <i class="fas fa-crosshairs" style="color: var(--primary); margin-right:6px;"></i> Inventaire Armement
+                                                    </label>
+                                                    <button type="button" class="btn-action edit" onclick="addArmeField('edit-armes-container-<%= agent._id %>')" style="font-size: 0.7rem; padding: 4px 8px;">
+                                                        <i class="fas fa-plus" style="margin-right: 4px;"></i> Ajouter une arme
+                                                    </button>
+                                                </div>
+                                                <div id="edit-armes-container-<%= agent._id %>" style="display: flex; flex-direction: column; gap: 8px;">
+                                                    <% if (agent.armes && agent.armes.length > 0) { %>
+                                                        <% agent.armes.forEach(arme => { %>
+                                                            <div class="arme-row">
+                                                                <input type="text" name="nomArme" value="<%= arme.nomArme %>" class="form-control" placeholder="Nom de l'arme" required>
+                                                                <input type="text" name="idSerie" value="<%= arme.idSerie %>" class="form-control" placeholder="N° Série" required>
+                                                                <button type="button" class="btn-action delete" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                                                            </div>
+                                                        <% }); %>
+                                                    <% } %>
+                                                </div>
                                             </div>
 
-                                            <div style="display:flex; gap:10px;">
-                                                <button type="submit" class="btn" style="width: auto;">Sauvegarder les modifications</button>
-                                                <button type="button" class="btn" style="background: var(--bg-input); width: auto;" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top:20px; flex-wrap: wrap; gap: 15px; border-top: 1px solid var(--border-light); padding-top: 20px;">
+                                                <div style="display: flex; gap: 15px;">
+                                                    <div class="switch-container" style="margin-top:0; width: 220px; background: rgba(0,0,0,0.2);">
+                                                        <span style="font-size: 0.8rem; font-weight:700; color:#fff;">Accès Admin</span>
+                                                        <label class="switch">
+                                                            <input type="checkbox" name="isAdmin" <%= agent.isAdmin ? 'checked' : '' %>>
+                                                            <span class="slider"></span>
+                                                        </label>
+                                                    </div>
+                                                    <div class="switch-container" style="margin-top:0; width: 220px; background: rgba(0,0,0,0.2);">
+                                                        <span style="font-size: 0.8rem; font-weight:700; color:#fff;">Suppression</span>
+                                                        <label class="switch">
+                                                            <input type="checkbox" name="canDeleteArchives" <%= agent.canDeleteArchives ? 'checked' : '' %>>
+                                                            <span class="slider"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div style="display:flex; gap:10px;">
+                                                    <button type="button" class="btn" style="width: auto; padding: 10px 18px; border-color: rgba(255,255,255,0.1); color: var(--text-muted);" onclick="toggleEditRow('<%= agent._id %>')">Annuler</button>
+                                                    <button type="submit" class="btn" style="width: auto; padding: 10px 24px; background: var(--primary); color: #07090e;"><i class="fas fa-save" style="margin-right: 6px;"></i> Sauvegarder</button>
+                                                </div>
                                             </div>
                                         </form>
                                     </td>
@@ -477,12 +670,19 @@
 
     <!-- Danger Zone -->
     <div class="panel-box danger-zone">
-        <h2><i class="fas fa-exclamation-triangle"></i> Zone Critique</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Efface définitivement la totalité de la base de données des rapports d'opération.</p>
+        <h2><i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i> Zone de Danger Critique</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">Les actions ci-dessous sont irréversibles. Une confirmation vous sera demandée.</p>
+        <hr style="border: 0; border-top: 1px solid rgba(239, 68, 68, 0.15); margin: 20px 0;">
         
-        <form action="/admin/purge-rapports" method="POST" onsubmit="return confirm('⚠️ ALERTE : Voulez-vous vraiment détruire l\'intégralité des rapports ?');">
-            <button type="submit" class="btn btn-danger">Purger tous les rapports (<%= archivesCount %>)</button>
-        </form>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <strong style="display: block; color: #fff; font-size: 1rem; margin-bottom: 3px;">Purger tous les rapports d'opération</strong>
+                <span style="color: var(--text-muted); font-size: 0.8rem;">Efface définitivement la totalité de la base de données des tickets (<%= archivesCount %> éléments).</span>
+            </div>
+            <form action="/admin/purge-rapports" method="POST" onsubmit="return confirm('⚠️ ALERTE CRITIQUE : Voulez-vous vraiment détruire l\'intégralité des rapports ? Cette action ne peut pas être annulée.');">
+                <button type="submit" class="btn btn-danger" style="padding: 10px 20px;"><i class="fas fa-skull-crossbones" style="margin-right: 8px;"></i> Exécuter la Purge Totale</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -494,5 +694,19 @@
         } else {
             row.style.display = 'table-row';
         }
+    }
+
+    function addArmeField(containerId, nom = '', serie = '') {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const div = document.createElement('div');
+        div.className = 'arme-row';
+        div.innerHTML = `
+            <input type="text" name="nomArme" value="${nom}" class="form-control" placeholder="Nom de l'arme (ex: Combat Pistol)" required>
+            <input type="text" name="idSerie" value="${serie}" class="form-control" placeholder="N° Série (ex: W12345)" required>
+            <button type="button" class="btn-action delete" onclick="this.parentElement.remove()" title="Retirer l'arme"><i class="fas fa-times"></i></button>
+        `;
+        container.appendChild(div);
     }
 </script>
