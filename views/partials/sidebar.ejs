@@ -316,7 +316,17 @@
             const href = link.getAttribute('href');
             link.classList.remove('active');
             
-            if (href === currentUrl || (href !== '/' && href !== '/documents' && currentUrl.startsWith(href))) {
+            // On vérifie l'égalité stricte en priorité
+            if (currentUrl === href) {
+                link.classList.add('active');
+            } 
+            // On gère les sous-dossiers, mais on exclut explicitement /saisie
+            else if (
+                href !== '/' && 
+                href !== '/documents' && 
+                href !== '/saisie' && 
+                currentUrl.startsWith(href)
+            ) {
                 link.classList.add('active');
             }
         });
