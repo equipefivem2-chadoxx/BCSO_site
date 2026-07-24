@@ -95,9 +95,10 @@
         text-transform: uppercase; 
     }
 
+    /* Modifié pour 4 colonnes car on a retiré le bouton Intervention */
     .formation-nav {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 12px;
         margin-bottom: 30px;
     }
@@ -206,9 +207,6 @@
 
     @media (max-width: 1200px) {
         .proc-wrapper { margin-left: 0; padding: 20px; }
-        .formation-nav { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 768px) {
         .formation-nav { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
@@ -222,13 +220,12 @@
         </div>
     </div>
 
-    <!-- NAVIGATION 5 BOUTONS -->
+    <!-- NAVIGATION 4 BOUTONS -->
     <div class="formation-nav">
         <button class="form-nav-btn active" onclick="switchTemplate('plainte', this)"><i class="fas fa-file-pen"></i> A) Plainte</button>
         <button class="form-nav-btn" onclick="switchTemplate('deposition', this)"><i class="fas fa-microphone-lines"></i> B) Déposition</button>
         <button class="form-nav-btn" onclick="switchTemplate('arrestation', this)"><i class="fas fa-handcuffs"></i> C) R. Arrestation</button>
-        <button class="form-nav-btn" onclick="switchTemplate('intervention', this)"><i class="fas fa-car-on"></i> D) R. Intervention</button>
-        <button class="form-nav-btn" onclick="switchTemplate('incident', this)"><i class="fas fa-triangle-exclamation"></i> E) R. Incident</button>
+        <button class="form-nav-btn" onclick="switchTemplate('incident', this)"><i class="fas fa-triangle-exclamation"></i> D) R. Incident</button>
     </div>
 
     <!-- ONGLET A : PLAINTE -->
@@ -327,12 +324,12 @@
         </div>
     </div>
 
-    <!-- ONGLET C : RAPPORT ARRESTATION -->
+    <!-- ONGLET C : RAPPORT ARRESTATION ET INTERVENTION -->
     <div id="arrestation" class="formation-pane">
         <div class="main-grid">
             <div class="info-panel">
                 <h2><span>C)</span> Rapport d'Arrestation</h2>
-                <p>Format standardisé pour documenter l'arrestation d'un individu et son placement en cellule.</p>
+                <p>Format standardisé pour documenter l'arrestation d'un individu, son placement en cellule et l'intervention globale.</p>
             </div>
             <div class="use-case-box">
                 <button class="btn-copy" onclick="copyText('txt-arrestation', this)"><i class="fas fa-copy"></i> Copier</button>
@@ -347,21 +344,8 @@ Heure des droits Miranda :
 
 ```
 
-```</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ONGLET D : RAPPORT D'INTERVENTION -->
-    <div id="intervention" class="formation-pane">
-        <div class="main-grid">
-            <div class="info-panel">
-                <h2><span>D)</span> Rapport d'Intervention</h2>
-                <p>Pour documenter une intervention spécifique effectuée par les unités du BCSO.</p>
-            </div>
-            <div class="use-case-box">
-                <button class="btn-copy" onclick="copyText('txt-intervention', this)"><i class="fas fa-copy"></i> Copier</button>
-                <div id="txt-intervention" class="template-content">Rapport d’intervention : 
+```
+Rapport d’intervention : 
 
 Les unités du Blaine County Sheriff's Office sont intervenues pour [MOTIF DE L'INTERVENTION] au niveau de [LIEU].
 
@@ -381,11 +365,11 @@ Amendes total/peine :
         </div>
     </div>
 
-    <!-- ONGLET E : RAPPORT INCIDENT -->
+    <!-- ONGLET D : RAPPORT INCIDENT -->
     <div id="incident" class="formation-pane">
         <div class="main-grid">
             <div class="info-panel">
-                <h2><span>E)</span> Rapport d'Incident</h2>
+                <h2><span>D)</span> Rapport d'Incident</h2>
                 <p>À remplir obligatoirement suite à un événement majeur tel qu'un tir ou un accident.</p>
             </div>
             <div class="use-case-box">
