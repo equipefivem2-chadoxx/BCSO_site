@@ -155,14 +155,30 @@
         color: #ef4444 !important;
     }
 
-    .sidebar-user-profile {
+    /* 🚀 NOUVEAU STYLE POUR RENDRE LE PROFIL CLIQUABLE */
+    .sidebar-user-profile-link {
+        text-decoration: none;
         margin-top: auto;
+    }
+    .sidebar-user-profile {
         padding: 20px;
         background: rgba(0, 0, 0, 0.25);
         border-top: 1px solid rgba(189, 165, 129, 0.1);
         display: flex;
         align-items: center;
         gap: 15px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .sidebar-user-profile:hover {
+        background: rgba(189, 165, 129, 0.05);
+        cursor: pointer;
+    }
+    .sidebar-user-profile:hover .profile-icon {
+        background: var(--primary);
+        color: #05070b;
+        box-shadow: 0 0 15px rgba(189, 165, 129, 0.4);
+        transform: scale(1.05);
     }
     
     .profile-icon {
@@ -176,6 +192,7 @@
         justify-content: center;
         color: var(--primary);
         font-size: 16px;
+        transition: all 0.3s;
     }
     
     .profile-details {
@@ -194,6 +211,19 @@
         color: var(--primary);
         font-size: 11px;
         font-weight: 600;
+    }
+    
+    /* Petite icône d'édition qui apparait au survol */
+    .profile-edit-icon {
+        position: absolute;
+        right: 20px;
+        color: var(--primary);
+        opacity: 0;
+        transition: 0.3s;
+    }
+    .sidebar-user-profile:hover .profile-edit-icon {
+        opacity: 1;
+        transform: translateX(-5px);
     }
 </style>
 
@@ -257,15 +287,19 @@
     </div>
 
     <% if (typeof user !== 'undefined' && user) { %>
-        <div class="sidebar-user-profile">
-            <div class="profile-icon">
-                <i class="fas fa-user-shield"></i>
+        <!-- 🚀 LIEN VERS LE PROFIL AJOUTÉ ICI -->
+        <a href="/profil" class="sidebar-user-profile-link">
+            <div class="sidebar-user-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="profile-details">
+                    <span class="profile-name"><%= user.username || user.nom || 'Agent BCSO' %></span>
+                    <span class="profile-grade"><%= user.grade || 'Effectif' %></span>
+                </div>
+                <i class="fas fa-chevron-right profile-edit-icon"></i>
             </div>
-            <div class="profile-details">
-                <span class="profile-name"><%= user.username || user.nom || 'Agent BCSO' %></span>
-                <span class="profile-grade"><%= user.grade || 'Effectif' %></span>
-            </div>
-        </div>
+        </a>
     <% } %>
 </aside>
 

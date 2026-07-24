@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// 🚀 L'ORDRE STRICT DES GRADES POUR LE TRI
 const ordreGrades = [
     'Sheriff', 
     'Lieutenant', 
@@ -15,7 +14,6 @@ const ordreGrades = [
     'Deputy Junior'
 ];
 
-// 🚀 Route 1 : Affichage du Hub (index.ejs)
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -78,7 +76,49 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 🚀 Route 2 : La liste des évaluations
+// 🚀 NOUVELLE ROUTE ANNUAIRE (POUR LES SUPERVISEURS)
+router.get('/annuaire', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        const currentGrade = agentDB ? agentDB.grade : req.session.user.grade;
+        const gradesSupervision = ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'];
+
+        const isUserAdmin = req.session.user.isAdmin === true || 
+                            req.session.user.role === 'admin' || 
+                            discordId === '1247264549489610897' || 
+                            (agentDB && agentDB.isAdmin === true);
+
+        const viewUser = {
+            ...req.session.user,
+            grade: currentGrade,
+            nom: agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username,
+            isAdmin: isUserAdmin
+        };
+
+        if (!isUserAdmin && !gradesSupervision.includes(currentGrade)) {
+            return res.redirect('/superviseur');
+        }
+
+        let agents = await Agent.find();
+        agents.sort((a, b) => ordreGrades.indexOf(a.grade) - ordreGrades.indexOf(b.grade));
+
+        res.render('pages/superviseur/annuaire', { 
+            title: 'BCSO - Annuaire & Paies',
+            user: viewUser, 
+            agents: agents
+        });
+
+    } catch (error) {
+        console.error('Erreur annuaire:', error);
+        res.redirect('/superviseur');
+    }
+});
+
 router.get('/evaluations', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -125,7 +165,6 @@ router.get('/evaluations', async (req, res) => {
     }
 });
 
-// 🚀 Route 3 : Lire une évaluation détaillée
 router.get('/rapport/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -217,10 +256,6 @@ router.post('/evaluations/supprimer-tout', async (req, res) => {
         res.redirect('/superviseur/evaluations');
     }
 });
-
-// ==============================================================
-// 🚀 GESTION DES PARTENARIATS ENTREPRISES
-// ==============================================================
 
 router.get('/partenariats', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
@@ -327,10 +362,6 @@ router.get('/partenariats/:id', async (req, res) => {
     }
 });
 
-// ==============================================================
-// 🚀 GESTION DES BANNIS DU NORD
-// ==============================================================
-
 router.get('/bannis', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -409,10 +440,6 @@ router.post('/bannis/supprimer/:id', async (req, res) => {
         res.redirect('/superviseur/bannis?error=1');
     }
 });
-
-// ==============================================================
-// 🚀 GESTION DES GRILLES REÇU FL (SUPERVISION)
-// ==============================================================
 
 router.get('/recu-fl', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
@@ -549,10 +576,6 @@ router.post('/fl/:id/supprimer', async (req, res) => {
     }
 });
 
-// ==============================================================
-// 🚀 GESTION DES ROLL CALL (NOUVEAU)
-// ==============================================================
-
 router.get('/rollcall', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -589,7 +612,6 @@ router.get('/rollcall', async (req, res) => {
         const rollcall = await RollCall.findOne({ date: searchDate });
         let agents = await Agent.find();
         
-        // 🚀 NOUVEAU : TRI STRICT PAR GRADE
         agents.sort((a, b) => ordreGrades.indexOf(a.grade) - ordreGrades.indexOf(b.grade));
 
         const stats = { present: 0, absent: 0, retard: 0, non_repondu: 0 };
@@ -625,7 +647,6 @@ router.get('/rollcall', async (req, res) => {
     }
 });
 
-// 🚀 ROUTE STATISTIQUES GLOBALES ROLL CALL
 router.get('/rollcall/stats', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -676,7 +697,6 @@ router.get('/rollcall/stats', async (req, res) => {
             };
         });
 
-        // 🚀 NOUVEAU : TRI STRICT PAR GRADE
         statsGlobales.sort((a, b) => ordreGrades.indexOf(a.grade) - ordreGrades.indexOf(b.grade));
 
         res.render('pages/superviseur/rollcall-stats', {
@@ -692,7 +712,6 @@ router.get('/rollcall/stats', async (req, res) => {
     }
 });
 
-// 🚀 NOUVELLE ROUTE POUR PURGER TOUTES LES STATISTIQUES ROLL CALL
 router.post('/rollcall/purger', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -706,13 +725,11 @@ router.post('/rollcall/purger', async (req, res) => {
                             discordId === '1247264549489610897' || 
                             (agentDB && agentDB.isAdmin === true);
 
-        // Seuls les admins ou les haut-gradés avec droits peuvent purger
         if (!isUserAdmin) {
             return res.redirect('/superviseur/rollcall/stats');
         }
 
         const RollCall = require('../models/RollCall');
-        // Vider intégralement la collection RollCall
         await RollCall.deleteMany({});
         
         res.redirect('/superviseur/rollcall/stats?success=purged');

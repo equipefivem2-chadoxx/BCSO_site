@@ -73,6 +73,53 @@ router.get('/dashboard', async (req, res) => {
     });
 });
 
+// 🚀 NOUVELLE ROUTE PROFIL AGENT
+router.get('/profil', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+
+        if (!agentDB) {
+            return res.redirect('/dashboard'); // Si l'agent n'est pas dans la DB, on le renvoie au dashboard
+        }
+
+        res.render('pages/profil', { 
+            title: 'BCSO - Mon Profil',
+            user: req.session.user,
+            agentDB: agentDB 
+        });
+    } catch (err) {
+        console.error("Erreur chargement profil:", err);
+        res.redirect('/dashboard');
+    }
+});
+
+// 🚀 NOUVELLE ROUTE UPDATE PROFIL
+router.post('/profil/update', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    
+    try {
+        const Agent = require('../models/Agent');
+        const discordId = req.session.user.id || req.session.user.discordId;
+        
+        await Agent.findOneAndUpdate(
+            { discordId: discordId },
+            { 
+                telephone: req.body.telephone,
+                iban: req.body.iban 
+            }
+        );
+
+        res.redirect('/profil?success=1');
+    } catch (err) {
+        console.error("Erreur MAJ profil:", err);
+        res.redirect('/profil?error=1');
+    }
+});
+
 router.get('/reglement', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/reglement', { 
@@ -210,7 +257,6 @@ router.get('/documents/end-of-watch', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE TEMPLATES 
 router.get('/documents/templates', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-templates', { 

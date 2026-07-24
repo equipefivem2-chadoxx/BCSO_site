@@ -1,0 +1,259 @@
+<%- include('../../partials/header') %>
+<%- include('../../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75);
+        --text-main: #e2e8f0;
+        --border-glow: rgba(189, 165, 129, 0.25);
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px;
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    .annuaire-wrapper { 
+        max-width: 1400px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 30px; 
+        animation: fadeUp 0.5s ease-out forwards;
+        margin-left: 280px;
+    }
+
+    .annuaire-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 35px; 
+        background: var(--bg-panel); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--border-glow); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    }
+
+    .btn-back { 
+        background: rgba(189, 165, 129, 0.08); 
+        border: 1px solid rgba(189, 165, 129, 0.3); 
+        color: var(--primary); 
+        padding: 12px 22px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        text-decoration: none; 
+        transition: 0.3s ease; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 10px; 
+        font-size: 0.8rem;
+    }
+    .btn-back:hover { 
+        background: var(--primary); 
+        color: #05070b; 
+        box-shadow: 0 0 15px var(--primary-glow); 
+    }
+
+    .annuaire-title { text-align: right; }
+    .annuaire-title h1 { 
+        font-size: 26px; 
+        font-weight: 900; 
+        margin: 0; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+    }
+    .annuaire-title p { 
+        color: var(--primary); 
+        margin: 5px 0 0 0; 
+        font-weight: 700; 
+        font-size: 13px; 
+        letter-spacing: 3px; 
+        text-transform: uppercase; 
+    }
+
+    .table-container {
+        background: var(--bg-panel);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 20px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    th {
+        color: #94a3b8;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 20px;
+        border-bottom: 2px solid rgba(189, 165, 129, 0.2);
+    }
+
+    td {
+        padding: 20px;
+        color: #e2e8f0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 0.95rem;
+        font-weight: 500;
+        vertical-align: middle;
+    }
+
+    tr:hover td {
+        background: rgba(189, 165, 129, 0.03);
+    }
+
+    .agent-grade {
+        color: var(--primary);
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .agent-name {
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .badge-matricule {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-family: monospace;
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    .copy-btn {
+        background: rgba(189, 165, 129, 0.1);
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: 0.3s;
+    }
+
+    .copy-btn:hover {
+        background: var(--primary);
+        color: #000;
+    }
+
+    .copy-btn.copied {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+    }
+</style>
+
+<div class="annuaire-wrapper">
+    <div class="annuaire-header">
+        <a href="/superviseur" class="btn-back"><i class="fas fa-chevron-left"></i> Hub Supervision</a>
+        <div class="annuaire-title">
+            <h1>Annuaire & Paies</h1>
+            <p>Registre officiel des effectifs du BCSO</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Agent</th>
+                    <th>Matricule</th>
+                    <th>Téléphone</th>
+                    <th>Relevé IBAN</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(agents && agents.length > 0) { %>
+                    <% agents.forEach(function(agent) { %>
+                        <tr>
+                            <td>
+                                <span class="agent-grade"><%= agent.grade %></span>
+                                <span class="agent-name"><%= agent.prenom %> <%= agent.nom %></span>
+                            </td>
+                            <td><span class="badge-matricule"><%= agent.matricule %></span></td>
+                            <td>
+                                <% if(agent.telephone !== 'Non renseigné' && agent.telephone) { %>
+                                    <i class="fas fa-phone" style="color: #94a3b8; margin-right: 5px; font-size: 0.8rem;"></i> <%= agent.telephone %>
+                                <% } else { %>
+                                    <span style="color: #ef4444; font-size: 0.85rem; font-style: italic;">Non renseigné</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if(agent.iban !== 'Non renseigné' && agent.iban) { %>
+                                    <span style="font-family: monospace; color: #fff;"><%= agent.iban %></span>
+                                <% } else { %>
+                                    <span style="color: #ef4444; font-size: 0.85rem; font-style: italic;">Non renseigné</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if(agent.iban !== 'Non renseigné' && agent.iban) { %>
+                                    <button class="copy-btn" onclick="copyIban('<%= agent.iban %>', this)">
+                                        <i class="fas fa-copy"></i> Copier
+                                    </button>
+                                <% } else { %>
+                                    <span style="color: #64748b; font-size: 0.8rem;">-</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #94a3b8; padding: 40px;">Aucun agent trouvé dans la base de données.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function copyIban(iban, btnElement) {
+        navigator.clipboard.writeText(iban).then(() => {
+            const originalHTML = btnElement.innerHTML;
+            btnElement.classList.add('copied');
+            btnElement.innerHTML = '<i class="fas fa-check"></i> Copié !';
+            setTimeout(() => {
+                btnElement.classList.remove('copied');
+                btnElement.innerHTML = originalHTML;
+            }, 2000);
+        }).catch(err => {
+            console.error('Erreur lors de la copie : ', err);
+        });
+    }
+</script>
