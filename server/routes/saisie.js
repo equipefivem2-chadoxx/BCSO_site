@@ -3,7 +3,7 @@ const router = express.Router();
 const Saisie = require('../models/Saisie');
 const Agent = require('../models/Agent');
 
-// Afficher la page
+// 1. PAGE PRINCIPALE : Affiche la liste des saisies (fichier saisie.ejs) -> URL : /saisie
 router.get('/', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -20,7 +20,18 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Ajouter une saisie
+// 2. LA ROUTE MANQUANTE : Affiche le formulaire (fichier declarer-saisie.ejs) -> URL : /saisie/declarer
+router.get('/declarer', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    
+    // C'EST ICI QU'ON APPELLE TON FICHIER declarer-saisie.ejs
+    res.render('pages/declarer-saisie', { 
+        title: 'BCSO - Déclarer une Saisie',
+        user: req.session.user
+    });
+});
+
+// 3. ACTION : Sauvegarder la saisie quand le formulaire est validé -> URL : /saisie/ajouter
 router.post('/ajouter', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
 
@@ -40,14 +51,15 @@ router.post('/ajouter', async (req, res) => {
         });
 
         await nouvelleSaisie.save();
+        // On redirige vers la liste des saisies avec un message de succès
         res.redirect('/saisie?success=1');
     } catch (err) {
         console.error("Erreur ajout saisie:", err);
-        res.redirect('/saisie?error=1');
+        res.redirect('/saisie/declarer?error=1');
     }
 });
 
-// Changer le statut (Détruire / Restituer)
+// 4. ACTION : Changer le statut (Détruire / Restituer)
 router.post('/statut/:id', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
