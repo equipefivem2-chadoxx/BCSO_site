@@ -95,9 +95,10 @@
         text-transform: uppercase; 
     }
 
+    /* Modifié pour 5 colonnes */
     .formation-nav {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 12px;
         margin-bottom: 30px;
     }
@@ -109,7 +110,7 @@
         border-radius: 10px;
         font-family: 'Montserrat', sans-serif;
         font-weight: 800;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         text-transform: uppercase;
         letter-spacing: 1px;
         cursor: pointer;
@@ -117,7 +118,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
     }
     .form-nav-btn:hover { background: rgba(255,255,255,0.02); color: #fff; }
     .form-nav-btn.active {
@@ -162,7 +163,7 @@
         font-size: 0.9rem;
         line-height: 1.6;
         background: rgba(0, 0, 0, 0.3);
-        padding: 20px;
+        padding: 40px 20px 20px 20px;
         border-radius: 8px;
         border: 1px dashed rgba(189, 165, 129, 0.3);
         white-space: pre-wrap;
@@ -170,8 +171,8 @@
 
     .btn-copy {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        top: 35px;
+        right: 35px;
         background: rgba(189, 165, 129, 0.1);
         border: 1px solid var(--primary);
         color: var(--primary);
@@ -185,6 +186,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        z-index: 10;
     }
     .btn-copy:hover {
         background: var(--primary);
@@ -203,6 +205,9 @@
 
     @media (max-width: 1200px) {
         .proc-wrapper { margin-left: 0; padding: 20px; }
+        .formation-nav { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
         .formation-nav { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
@@ -216,14 +221,16 @@
         </div>
     </div>
 
+    <!-- NAVIGATION 5 BOUTONS -->
     <div class="formation-nav">
-        <button class="form-nav-btn active" onclick="switchTemplate('plainte', this)"><i class="fas fa-file-pen"></i> A) Plainte Civile</button>
+        <button class="form-nav-btn active" onclick="switchTemplate('plainte', this)"><i class="fas fa-file-pen"></i> A) Plainte</button>
         <button class="form-nav-btn" onclick="switchTemplate('deposition', this)"><i class="fas fa-microphone-lines"></i> B) Déposition</button>
-        <button class="form-nav-btn" onclick="switchTemplate('arrestation', this)"><i class="fas fa-handcuffs"></i> C) Rapport d'Arrestation</button>
-        <button class="form-nav-btn" onclick="switchTemplate('incident', this)"><i class="fas fa-triangle-exclamation"></i> D) Rapport d'Incident</button>
+        <button class="form-nav-btn" onclick="switchTemplate('arrestation', this)"><i class="fas fa-handcuffs"></i> C) R. Arrestation</button>
+        <button class="form-nav-btn" onclick="switchTemplate('intervention', this)"><i class="fas fa-car-on"></i> D) R. Intervention</button>
+        <button class="form-nav-btn" onclick="switchTemplate('incident', this)"><i class="fas fa-triangle-exclamation"></i> E) R. Incident</button>
     </div>
 
-    <!-- ONGLET : PLAINTE -->
+    <!-- ONGLET A : PLAINTE -->
     <div id="plainte" class="formation-pane active">
         <div class="main-grid">
             <div class="info-panel">
@@ -232,153 +239,107 @@
             </div>
             <div class="use-case-box">
                 <button class="btn-copy" onclick="copyText('txt-plainte', this)"><i class="fas fa-copy"></i> Copier</button>
-                <div id="txt-plainte" class="template-content">**DÉPÔT DE PLAINTE OFFICIEL - BCSO**
+                <div id="txt-plainte" class="template-content">![lspd.webp ou bcso.webp ou justice.webp ou irs.webp](https://cdn.sacul.cloud/noface/society/icons/mairiels.webp)
 
-**INFORMATIONS DU PLAIGNANT :**
-- Nom & Prénom : 
-- Numéro de téléphone : 
-- Profession : 
+# TITRE DU RAPPORT DE PLAINTE
 
-**DÉTAILS DE L'INCIDENT :**
-- Date et Heure des faits : 
-- Lieu exact : 
+## Plaignant
 
-**DESCRIPTION DES FAITS :**
-[Détaillez ici de manière chronologique les événements tels que décrits par le plaignant]
+* **Nom et prénom :**
+* **Numéro de téléphone :**
 
-**INFORMATIONS SUSPECTS / VÉHICULES (Si connus) :**
-- Description physique : 
-- Véhicule (Modèle/Couleur/Plaque) : 
+## Témoin (suprimé si aucun)
 
-**PREUVES FOURNIES :**
-[Photos, témoignages, certificats médicaux...]
+* **Nom et prénom :**
+* **Numéro de téléphone :**
 
-Agent en charge : <%= user.grade %> <%= user.nom %>
-Signature du plaignant : </div>
+## Personne mise en cause
+
+* **Nom et prénom :**
+* **Numéro de téléphone :**
+
+----------------------------------------------------------
+
+# DÉPOSITIONS
+
+### Déposition du plaignant
+
+> 
+
+---
+
+### Déposition du témoin
+
+> 
+
+---
+
+### Déposition de la personne mise en cause
+
+> 
+
+# CONTENU DU RAPPORT
+
+**[Matricule | Nom Prénom de l'agent]**
+
+> Le plaignant, **[Nom Prénom]**, déclare que **[Résumé des faits selon le plaignant]**.
+
+> La personne mise en cause, **[Nom Prénom]**, indique que **[Version des faits de la personne mise en cause]**.
+
+> Le témoin, **[Nom Prénom]**, déclare que **[Résumé du témoignage]**.
+
+> Les déclarations des différentes parties ont été recueillies et consignées. La plainte est enregistrée et transmise aux autorités compétentes afin de déterminer les éventuelles responsabilités pénales au regard des éléments recueillis et des preuves disponibles.</div>
             </div>
         </div>
     </div>
 
-    <!-- ONGLET : DÉPOSITION -->
+    <!-- ONGLET B : DÉPOSITION -->
     <div id="deposition" class="formation-pane">
         <div class="main-grid">
             <div class="info-panel">
-                <h2><span>B)</span> Modèle de Déposition / Témoignage</h2>
+                <h2><span>B)</span> Modèle de Déposition</h2>
                 <p>À utiliser pour recueillir le témoignage d'une victime ou d'un témoin suite à un événement.</p>
             </div>
             <div class="use-case-box">
                 <button class="btn-copy" onclick="copyText('txt-deposition', this)"><i class="fas fa-copy"></i> Copier</button>
-                <div id="txt-deposition" class="template-content">**DÉPOSITION OFFICIELLE - BCSO**
+                <div id="txt-deposition" class="template-content"># Déposition
 
-**INFORMATIONS DU TÉMOIN / VICTIME :**
-- Nom & Prénom : 
-- Numéro de téléphone : 
-- Rôle (Témoin ou Victime) : 
+## Plaignant
 
-**DÉCLARATION :**
-*Rappel : Toute fausse déclaration est passible de poursuites pénales.*
+* **Nom et prénom :**
+* **Numéro de téléphone :**
 
-[Insérer ici la déclaration exacte de l'individu]
+----------------------------------------------------------
 
-Agent ayant recueilli la déposition : <%= user.grade %> <%= user.nom %>
-Date et Heure : </div>
+## DÉPOSITION
+
+**Plaignant [Nom Prénom] :**
+
+> [Déclaration complète du plaignant.]
+
+----------------------------------------------------------
+
+**Informations complémentaires (si applicable) :**
+
+> [Description des suspects, véhicules, armes, direction de fuite, témoins, éléments de preuve, etc.]</div>
             </div>
         </div>
     </div>
 
-    <!-- ONGLET : RAPPORT ARRESTATION -->
+    <!-- ONGLET C : RAPPORT ARRESTATION -->
     <div id="arrestation" class="formation-pane">
         <div class="main-grid">
             <div class="info-panel">
                 <h2><span>C)</span> Rapport d'Arrestation</h2>
-                <p>Format standardisé pour documenter l'arrestation d'un individu et son placement en cellule (MDC).</p>
+                <p>Format standardisé pour documenter l'arrestation d'un individu et son placement en cellule.</p>
             </div>
             <div class="use-case-box">
                 <button class="btn-copy" onclick="copyText('txt-arrestation', this)"><i class="fas fa-copy"></i> Copier</button>
-                <div id="txt-arrestation" class="template-content">**RAPPORT D'ARRESTATION - BCSO**
+                <div id="txt-arrestation" class="template-content">![lspd.webp ou bcso.webp ou justice.webp ou irs.webp](https://cdn.sacul.cloud/noface/society/icons/mairiels.webp)
 
-**IDENTITÉ DU SUSPECT :**
-- Nom & Prénom : 
-- Date de naissance (Si connue) : 
+# [Titre du rapport]
 
-**CHARGES RETENUES :**
-- [Charge 1]
-- [Charge 2]
-
-**RÉSUMÉ DE L'INTERVENTION :**
-[Détaillez le motif du contrôle, le déroulement de l'arrestation, la lecture des droits, etc.]
-
-**OBJETS SAISIS LORS DE LA FOUILLE :**
-- [Objet 1]
-- [Objet 2]
-
-**DÉCISION FINALE :**
-- Temps de cellule : XX Mois
-- Montant de l'amende : $XX
-
-Agents impliqués : <%= user.grade %> <%= user.nom %>, [Autres agents]</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ONGLET : RAPPORT INCIDENT -->
-    <div id="incident" class="formation-pane">
-        <div class="main-grid">
-            <div class="info-panel">
-                <h2><span>D)</span> Rapport d'Incident (Tir / Accident)</h2>
-                <p>À remplir obligatoirement suite à l'usage d'une arme à feu létale ou un accident impliquant un véhicule de fonction.</p>
-            </div>
-            <div class="use-case-box">
-                <button class="btn-copy" onclick="copyText('txt-incident', this)"><i class="fas fa-copy"></i> Copier</button>
-                <div id="txt-incident" class="template-content">**RAPPORT D'INCIDENT INTERNE - BCSO**
-
-**NATURE DE L'INCIDENT :** [Tir Létal / Accident de la route / Blessure d'un agent]
-**DATE ET HEURE :**
-**LIEU :**
-
-**AGENTS IMPLIQUÉS :**
-- <%= user.grade %> <%= user.nom %>
-- [Autres agents]
-
-**DESCRIPTION DÉTAILLÉE DE L'INCIDENT :**
-[Expliquez pourquoi le feu a été ouvert, ou comment l'accident s'est produit]
-
-**DÉGÂTS MATÉRIELS OU CORPORELS :**
-- Suspects : [État de santé]
-- Agents : [État de santé]
-- Véhicules : [Dégâts]
-
-**UNITÉS SUPPLÉMENTAIRES DÉPLOYÉES :** [EMS, LSPD, etc.]</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="academy-footer">
-        Blaine County Sheriff's Office — Official Templates Database
-    </div>
-</div>
-
-<script>
-    function switchTemplate(paneId, buttonElement) {
-        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
-        
-        buttonElement.classList.add('active');
-        document.getElementById(paneId).classList.add('active');
-    }
-
-    function copyText(elementId, btnElement) {
-        const textToCopy = document.getElementById(elementId).innerText;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            const originalText = btnElement.innerHTML;
-            btnElement.classList.add('copied');
-            btnElement.innerHTML = '<i class="fas fa-check"></i> Copié !';
-            setTimeout(() => {
-                btnElement.classList.remove('copied');
-                btnElement.innerHTML = originalText;
-            }, 2000);
-        }).catch(err => {
-            console.error('Erreur lors de la copie : ', err);
-        });
-    }
-</script>
+Date et heure de l'incident :  
+Lieu de l'incident :
+Nom du suspect : 
+Heure des droits Miranda :
