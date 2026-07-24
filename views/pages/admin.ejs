@@ -82,7 +82,7 @@
 
     .admin-grid {
         display: grid;
-        grid-template-columns: 360px 1fr;
+        grid-template-columns: 380px 1fr;
         gap: 25px;
         align-items: start;
     }
@@ -121,6 +121,7 @@
         color: #f8fafc;
         font-size: 0.9rem;
         transition: border-color 0.2s;
+        box-sizing: border-box;
     }
     .form-control:focus {
         outline: none;
@@ -183,13 +184,23 @@
     .danger-zone h2 { color: #ef4444; font-size: 1.2rem; }
     .btn-danger { background: #ef4444; color: #fff; width: auto; }
     .btn-danger:hover { background: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+
+    .arme-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: rgba(0,0,0,0.2);
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
 </style>
 
 <div id="admin-container">
     <div class="page-header">
         <div>
             <h1>Haut Commandement</h1>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin: 4px 0 0 0;">Gestion globale des accès et des effectifs BCSO</p>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin: 4px 0 0 0;">Gestion globale des accès, de l'armement et des effectifs BCSO</p>
         </div>
     </div>
 
@@ -218,6 +229,7 @@
     </div>
 
     <div class="admin-grid">
+        <!-- Formulaire d'enregistrement -->
         <div class="panel-box">
             <h2 style="font-size: 1.1rem;">Enregistrer un Agent</h2>
             <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
@@ -261,6 +273,19 @@
                         <option value="Lieutenant">Lieutenant</option>
                         <option value="Sheriff">Sheriff</option>
                     </select>
+                </div>
+
+                <!-- Section Armement Attribué (Création) -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin:0;"><i class="fas fa-crosshairs" style="color: var(--primary);"></i> Armement Attribué</label>
+                        <button type="button" class="btn-action edit" onclick="addArmeField('create-armes-container')" style="font-size: 0.75rem; padding: 4px 8px;">
+                            <i class="fas fa-plus"></i> Arme
+                        </button>
+                    </div>
+                    <div id="create-armes-container" style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Les champs d'armes ajoutés dynamiquement apparaîtront ici -->
+                    </div>
                 </div>
 
                 <div class="switch-container">
@@ -327,7 +352,6 @@
                                         </form>
                                     </td>
                                 </tr>
-                                <!-- Ligne d'édition cachée pour l'entreprise -->
                                 <tr id="edit-ent-<%= ent._id %>" class="edit-row">
                                     <td colspan="4" style="padding: 20px;">
                                         <form action="/admin/entreprise/modifier/<%= ent._id %>" method="POST" style="display: flex; gap: 15px; align-items: center;">
@@ -361,6 +385,7 @@
                                 <th>Matricule</th>
                                 <th>Identité</th>
                                 <th>Grade</th>
+                                <th>Armement</th>
                                 <th>Permissions</th>
                                 <th>Actions</th>
                             </tr>
@@ -368,7 +393,7 @@
                         <tbody>
                             <% if(agents.length === 0) { %>
                                 <tr>
-                                    <td colspan="5" style="text-align: center; color: #94a3b8; padding: 40px;">Aucun agent enregistré.</td>
+                                    <td colspan="6" style="text-align: center; color: #94a3b8; padding: 40px;">Aucun agent enregistré.</td>
                                 </tr>
                             <% } %>
                             <% agents.forEach(agent => { %>
@@ -376,6 +401,22 @@
                                     <td style="font-weight: 800; color: var(--primary);">#<%= agent.matricule %></td>
                                     <td style="color: #fff; font-weight: 600;"><%= agent.prenom %> <%= agent.nom %></td>
                                     <td style="color: #cbd5e1;"><%= agent.grade %></td>
+                                    <!-- Affichage de l'armement -->
+                                    <td>
+                                        <% if (agent.armes && agent.armes.length > 0) { %>
+                                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                                <% agent.armes.forEach(arme => { %>
+                                                    <span style="font-size: 0.78rem; background: rgba(255,255,255,0.04); padding: 3px 7px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); display: inline-block;">
+                                                        <i class="fas fa-crosshairs" style="color: var(--primary); font-size: 0.7rem; margin-right: 3px;"></i>
+                                                        <strong style="color: #fff;"><%= arme.nomArme %></strong> 
+                                                        <span style="color: #94a3b8; font-family: monospace;">(#<%= arme.idSerie %>)</span>
+                                                    </span>
+                                                <% }); %>
+                                            </div>
+                                        <% } else { %>
+                                            <span style="color: #64748b; font-size: 0.8rem; font-style: italic;">Aucune arme</span>
+                                        <% } %>
+                                    </td>
                                     <td>
                                         <span class="badge <%= agent.isAdmin ? 'badge-admin' : 'badge-user' %>">
                                             <%= agent.isAdmin ? 'Admin Site' : 'Agent' %>
@@ -394,10 +435,12 @@
                                     </td>
                                 </tr>
 
+                                <!-- Ligne d'édition Agent -->
                                 <tr id="edit-<%= agent._id %>" class="edit-row">
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <form action="/admin/modifier/<%= agent._id %>" method="POST">
                                             <h3 style="font-size:1rem; margin-bottom:20px; color:var(--primary);"><i class="fas fa-user-edit" style="margin-right: 8px;"></i> Modifier <%= agent.prenom %> <%= agent.nom %></h3>
+                                            
                                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom:15px;">
                                                 <div>
                                                     <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Prénom</label>
@@ -412,6 +455,7 @@
                                                     <input type="text" name="matricule" value="<%= agent.matricule %>" class="form-control" required>
                                                 </div>
                                             </div>
+
                                             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom:15px;">
                                                 <div>
                                                     <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Téléphone</label>
@@ -441,6 +485,30 @@
                                                     </select>
                                                 </div>
                                             </div>
+
+                                            <!-- Armement dans l'édition -->
+                                            <div style="margin-bottom: 20px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                    <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">
+                                                        <i class="fas fa-crosshairs" style="color: var(--primary);"></i> Armement de l'Agent
+                                                    </label>
+                                                    <button type="button" class="btn-action edit" onclick="addArmeField('edit-armes-container-<%= agent._id %>')" style="font-size: 0.75rem; padding: 4px 10px;">
+                                                        <i class="fas fa-plus"></i> Ajouter une arme
+                                                    </button>
+                                                </div>
+                                                <div id="edit-armes-container-<%= agent._id %>" style="display: flex; flex-direction: column; gap: 8px;">
+                                                    <% if (agent.armes && agent.armes.length > 0) { %>
+                                                        <% agent.armes.forEach(arme => { %>
+                                                            <div class="arme-row">
+                                                                <input type="text" name="nomArme" value="<%= arme.nomArme %>" class="form-control" placeholder="Nom de l'arme (ex: Combat Pistol)" required>
+                                                                <input type="text" name="idSerie" value="<%= arme.idSerie %>" class="form-control" placeholder="N° Série (ex: W12345)" required>
+                                                                <button type="button" class="btn-action delete" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                                                            </div>
+                                                        <% }); %>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+
                                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top:20px; flex-wrap: wrap; gap: 10px;">
                                                 <div style="display: flex; gap: 15px;">
                                                     <div class="switch-container" style="margin-top:0; width: 220px; padding: 10px 15px;">
@@ -474,6 +542,7 @@
         </div>
     </div>
 
+    <!-- Danger Zone -->
     <div class="panel-box danger-zone">
         <h2><i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Zone de Danger Critique</h2>
         <p style="color: #94a3b8; font-size: 0.9rem;">Les actions ci-dessous sont irréversibles. Soyez extrêmement vigilants.</p>
@@ -499,5 +568,20 @@
         } else {
             row.style.display = 'table-row';
         }
+    }
+
+    // Ajout dynamique de lignes d'armes
+    function addArmeField(containerId, nom = '', serie = '') {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const div = document.createElement('div');
+        div.className = 'arme-row';
+        div.innerHTML = `
+            <input type="text" name="nomArme" value="${nom}" class="form-control" placeholder="Nom de l'arme (ex: Combat Pistol)" required>
+            <input type="text" name="idSerie" value="${serie}" class="form-control" placeholder="N° Série (ex: W12345)" required>
+            <button type="button" class="btn-action delete" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+        `;
+        container.appendChild(div);
     }
 </script>

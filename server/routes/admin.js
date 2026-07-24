@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Agent = require('../models/Agent');
 const Ticket = require('../models/Ticket');
-const Entreprise = require('../models/Entreprise'); // 🚀 Modèle Entreprise requis
+const Entreprise = require('../models/Entreprise');
 
 const checkAdmin = async (req, res, next) => {
     const user = req.session.user;
@@ -26,12 +26,28 @@ const checkAdmin = async (req, res, next) => {
 
 router.use(checkAdmin);
 
+// Helper pour formater les armes reçues depuis les formulaires EJS
+function parseArmes(nomArme, idSerie) {
+    const armes = [];
+    if (nomArme && idSerie) {
+        const noms = Array.isArray(nomArme) ? nomArme : [nomArme];
+        const series = Array.isArray(idSerie) ? idSerie : [idSerie];
+        for (let i = 0; i < noms.length; i++) {
+            if (noms[i] && noms[i].trim() !== '' && series[i] && series[i].trim() !== '') {
+                armes.push({
+                    nomArme: noms[i].trim(),
+                    idSerie: series[i].trim()
+                });
+            }
+        }
+    }
+    return armes;
+}
+
 // 1. Page Admin
 router.get('/', async (req, res) => {
     try {
         const agents = await Agent.find();
-        
-        // 🚀 On récupère les entreprises partenaires pour les afficher sur la page
         const entreprises = await Entreprise.find().sort({ nom: 1 });
 
         const ordreGrades = [
@@ -51,7 +67,7 @@ router.get('/', async (req, res) => {
         res.render('pages/admin', { 
             title: 'BCSO - Haut Commandement',
             agents: agents,
-            entreprises: entreprises, // 🚀 Liste passée à la vue
+            entreprises: entreprises,
             archivesCount: archivesCount
         });
     } catch (error) {
@@ -63,19 +79,28 @@ router.get('/', async (req, res) => {
 // 2. Gestion des Agents
 router.post('/ajouter', async (req, res) => {
     try {
-        // 🚀 AJOUT DE LA VARIABLE iban ICI
-        const { prenom, nom, matricule, grade, telephone, iban, discordId, isAdmin, canDeleteArchives } = req.body;
+        const { prenom, nom, matricule, grade, telephone, iban, discordId, isAdmin, canDeleteArchives, nomArme, idSerie } = req.body;
+        
+        // Extraction du tableau d'armes
+        const armes = parseArmes(nomArme, idSerie);
+
         const nouvelAgent = new Agent({
-            prenom, nom, matricule, grade,
+            prenom, 
+            nom, 
+            matricule, 
+            grade,
             telephone: telephone || "Non renseigné",
-            iban: iban || "Non renseigné", // 🚀 SAUVEGARDE DE L'IBAN
+            iban: iban || "Non renseigné",
+            armes: armes,
             discordId: discordId || '',
             isAdmin: isAdmin === 'on' ? true : false,
             canDeleteArchives: canDeleteArchives === 'on' ? true : false
         });
+        
         await nouvelAgent.save();
         res.redirect('/admin'); 
     } catch (error) {
+        console.error("Erreur création agent:", error);
         res.redirect('/admin?error=1');
     }
 });
@@ -91,23 +116,31 @@ router.post('/supprimer/:id', async (req, res) => {
 
 router.post('/modifier/:id', async (req, res) => {
     try {
-        // 🚀 AJOUT DE LA VARIABLE iban ICI
-        const { prenom, nom, matricule, grade, telephone, iban, discordId, isAdmin, canDeleteArchives } = req.body;
+        const { prenom, nom, matricule, grade, telephone, iban, discordId, isAdmin, canDeleteArchives, nomArme, idSerie } = req.body;
+        
+        // Extraction du tableau d'armes
+        const armes = parseArmes(nomArme, idSerie);
+
         await Agent.findByIdAndUpdate(req.params.id, {
-            prenom, nom, matricule, grade,
+            prenom, 
+            nom, 
+            matricule, 
+            grade,
             telephone: telephone || "Non renseigné",
-            iban: iban || "Non renseigné", // 🚀 SAUVEGARDE DE L'IBAN
+            iban: iban || "Non renseigné",
+            armes: armes,
             discordId,
             isAdmin: isAdmin === 'on' ? true : false,
             canDeleteArchives: canDeleteArchives === 'on' ? true : false
         });
         res.redirect('/admin');
     } catch (error) {
+        console.error("Erreur modification agent:", error);
         res.redirect('/admin');
     }
 });
 
-// 3. 🚀 GESTION DES COMPTES ENTREPRISES PARTENAIRES
+// 3. Gestion des comptes Entreprises Partenaires
 router.post('/entreprise/ajouter', async (req, res) => {
     try {
         const { nom, identifiant, motDePasse } = req.body;
@@ -128,7 +161,6 @@ router.post('/entreprise/supprimer/:id', async (req, res) => {
     }
 });
 
-// NOUVEAU: Modification des entreprises
 router.post('/entreprise/modifier/:id', async (req, res) => {
     try {
         const { nom, identifiant, motDePasse } = req.body;
