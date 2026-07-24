@@ -10,9 +10,8 @@ const superviseurRoutes = require('./superviseur');
 const entrepriseRoutes = require('./entreprise'); 
 const flRoutes = require('./fl');
 const patchnoteRoutes = require('./patchnote');
-const rollcallRoutes = require('./api/rollcall'); // 🚀 NOUVELLE ROUTE ROLL CALL
+const rollcallRoutes = require('./api/rollcall');
 
-// 🚀 MIDDLEWARE DE SYNCHRONISATION EN TEMPS RÉEL
 router.use(async (req, res, next) => {
     if (req.session.user) {
         try {
@@ -32,12 +31,8 @@ router.use(async (req, res, next) => {
     next();
 });
 
-// =========================================================
-// 👑 ROUTES DASHBOARD CHADOXX (GOD MODE)
-// =========================================================
 const chadoxxRoutes = require('./chadoxx');
 router.use('/chadoxx', chadoxxRoutes);
-// =========================================================
 
 router.get('/', (req, res) => {
     if (req.session.user) {
@@ -191,7 +186,6 @@ router.get('/documents/armes', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLES ROUTES POUR VÉHICULES
 router.get('/documents/custom-vehicules', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-custom-vehicules', { 
@@ -208,7 +202,6 @@ router.get('/documents/reconnaissance-vehicules', (req, res) => {
     });
 });
 
-// 🚀 NOUVELLE ROUTE : CALL END OF WATCH
 router.get('/documents/end-of-watch', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/doc-end-of-watch', { 
@@ -216,7 +209,15 @@ router.get('/documents/end-of-watch', (req, res) => {
         user: req.session.user
     });
 });
-// ====================================
+
+// 🚀 NOUVELLE ROUTE TEMPLATES 
+router.get('/documents/templates', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/doc-templates', { 
+        title: 'BCSO - Templates & Formulaires',
+        user: req.session.user
+    });
+});
 
 router.get('/documents/evaluer-junior', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
@@ -366,7 +367,7 @@ router.use('/superviseur', superviseurRoutes);
 router.use('/effectifs', effectifsRoutes);
 router.use('/archives', archivesRoutes);
 router.use('/api/tickets', apiTicketsRoutes);
-router.use('/api/rollcall', rollcallRoutes); // 🚀 NOUVELLE ROUTE DÉCLARÉE ICI
+router.use('/api/rollcall', rollcallRoutes);
 router.use('/entreprise', entrepriseRoutes);
 router.use('/fl', flRoutes);
 router.use('/patchnotes', patchnoteRoutes);

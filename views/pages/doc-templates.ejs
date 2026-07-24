@@ -1,0 +1,384 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75);
+        --text-main: #e2e8f0;
+        --border-glow: rgba(189, 165, 129, 0.25);
+        --success: #10b981;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px;
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes slideInRight { 
+        from { opacity: 0; transform: translateX(20px); } 
+        to { opacity: 1; transform: translateX(0); } 
+    }
+
+    .proc-wrapper { 
+        max-width: 1400px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 30px; 
+        animation: fadeUp 0.5s ease-out forwards;
+        margin-left: 300px;
+    }
+
+    .proc-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 35px; 
+        background: var(--bg-panel); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--border-glow); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    }
+
+    .btn-back { 
+        background: rgba(189, 165, 129, 0.08); 
+        border: 1px solid rgba(189, 165, 129, 0.3); 
+        color: var(--primary); 
+        padding: 12px 22px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        text-decoration: none; 
+        transition: 0.3s ease; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 10px; 
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+    }
+    .btn-back:hover { 
+        background: var(--primary); 
+        color: #05070b; 
+        box-shadow: 0 0 15px var(--primary-glow); 
+        transform: translateX(-3px);
+    }
+
+    .proc-title { text-align: right; }
+    .proc-title h1 { 
+        font-size: 26px; 
+        font-weight: 900; 
+        margin: 0; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+    }
+    .proc-title p { 
+        color: var(--primary); 
+        margin: 5px 0 0 0; 
+        font-weight: 700; 
+        font-size: 13px; 
+        letter-spacing: 3px; 
+        text-transform: uppercase; 
+    }
+
+    .formation-nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    .form-nav-btn {
+        background: rgba(6, 9, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        color: #94a3b8;
+        padding: 16px;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .form-nav-btn:hover { background: rgba(255,255,255,0.02); color: #fff; }
+    .form-nav-btn.active {
+        background: linear-gradient(180deg, rgba(189, 165, 129, 0.15) 0%, rgba(189,165,129,0.02) 100%);
+        color: var(--primary);
+        border: 1px solid var(--primary);
+        box-shadow: 0 5px 15px rgba(189, 165, 129, 0.05);
+    }
+
+    .formation-pane { display: none; animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .formation-pane.active { display: block; }
+
+    .main-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+
+    .info-panel {
+        background: var(--bg-panel);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-left: 4px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .info-panel h2 {
+        margin: 0 0 15px 0; color: #fff; font-size: 1.25rem; text-transform: uppercase;
+        font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;
+    }
+    .info-panel h2 span { color: var(--primary); }
+    .info-panel p { color: #cbd5e1; line-height: 1.7; font-size: 0.92rem; margin: 0; font-weight: 500; }
+
+    .use-case-box {
+        background: rgba(10, 15, 30, 0.4);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 25px;
+        position: relative;
+    }
+    
+    .template-content {
+        color: #e2e8f0;
+        font-family: 'Consolas', 'Courier New', monospace;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px dashed rgba(189, 165, 129, 0.3);
+        white-space: pre-wrap;
+    }
+
+    .btn-copy {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(189, 165, 129, 0.1);
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-copy:hover {
+        background: var(--primary);
+        color: #000;
+    }
+    .btn-copy.copied {
+        background: var(--success);
+        border-color: var(--success);
+        color: #fff;
+    }
+
+    .academy-footer {
+        margin-top: 40px; text-align: center; padding: 15px; border-top: 1px dashed rgba(255,255,255,0.05);
+        color: #475569; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    @media (max-width: 1200px) {
+        .proc-wrapper { margin-left: 0; padding: 20px; }
+        .formation-nav { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+
+<div class="proc-wrapper">
+    <div class="proc-header">
+        <a href="/documents" class="btn-back"><i class="fas fa-chevron-left"></i> Documents</a>
+        <div class="proc-title">
+            <h1>Templates & Formulaires</h1>
+            <p>Documents Pré-remplis du BCSO</p>
+        </div>
+    </div>
+
+    <div class="formation-nav">
+        <button class="form-nav-btn active" onclick="switchTemplate('plainte', this)"><i class="fas fa-file-pen"></i> A) Plainte Civile</button>
+        <button class="form-nav-btn" onclick="switchTemplate('deposition', this)"><i class="fas fa-microphone-lines"></i> B) Déposition</button>
+        <button class="form-nav-btn" onclick="switchTemplate('arrestation', this)"><i class="fas fa-handcuffs"></i> C) Rapport d'Arrestation</button>
+        <button class="form-nav-btn" onclick="switchTemplate('incident', this)"><i class="fas fa-triangle-exclamation"></i> D) Rapport d'Incident</button>
+    </div>
+
+    <!-- ONGLET : PLAINTE -->
+    <div id="plainte" class="formation-pane active">
+        <div class="main-grid">
+            <div class="info-panel">
+                <h2><span>A)</span> Modèle de Plainte Civile</h2>
+                <p>À utiliser lorsqu'un citoyen souhaite déposer une plainte officielle contre un ou plusieurs individus.</p>
+            </div>
+            <div class="use-case-box">
+                <button class="btn-copy" onclick="copyText('txt-plainte', this)"><i class="fas fa-copy"></i> Copier</button>
+                <div id="txt-plainte" class="template-content">**DÉPÔT DE PLAINTE OFFICIEL - BCSO**
+
+**INFORMATIONS DU PLAIGNANT :**
+- Nom & Prénom : 
+- Numéro de téléphone : 
+- Profession : 
+
+**DÉTAILS DE L'INCIDENT :**
+- Date et Heure des faits : 
+- Lieu exact : 
+
+**DESCRIPTION DES FAITS :**
+[Détaillez ici de manière chronologique les événements tels que décrits par le plaignant]
+
+**INFORMATIONS SUSPECTS / VÉHICULES (Si connus) :**
+- Description physique : 
+- Véhicule (Modèle/Couleur/Plaque) : 
+
+**PREUVES FOURNIES :**
+[Photos, témoignages, certificats médicaux...]
+
+Agent en charge : <%= user.grade %> <%= user.nom %>
+Signature du plaignant : </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET : DÉPOSITION -->
+    <div id="deposition" class="formation-pane">
+        <div class="main-grid">
+            <div class="info-panel">
+                <h2><span>B)</span> Modèle de Déposition / Témoignage</h2>
+                <p>À utiliser pour recueillir le témoignage d'une victime ou d'un témoin suite à un événement.</p>
+            </div>
+            <div class="use-case-box">
+                <button class="btn-copy" onclick="copyText('txt-deposition', this)"><i class="fas fa-copy"></i> Copier</button>
+                <div id="txt-deposition" class="template-content">**DÉPOSITION OFFICIELLE - BCSO**
+
+**INFORMATIONS DU TÉMOIN / VICTIME :**
+- Nom & Prénom : 
+- Numéro de téléphone : 
+- Rôle (Témoin ou Victime) : 
+
+**DÉCLARATION :**
+*Rappel : Toute fausse déclaration est passible de poursuites pénales.*
+
+[Insérer ici la déclaration exacte de l'individu]
+
+Agent ayant recueilli la déposition : <%= user.grade %> <%= user.nom %>
+Date et Heure : </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET : RAPPORT ARRESTATION -->
+    <div id="arrestation" class="formation-pane">
+        <div class="main-grid">
+            <div class="info-panel">
+                <h2><span>C)</span> Rapport d'Arrestation</h2>
+                <p>Format standardisé pour documenter l'arrestation d'un individu et son placement en cellule (MDC).</p>
+            </div>
+            <div class="use-case-box">
+                <button class="btn-copy" onclick="copyText('txt-arrestation', this)"><i class="fas fa-copy"></i> Copier</button>
+                <div id="txt-arrestation" class="template-content">**RAPPORT D'ARRESTATION - BCSO**
+
+**IDENTITÉ DU SUSPECT :**
+- Nom & Prénom : 
+- Date de naissance (Si connue) : 
+
+**CHARGES RETENUES :**
+- [Charge 1]
+- [Charge 2]
+
+**RÉSUMÉ DE L'INTERVENTION :**
+[Détaillez le motif du contrôle, le déroulement de l'arrestation, la lecture des droits, etc.]
+
+**OBJETS SAISIS LORS DE LA FOUILLE :**
+- [Objet 1]
+- [Objet 2]
+
+**DÉCISION FINALE :**
+- Temps de cellule : XX Mois
+- Montant de l'amende : $XX
+
+Agents impliqués : <%= user.grade %> <%= user.nom %>, [Autres agents]</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET : RAPPORT INCIDENT -->
+    <div id="incident" class="formation-pane">
+        <div class="main-grid">
+            <div class="info-panel">
+                <h2><span>D)</span> Rapport d'Incident (Tir / Accident)</h2>
+                <p>À remplir obligatoirement suite à l'usage d'une arme à feu létale ou un accident impliquant un véhicule de fonction.</p>
+            </div>
+            <div class="use-case-box">
+                <button class="btn-copy" onclick="copyText('txt-incident', this)"><i class="fas fa-copy"></i> Copier</button>
+                <div id="txt-incident" class="template-content">**RAPPORT D'INCIDENT INTERNE - BCSO**
+
+**NATURE DE L'INCIDENT :** [Tir Létal / Accident de la route / Blessure d'un agent]
+**DATE ET HEURE :**
+**LIEU :**
+
+**AGENTS IMPLIQUÉS :**
+- <%= user.grade %> <%= user.nom %>
+- [Autres agents]
+
+**DESCRIPTION DÉTAILLÉE DE L'INCIDENT :**
+[Expliquez pourquoi le feu a été ouvert, ou comment l'accident s'est produit]
+
+**DÉGÂTS MATÉRIELS OU CORPORELS :**
+- Suspects : [État de santé]
+- Agents : [État de santé]
+- Véhicules : [Dégâts]
+
+**UNITÉS SUPPLÉMENTAIRES DÉPLOYÉES :** [EMS, LSPD, etc.]</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academy-footer">
+        Blaine County Sheriff's Office — Official Templates Database
+    </div>
+</div>
+
+<script>
+    function switchTemplate(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+
+    function copyText(elementId, btnElement) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = btnElement.innerHTML;
+            btnElement.classList.add('copied');
+            btnElement.innerHTML = '<i class="fas fa-check"></i> Copié !';
+            setTimeout(() => {
+                btnElement.classList.remove('copied');
+                btnElement.innerHTML = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.error('Erreur lors de la copie : ', err);
+        });
+    }
+</script>
