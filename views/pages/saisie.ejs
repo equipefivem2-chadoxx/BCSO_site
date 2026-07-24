@@ -25,7 +25,7 @@
         display: flex; 
         justify-content: space-between; 
         align-items: center; 
-        margin-bottom: 35px; 
+        margin-bottom: 25px; 
         background: var(--bg-panel); 
         padding: 25px 35px; 
         border-radius: 16px; 
@@ -48,6 +48,48 @@
     }
     .btn-new:hover { background: var(--primary); color: #05070b; box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px); }
 
+    /* FILTRES & RECHERCHE */
+    .search-panel {
+        background: var(--bg-panel);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .search-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
+    .search-group label { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+    
+    .search-input {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(189, 165, 129, 0.2);
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+    .search-input:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.5); }
+    
+    .btn-search {
+        background: var(--primary); color: #000; font-weight: 800; border: none; padding: 10px 20px;
+        border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; height: 100%;
+        margin-top: 24px; transition: 0.3s;
+    }
+    .btn-search:hover { box-shadow: 0 0 15px var(--primary-glow); transform: scale(1.02); }
+    .btn-reset {
+        background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; padding: 10px 20px;
+        border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+        margin-top: 24px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-reset:hover { background: rgba(255,255,255,0.2); }
+
     /* GRILLE DES SCELLÉS */
     .scelles-grid {
         display: grid;
@@ -66,107 +108,70 @@
         display: flex;
         flex-direction: column;
     }
-    .preuve-card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(189, 165, 129, 0.4);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
+    .preuve-card:hover { transform: translateY(-5px); border-color: rgba(189, 165, 129, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-    /* IMAGE / HAUT DE CARTE */
-    .preuve-img-container {
-        height: 180px;
-        background: rgba(0,0,0,0.5);
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-bottom: 2px solid rgba(189, 165, 129, 0.2);
-    }
-    .preuve-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        opacity: 0.8;
-        transition: 0.3s;
-    }
+    .preuve-img-container { height: 180px; background: rgba(0,0,0,0.5); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 2px solid rgba(189, 165, 129, 0.2); }
+    .preuve-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
     .preuve-card:hover .preuve-img { opacity: 1; transform: scale(1.05); }
-    
     .no-img { color: #475569; font-size: 3rem; opacity: 0.5; }
 
-    /* BADGES */
-    .badges-container {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        right: 15px;
-        display: flex;
-        justify-content: space-between;
-        pointer-events: none;
-    }
-    .badge {
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        backdrop-filter: blur(5px);
-    }
+    .badges-container { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; pointer-events: none; }
+    .badge { padding: 5px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px); }
     
-    /* Couleurs par Type */
     .badge-type { background: rgba(0,0,0,0.7); border: 1px solid #fff; color: #fff; }
     .type-arme { border-color: #ef4444; color: #fca5a5; }
     .type-drogue { border-color: #10b981; color: #6ee7b7; }
     .type-argent { border-color: #f59e0b; color: #fcd34d; }
     
-    /* Couleurs par Statut */
     .badge-status { border: 1px solid transparent; }
     .status-scelle { background: rgba(189, 165, 129, 0.2); border-color: var(--primary); color: var(--primary); }
     .status-detruit { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
     .status-restitue { background: rgba(16, 185, 129, 0.2); border-color: var(--success); color: #6ee7b7; }
 
-    /* CORPS DE CARTE */
     .preuve-body { padding: 20px; flex-grow: 1; }
-    .preuve-title {
-        font-size: 1.1rem; color: #fff; font-weight: 800; margin: 0 0 15px 0;
-        display: flex; justify-content: space-between; align-items: center;
-    }
+    .preuve-title { font-size: 1.1rem; color: #fff; font-weight: 800; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center; }
     .quantite-tag { background: var(--primary); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
     
     .preuve-details { list-style: none; padding: 0; margin: 0; }
-    .preuve-details li {
-        font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;
-    }
+    .preuve-details li { font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; }
     .preuve-details i { color: var(--primary); margin-top: 3px; width: 15px; }
     .preuve-details strong { color: #cbd5e1; }
 
-    /* ACTIONS (BOUTONS STATUT) */
-    .preuve-actions {
-        padding: 15px 20px;
-        background: rgba(0,0,0,0.2);
-        border-top: 1px solid rgba(255,255,255,0.05);
-        display: flex;
-        gap: 10px;
-    }
-    .btn-action {
-        flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif;
-        font-weight: 700; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.2s;
-        display: flex; justify-content: center; align-items: center; gap: 6px;
-    }
-    
-    /* Boutons selon le statut */
+    .preuve-actions { padding: 15px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; }
+    .btn-action { flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; }
     .form-action { flex: 1; display: flex; }
     .btn-detruire { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); }
     .btn-detruire:hover { background: var(--danger); color: #fff; }
-    
     .btn-restituer { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); color: var(--success); }
     .btn-restituer:hover { background: var(--success); color: #fff; }
     
-    .empty-state {
-        grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--bg-panel);
-        border-radius: 12px; border: 1px dashed rgba(189, 165, 129, 0.3); color: #94a3b8;
+    .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--bg-panel); border-radius: 12px; border: 1px dashed rgba(189, 165, 129, 0.3); color: #94a3b8; }
+
+    /* PAGINATION */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 40px;
+        padding-bottom: 20px;
     }
+    .page-btn {
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(189, 165, 129, 0.2);
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+    .page-btn:hover { border-color: var(--primary); background: rgba(189, 165, 129, 0.1); }
+    .page-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+    .page-btn.disabled { opacity: 0.5; pointer-events: none; }
 </style>
 
 <div class="scelles-wrapper">
@@ -182,14 +187,52 @@
         </div>
     </div>
 
+    <!-- MOTEUR DE RECHERCHE -->
+    <form action="/saisie" method="GET" class="search-panel">
+        <div class="search-group" style="flex: 2;">
+            <label>Recherche globale</label>
+            <input type="text" name="search" class="search-input" placeholder="Suspect, Agent, N° Série, Arme..." value="<%= queryParams.search || '' %>">
+        </div>
+        
+        <div class="search-group">
+            <label>Type de saisie</label>
+            <select name="type" class="search-input">
+                <option value="Tous" <%= queryParams.type === 'Tous' ? 'selected' : '' %>>Tous</option>
+                <option value="Arme" <%= queryParams.type === 'Arme' ? 'selected' : '' %>>Arme</option>
+                <option value="Drogue" <%= queryParams.type === 'Drogue' ? 'selected' : '' %>>Drogue</option>
+                <option value="Argent Sale" <%= queryParams.type === 'Argent Sale' ? 'selected' : '' %>>Argent Sale</option>
+                <option value="Autre" <%= queryParams.type === 'Autre' ? 'selected' : '' %>>Autre</option>
+            </select>
+        </div>
+
+        <div class="search-group">
+            <label>Statut</label>
+            <select name="statut" class="search-input">
+                <option value="Tous" <%= queryParams.statut === 'Tous' ? 'selected' : '' %>>Tous</option>
+                <option value="Stocké" <%= queryParams.statut === 'Stocké' ? 'selected' : '' %>>Stocké en Scellé</option>
+                <option value="Détruit" <%= queryParams.statut === 'Détruit' ? 'selected' : '' %>>Détruit</option>
+                <option value="Restitué" <%= queryParams.statut === 'Restitué' ? 'selected' : '' %>>Restitué</option>
+            </select>
+        </div>
+
+        <div class="search-group">
+            <label>Trier par Date</label>
+            <select name="dateOrder" class="search-input">
+                <option value="desc" <%= queryParams.dateOrder !== 'asc' ? 'selected' : '' %>>Plus récent d'abord</option>
+                <option value="asc" <%= queryParams.dateOrder === 'asc' ? 'selected' : '' %>>Plus ancien d'abord</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-search"><i class="fas fa-search"></i> Filtrer</button>
+        <a href="/saisie" class="btn-reset"><i class="fas fa-times"></i></a>
+    </form>
+
     <!-- GRILLE DES PREUVES -->
     <div class="scelles-grid">
-        
         <% if (saisies && saisies.length > 0) { %>
             <% saisies.forEach(saisie => { %>
                 <div class="preuve-card">
                     
-                    <!-- IMAGE & BADGES -->
                     <div class="preuve-img-container">
                         <% if (saisie.photoUrl) { %>
                             <img src="<%= saisie.photoUrl %>" alt="Preuve" class="preuve-img">
@@ -198,7 +241,6 @@
                         <% } %>
                         
                         <div class="badges-container">
-                            <!-- Type Badge -->
                             <% 
                                 let typeClass = '';
                                 if(saisie.typeSaisie === 'Arme') typeClass = 'type-arme';
@@ -207,18 +249,16 @@
                             %>
                             <span class="badge badge-type <%= typeClass %>"><%= saisie.typeSaisie %></span>
                             
-                            <!-- Status Badge -->
                             <% 
-                                const currentStatut = saisie.statut || 'Scellé'; 
+                                const currentStatut = saisie.statut || 'Stocké'; 
                                 let statusClass = 'status-scelle';
                                 if(currentStatut === 'Détruit') statusClass = 'status-detruit';
                                 if(currentStatut === 'Restitué') statusClass = 'status-restitue';
                             %>
-                            <span class="badge badge-status <%= statusClass %>"><i class="fas fa-fingerprint"></i> <%= currentStatut %></span>
+                            <span class="badge badge-status <%= statusClass %>"><i class="fas fa-fingerprint"></i> <%= currentStatut === 'Stocké' ? 'Scellé' : currentStatut %></span>
                         </div>
                     </div>
 
-                    <!-- DÉTAILS -->
                     <div class="preuve-body">
                         <h3 class="preuve-title">
                             <%= saisie.intitule %>
@@ -232,13 +272,12 @@
                             <% if (saisie.numeroSerie && saisie.numeroSerie !== 'N/A') { %>
                                 <li><i class="fas fa-barcode"></i> <span><strong>N° Série:</strong> <%= saisie.numeroSerie %></span></li>
                             <% } %>
+                            <li><i class="fas fa-calendar-alt"></i> <span><strong>Date:</strong> <%= new Date(saisie.date).toLocaleDateString('fr-FR') %></span></li>
                         </ul>
                     </div>
 
-                    <!-- ACTIONS -->
                     <% if (currentStatut !== 'Détruit' && currentStatut !== 'Restitué') { %>
                         <div class="preuve-actions">
-                            <!-- Formulaire Détruire -->
                             <form action="/saisie/statut/<%= saisie._id %>" method="POST" class="form-action">
                                 <input type="hidden" name="statut" value="Détruit">
                                 <button type="submit" class="btn-action btn-detruire" onclick="return confirm('Es-tu sûr de vouloir détruire ce scellé ?');">
@@ -246,7 +285,6 @@
                                 </button>
                             </form>
                             
-                            <!-- Formulaire Restituer -->
                             <form action="/saisie/statut/<%= saisie._id %>" method="POST" class="form-action">
                                 <input type="hidden" name="statut" value="Restitué">
                                 <button type="submit" class="btn-action btn-restituer" onclick="return confirm('Es-tu sûr de vouloir restituer ce scellé ?');">
@@ -262,9 +300,31 @@
             <div class="empty-state">
                 <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px; color: rgba(189, 165, 129, 0.4);"></i>
                 <h2>Le casier des preuves est vide</h2>
-                <p>Aucune saisie n'a été enregistrée pour le moment.</p>
+                <p>Aucune saisie ne correspond à votre recherche.</p>
             </div>
         <% } %>
-
     </div>
+
+    <!-- PAGINATION -->
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <% 
+                // Reconstruction de l'URL avec les filtres pour les liens de pagination
+                let baseUrl = '/saisie?';
+                if(queryParams.search) baseUrl += `search=${queryParams.search}&`;
+                if(queryParams.type) baseUrl += `type=${queryParams.type}&`;
+                if(queryParams.statut) baseUrl += `statut=${queryParams.statut}&`;
+                if(queryParams.dateOrder) baseUrl += `dateOrder=${queryParams.dateOrder}&`;
+            %>
+            
+            <a href="<%= baseUrl %>page=<%= currentPage - 1 %>" class="page-btn <%= currentPage === 1 ? 'disabled' : '' %>"><i class="fas fa-chevron-left"></i></a>
+            
+            <% for(let i = 1; i <= totalPages; i++) { %>
+                <a href="<%= baseUrl %>page=<%= i %>" class="page-btn <%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+            <% } %>
+
+            <a href="<%= baseUrl %>page=<%= currentPage + 1 %>" class="page-btn <%= currentPage === totalPages ? 'disabled' : '' %>"><i class="fas fa-chevron-right"></i></a>
+        </div>
+    <% } %>
+
 </div>
