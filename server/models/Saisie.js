@@ -1,23 +1,71 @@
-const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
+const Saisie = require('../models/Saisie');
+const Agent = require('../models/Agent');
 
-const SaisieSchema = new mongoose.Schema({
-    agentNom: { type: String, required: true },
-    suspect: { type: String, required: true },
-    typeSaisie: { 
-        type: String, 
-        enum: ['Arme', 'Drogue', 'Argent Sale', 'Objet Illégal', 'Autre'], 
-        required: true 
-    },
-    intitule: { type: String, required: true },
-    quantite: { type: Number, default: 1 },
-    numeroSerie: { type: String, default: 'N/A' },
-    photoUrl: { type: String, default: '' }, // Juste l'URL pour ne pas surcharger la BDD
-    statut: { 
-        type: String, 
-        enum: ['Sous scellé', 'Détruit', 'Restitué'], 
-        default: 'Sous scellé' 
-    },
-    date: { type: Date, default: Date.now }
+// Afficher la page des saisies
+router.get('/', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const saisies = await Saisie.find().sort({ date: -1 }).limit(50);
+        res.render('pages/saisie', { 
+            title: 'BCSO - Saisies & Scellés',
+            user: req.session.user,
+            saisies: saisies
+        });
+    } catch (err) {
+        console.error(err);
+        res.redirect('/dashboard');
+    }
 });
 
-module.exports = mongoose.model('Saisie', SaisieSchema);
+// Afficher la page de déclaration
+router.get('/declarer', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    res.render('pages/declarer-saisie', { 
+        title: 'BCSO - Déclarer une saisie',
+        user: req.session.user
+    });
+});
+
+// Ajouter une saisie
+router.post('/ajouter', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+
+    try {
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+        const nomAgent = agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
+
+        const nouvelleSaisie = new Saisie({
+            agentNom: nomAgent,
+            suspect: req.body.suspect || 'Inconnu',
+            typeSaisie: req.body.typeSaisie,
+            intitule: req.body.intitule,
+            quantite: req.body.quantite || 1,
+            numeroSerie: req.body.numeroSerie || 'N/A',
+            photoUrl: req.body.photoUrl || ''
+        });
+
+        await nouvelleSaisie.save();
+        res.redirect('/saisie?success=1');
+    } catch (err) {
+        console.error("Erreur ajout saisie:", err);
+        res.redirect('/saisie?error=1');
+    }
+});
+
+// Changer le statut (Détruire / Restituer)
+router.post('/statut/:id', async (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    try {
+        await Saisie.findByIdAndUpdate(req.params.id, { statut: req.body.statut });
+        res.redirect('/saisie');
+    } catch (err) {
+        res.redirect('/saisie');
+    }
+});
+
+module.exports = router;
