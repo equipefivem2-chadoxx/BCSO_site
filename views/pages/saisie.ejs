@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    .saisie-container { margin-left: 280px; padding: 40px; color: #fff; }
+    .header-title { color: #bda581; font-size: 24px; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid rgba(189, 165, 129, 0.3); padding-bottom: 10px; }
+    .form-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(189, 165, 129, 0.2); padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; color: #bda581; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; }
+    .form-control { width: 100%; background: #07090e; border: 1px solid rgba(189, 165, 129, 0.3); color: #fff; padding: 10px; border-radius: 5px; }
+    .form-control:focus { outline: none; border-color: #bda581; box-shadow: 0 0 10px rgba(189, 165, 129, 0.2); }
+    .btn-submit { background: #bda581; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+    .btn-submit:hover { background: #d4bc96; box-shadow: 0 0 15px rgba(189, 165, 129, 0.4); }
+    
+    .table-saisies { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.4); border-radius: 10px; overflow: hidden; }
+    .table-saisies th { background: rgba(189, 165, 129, 0.15); color: #bda581; padding: 15px; text-align: left; font-size: 13px; text-transform: uppercase; }
+    .table-saisies td { padding: 15px; border-bottom: 1px solid rgba(189, 165, 129, 0.1); font-size: 14px; }
+    .badge-scelle { background: rgba(189, 165, 129, 0.2); color: #bda581; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+    .badge-detruit { background: rgba(220, 38, 38, 0.2); color: #f87171; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+</style>
+
+<div class="saisie-container">
+    <div class="header-title"><i class="fas fa-box-open"></i> Enregistrement d'une Saisie</div>
+
+    <div class="form-box">
+        <form action="/saisie/ajouter" method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label>Nom du suspect / Propriétaire</label>
+                    <input type="text" name="suspect" class="form-control" placeholder="Ex: John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label>Type de saisie</label>
+                    <select name="typeSaisie" class="form-control" required>
+                        <option value="Arme">Arme</option>
+                        <option value="Drogue">Drogue</option>
+                        <option value="Argent Sale">Argent Sale</option>
+                        <option value="Objet Illégal">Objet Illégal</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Intitulé (Nom de l'objet)</label>
+                    <input type="text" name="intitule" class="form-control" placeholder="Ex: Pistolet de combat / Cannabis" required>
+                </div>
+                <div class="form-group">
+                    <label>Quantité / Montant</label>
+                    <input type="number" name="quantite" class="form-control" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Numéro de série (Si Arme)</label>
+                    <input type="text" name="numeroSerie" class="form-control" placeholder="Laisser vide si non applicable">
+                </div>
+                <div class="form-group">
+                    <label>Lien Photo (Preuve Discord/Imgur)</label>
+                    <input type="url" name="photoUrl" class="form-control" placeholder="https://...">
+                </div>
+            </div>
+            <button type="submit" class="btn-submit" style="margin-top: 15px;"><i class="fas fa-save"></i> Mettre sous scellé</button>
+        </form>
+    </div>
+
+    <div class="header-title" style="margin-top: 50px;"><i class="fas fa-archive"></i> Registre des Scellés</div>
+    
+    <table class="table-saisies">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Saisi par</th>
+                <th>Suspect</th>
+                <th>Objet</th>
+                <th>Quantité</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% saisies.forEach(function(saisie) { %>
+                <tr>
+                    <td><%= new Date(saisie.date).toLocaleDateString('fr-FR') %></td>
+                    <td><%= saisie.agentNom %></td>
+                    <td><%= saisie.suspect %></td>
+                    <td><strong><%= saisie.intitule %></strong> <br><small style="color:#94a3b8"><%= saisie.typeSaisie %></small></td>
+                    <td><%= saisie.quantite %></td>
+                    <td>
+                        <% if(saisie.statut === 'Sous scellé') { %>
+                            <span class="badge-scelle"><i class="fas fa-box"></i> Sous scellé</span>
+                        <% } else { %>
+                            <span class="badge-detruit"><i class="fas fa-fire"></i> <%= saisie.statut %></span>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if(saisie.statut === 'Sous scellé') { %>
+                            <form action="/saisie/statut/<%= saisie._id %>" method="POST" style="display:inline;">
+                                <input type="hidden" name="statut" value="Détruit">
+                                <button type="submit" style="background: none; border: none; color: #f87171; cursor: pointer;" title="Détruire">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        <% } %>
+                        <% if(saisie.photoUrl) { %>
+                            <a href="<%= saisie.photoUrl %>" target="_blank" style="color: #bda581; margin-left: 10px;" title="Voir la preuve"><i class="fas fa-image"></i></a>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>

@@ -11,6 +11,7 @@ const entrepriseRoutes = require('./entreprise');
 const flRoutes = require('./fl');
 const patchnoteRoutes = require('./patchnote');
 const rollcallRoutes = require('./api/rollcall');
+const saisieRoutes = require('./saisie'); // 🚀 IMPORT DE LA NOUVELLE ROUTE SAISIE
 
 router.use(async (req, res, next) => {
     if (req.session.user) {
@@ -58,7 +59,7 @@ router.get('/dashboard', async (req, res) => {
         
         recentTickets = await Ticket.find({}).sort({ dateCreation: -1 }).limit(5);
     } catch (err) {
-        console.log('Attente de la création des collections...');
+        console.log('Attente de la création collections...');
     }
 
     let ticketsEnCoursCount = req.app.locals.ticketsEnCoursCount || 0;
@@ -441,6 +442,9 @@ router.use('/api/rollcall', rollcallRoutes);
 router.use('/entreprise', entrepriseRoutes);
 router.use('/fl', flRoutes);
 router.use('/patchnotes', patchnoteRoutes);
+
+// 🚀 AJOUT DE L'UTILISATION DE LA ROUTE SAISIE
+router.use('/saisie', saisieRoutes); 
 
 router.use((req, res) => {
     res.status(404).render('pages/404', { message: 'Page introuvable', title: '404' });
