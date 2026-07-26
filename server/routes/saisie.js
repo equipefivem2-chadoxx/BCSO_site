@@ -101,13 +101,16 @@ router.post('/ajouter', async (req, res) => {
     }
 });
 
-// 4. ACTION (PROTÉGÉE) : Changer le statut
+// 4. ACTION (PROTÉGÉE) : Supprimer le scellé de la BDD (Détruire / Restituer)
 router.post('/statut/:id', isSuperviseur, async (req, res) => {
     try {
-        await Saisie.findByIdAndUpdate(req.params.id, { statut: req.body.statut });
+        // 🚀 NOUVEAU : Suppression pure et simple de l'entrée dans la base de données
+        await Saisie.findByIdAndDelete(req.params.id);
+        
         const referer = req.get('Referrer') || '/saisie';
         res.redirect(referer);
     } catch (err) {
+        console.error("Erreur lors de la suppression de la saisie:", err);
         res.redirect('/saisie');
     }
 });
