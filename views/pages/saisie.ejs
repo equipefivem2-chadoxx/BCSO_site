@@ -1,46 +1,46 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
 <style>
     :root {
         --primary: #bda581;
+        --bg-card: rgba(15, 23, 42, 0.4);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
         --primary-glow: rgba(189, 165, 129, 0.2);
-        --bg-panel: rgba(11, 15, 25, 0.75);
-        --border-glow: rgba(189, 165, 129, 0.25);
         --success: #10b981;
         --danger: #ef4444;
         --warning: #f59e0b;
     }
 
+    body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: var(--text-main); }
+
     @keyframes fadeUp { 
-        from { opacity: 0; transform: translateY(20px); } 
+        from { opacity: 0; transform: translateY(15px); } 
         to { opacity: 1; transform: translateY(0); } 
     }
 
     .scelles-wrapper { 
+        margin-left: 280px; 
+        padding: 50px 60px; 
         max-width: 1400px; 
-        margin: 0 auto; 
-        animation: fadeUp 0.5s ease-out forwards;
+        animation: fadeUp 0.4s ease-out;
     }
 
-    /* HEADER */
-    .proc-header { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        margin-bottom: 25px; 
-        background: var(--bg-panel); 
-        padding: 25px 35px; 
-        border-radius: 16px; 
-        border-top: 1px solid var(--border-glow); 
-        backdrop-filter: blur(20px); 
-        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    /* HEADER STYLE SUPERVISEUR */
+    .page-header { 
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2); 
+        padding-bottom: 20px; 
+        margin-bottom: 35px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-
-    .header-actions { display: flex; gap: 15px; }
-
-    .proc-title h1 { font-size: 26px; font-weight: 900; margin: 0; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
-    .proc-title p { color: var(--primary); margin: 5px 0 0 0; font-weight: 700; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; }
+    .page-header h1 { color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 28px; }
+    .page-header p { color: #94a3b8; margin-top: 5px; margin-bottom: 0; font-size: 14px; }
 
     .btn-new {
-        background: linear-gradient(135deg, rgba(189, 165, 129, 0.1) 0%, rgba(189, 165, 129, 0.3) 100%);
+        background: linear-gradient(135deg, rgba(189, 165, 129, 0.1) 0%, rgba(189, 165, 129, 0.2) 100%);
         border: 1px solid var(--primary); color: #fff; padding: 12px 24px; border-radius: 8px;
         font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
         letter-spacing: 1px; cursor: pointer; text-decoration: none; transition: all 0.3s;
@@ -50,14 +50,13 @@
 
     /* FILTRES & RECHERCHE */
     .search-panel {
-        background: var(--bg-panel);
+        background: var(--bg-card);
         border: 1px solid rgba(255,255,255,0.05);
         border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 30px;
-        backdrop-filter: blur(10px);
+        padding: 25px;
+        margin-bottom: 40px;
         display: flex;
-        gap: 15px;
+        gap: 20px;
         flex-wrap: wrap;
         align-items: center;
     }
@@ -69,7 +68,7 @@
         background: rgba(0,0,0,0.3);
         border: 1px solid rgba(189, 165, 129, 0.2);
         color: #fff;
-        padding: 10px 15px;
+        padding: 12px 15px;
         border-radius: 8px;
         font-family: 'Montserrat', sans-serif;
         font-size: 0.9rem;
@@ -78,17 +77,17 @@
     .search-input:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.5); }
     
     .btn-search {
-        background: var(--primary); color: #000; font-weight: 800; border: none; padding: 10px 20px;
+        background: var(--primary); color: #000; font-weight: 800; border: none; padding: 12px 20px;
         border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; height: 100%;
         margin-top: 24px; transition: 0.3s;
     }
     .btn-search:hover { box-shadow: 0 0 15px var(--primary-glow); transform: scale(1.02); }
     .btn-reset {
-        background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; padding: 10px 20px;
+        background: rgba(255,255,255,0.05); color: #fff; text-decoration: none; padding: 12px 20px;
         border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
-        margin-top: 24px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2);
+        margin-top: 24px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1);
     }
-    .btn-reset:hover { background: rgba(255,255,255,0.2); }
+    .btn-reset:hover { background: rgba(255,255,255,0.1); }
 
     /* GRILLE DES SCELLÉS */
     .scelles-grid {
@@ -97,20 +96,20 @@
         gap: 25px;
     }
 
-    /* CARTE DE PREUVE */
+    /* CARTE DE PREUVE STYLE "TOOL-CARD" */
     .preuve-card {
-        background: var(--bg-panel);
-        border: 1px solid rgba(255,255,255,0.05);
+        background: var(--bg-card); 
+        border: 1px solid rgba(255,255,255,0.05); 
+        border-top: 3px solid var(--primary);
         border-radius: 12px;
         overflow: hidden;
-        backdrop-filter: blur(10px);
-        transition: transform 0.3s, box-shadow 0.3s;
+        transition: 0.3s;
         display: flex;
         flex-direction: column;
     }
-    .preuve-card:hover { transform: translateY(-5px); border-color: rgba(189, 165, 129, 0.4); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .preuve-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(189, 165, 129, 0.15); border-color: rgba(189, 165, 129, 0.4); }
 
-    .preuve-img-container { height: 180px; background: rgba(0,0,0,0.5); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 2px solid rgba(189, 165, 129, 0.2); }
+    .preuve-img-container { height: 180px; background: rgba(0,0,0,0.5); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
     .preuve-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
     .preuve-card:hover .preuve-img { opacity: 1; transform: scale(1.05); }
     .no-img { color: #475569; font-size: 3rem; opacity: 0.5; }
@@ -124,9 +123,9 @@
     .type-argent { border-color: #f59e0b; color: #fcd34d; }
     
     .badge-status { border: 1px solid transparent; }
-    .status-scelle { background: rgba(189, 165, 129, 0.2); border-color: var(--primary); color: var(--primary); }
-    .status-detruit { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
-    .status-restitue { background: rgba(16, 185, 129, 0.2); border-color: var(--success); color: #6ee7b7; }
+    .status-scelle { background: rgba(189, 165, 129, 0.1); border-color: var(--primary); color: var(--primary); }
+    .status-detruit { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); color: #fca5a5; }
+    .status-restitue { background: rgba(16, 185, 129, 0.1); border-color: var(--success); color: #6ee7b7; }
 
     .preuve-body { padding: 20px; flex-grow: 1; }
     .preuve-title { font-size: 1.1rem; color: #fff; font-weight: 800; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center; }
@@ -140,12 +139,12 @@
     .preuve-actions { padding: 15px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; }
     .btn-action { flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; }
     .form-action { flex: 1; display: flex; }
-    .btn-detruire { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); }
-    .btn-detruire:hover { background: var(--danger); color: #fff; }
-    .btn-restituer { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); color: var(--success); }
-    .btn-restituer:hover { background: var(--success); color: #fff; }
+    .btn-detruire { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger); }
+    .btn-detruire:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .btn-restituer { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); }
+    .btn-restituer:hover { background: var(--success); color: #fff; border-color: var(--success); }
     
-    .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--bg-panel); border-radius: 12px; border: 1px dashed rgba(189, 165, 129, 0.3); color: #94a3b8; }
+    .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--bg-card); border-radius: 12px; border: 1px dashed rgba(189, 165, 129, 0.3); color: #94a3b8; }
 
     /* PAGINATION */
     .pagination {
@@ -177,10 +176,10 @@
 <div class="scelles-wrapper">
     
     <!-- EN-TÊTE -->
-    <div class="proc-header">
-        <div class="proc-title">
-            <h1>Saisies & Scellés</h1>
-            <p>Bureau des Preuves - Registre Officiel</p>
+    <div class="page-header">
+        <div>
+            <h1>Registre des Saisies</h1>
+            <p>Bureau des Preuves - Consultation Superviseur</p>
         </div>
         <div class="header-actions">
             <a href="/saisie/declarer" class="btn-new"><i class="fas fa-plus"></i> Déclarer une saisie</a>
@@ -278,16 +277,17 @@
 
                     <% if (currentStatut !== 'Détruit' && currentStatut !== 'Restitué') { %>
                         <div class="preuve-actions">
+                            <!-- Les actions détruisent désormais l'entrée depuis la BDD (Modif côté API) -->
                             <form action="/saisie/statut/<%= saisie._id %>" method="POST" class="form-action">
                                 <input type="hidden" name="statut" value="Détruit">
-                                <button type="submit" class="btn-action btn-detruire" onclick="return confirm('Es-tu sûr de vouloir détruire ce scellé ?');">
+                                <button type="submit" class="btn-action btn-detruire" onclick="return confirm('Attention : Cette action va effacer ce scellé définitivement de la base de données. Continuer ?');">
                                     <i class="fas fa-fire"></i> Détruire
                                 </button>
                             </form>
                             
                             <form action="/saisie/statut/<%= saisie._id %>" method="POST" class="form-action">
                                 <input type="hidden" name="statut" value="Restitué">
-                                <button type="submit" class="btn-action btn-restituer" onclick="return confirm('Es-tu sûr de vouloir restituer ce scellé ?');">
+                                <button type="submit" class="btn-action btn-restituer" onclick="return confirm('Attention : Cette action va effacer ce scellé définitivement de la base de données. Continuer ?');">
                                     <i class="fas fa-hand-holding"></i> Restituer
                                 </button>
                             </form>
@@ -309,7 +309,6 @@
     <% if (totalPages > 1) { %>
         <div class="pagination">
             <% 
-                // Reconstruction de l'URL avec les filtres pour les liens de pagination
                 let baseUrl = '/saisie?';
                 if(queryParams.search) baseUrl += `search=${queryParams.search}&`;
                 if(queryParams.type) baseUrl += `type=${queryParams.type}&`;
