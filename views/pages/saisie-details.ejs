@@ -1,0 +1,205 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --bg-card: rgba(15, 23, 42, 0.4);
+        --bg-dark: #07090e;
+        --text-main: #e2e8f0;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --success: #10b981;
+        --danger: #ef4444;
+    }
+
+    body { margin: 0; background-color: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: var(--text-main); }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(15px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    .details-wrapper { 
+        margin-left: 280px; 
+        padding: 50px 60px; 
+        max-width: 1400px; 
+        animation: fadeUp 0.4s ease-out;
+    }
+
+    .page-header { 
+        border-bottom: 1px solid rgba(189, 165, 129, 0.2); 
+        padding-bottom: 20px; 
+        margin-bottom: 35px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .page-header h1 { color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 28px; }
+    .page-header p { color: #94a3b8; margin-top: 5px; margin-bottom: 0; font-size: 14px; }
+
+    .btn-back {
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 20px; border-radius: 8px;
+        font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+        letter-spacing: 1px; cursor: pointer; text-decoration: none; transition: all 0.3s;
+        display: inline-flex; align-items: center; gap: 10px;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.1); color: var(--primary); }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 30px;
+        align-items: start;
+    }
+
+    .panel-box {
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-top: 3px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    /* GRAND CONTENEUR PHOTO */
+    .large-img-container {
+        width: 100%;
+        min-height: 400px;
+        background: #030508;
+        border-radius: 10px;
+        border: 1px solid rgba(189, 165, 129, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+    .large-img {
+        max-width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+    }
+    .no-img-large {
+        color: #475569;
+        font-size: 5rem;
+        opacity: 0.3;
+        text-align: center;
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 30px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .info-list li {
+        font-size: 1rem;
+        color: #94a3b8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.03);
+        padding-bottom: 12px;
+    }
+    .info-list i { color: var(--primary); width: 25px; }
+    .info-list strong { color: #fff; }
+
+    .actions-box {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .btn-action {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-detruire { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger); }
+    .btn-detruire:hover { background: var(--danger); color: #fff; }
+    .btn-restituer { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); }
+    .btn-restituer:hover { background: var(--success); color: #fff; }
+
+    @media (max-width: 900px) { .details-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="details-wrapper">
+    
+    <div class="page-header">
+        <div>
+            <h1>Détails de la Saisie</h1>
+            <p>Fiche technique du scellé n° <%= saisie._id %></p>
+        </div>
+        <div>
+            <a href="/saisie" class="btn-back"><i class="fas fa-arrow-left"></i> Retour au registre</a>
+        </div>
+    </div>
+
+    <div class="details-grid">
+        
+        <!-- COLONNE GAUCHE : PHOTO EN GRAND -->
+        <div class="panel-box">
+            <h2 style="margin-top: 0; color: #fff; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px;">
+                <i class="fas fa-camera" style="color: var(--primary);"></i> Pièce à conviction
+            </h2>
+            <div class="large-img-container">
+                <% if (saisie.photoUrl) { %>
+                    <img src="<%= saisie.photoUrl %>" alt="Preuve en grand" class="large-img">
+                <% } else { %>
+                    <div>
+                        <i class="fas fa-box-open no-img-large"></i>
+                        <p style="color: #475569; margin-top: 10px; font-weight: 600;">Aucune image enregistrée</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- COLONNE DROITE : INFORMATIONS & ACTIONS -->
+        <div class="panel-box">
+            <h2 style="margin-top: 0; color: #fff; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <span><i class="fas fa-info-circle" style="color: var(--primary);"></i> Informations</span>
+                <span style="background: var(--primary); color: #000; padding: 3px 10px; border-radius: 6px; font-size: 0.8rem;">x<%= saisie.quantite %></span>
+            </h2>
+
+            <ul class="info-list">
+                <li><span><i class="fas fa-tag"></i> Intitulé</span> <strong><%= saisie.intitule %></strong></li>
+                <li><span><i class="fas fa-folder"></i> Catégorie</span> <strong style="color: var(--primary);"><%= saisie.typeSaisie %></strong></li>
+                <li><span><i class="fas fa-user-secret"></i> Suspect</span> <strong><%= saisie.suspect %></strong></li>
+                <li><span><i class="fas fa-id-badge"></i> Saisi par</span> <strong><%= saisie.agentNom %></strong></li>
+                <% if (saisie.numeroSerie && saisie.numeroSerie !== 'N/A') { %>
+                    <li><span><i class="fas fa-barcode"></i> Numéro de série</span> <strong style="color: #fca5a5;"><%= saisie.numeroSerie %></strong></li>
+                <% } %>
+                <li><span><i class="fas fa-calendar-alt"></i> Date de saisie</span> <strong><%= new Date(saisie.date).toLocaleDateString('fr-FR') %> à <%= new Date(saisie.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) %></strong></li>
+            </ul>
+
+            <div class="actions-box">
+                <form action="/saisie/statut/<%= saisie._id %>" method="POST" style="flex: 1; display: flex;">
+                    <button type="submit" class="btn-action btn-detruire" onclick="return confirm('Attention : Cette action va effacer ce scellé définitivement de la base de données. Continuer ?');">
+                        <i class="fas fa-fire"></i> Détruire
+                    </button>
+                </form>
+                
+                <form action="/saisie/statut/<%= saisie._id %>" method="POST" style="flex: 1; display: flex;">
+                    <button type="submit" class="btn-action btn-restituer" onclick="return confirm('Attention : Cette action va effacer ce scellé définitivement de la base de données. Continuer ?');">
+                        <i class="fas fa-hand-holding"></i> Restituer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -63,11 +63,27 @@ router.get('/', isSuperviseur, async (req, res) => {
     }
 });
 
+// 🚀 NOUVEAU : PAGE DÉTAILS D'UNE SAISIE (AVEC PHOTO EN GRAND)
+router.get('/detail/:id', isSuperviseur, async (req, res) => {
+    try {
+        const saisie = await Saisie.findById(req.params.id);
+        if (!saisie) return res.redirect('/saisie');
+
+        res.render('pages/saisie-details', {
+            title: `BCSO - Saisie #${saisie.intitule}`,
+            user: req.session.user,
+            saisie: saisie
+        });
+    } catch (err) {
+        console.error("Erreur détail saisie:", err);
+        res.redirect('/saisie');
+    }
+});
+
 // 2. PAGE DÉCLARATION (PUBLIQUE POUR AGENTS) : Affiche le formulaire
 router.get('/declarer', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
-        // 🚀 NOUVEAU : On cherche le nom de l'agent dans la BDD
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
         const nomAgent = agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
@@ -75,7 +91,7 @@ router.get('/declarer', async (req, res) => {
         res.render('pages/declarer-saisie', { 
             title: 'BCSO - Déclarer une Saisie',
             user: req.session.user,
-            nomAgent: nomAgent // 🚀 On envoie le nom de l'agent au visuel
+            nomAgent: nomAgent 
         });
     } catch (err) {
         res.redirect('/dashboard'); 
@@ -111,7 +127,6 @@ router.post('/ajouter', async (req, res) => {
 router.post('/statut/:id', isSuperviseur, async (req, res) => {
     try {
         await Saisie.findByIdAndDelete(req.params.id);
-        
         const referer = req.get('Referrer') || '/saisie';
         res.redirect(referer);
     } catch (err) {

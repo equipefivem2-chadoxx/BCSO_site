@@ -27,7 +27,6 @@
         animation: fadeUp 0.4s ease-out;
     }
 
-    /* HEADER STYLE SUPERVISEUR */
     .page-header { 
         border-bottom: 1px solid rgba(189, 165, 129, 0.2); 
         padding-bottom: 20px; 
@@ -48,7 +47,6 @@
     }
     .btn-new:hover { background: var(--primary); color: #05070b; box-shadow: 0 0 20px var(--primary-glow); transform: translateY(-2px); }
 
-    /* FILTRES & RECHERCHE */
     .search-panel {
         background: var(--bg-card);
         border: 1px solid rgba(255,255,255,0.05);
@@ -89,14 +87,12 @@
     }
     .btn-reset:hover { background: rgba(255,255,255,0.1); }
 
-    /* GRILLE DES SCELLÉS */
     .scelles-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 25px;
     }
 
-    /* CARTE DE PREUVE STYLE "TOOL-CARD" */
     .preuve-card {
         background: var(--bg-card); 
         border: 1px solid rgba(255,255,255,0.05); 
@@ -109,23 +105,22 @@
     }
     .preuve-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(189, 165, 129, 0.15); border-color: rgba(189, 165, 129, 0.4); }
 
-    .preuve-img-container { height: 180px; background: rgba(0,0,0,0.5); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    .preuve-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
-    .preuve-card:hover .preuve-img { opacity: 1; transform: scale(1.05); }
+    /* 🚀 CORRECTION : Image en "contain" sur fond très sombre pour ne rien couper */
+    .preuve-img-container { height: 190px; background: #030508; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .preuve-img { width: 100%; height: 100%; object-fit: contain; transition: 0.3s; padding: 10px; }
+    .preuve-card:hover .preuve-img { transform: scale(1.03); }
     .no-img { color: #475569; font-size: 3rem; opacity: 0.5; }
 
-    .badges-container { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; pointer-events: none; }
-    .badge { padding: 5px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px); }
+    .badges-container { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; }
+    .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px); }
     
-    .badge-type { background: rgba(0,0,0,0.7); border: 1px solid #fff; color: #fff; }
+    .badge-type { background: rgba(0,0,0,0.8); border: 1px solid #fff; color: #fff; }
     .type-arme { border-color: #ef4444; color: #fca5a5; }
     .type-drogue { border-color: #10b981; color: #6ee7b7; }
     .type-argent { border-color: #f59e0b; color: #fcd34d; }
     
     .badge-status { border: 1px solid transparent; }
-    .status-scelle { background: rgba(189, 165, 129, 0.1); border-color: var(--primary); color: var(--primary); }
-    .status-detruit { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); color: #fca5a5; }
-    .status-restitue { background: rgba(16, 185, 129, 0.1); border-color: var(--success); color: #6ee7b7; }
+    .status-scelle { background: rgba(189, 165, 129, 0.15); border-color: var(--primary); color: var(--primary); }
 
     .preuve-body { padding: 20px; flex-grow: 1; }
     .preuve-title { font-size: 1.1rem; color: #fff; font-weight: 800; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center; }
@@ -137,37 +132,15 @@
     .preuve-details strong { color: #cbd5e1; }
 
     .preuve-actions { padding: 15px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 10px; }
-    .btn-action { flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; }
-    .form-action { flex: 1; display: flex; }
-    .btn-detruire { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger); }
-    .btn-detruire:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
-    .btn-restituer { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); }
-    .btn-restituer:hover { background: var(--success); color: #fff; border-color: var(--success); }
+    .btn-action { flex: 1; padding: 10px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; }
     
+    .btn-details { background: rgba(189, 165, 129, 0.1); border: 1px solid var(--primary); color: var(--primary); }
+    .btn-details:hover { background: var(--primary); color: #000; }
+
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--bg-card); border-radius: 12px; border: 1px dashed rgba(189, 165, 129, 0.3); color: #94a3b8; }
 
-    /* PAGINATION */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin-top: 40px;
-        padding-bottom: 20px;
-    }
-    .page-btn {
-        background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(189, 165, 129, 0.2);
-        color: #fff;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 700;
-        transition: 0.3s;
-    }
+    .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 40px; padding-bottom: 20px; }
+    .page-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(189, 165, 129, 0.2); color: #fff; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; text-decoration: none; font-weight: 700; transition: 0.3s; }
     .page-btn:hover { border-color: var(--primary); background: rgba(189, 165, 129, 0.1); }
     .page-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
     .page-btn.disabled { opacity: 0.5; pointer-events: none; }
@@ -175,7 +148,6 @@
 
 <div class="scelles-wrapper">
     
-    <!-- EN-TÊTE -->
     <div class="page-header">
         <div>
             <h1>Registre des Saisies</h1>
@@ -186,7 +158,6 @@
         </div>
     </div>
 
-    <!-- MOTEUR DE RECHERCHE -->
     <form action="/saisie" method="GET" class="search-panel">
         <div class="search-group" style="flex: 2;">
             <label>Recherche globale</label>
@@ -226,7 +197,6 @@
         <a href="/saisie" class="btn-reset"><i class="fas fa-times"></i></a>
     </form>
 
-    <!-- GRILLE DES PREUVES -->
     <div class="scelles-grid">
         <% if (saisies && saisies.length > 0) { %>
             <% saisies.forEach(saisie => { %>
@@ -247,14 +217,7 @@
                                 else if(saisie.typeSaisie === 'Argent Sale') typeClass = 'type-argent';
                             %>
                             <span class="badge badge-type <%= typeClass %>"><%= saisie.typeSaisie %></span>
-                            
-                            <% 
-                                const currentStatut = saisie.statut || 'Stocké'; 
-                                let statusClass = 'status-scelle';
-                                if(currentStatut === 'Détruit') statusClass = 'status-detruit';
-                                if(currentStatut === 'Restitué') statusClass = 'status-restitue';
-                            %>
-                            <span class="badge badge-status <%= statusClass %>"><i class="fas fa-fingerprint"></i> <%= currentStatut === 'Stocké' ? 'Scellé' : currentStatut %></span>
+                            <span class="badge badge-status status-scelle"><i class="fas fa-fingerprint"></i> Scellé</span>
                         </div>
                     </div>
 
@@ -275,24 +238,11 @@
                         </ul>
                     </div>
 
-                    <% if (currentStatut !== 'Détruit' && currentStatut !== 'Restitué') { %>
-                        <div class="preuve-actions">
-                            <!-- Les actions détruisent désormais l'entrée depuis la BDD (Modif côté API) -->
-                            <form action="/saisie/statut/<%= saisie._id %>" method="POST" class="form-action">
-                                <input type="hidden" name="statut" value="Détruit">
-                                <button type="submit" class="btn-action btn-detruire" onclick="return confirm('Attention : Cette action va effacer ce scellé définitivement de la base de données. Continuer ?');">
-                                    <i class="fas fa-fire"></i> Détruire
-                                </button>
-                            </form>
-                            
-                            <form action="/saisie/statut/<%= saisie._id %>" method="POST" class="form-action">
-                                <input type="hidden" name="statut" value="Restitué">
-                                <button type="submit" class="btn-action btn-restituer" onclick="return confirm('Attention : Cette action va effacer ce scellé définitivement de la base de données. Continuer ?');">
-                                    <i class="fas fa-hand-holding"></i> Restituer
-                                </button>
-                            </form>
-                        </div>
-                    <% } %>
+                    <div class="preuve-actions">
+                        <a href="/saisie/detail/<%= saisie._id %>" class="btn-action btn-details">
+                            <i class="fas fa-search"></i> Détails & Photo
+                        </a>
+                    </div>
 
                 </div>
             <% }) %>
@@ -305,7 +255,6 @@
         <% } %>
     </div>
 
-    <!-- PAGINATION -->
     <% if (totalPages > 1) { %>
         <div class="pagination">
             <% 
