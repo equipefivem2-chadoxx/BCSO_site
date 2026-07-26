@@ -142,7 +142,8 @@
                 
                 <div class="input-group">
                     <label>Nom de l'Agent</label>
-                    <input type="text" name="agentNom" class="custom-input" placeholder="Ex: Cpt. John Doe" required>
+                    <!-- 🚀 NOUVEAU : Champ pré-rempli, grisé et bloqué (readonly) -->
+                    <input type="text" name="agentNom" class="custom-input input-disabled" value="<%= typeof nomAgent !== 'undefined' ? nomAgent : 'Agent Inconnu' %>" readonly>
                 </div>
 
                 <div class="input-group">

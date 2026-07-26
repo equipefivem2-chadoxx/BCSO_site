@@ -67,9 +67,15 @@ router.get('/', isSuperviseur, async (req, res) => {
 router.get('/declarer', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
+        // 🚀 NOUVEAU : On cherche le nom de l'agent dans la BDD
+        const discordId = req.session.user.id || req.session.user.discordId;
+        const agentDB = await Agent.findOne({ discordId: discordId });
+        const nomAgent = agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
+
         res.render('pages/declarer-saisie', { 
             title: 'BCSO - Déclarer une Saisie',
-            user: req.session.user
+            user: req.session.user,
+            nomAgent: nomAgent // 🚀 On envoie le nom de l'agent au visuel
         });
     } catch (err) {
         res.redirect('/dashboard'); 
@@ -104,7 +110,6 @@ router.post('/ajouter', async (req, res) => {
 // 4. ACTION (PROTÉGÉE) : Supprimer le scellé de la BDD (Détruire / Restituer)
 router.post('/statut/:id', isSuperviseur, async (req, res) => {
     try {
-        // 🚀 NOUVEAU : Suppression pure et simple de l'entrée dans la base de données
         await Saisie.findByIdAndDelete(req.params.id);
         
         const referer = req.get('Referrer') || '/saisie';
