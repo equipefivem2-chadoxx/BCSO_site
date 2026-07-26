@@ -12,6 +12,9 @@ const agentSchema = new mongoose.Schema({
     
     iban: { type: String, required: false, default: "Non renseigné" },
     
+    // 🚀 NOUVEAU : Pass d'immunité permanent pour les absences Rollcall
+    hasPass: { type: Boolean, default: false },
+    
     // 🚀 NOUVEAU : Tableau pour stocker l'armurerie personnelle de l'agent
     armes: [{
         nomArme: { type: String, required: true },

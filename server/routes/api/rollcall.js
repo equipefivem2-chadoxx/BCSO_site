@@ -2,12 +2,35 @@ const express = require('express');
 const router = express.Router();
 const cron = require('node-cron');
 const RollCall = require('../../models/RollCall');
-const Agent = require('../../models/Agent'); // On importe le modèle Agent pour lister les effectifs
+const Agent = require('../../models/Agent');
+
+// 🚀 NOUVELLE ROUTE : Gérer le pass depuis le bot Discord
+router.post('/pass', async (req, res) => {
+    const { discordId, action } = req.body;
+
+    if (!discordId || !action) {
+        return res.status(400).json({ error: "Paramètres manquants" });
+    }
+
+    try {
+        const agent = await Agent.findOne({ discordId: discordId });
+        if (!agent) {
+            return res.status(404).json({ error: "Agent introuvable en base de données" });
+        }
+
+        // On met à jour le pass dans la BDD
+        agent.hasPass = (action === 'add');
+        await agent.save();
+
+        res.status(200).json({ message: `Pass ${action === 'add' ? 'ajouté' : 'retiré'} avec succès pour ${discordId}`, hasPass: agent.hasPass });
+    } catch (err) {
+        console.error("❌ Erreur API Pass:", err);
+        res.status(500).json({ error: "Erreur serveur interne" });
+    }
+});
 
 // POST /api/rollcall/update
 router.post('/update', async (req, res) => {
-    // Le bot doit envoyer: { "date": "23/07/26", "discordId": "123456789", "status": "present" }
-    // Status peut être: 'present', 'absent', 'retard', ou 'remove'
     const { date, discordId, status } = req.body; 
 
     if (!date || !discordId || !status) {
@@ -36,7 +59,6 @@ router.post('/update', async (req, res) => {
 
         await rollcall.save();
 
-        // 🚀 VÉRIFICATION EN DIRECT : Comptage des 4 absences / non-réactions
         const missedCount = await RollCall.countDocuments({
             $or: [
                 { "reponses": { $elemMatch: { discordId: discordId, status: 'absent' } } },
@@ -45,15 +67,22 @@ router.post('/update', async (req, res) => {
         });
 
         if (missedCount >= 4) {
-            try {
-                await fetch('http://localhost:3000/api/check-absence', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ discordId })
-                });
-                console.log(`📡 [Alerte Rollcall] Requête envoyée au bot pour ${discordId} (${missedCount} manqués)`);
-            } catch (botErr) {
-                console.error("❌ Impossible de contacter le bot Discord :", botErr.message);
+            // 🛡️ VÉRIFICATION DU PASS DANS LA BDD
+            const agent = await Agent.findOne({ discordId: discordId });
+            
+            if (agent && agent.hasPass) {
+                console.log(`🛡️ [Immunité] Alerte ignorée pour l'ID ${discordId} (Pass actif)`);
+            } else {
+                try {
+                    await fetch('http://localhost:3000/api/check-absence', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ discordId })
+                    });
+                    console.log(`📡 [Alerte Rollcall] Requête envoyée au bot pour ${discordId} (${missedCount} manqués)`);
+                } catch (botErr) {
+                    console.error("❌ Impossible de contacter le bot Discord :", botErr.message);
+                }
             }
         }
 
@@ -68,16 +97,16 @@ router.post('/update', async (req, res) => {
 cron.schedule('0 0 * * *', async () => {
     console.log("⏰ [Cron] Clôture journalière : Vérification des absences Rollcall...");
     try {
-        // On récupère tous les agents enregistrés dans la base
         const agents = await Agent.find({});
 
         for (const agent of agents) {
-            // On s'assure que l'agent a bien un ID Discord d'enregistré
             if (!agent.discordId) continue;
+            
+            // 🛡️ Si l'agent a un pass dans la BDD, on l'ignore instantanément !
+            if (agent.hasPass) continue;
 
             const discordId = agent.discordId;
 
-            // On recalcule le total des manquements pour chaque agent
             const missedCount = await RollCall.countDocuments({
                 $or: [
                     { "reponses": { $elemMatch: { discordId: discordId, status: 'absent' } } },
@@ -85,7 +114,6 @@ cron.schedule('0 0 * * *', async () => {
                 ]
             });
 
-            // S'il a 4 manquements ou plus, on lance l'alerte au bot
             if (missedCount >= 4) {
                 try {
                     await fetch('http://localhost:3000/api/check-absence', {

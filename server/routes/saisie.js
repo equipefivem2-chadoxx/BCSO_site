@@ -3,22 +3,35 @@ const router = express.Router();
 const Saisie = require('../models/Saisie');
 const Agent = require('../models/Agent');
 
-// 1. PAGE PRINCIPALE : Affiche la liste des saisies avec RECHERCHE et PAGINATION
-router.get('/', async (req, res) => {
-    if (!req.session.user) return res.redirect('/auth/login');
+// Middleware de sécurité : Vérifier si l'utilisateur est un superviseur
+const isSuperviseur = (req, res, next) => {
+    const user = req.session.user;
+    if (!user) return res.redirect('/auth/login');
+    
+    const hasAccess = (
+        user.isAdmin === true || 
+        user.role === 'admin' || 
+        user.id === '1247264549489610897' || 
+        ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'].includes(user.grade)
+    );
 
+    if (hasAccess) {
+        next(); 
+    } else {
+        res.status(403).send("<h1>Accès Refusé</h1><p>Seuls les superviseurs peuvent consulter le registre des saisies.</p>");
+    }
+};
+
+// 1. PAGE PRINCIPALE (PROTÉGÉE) : Affiche la liste des saisies
+router.get('/', isSuperviseur, async (req, res) => {
     try {
-        // Paramètres de pagination
         const page = parseInt(req.query.page) || 1;
-        const limit = 12; // Nombre de saisies par page
+        const limit = 12; 
         const skip = (page - 1) * limit;
-
-        // Construction du filtre de recherche
         let query = {};
 
-        // Recherche globale (Suspect, Agent, N° Série, Intitulé)
         if (req.query.search && req.query.search.trim() !== '') {
-            const searchRegex = new RegExp(req.query.search.trim(), 'i'); // 'i' pour insensible à la casse
+            const searchRegex = new RegExp(req.query.search.trim(), 'i'); 
             query.$or = [
                 { suspect: searchRegex },
                 { agentNom: searchRegex },
@@ -26,61 +39,46 @@ router.get('/', async (req, res) => {
                 { intitule: searchRegex }
             ];
         }
+        if (req.query.type && req.query.type !== 'Tous') query.typeSaisie = req.query.type;
+        if (req.query.statut && req.query.statut !== 'Tous') query.statut = req.query.statut;
 
-        // Filtre par Type
-        if (req.query.type && req.query.type !== 'Tous') {
-            query.typeSaisie = req.query.type;
-        }
+        let sort = { date: -1 };
+        if (req.query.dateOrder === 'asc') sort.date = 1; 
 
-        // Filtre par Statut
-        if (req.query.statut && req.query.statut !== 'Tous') {
-            query.statut = req.query.statut;
-        }
-
-        // Ordre de tri (Date)
-        let sort = { date: -1 }; // Par défaut : du plus récent au plus ancien
-        if (req.query.dateOrder === 'asc') {
-            sort.date = 1; // Du plus ancien au plus récent
-        }
-
-        // Exécution de la requête avec les filtres, le tri et la pagination
         const totalSaisies = await Saisie.countDocuments(query);
         const totalPages = Math.ceil(totalSaisies / limit) || 1;
         const saisies = await Saisie.find(query).sort(sort).skip(skip).limit(limit);
 
         res.render('pages/saisie', { 
-            title: 'BCSO - Saisies & Scellés',
+            title: 'BCSO - Registre des Saisies',
             user: req.session.user,
             saisies: saisies,
             currentPage: page,
             totalPages: totalPages,
-            queryParams: req.query // On renvoie les paramètres pour garder les filtres affichés
+            queryParams: req.query 
         });
     } catch (err) {
-        console.error("Erreur lors du chargement de la page saisie:", err);
-        res.status(500).send("ERREUR CRITIQUE DANS SAISIE.EJS : " + err.message); 
+        console.error("Erreur saisies:", err);
+        res.status(500).send("Erreur serveur"); 
     }
 });
 
-// 2. PAGE DÉCLARATION : Affiche le formulaire
+// 2. PAGE DÉCLARATION (PUBLIQUE POUR AGENTS) : Affiche le formulaire
 router.get('/declarer', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-    
     try {
         res.render('pages/declarer-saisie', { 
             title: 'BCSO - Déclarer une Saisie',
             user: req.session.user
         });
     } catch (err) {
-        console.error("Erreur lors du chargement du formulaire:", err);
-        res.redirect('/saisie');
+        res.redirect('/dashboard'); 
     }
 });
 
 // 3. ACTION : Sauvegarder la saisie
 router.post('/ajouter', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
-
     try {
         const discordId = req.session.user.id || req.session.user.discordId;
         const agentDB = await Agent.findOne({ discordId: discordId });
@@ -97,23 +95,19 @@ router.post('/ajouter', async (req, res) => {
         });
 
         await nouvelleSaisie.save();
-        res.redirect('/saisie?success=1');
+        res.redirect('/saisie/declarer?success=1'); 
     } catch (err) {
-        console.error("Erreur ajout saisie:", err);
         res.redirect('/saisie/declarer?error=1');
     }
 });
 
-// 4. ACTION : Changer le statut (Détruire / Restituer)
-router.post('/statut/:id', async (req, res) => {
-    if (!req.session.user) return res.redirect('/auth/login');
+// 4. ACTION (PROTÉGÉE) : Changer le statut
+router.post('/statut/:id', isSuperviseur, async (req, res) => {
     try {
         await Saisie.findByIdAndUpdate(req.params.id, { statut: req.body.statut });
-        // On redirige vers la page précédente pour ne pas perdre la recherche en cours
         const referer = req.get('Referrer') || '/saisie';
         res.redirect(referer);
     } catch (err) {
-        console.error("Erreur changement statut:", err);
         res.redirect('/saisie');
     }
 });
