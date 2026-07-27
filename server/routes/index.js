@@ -201,6 +201,15 @@ router.get('/formations/police-scientifique', (req, res) => {
     });
 });
 
+// 🚀 NOUVELLE ROUTE : BOMB SQUAD
+router.get('/formations/bombsquad', (req, res) => {
+    if (!req.session.user) return res.redirect('/auth/login');
+    res.render('pages/formation-bombsquad', { 
+        title: 'BCSO - Bomb Squad',
+        user: req.session.user
+    });
+});
+
 router.get('/documents', (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     res.render('pages/documents', { 

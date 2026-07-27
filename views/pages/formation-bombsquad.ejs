@@ -1,0 +1,593 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+    :root {
+        --primary: #bda581;
+        --primary-glow: rgba(189, 165, 129, 0.2);
+        --bg-dark: #05070b;
+        --bg-panel: rgba(11, 15, 25, 0.75);
+        --text-main: #e2e8f0;
+        --border-glow: rgba(189, 165, 129, 0.25);
+        --success: #10b981;
+        --info: #38bdf8;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
+
+    body {
+        margin: 0;
+        background-color: var(--bg-dark);
+        background-image: 
+            linear-gradient(rgba(189, 165, 129, 0.01) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(189, 165, 129, 0.01) 1px, transparent 1px);
+        background-size: 30px 30px;
+        font-family: 'Montserrat', sans-serif; 
+        color: var(--text-main); 
+        min-height: 100vh;
+    }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+    @keyframes slideInRight { 
+        from { opacity: 0; transform: translateX(20px); } 
+        to { opacity: 1; transform: translateX(0); } 
+    }
+
+    .proc-wrapper { 
+        max-width: 1400px; 
+        margin: 40px auto 80px auto; 
+        padding: 0 30px; 
+        animation: fadeUp 0.5s ease-out forwards;
+        margin-left: 300px; 
+    }
+
+    /* HEADER TACTIQUE */
+    .proc-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-bottom: 35px; 
+        background: var(--bg-panel); 
+        padding: 25px 35px; 
+        border-radius: 16px; 
+        border-top: 1px solid var(--danger); 
+        backdrop-filter: blur(20px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+    }
+
+    .btn-back { 
+        background: rgba(189, 165, 129, 0.08); 
+        border: 1px solid rgba(189, 165, 129, 0.3); 
+        color: var(--primary); 
+        padding: 12px 22px; 
+        border-radius: 8px; 
+        font-weight: 800; 
+        text-transform: uppercase; 
+        text-decoration: none; 
+        transition: 0.3s ease; 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 10px; 
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+    }
+    .btn-back:hover { 
+        background: var(--primary); 
+        color: #05070b; 
+        box-shadow: 0 0 15px var(--primary-glow); 
+        transform: translateX(-3px);
+    }
+
+    .proc-title { text-align: right; }
+    .proc-title h1 { 
+        font-size: 26px; 
+        font-weight: 900; 
+        margin: 0; 
+        color: #fff; 
+        text-transform: uppercase; 
+        letter-spacing: 2px; 
+    }
+    .proc-title p { 
+        color: var(--danger); 
+        margin: 5px 0 0 0; 
+        font-weight: 700; 
+        font-size: 13px; 
+        letter-spacing: 3px; 
+        text-transform: uppercase; 
+    }
+
+    /* BARRE D'ONGLETS MODULARISÉE */
+    .formation-nav {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .form-nav-btn {
+        background: rgba(6, 9, 15, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        color: #94a3b8;
+        padding: 16px 10px;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .form-nav-btn:hover {
+        background: rgba(255,255,255,0.02);
+        color: #fff;
+    }
+    .form-nav-btn.active {
+        background: linear-gradient(180deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.02) 100%);
+        color: var(--danger);
+        border: 1px solid var(--danger);
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.1);
+    }
+
+    .formation-pane { 
+        display: none; 
+        animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+    }
+    .formation-pane.active { display: block; }
+
+    /* CONTENUS TEXTUELS PLEINE LARGEUR (Puisqu'il n'y a pas d'images) */
+    .tactical-details {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .tactical-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .info-panel {
+        background: var(--bg-panel);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-left: 4px solid var(--primary);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .info-panel h2 {
+        margin: 0 0 20px 0;
+        color: #fff;
+        font-size: 1.25rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .info-panel h2 span { color: var(--primary); }
+    
+    .tactical-list {
+        margin: 0;
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .tactical-list li {
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.5;
+    }
+    .tactical-list li strong {
+        color: #fff;
+    }
+
+    /* CARTES DES TYPES DE BOMBES (Grille) */
+    .bomb-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
+    }
+    .bomb-card {
+        background: rgba(10, 15, 30, 0.4);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-top: 3px solid var(--danger);
+        border-radius: 12px;
+        padding: 25px;
+    }
+    .bomb-card h3 {
+        color: #fff; font-size: 1.1rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;
+    }
+    .bomb-info {
+        display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;
+    }
+    .bomb-info p { margin: 0; font-size: 0.9rem; color: #cbd5e1; line-height: 1.4;}
+    .bomb-info strong { color: var(--primary); }
+    
+    .bomb-defuse {
+        background: rgba(16, 185, 129, 0.05);
+        border-left: 3px solid var(--success);
+        padding: 15px;
+        border-radius: 4px;
+    }
+    .bomb-defuse h4 { margin: 0 0 8px 0; color: var(--success); font-size: 0.85rem; text-transform: uppercase; }
+    .bomb-defuse p { margin: 0; font-size: 0.85rem; color: #94a3b8; font-weight: 600; }
+
+    /* BLOCS DE DOCTRINE */
+    .use-case-box {
+        background: rgba(10, 15, 30, 0.4);
+        border: 1px solid rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 25px;
+    }
+    .use-case-box h3 {
+        margin: 0 0 12px 0;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--primary);
+    }
+    .use-case-text {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+        font-weight: 600;
+    }
+    .doctrine-rule { border-left: 4px solid var(--danger); background: rgba(239, 68, 68, 0.03); }
+
+    .phase-badge {
+        display: inline-block;
+        background: rgba(189, 165, 129, 0.15);
+        color: var(--primary);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .academy-footer {
+        margin-top: 40px; text-align: center; padding: 15px; border-top: 1px dashed rgba(255,255,255,0.05); color: #475569; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    @media (max-width: 1200px) {
+        .proc-wrapper { margin-left: 0; padding: 20px; }
+        .formation-nav { grid-template-columns: 1fr; }
+        .tactical-grid-2 { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="proc-wrapper">
+    
+    <!-- HEADER -->
+    <div class="proc-header">
+        <a href="/formations" class="btn-back"><i class="fas fa-chevron-left"></i> Formations</a>
+        <div class="proc-title">
+            <h1>Bomb Squad Unit</h1>
+            <p>Sheriff Academy - Unité de Déminage</p>
+        </div>
+    </div>
+
+    <!-- ONGLETS DE NAVIGATION -->
+    <div class="formation-nav">
+        <button class="form-nav-btn active" onclick="switchFormation('intro', this)"><i class="fas fa-shield-halved"></i> 1. Introduction</button>
+        <button class="form-nav-btn" onclick="switchFormation('typo', this)"><i class="fas fa-bomb"></i> 2. Typologie & Désamorçage</button>
+        <button class="form-nav-btn" onclick="switchFormation('regles', this)"><i class="fas fa-gavel"></i> 3. Règles & Protocoles</button>
+        <button class="form-nav-btn" onclick="switchFormation('phases', this)"><i class="fas fa-list-check"></i> 4. Phases d'Intervention</button>
+        <button class="form-nav-btn" onclick="switchFormation('exos', this)"><i class="fas fa-dumbbell"></i> 5. Entraînements</button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M1 : INTRODUCTION & MISSIONS -->
+    <!-- ============================================== -->
+    <div id="intro" class="formation-pane active">
+        <div class="tactical-details">
+            <div class="info-panel">
+                <h2><span>01 /</span> Qui sommes-nous ?</h2>
+                <p style="color: #f1f5f9; font-size: 1.05rem; font-weight: 700; margin-bottom: 20px; line-height: 1.5;">
+                    L’unité de déminage est une unité spécialisée dédiée à la protection des personnes et des biens face à la menace d’engins explosifs.
+                </p>
+                <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0;">
+                    Nous assurons l’évaluation, la coordination et la mise en œuvre des mesures de sécurité appropriées, en collaboration avec les autres services (police, pompiers, services médicaux et unités militaires spécialisées). Notre mission repose sur la prévention, la sécurisation et la gestion maîtrisée des incidents, en privilégiant la préservation de la vie humaine.
+                </p>
+            </div>
+
+            <div class="tactical-grid-2">
+                <div class="info-panel" style="border-left-color: var(--info);">
+                    <h2><span>02 /</span> Missions principales</h2>
+                    <ul class="tactical-list">
+                        <li>Évaluation et sécurisation des zones à risque.</li>
+                        <li>Coordination interservices lors d’incidents impliquant des engins suspects.</li>
+                        <li>Prise en charge administrative et logistique des interventions.</li>
+                        <li>Formation et entraînement des équipes opérationnelles et des unités partenaires.</li>
+                        <li>Analyse post-incident et production de rapports d’expertise (RETEX).</li>
+                        <li>Sensibilisation et prévention auprès du public et des partenaires.</li>
+                    </ul>
+                </div>
+
+                <div class="info-panel" style="border-left-color: var(--danger);">
+                    <h2><span>03 /</span> Principes généraux & Sécurité</h2>
+                    <ul class="tactical-list">
+                        <li><strong>Approche prudente :</strong> évaluer la menace depuis des positions sûres et maintenir la distance.</li>
+                        <li><strong>Observation :</strong> identifier visuellement et par capteurs la nature de l’objet sans contact.</li>
+                        <li><strong>Périmètre :</strong> interdire l’accès, diriger les évacuations, sécuriser les accès routiers.</li>
+                        <li><strong>Protection :</strong> pare-éclats, abris et orientations d’évacuation.</li>
+                        <li><strong>Chaîne de commandement :</strong> obligatoire pour engager la manipulation d'un engin.</li>
+                        <li><strong>Pièges secondaires :</strong> contrôles systématiques des zones adjacentes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M2 : TYPOLOGIE & DÉSAMORÇAGE -->
+    <!-- ============================================== -->
+    <div id="typo" class="formation-pane">
+        <div class="tactical-details">
+            <div class="use-case-box" style="margin-bottom: 10px;">
+                <p class="use-case-text" style="color: #cbd5e1;">
+                    Cette section répertorie les types d'engins explosifs rencontrés sur le terrain et la méthodologie tactique d'approche et de désamorçage spécifique à chacun.
+                </p>
+            </div>
+
+            <div class="bomb-grid">
+                <!-- MINE A PRESSION -->
+                <div class="bomb-card">
+                    <h3><i class="fas fa-shoe-prints"></i> Mine à Pression-Dépression</h3>
+                    <div class="bomb-info">
+                        <p><strong>Danger :</strong> Déclenchement instantané, très imprévisible.</p>
+                        <p><strong>Effet :</strong> Explose quand on marche dessus ou quand la pression change.</p>
+                        <p><strong>Reconnaître :</strong> Au sol, zone suspecte / isolée, parfois cachée.</p>
+                        <p><strong>Rayon d'explosion :</strong> Court à moyen (5 à 15 mètres).</p>
+                        <p><em>Souvent utilisée pour piéger une zone déjà suspecte.</em></p>
+                    </div>
+                    <div class="bomb-defuse">
+                        <h4>Protocole de désamorçage</h4>
+                        <p>Utiliser de l’azote pour glacer les composants. Courir ensuite car l'explosion est immédiate. Retrouver le boîtier et retirer le ressort via le levier.</p>
+                    </div>
+                </div>
+
+                <!-- BOMBE IEM -->
+                <div class="bomb-card">
+                    <h3><i class="fas fa-bolt"></i> Bombe à ondes IEM</h3>
+                    <div class="bomb-info">
+                        <p><strong>Danger :</strong> Perturbe tout l’équipement, peut désactiver radio / robot.</p>
+                        <p><strong>Effet :</strong> Envoie une impulsion électromagnétique coupant les appareils.</p>
+                        <p><strong>Reconnaître :</strong> Présence d’appareils électroniques, comportement bizarre du matériel.</p>
+                        <p><strong>Rayon d'effet :</strong> Moyen (10 à 30 mètres).</p>
+                        <p><em>Peut servir à piéger les unités qui utilisent des robots.</em></p>
+                    </div>
+                    <div class="bomb-defuse">
+                        <h4>Protocole de désamorçage</h4>
+                        <p>Envoyer une impulsion électro-magnétique pour désactiver la bombe. Dissocier ensuite ce qui reçoit les ondes du module explosif.</p>
+                    </div>
+                </div>
+
+                <!-- BOMBE BOUTON -->
+                <div class="bomb-card">
+                    <h3><i class="fas fa-hand-pointer"></i> Bombe Bouton</h3>
+                    <div class="bomb-info">
+                        <p><strong>Danger :</strong> Dépend d’une personne, peut exploser à tout moment.</p>
+                        <p><strong>Effet :</strong> Explosion déclenchée manuellement.</p>
+                        <p><strong>Reconnaître :</strong> Individu suspect, deux fils qui vont du pain à un déclencheur.</p>
+                        <p><strong>Rayon d'explosion :</strong> Variable (10 à 30 mètres).</p>
+                        <p><em>Souvent utilisée en prise d’otage.</em></p>
+                    </div>
+                    <div class="bomb-defuse">
+                        <h4>Protocole de désamorçage</h4>
+                        <p>Retrouver le déclencheur. Déconnecter ensuite le déclencheur de l’explosif. Toujours isoler les extrémités pour éviter tout contact.</p>
+                    </div>
+                </div>
+
+                <!-- BOMBE MINUTEUR -->
+                <div class="bomb-card">
+                    <h3><i class="fas fa-stopwatch"></i> Bombe Minuteur</h3>
+                    <div class="bomb-info">
+                        <p><strong>Danger :</strong> Explosion programmée, stress élevé (compte à rebours).</p>
+                        <p><strong>Effet :</strong> Explose à une heure/minute précise.</p>
+                        <p><strong>Reconnaître :</strong> Bruit de tic-tac, écran / minuterie apparents.</p>
+                        <p><strong>Rayon d'explosion :</strong> Moyen à large (15 à 40 mètres).</p>
+                    </div>
+                    <div class="bomb-defuse">
+                        <h4>Protocole de désamorçage</h4>
+                        <p>Observer les fils liés du minuteur jusqu’au pain explosif. Il faudra ensuite débrancher/couper le fil et isoler les extrémités du fil coupé.</p>
+                    </div>
+                </div>
+
+                <!-- NITROGLYCÉRINE -->
+                <div class="bomb-card">
+                    <h3><i class="fas fa-flask"></i> Bombe Nitroglycérine</h3>
+                    <div class="bomb-info">
+                        <p><strong>Danger :</strong> Extrêmement instable, explose au moindre choc.</p>
+                        <p><strong>Effet :</strong> Explosion très puissante.</p>
+                        <p><strong>Reconnaître :</strong> Transport délicat, liquide visible, objet fragile.</p>
+                        <p><strong>Rayon d'explosion :</strong> Large (20 à 50 mètres).</p>
+                    </div>
+                    <div class="bomb-defuse">
+                        <h4>Protocole de désamorçage</h4>
+                        <p>Haute pression avec l’eau pour noyer les éléments chimiques afin d’empêcher que l’air fasse déclencher la bombe.</p>
+                    </div>
+                </div>
+
+                <!-- DÉTECTION DE MOUVEMENT -->
+                <div class="bomb-card">
+                    <h3><i class="fas fa-satellite-dish"></i> Bombe à détection de mouvement</h3>
+                    <div class="bomb-info">
+                        <p><strong>Danger :</strong> Déclenchement automatique, très piégeuse.</p>
+                        <p><strong>Effet :</strong> Explose si un mouvement est détecté dans son champ.</p>
+                        <p><strong>Reconnaître :</strong> Capteurs ou faisceaux visibles, zone piégée.</p>
+                        <p><strong>Rayon d'explosion :</strong> Moyen (10 à 30 mètres).</p>
+                    </div>
+                    <div class="bomb-defuse">
+                        <h4>Protocole de désamorçage</h4>
+                        <p>Destruction en la faisant exploser via du mouvement contrôlé. Du matériel particulier existe pour cette situation, dépends des conditions de l’opération.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M3 : RÈGLES & PROTOCOLES -->
+    <!-- ============================================== -->
+    <div id="regles" class="formation-pane">
+        <div class="tactical-details">
+            <div class="tactical-grid-2">
+                <div class="info-panel">
+                    <h2><span>04 /</span> Règlement Opérationnel</h2>
+                    <ul class="tactical-list">
+                        <li><strong>Priorité :</strong> Évacuation, protection et assistance des civils.</li>
+                        <li><strong>Notification :</strong> Alerte immédiate de la hiérarchie et des secours.</li>
+                        <li><strong>Périmètre :</strong> Établissement strict par le chef d’intervention.</li>
+                        <li><strong>À distance :</strong> Utilisation de caméras, robots, capteurs inertiels sans contact direct.</li>
+                        <li><strong>Habilitation :</strong> La manipulation est réservée aux spécialistes. Toute décision d'approche doit être validée par le commandement.</li>
+                        <li><strong>Contamination :</strong> Activer les protocoles de confinement (NBC) si nécessaire.</li>
+                    </ul>
+                </div>
+
+                <div class="info-panel" style="border-left-color: var(--warning);">
+                    <h2><span>05 /</span> Règlement Intérieur</h2>
+                    <ul class="tactical-list">
+                        <li>Respect strict des ordres hiérarchiques durant les opérations.</li>
+                        <li>Port obligatoire de l’équipement de protection lourd et coms.</li>
+                        <li>Interdiction de toute initiative individuelle pouvant compromettre la sécurité.</li>
+                        <li>Maintien de la confidentialité sur les techniques et rapports.</li>
+                        <li>Entretien et vérification régulière du matériel de déminage.</li>
+                        <li>Débriefing et prise en charge psychologique obligatoires post-intervention.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="use-case-box doctrine-rule">
+                <h3><i class="fas fa-walkie-talkie"></i> Consignes de communication</h3>
+                <p class="use-case-text" style="color: #cbd5e1;">
+                    Communication claire et continue entre le chef d'intervention, la cellule logistique et les unités de terrain. Journalisation stricte de toutes les actions et décisions sur le rapport d’intervention.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M4 : PHASES D'INTERVENTION -->
+    <!-- ============================================== -->
+    <div id="phases" class="formation-pane">
+        <div class="tactical-details">
+            <div class="info-panel" style="border-left-color: #fff;">
+                <h2><span>06 /</span> Protocoles d'intervention chronologiques</h2>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px;">Organisation non technique de la sécurisation et résolution d'un incident explosif.</p>
+
+                <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div class="phase-badge">PHASE 1</div>
+                    <h3 style="color: #fff; margin: 0 0 10px 0;">Notification et prise de commandement</h3>
+                    <ul class="tactical-list">
+                        <li>Réception de l’alerte et information des responsables.</li>
+                        <li>Déclenchement de la cellule de crise si nécessaire.</li>
+                        <li>Envoi d’une équipe d’évaluation (sans contact) avec équipement d’observation.</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div class="phase-badge">PHASE 2</div>
+                    <h3 style="color: #fff; margin: 0 0 10px 0;">Sécurisation et évacuation</h3>
+                    <ul class="tactical-list">
+                        <li>Mise en place du périmètre et consignes d’évacuation.</li>
+                        <li>Point de rassemblement pour les civils.</li>
+                        <li>Contrôle des flux routiers et coordination EMS.</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div class="phase-badge">PHASE 3</div>
+                    <h3 style="color: #fff; margin: 0 0 10px 0;">Évaluation technique à distance</h3>
+                    <ul class="tactical-list">
+                        <li>Recours aux moyens de vision à distance (robots, drones).</li>
+                        <li>Rédaction d’un rapport initial : type d’objet présumé, risques, options.</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div class="phase-badge">PHASE 4</div>
+                    <h3 style="color: #fff; margin: 0 0 10px 0;">Décision opérationnelle</h3>
+                    <ul class="tactical-list">
+                        <li>Réunion de décision avec le commandement.</li>
+                        <li>Choix d'action : renforcement du confinement ou intervention/neutralisation.</li>
+                        <li>Consigner la procédure par écrit avant d'agir sur l'engin.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="phase-badge">PHASE 5</div>
+                    <h3 style="color: #fff; margin: 0 0 10px 0;">Post-intervention</h3>
+                    <ul class="tactical-list">
+                        <li>Sécurisation définitive et levée du périmètre.</li>
+                        <li>Transport des éléments vers les filières spécialisées.</li>
+                        <li>Rapport RETEX et analyse post-événement.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- M5 : ENTRAÎNEMENTS & EXERCICES -->
+    <!-- ============================================== -->
+    <div id="exos" class="formation-pane">
+        <div class="tactical-details">
+            <div class="info-panel">
+                <h2><span>07 /</span> Exercices et scénarios d'entraînement</h2>
+                <p style="color: #f1f5f9; font-weight: 600; margin-bottom: 20px;">
+                    Objectif : proposer des entraînements immersifs sans exposition à des risques réels ni informations techniques exploitables. Utilisation exclusive de dispositifs inertes.
+                </p>
+                
+                <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--primary); margin-bottom: 15px;">Exemples de scénarios types :</h3>
+                <ul class="tactical-list" style="margin-bottom: 30px;">
+                    <li><strong>Scénario A :</strong> Colis suspect dans un bâtiment public (objet factice, minuterie simulée).</li>
+                    <li><strong>Scénario B :</strong> Véhicule suspect stationné (évacuation, observation robot, remorquage sécurisé).</li>
+                    <li><strong>Scénario C :</strong> Découverte d’un obus ancien sur chantier (périmètre et enlèvement spécialisé).</li>
+                    <li><strong>Scénario D :</strong> Incident combiné (engin inerte + simulation contamination NBC).</li>
+                    <li><strong>Scénario E :</strong> Gestion médias et communication publique post-incident.</li>
+                </ul>
+
+                <div class="use-case-box" style="background: rgba(16, 185, 129, 0.05); border-left: 4px solid var(--success);">
+                    <h3 style="color: var(--success);"><i class="fas fa-check-circle"></i> Bonnes pratiques pour instructeurs</h3>
+                    <ul class="tactical-list" style="padding-left: 10px; margin-top: 10px;">
+                        <li>N'utiliser que du matériel inerte approuvé.</li>
+                        <li>Documenter chaque exercice (déroulé, erreurs, axes d'amélioration).</li>
+                        <li>Ajouter un stress contrôlé pour habituer les opérateurs.</li>
+                        <li>Organiser un débriefing formel systématique pour mettre à jour les procédures.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="academy-footer">
+        Blaine County Sheriff's Office — Official Training Manual
+    </div>
+</div>
+
+<script>
+    function switchFormation(paneId, buttonElement) {
+        document.querySelectorAll('.form-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.formation-pane').forEach(pane => pane.classList.remove('active'));
+        
+        buttonElement.classList.add('active');
+        document.getElementById(paneId).classList.add('active');
+    }
+</script>
