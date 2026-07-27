@@ -26,7 +26,6 @@
         animation: fadeUp 0.4s ease-out;
     }
 
-    /* HEADER STYLE SUPERVISEUR */
     .page-header { 
         border-bottom: 1px solid rgba(189, 165, 129, 0.2); 
         padding-bottom: 20px; 
@@ -38,7 +37,6 @@
     .page-header h1 { color: var(--primary); margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; font-size: 28px; }
     .page-header p { color: #94a3b8; margin-top: 5px; margin-bottom: 0; font-size: 14px; text-transform: none; letter-spacing: normal; }
 
-    /* LAYOUT DU FORMULAIRE */
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -63,7 +61,6 @@
     }
     .form-panel h2 i { color: var(--primary); }
 
-    /* STYLES DES CHAMPS DE SAISIE */
     .input-group { margin-bottom: 20px; position: relative; }
     .input-group label {
         display: block; font-size: 0.75rem; color: #94a3b8; font-weight: 700;
@@ -86,7 +83,6 @@
         right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); pointer-events: none;
     }
 
-    /* ZONE DE PREUVE PHOTO */
     .photo-preview-box {
         margin-top: 15px; width: 100%; height: 250px; border: 1px dashed rgba(255,255,255,0.15);
         border-radius: 8px; background: rgba(0,0,0,0.3); display: flex; justify-content: center;
@@ -97,7 +93,6 @@
     .photo-preview-box .placeholder { color: #475569; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; }
     .photo-preview-box .placeholder i { font-size: 2rem; color: rgba(189, 165, 129, 0.3); }
 
-    /* BOUTON DE SOUMISSION */
     .submit-section { margin-top: 30px; text-align: right; }
     .btn-submit {
         background: linear-gradient(135deg, rgba(189, 165, 129, 0.1) 0%, rgba(189, 165, 129, 0.2) 100%);
@@ -118,31 +113,26 @@
 
 <div class="saisie-wrapper">
     
-    <!-- EN-TÊTE -->
     <div class="page-header">
         <div>
             <h1>Déclaration de Saisie</h1>
             <p>Bureau des Preuves - Dépôt de scellé</p>
         </div>
         <div class="header-actions">
-            <!-- Si c'est un Superviseur, il peut retourner sur la liste -->
             <% if (typeof user !== 'undefined' && user && (user.isAdmin === true || ['SLO', 'Sergeant I', 'Sergeant II', 'Sergeant Chef', 'Lieutenant', 'Sheriff'].includes(user.grade))) { %>
                 <a href="/saisie" class="btn-new" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #fff;"><i class="fas fa-list"></i> Voir le Registre</a>
             <% } %>
         </div>
     </div>
 
-    <!-- FORMULAIRE DE SAISIE -->
     <form action="/saisie/ajouter" method="POST" id="formSaisie">
         <div class="form-grid">
             
-            <!-- PANEL 1 : INFOS GÉNÉRALES -->
             <div class="form-panel">
                 <h2><i class="fas fa-id-card-clip"></i> Acteurs de la procédure</h2>
                 
                 <div class="input-group">
                     <label>Nom de l'Agent</label>
-                    <!-- 🚀 NOUVEAU : Champ pré-rempli, grisé et bloqué (readonly) -->
                     <input type="text" name="agentNom" class="custom-input input-disabled" value="<%= typeof nomAgent !== 'undefined' ? nomAgent : 'Agent Inconnu' %>" readonly>
                 </div>
 
@@ -152,7 +142,6 @@
                 </div>
             </div>
 
-            <!-- PANEL 2 : DÉTAILS DE LA SAISIE -->
             <div class="form-panel">
                 <h2><i class="fas fa-box-open"></i> Caractéristiques de l'objet</h2>
                 
@@ -162,6 +151,7 @@
                         <select name="typeSaisie" id="typeSaisieSelect" class="custom-input custom-select" required onchange="checkType()">
                             <option value="" disabled selected>-- Sélectionner la catégorie --</option>
                             <option value="Arme">Arme</option>
+                            <option value="Munitions">Munitions</option>
                             <option value="Drogue">Drogue</option>
                             <option value="Argent Sale">Argent Sale</option>
                             <option value="Objet Illégal">Objet Illégal (Cagoule, Outils...)</option>
@@ -173,7 +163,8 @@
                 <div class="form-grid" style="gap: 15px;">
                     <div class="input-group" style="margin-bottom: 0;">
                         <label>Intitulé exact</label>
-                        <input type="text" name="intitule" class="custom-input" placeholder="Ex: Pistolet Lourd, Pochons..." required>
+                        <!-- Mise à jour du placeholder pour expliquer le cumul -->
+                        <input type="text" name="intitule" class="custom-input" placeholder="Sera cumulé si même suspect..." required>
                     </div>
                     <div class="input-group" style="margin-bottom: 0;">
                         <label>Quantité / Montant</label>
@@ -187,12 +178,12 @@
                 </div>
             </div>
 
-            <!-- PANEL 3 : PREUVE -->
             <div class="form-panel full-width">
                 <h2><i class="fas fa-camera"></i> Pièce à conviction (Photographie)</h2>
                 
                 <div class="input-group">
-                    <label>URL de la photo (Hébergeur Externe, Discord, etc.)</label>
+                    <!-- Mise à jour du label -->
+                    <label>URL de la photo (Optionnelle pour ajouter du stock existant)</label>
                     <input type="url" name="photoUrl" id="photoUrlInput" class="custom-input" placeholder="https://..." oninput="previewImage()">
                 </div>
 
@@ -215,7 +206,6 @@
     </form>
 </div>
 
-<!-- SCRIPTS D'INTERACTIVITÉ -->
 <script>
     function checkType() {
         const select = document.getElementById('typeSaisieSelect');

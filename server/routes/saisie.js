@@ -63,7 +63,7 @@ router.get('/', isSuperviseur, async (req, res) => {
     }
 });
 
-// 🚀 NOUVEAU : PAGE DÉTAILS D'UNE SAISIE (AVEC PHOTO EN GRAND)
+// 🚀 PAGE DÉTAILS D'UNE SAISIE (AVEC PHOTO EN GRAND)
 router.get('/detail/:id', isSuperviseur, async (req, res) => {
     try {
         const saisie = await Saisie.findById(req.params.id);
@@ -98,7 +98,7 @@ router.get('/declarer', async (req, res) => {
     }
 });
 
-// 3. ACTION : Sauvegarder la saisie
+// 3. ACTION : Sauvegarder la saisie avec logique de CUMUL par SUSPECT
 router.post('/ajouter', async (req, res) => {
     if (!req.session.user) return res.redirect('/auth/login');
     try {
@@ -106,12 +106,40 @@ router.post('/ajouter', async (req, res) => {
         const agentDB = await Agent.findOne({ discordId: discordId });
         const nomAgent = agentDB ? `${agentDB.prenom} ${agentDB.nom}` : req.session.user.username;
 
+        const quantiteAjoutee = parseInt(req.body.quantite) || 1;
+        const intituleSaisi = req.body.intitule.trim();
+        const suspectSaisi = req.body.suspect || 'Inconnu';
+
+        // 🚀 LOGIQUE DE CUMUL : On additionne tout sauf les Armes, et SEULEMENT pour le même suspect
+        if (req.body.typeSaisie !== 'Arme') {
+            const scelleExistant = await Saisie.findOne({
+                typeSaisie: req.body.typeSaisie,
+                intitule: { $regex: new RegExp(`^${intituleSaisi}$`, 'i') },
+                suspect: { $regex: new RegExp(`^${suspectSaisi}$`, 'i') } // 🔍 DOIT ÊTRE LE MÊME SUSPECT
+            });
+
+            if (scelleExistant) {
+                // On additionne les quantités
+                scelleExistant.quantite += quantiteAjoutee;
+                scelleExistant.date = Date.now(); // Actualise la date de la dernière saisie
+                
+                // Si l'agent a mis une nouvelle photo, on met à jour l'ancienne
+                if (req.body.photoUrl && req.body.photoUrl.trim() !== '') {
+                    scelleExistant.photoUrl = req.body.photoUrl;
+                }
+                
+                await scelleExistant.save();
+                return res.redirect('/saisie/declarer?success=1'); 
+            }
+        }
+
+        // Si c'est une Arme, ou si le consommable n'existe pas pour CE suspect, on crée une nouvelle carte
         const nouvelleSaisie = new Saisie({
             agentNom: nomAgent,
-            suspect: req.body.suspect || 'Inconnu',
+            suspect: suspectSaisi,
             typeSaisie: req.body.typeSaisie,
-            intitule: req.body.intitule,
-            quantite: req.body.quantite || 1,
+            intitule: intituleSaisi,
+            quantite: quantiteAjoutee,
             numeroSerie: req.body.numeroSerie || 'N/A',
             photoUrl: req.body.photoUrl || ''
         });
@@ -119,6 +147,7 @@ router.post('/ajouter', async (req, res) => {
         await nouvelleSaisie.save();
         res.redirect('/saisie/declarer?success=1'); 
     } catch (err) {
+        console.error("Erreur ajout saisie:", err);
         res.redirect('/saisie/declarer?error=1');
     }
 });
